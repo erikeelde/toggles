@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Toggles</string>
+
+    <string name="applications">Applications</string>
+
+    <string name="no_configurations_found">No configurations found.</string>
+    <string name="no_applications_found">No applications found</string>
+    <string name="restart_application">Restart application</string>
+    <string name="not_installed">Not installed</string>
+    <string name="application_not_installed">Application not installed</string>
+    <string name="delete_application">Delete application</string>
+    <string name="go_to_application_settings">Go to application settings</string>
+    <string name="filter_configurations">Filter configurations</string>
+    <string name="save">save</string>
+    <string name="revert">revert</string>
+    <string name="select_scope">Select scope</string>
+    <string name="application_icon">Application icon</string>
+    <string name="wrench_permission_label">Access Wrench</string>
+    <string name="wrench_permission_description">Access to request configuration from Wrench</string>
+    <string name="help">Help</string>
+    <string name="oss">Open source</string>
+    <string name="help_implementation_title">Help to get started will be here eventually. \n\nToggles is a rerelease of wrench (which I can no longer maintain). \n\nRead more about the connection on the github page: https://github.com/erikeelde/toggles</string>
+
+</resources>

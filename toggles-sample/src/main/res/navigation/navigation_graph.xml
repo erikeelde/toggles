@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:startDestination="@+id/action_live_data">
+
+    <fragment
+        android:id="@+id/action_live_data"
+        android:name="com.example.wrench.livedataprefs.LiveDataPreferencesFragment"
+        android:label="LiveDataPreferencesFragment" />
+    <fragment
+        android:id="@+id/action_wrench_prefs"
+        android:name="com.example.wrench.wrenchprefs.WrenchPreferencesFragment"
+        android:label="WrenchPreferencesFragment" />
+    <activity
+        android:id="@+id/action_oss"
+        android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+        android:label="OssActivity" />
+</navigation>
