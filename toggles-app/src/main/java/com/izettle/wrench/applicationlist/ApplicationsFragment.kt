@@ -8,8 +8,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.izettle.wrench.databinding.FragmentApplicationsBinding
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_applications.*
+import se.eelde.toggles.R
 import javax.inject.Inject
 
 internal class ApplicationsFragment : DaggerFragment() {
@@ -19,29 +20,24 @@ internal class ApplicationsFragment : DaggerFragment() {
 
     private val model by viewModels<ApplicationViewModel> { viewModelFactory }
 
-    private lateinit var fragmentApplicationsBinding: FragmentApplicationsBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        fragmentApplicationsBinding = FragmentApplicationsBinding.inflate(inflater, container, false)
-        fragmentApplicationsBinding.list.layoutManager = LinearLayoutManager(context)
-        return fragmentApplicationsBinding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_applications, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        fragmentApplicationsBinding.list.layoutManager = LinearLayoutManager(requireContext())
+        list.layoutManager = LinearLayoutManager(requireContext())
 
         val adapter = ApplicationAdapter()
         model.applications.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
-        fragmentApplicationsBinding.list.adapter = adapter
+        list.adapter = adapter
 
         model.isListEmpty.observe(viewLifecycleOwner, Observer { isEmpty ->
-            val animator = fragmentApplicationsBinding.animator
+            val animator = animator
             if (isEmpty == null || isEmpty) {
-                animator.displayedChild = animator.indexOfChild(fragmentApplicationsBinding.noApplicationsEmptyView)
+                animator.displayedChild = animator.indexOfChild(no_applications_empty_view)
             } else {
-                animator.displayedChild = animator.indexOfChild(fragmentApplicationsBinding.list)
+                animator.displayedChild = animator.indexOfChild(list)
             }
         })
     }

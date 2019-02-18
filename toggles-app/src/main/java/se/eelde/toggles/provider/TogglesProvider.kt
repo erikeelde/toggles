@@ -1,4 +1,4 @@
-package com.izettle.wrench.provider
+package se.eelde.toggles.provider
 
 import android.content.ContentUris
 import android.content.ContentValues
@@ -18,7 +18,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class WrenchProvider : DaggerContentProvider() {
+class TogglesProvider : DaggerContentProvider() {
 
     @Inject
     lateinit var applicationDao: WrenchApplicationDao
@@ -69,7 +69,7 @@ class WrenchProvider : DaggerContentProvider() {
 
         val callingApplication = getCallingApplication(applicationDao)
 
-        if (!isWrenchApplication(callingApplication)) {
+        if (!isTogglesApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
@@ -110,7 +110,7 @@ class WrenchProvider : DaggerContentProvider() {
         return cursor
     }
 
-    private fun isWrenchApplication(callingApplication: WrenchApplication): Boolean {
+    private fun isTogglesApplication(callingApplication: WrenchApplication): Boolean {
         return callingApplication.packageName == BuildConfig.APPLICATION_ID
     }
 
@@ -118,7 +118,7 @@ class WrenchProvider : DaggerContentProvider() {
 
         val callingApplication = getCallingApplication(applicationDao)
 
-        if (!isWrenchApplication(callingApplication)) {
+        if (!isTogglesApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
@@ -177,7 +177,7 @@ class WrenchProvider : DaggerContentProvider() {
     override fun bulkInsert(uri: Uri, values: Array<ContentValues>): Int {
         val callingApplication = getCallingApplication(applicationDao)
 
-        if (!isWrenchApplication(callingApplication)) {
+        if (!isTogglesApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
@@ -188,7 +188,7 @@ class WrenchProvider : DaggerContentProvider() {
 
         val callingApplication = getCallingApplication(applicationDao)
 
-        if (!isWrenchApplication(callingApplication)) {
+        if (!isTogglesApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
@@ -218,7 +218,7 @@ class WrenchProvider : DaggerContentProvider() {
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         val callingApplication = getCallingApplication(applicationDao)
 
-        if (!isWrenchApplication(callingApplication)) {
+        if (!isTogglesApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
@@ -228,7 +228,7 @@ class WrenchProvider : DaggerContentProvider() {
     override fun getType(uri: Uri): String? {
         val callingApplication = getCallingApplication(applicationDao)
 
-        if (!isWrenchApplication(callingApplication)) {
+        if (!isTogglesApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
@@ -307,7 +307,7 @@ class WrenchProvider : DaggerContentProvider() {
             return scope
         }
 
-        private fun assertValidApiVersion(togglesPreferences: ITogglesPreferences?, uri: Uri) {
+        private fun assertValidApiVersion(togglesPreferences: ITogglesPreferences, uri: Uri) {
             when (getApiVersion(uri)) {
                 API_1 -> {
                     return
@@ -316,7 +316,7 @@ class WrenchProvider : DaggerContentProvider() {
                     var l: Long = 0
                     try {
                         l = Binder.clearCallingIdentity()
-                        if (togglesPreferences!!.getBoolean("Require valid wrench api version", false)) {
+                        if (togglesPreferences.getBoolean("Require valid toggles api version", false)) {
                             throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
                         }
                     } finally {
@@ -327,7 +327,7 @@ class WrenchProvider : DaggerContentProvider() {
                     var l: Long = 0
                     try {
                         l = Binder.clearCallingIdentity()
-                        if (togglesPreferences!!.getBoolean("Require valid wrench api version", false)) {
+                        if (togglesPreferences.getBoolean("Require valid toggles api version", false)) {
                             throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
                         }
                     } finally {
@@ -337,7 +337,7 @@ class WrenchProvider : DaggerContentProvider() {
             }
         }
 
-        @WrenchApiVersion
+        @TogglesApiVersion
         private fun getApiVersion(uri: Uri): Int {
             val queryParameter = uri.getQueryParameter(WrenchProviderContract.WRENCH_API_VERSION)
             return if (queryParameter != null) {

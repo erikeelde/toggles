@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.izettle.wrench.R
 import com.izettle.wrench.database.WrenchApplication
+import se.eelde.toggles.R
 
 internal class ApplicationAdapter : PagedListAdapter<WrenchApplication, ApplicationViewHolder>(DIFF_CALLBACK) {
 

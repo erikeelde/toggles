@@ -6,15 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.izettle.wrench.database.WrenchConfigurationWithValues
-import com.izettle.wrench.databinding.ConfigurationListItemBinding
+import se.eelde.toggles.R
 
 internal class ConfigurationRecyclerViewAdapter(
         private val listener: Listener,
         private val model: ConfigurationViewModel) : ListAdapter<WrenchConfigurationWithValues, ConfigurationViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConfigurationViewHolder {
-        val binding = ConfigurationListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ConfigurationViewHolder(binding, listener)
+        return ConfigurationViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.configuration_list_item, parent, false), listener)
     }
 
     override fun onBindViewHolder(holder: ConfigurationViewHolder, position: Int) {

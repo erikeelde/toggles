@@ -46,12 +46,12 @@ dependencies {
     testImplementation("androidx.test:rules:1.2.0")
     testImplementation("androidx.test:runner:1.2.0")
     testImplementation("androidx.test.ext:junit:1.1.1")
-    testImplementation("org.robolectric:robolectric:4.3.1")
+    testImplementation("org.robolectric:robolectric:4.4")
 
     implementation(project(":toggles-core"))
     implementation("androidx.annotation:annotation:1.1.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72")
-    implementation("androidx.core:core-ktx:1.3.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0")
+    implementation("androidx.core:core-ktx:1.3.1")
 }
 
 apply(rootProject.file("gradle/gradle-mvn-push.gradle"))

@@ -29,5 +29,5 @@ interface WrenchScopeDao {
     fun getDefaultScope(applicationId: Long): WrenchScope
 
     @Update
-    fun update(scope: WrenchScope)
+    suspend fun update(scope: WrenchScope)
 }

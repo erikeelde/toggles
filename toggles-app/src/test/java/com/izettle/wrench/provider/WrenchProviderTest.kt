@@ -3,7 +3,6 @@ package com.izettle.wrench.provider
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.izettle.wrench.BuildConfig
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.Nut
 import com.izettle.wrench.core.WrenchProviderContract
@@ -13,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
+import se.eelde.toggles.BuildConfig
 
 @RunWith(AndroidJUnit4::class)
 class WrenchProviderTest {

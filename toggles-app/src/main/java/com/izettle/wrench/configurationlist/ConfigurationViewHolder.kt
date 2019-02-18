@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationWithValues
 import com.izettle.wrench.database.WrenchScope
-import com.izettle.wrench.databinding.ConfigurationListItemBinding
+import kotlinx.android.synthetic.main.configuration_list_item.view.*
 
 internal class ConfigurationViewHolder internal constructor(
-        val binding: ConfigurationListItemBinding,
-        val listener: ConfigurationRecyclerViewAdapter.Listener) : RecyclerView.ViewHolder(binding.root) {
+        val containerView: View,
+        val listener: ConfigurationRecyclerViewAdapter.Listener) : RecyclerView.ViewHolder(containerView) {
 
     fun bindTo(configuration: WrenchConfigurationWithValues, model: ConfigurationViewModel) {
-        binding.title.text = configuration.key
+        containerView.title.text = configuration.key
 
         val lol = configuration.configurationValues!!
 
@@ -22,19 +22,19 @@ internal class ConfigurationViewHolder internal constructor(
 
         val (_, _, value) = getItemForScope(defaultScope, lol)!!
 
-        binding.defaultValue.text = value
+        containerView.default_value.text = value
 
         val selectedScopedItem = getItemForScope(selectedScope, lol)
         if (selectedScopedItem != null && selectedScopedItem.scope != defaultScope!!.id) {
-            binding.defaultValue.paintFlags = binding.defaultValue.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            binding.customValue.text = selectedScopedItem.value
-            binding.customValue.visibility = View.VISIBLE
+            containerView.default_value.paintFlags = containerView.default_value.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            containerView.custom_value.text = selectedScopedItem.value
+            containerView.custom_value.visibility = View.VISIBLE
         } else {
-            binding.customValue.text = null
-            binding.defaultValue.paintFlags = binding.defaultValue.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            binding.customValue.visibility = View.GONE
+            containerView.custom_value.text = null
+            containerView.default_value.paintFlags = containerView.default_value.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            containerView.custom_value.visibility = View.GONE
         }
-        binding.root.setOnClickListener { view -> listener.configurationClicked(view, configuration) }
+        containerView.setOnClickListener { view -> listener.configurationClicked(view, configuration) }
     }
 
     private fun getItemForScope(scope: WrenchScope?, wrenchConfigurationValues: Set<WrenchConfigurationValue>): WrenchConfigurationValue? {
@@ -52,9 +52,9 @@ internal class ConfigurationViewHolder internal constructor(
     }
 
     fun clear() {
-        binding.title.text = null
-        binding.defaultValue.text = null
-        binding.root.setOnClickListener(null)
+        containerView.title.text = null
+        containerView.default_value.text = null
+        containerView.setOnClickListener(null)
     }
 
 }

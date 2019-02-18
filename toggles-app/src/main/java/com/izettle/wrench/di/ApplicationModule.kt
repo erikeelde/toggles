@@ -6,8 +6,6 @@ import com.izettle.wrench.database.WrenchDatabase
 import com.izettle.wrench.database.migrations.Migrations
 import com.izettle.wrench.preferences.ITogglesPreferences
 import com.izettle.wrench.preferences.TogglesPreferences
-import com.izettle.wrench.provider.IPackageManagerWrapper
-import com.izettle.wrench.provider.PackageManagerWrapper
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.Dispatchers
@@ -49,8 +47,8 @@ object ApplicationModule {
     @Provides
     fun provideIoDispatcher() = Dispatchers.IO
 
-    @Provides
-    fun providePackageManagerWrapper(application: Application): IPackageManagerWrapper = PackageManagerWrapper(application.packageManager)
+//    @Provides
+//    fun providePackageManagerWrapper(application: Application): IPackageManagerWrapper = PackageManagerWrapper(application.packageManager)
 
     @Provides
     fun providesWrenchPreferences(application: Application): ITogglesPreferences = TogglesPreferences(application)
