@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues by="lint 3.5.0-alpha03" client="gradle" format="5" variant="all" version="3.5.0-alpha03">
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_live_data_preferences` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_live_data_preferences.xml"
+            line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_wrench_preferences` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_wrench_preferences.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_wrench_service` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_wrench_service.xml" line="2" />
+    </issue>
+
+</issues>

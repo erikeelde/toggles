@@ -1,24 +1,24 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotlin_version: String by extra
+val kotlinVersion: String by extra
 buildscript {
-    var kotlin_version: String by extra
-    kotlin_version = "1.2.31"
+    var kotlinVersion: String by extra
+    kotlinVersion = "1.3.21"
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath(kotlin("gradle-plugin", kotlin_version))
+        classpath(kotlin("gradle-plugin", kotlinVersion))
     }
 }
 plugins {
-    "kotlin-dsl"
+    `kotlin-dsl`
 }
 apply {
     plugin("kotlin")
 }
 dependencies {
-    compile(kotlin("stdlib-jdk8", kotlin_version))
+    implementation(kotlin("stdlib-jdk8", kotlinVersion))
 }
 repositories {
     mavenCentral()

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<issues by="lint 3.0.0-alpha4" format="4">
-
-    <issue errorLine1="        &lt;service" errorLine2="        ^" id="ExportedService"
-        message="Exported service does not require permission">
-        <location column="9" file="src/main/AndroidManifest.xml" line="21" />
-    </issue>
-</issues>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues by="lint 3.5.0-alpha04" client="gradle" format="5" variant="all" version="3.5.0-alpha04">
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.application_list_item` appears to be unused">
+        <location column="1" file="src/main/res/layout/application_list_item.xml" line="2" />
+    </issue>
+
+    <issue errorLine1="    &lt;color name=&quot;colorOnPrimary&quot;>#E4E8F1&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~" id="UnusedResources"
+        message="The resource `R.color.colorOnPrimary` appears to be unused">
+        <location column="12" file="src/main/res/values/colors.xml" line="7" />
+    </issue>
+
+    <issue errorLine1="    &lt;color name=&quot;colorOnSecondary&quot;>#FFFF0000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~" id="UnusedResources"
+        message="The resource `R.color.colorOnSecondary` appears to be unused">
+        <location column="12" file="src/main/res/values/colors.xml" line="8" />
+    </issue>
+
+    <issue errorLine1="    &lt;color name=&quot;colorSurface&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~" id="UnusedResources"
+        message="The resource `R.color.colorSurface` appears to be unused">
+        <location column="12" file="src/main/res/values/colors.xml" line="9" />
+    </issue>
+
+    <issue errorLine1="    &lt;color name=&quot;colorOnSurface&quot;>#FFFFFF00&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~" id="UnusedResources"
+        message="The resource `R.color.colorOnSurface` appears to be unused">
+        <location column="12" file="src/main/res/values/colors.xml" line="10" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.configuration_list_item` appears to be unused">
+        <location column="1" file="src/main/res/layout/configuration_list_item.xml" line="2" />
+    </issue>
+
+    <issue errorLine1="    &lt;dimen name=&quot;text_margin&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~" id="UnusedResources"
+        message="The resource `R.dimen.text_margin` appears to be unused">
+        <location column="12" file="src/main/res/values/dimens.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_applications` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_applications.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_boolean_value` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_boolean_value.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_configurations` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_configurations.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_enum_value` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_enum_value.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_integer_value` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_integer_value.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_scope` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_scope.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.fragment_string_value` appears to be unused">
+        <location column="1" file="src/main/res/layout/fragment_string_value.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.oss_list_item` appears to be unused">
+        <location column="1" file="src/main/res/layout/oss_list_item.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^" id="UnusedResources"
+        message="The resource `R.layout.simple_list_item` appears to be unused">
+        <location column="1" file="src/main/res/layout/simple_list_item.xml" line="2" />
+    </issue>
+
+    <issue
+        errorLine1="    &lt;string name=&quot;no_configurations_found&quot;>No configurations found.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" id="UnusedResources"
+        message="The resource `R.string.no_configurations_found` appears to be unused">
+        <location column="13" file="src/main/res/values/strings.xml" line="6" />
+    </issue>
+
+    <issue
+        errorLine1="    &lt;string name=&quot;no_applications_found&quot;>No applications found&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~" id="UnusedResources"
+        message="The resource `R.string.no_applications_found` appears to be unused">
+        <location column="13" file="src/main/res/values/strings.xml" line="7" />
+    </issue>
+
+    <issue
+        errorLine1="    &lt;string name=&quot;help_dependency_title&quot;>App build.gradle&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~" id="UnusedResources"
+        message="The resource `R.string.help_dependency_title` appears to be unused">
+        <location column="13" file="src/main/res/values/strings.xml" line="24" />
+    </issue>
+
+</issues>
