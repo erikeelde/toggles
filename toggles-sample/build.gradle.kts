@@ -82,10 +82,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7")
 
-    implementation("com.google.dagger:dagger:2.28")
-    kapt("com.google.dagger:dagger-compiler:2.28")
-    implementation("com.google.dagger:dagger-android-support:2.28")
-    kapt("com.google.dagger:dagger-android-processor:2.28")
+    implementation("com.google.dagger:dagger:2.27")
+    kapt("com.google.dagger:dagger-compiler:2.27")
+    implementation("com.google.dagger:dagger-android-support:2.27")
+    kapt("com.google.dagger:dagger-android-processor:2.27")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("androidx.core:core-ktx:1.5.0-alpha01")
