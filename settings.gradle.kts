@@ -1,10 +1,5 @@
-include(":wrench-app",
-        ":wrench-prefs",
-        ":wrench-sample",
-        ":wrench-prefs-no-op",
-        ":wrench-core",
-        ":wrench-livedata",
-        ":wrench-service",
-        ":wrench-service-provider",
-        ":wrench-service-prefs",
-        ":wrench-service-prefs-no-op")
+include(":toggles-app",
+        ":toggles-sample",
+        ":toggles-core",
+        ":toggles-prefs",
+        ":toggles-livedata")

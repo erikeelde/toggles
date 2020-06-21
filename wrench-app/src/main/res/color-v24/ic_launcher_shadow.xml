@@ -1,1 +1,0 @@
-<gradient xmlns:android="http://schemas.android.com/apk/res/android" android:endColor="@color/launcherForegroundEndColor" android:endX="24" android:endY="24" android:startColor="@color/launcherForegroundStartColor" android:startX="0" android:startY="0" android:type="linear" />
