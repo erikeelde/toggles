@@ -43,7 +43,7 @@ android {
         val wrenchAuthority = "com.izettle.wrench.configprovider"
         val wrenchPermission = "com.izettle.wrench.permission"
         val togglesAuthority = "se.eelde.toggles.configprovider" // not used yet
-        val togglesPermission = "se.eelde.toggles.configprovider.permission" // not used yet
+        val togglesPermission = "se.eelde.toggles.provider_permission" // not used yet
 
         manifestPlaceholders["wrenchAuthority"] = wrenchAuthority
         manifestPlaceholders["wrenchPermission"] = wrenchPermission
