@@ -1,0 +1,50 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the develop branch
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Clone repo
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    # Step 3: Check the code with ktlint, you can remove this job if you don't use ktlint
+    #- name: Run Kotlin Linter
+    #  run: ./gradlew ktlintStagingDebugCheck
+
+    # Step 3: Check the code with Android linter
+    - name: Run Android Linter
+      run: ./gradlew lint
+
+    # Step 4: Yun your unit tests
+    - name: Run Unit Tests
+      run: ./gradlew testStagingDebugUnitTest
+
+    # Step 4: Assemble debug apk to send to firebase test lab
+    #- name: Assemble Debug APK
+    #  run: ./gradlew assembleStagingDebug
+
+    # Step 4: Assemble debug test apk to send to firebase test lab
+    #- name: Assemble Debug Test APK
+    #  run: ./gradlew assembleStagingDebugAndroidTest
+
