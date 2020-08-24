@@ -10,14 +10,14 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:4.2.0-alpha07")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.0-rc01")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.0")
         classpath("com.google.gms:oss-licenses:0.9.2")
     }
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.28.0"
+    id("com.github.ben-manes.versions") version "0.29.0"
     id("se.eelde.build-optimizations") version "0.1.2"
     id("com.github.plnice.canidropjetifier") version "0.5"
 }
