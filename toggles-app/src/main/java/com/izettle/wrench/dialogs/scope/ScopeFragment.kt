@@ -11,15 +11,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.izettle.wrench.R
 import com.izettle.wrench.database.WrenchScope
-import com.izettle.wrench.databinding.FragmentScopeBinding
 import dagger.android.support.DaggerDialogFragment
+import kotlinx.android.synthetic.main.fragment_scope.view.*
+import se.eelde.toggles.R
 import javax.inject.Inject
 
 class ScopeFragment : DaggerDialogFragment(), ScopeRecyclerViewAdapter.Listener {
-    private lateinit var binding: FragmentScopeBinding
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -28,7 +26,7 @@ class ScopeFragment : DaggerDialogFragment(), ScopeRecyclerViewAdapter.Listener 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        binding = FragmentScopeBinding.inflate(LayoutInflater.from(context))
+        val root = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_scope, null, false)
 
         viewModel.init(requireArguments().getLong(ARGUMENT_APPLICATION_ID))
 
@@ -37,12 +35,12 @@ class ScopeFragment : DaggerDialogFragment(), ScopeRecyclerViewAdapter.Listener 
         viewModel.selectedScopeLiveData.observe(this, Observer { wrenchScope -> viewModel.selectedScope = wrenchScope })
 
         adapter = ScopeRecyclerViewAdapter(this)
-        binding.list.adapter = adapter
-        binding.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        root.list.adapter = adapter
+        root.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         return AlertDialog.Builder(requireContext())
                 .setTitle(R.string.select_scope)
-                .setView(binding.root)
+                .setView(root)
                 .setPositiveButton("Add") { _, _ ->
 
                     val input = EditText(requireContext())

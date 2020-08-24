@@ -18,17 +18,16 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.izettle.wrench.R
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchConfigurationWithValues
-import com.izettle.wrench.databinding.FragmentConfigurationsBinding
 import com.izettle.wrench.dialogs.scope.ScopeFragment
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_configurations.*
+import se.eelde.toggles.R
 import javax.inject.Inject
 
 class ConfigurationsFragment : DaggerFragment(), SearchView.OnQueryTextListener, ConfigurationRecyclerViewAdapter.Listener {
-    private lateinit var fragmentConfigurationsBinding: FragmentConfigurationsBinding
     private var currentFilter: CharSequence? = null
     private var searchView: SearchView? = null
 
@@ -40,11 +39,10 @@ class ConfigurationsFragment : DaggerFragment(), SearchView.OnQueryTextListener,
     private val model by viewModels<ConfigurationViewModel> { viewModelFactory }
 
     private fun updateConfigurations(wrenchConfigurations: List<WrenchConfigurationWithValues>) {
-        var adapter = fragmentConfigurationsBinding.list.adapter as ConfigurationRecyclerViewAdapter?
+        var adapter = list.adapter as ConfigurationRecyclerViewAdapter?
         if (adapter == null) {
             adapter = ConfigurationRecyclerViewAdapter(this, model)
-
-            fragmentConfigurationsBinding.list.adapter = adapter
+            list.adapter = adapter
         }
         adapter.submitList(wrenchConfigurations)
     }
@@ -65,16 +63,15 @@ class ConfigurationsFragment : DaggerFragment(), SearchView.OnQueryTextListener,
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return FragmentConfigurationsBinding.inflate(inflater, container, false).also { fragmentConfigurationsBinding = it }.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_configurations, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         model.setApplicationId(args.applicationId)
 
-        fragmentConfigurationsBinding.list.layoutManager = LinearLayoutManager(context)
+        list.layoutManager = LinearLayoutManager(context)
 
         model.wrenchApplication.observe(viewLifecycleOwner, Observer { wrenchApplication ->
             if (wrenchApplication != null) {
@@ -83,14 +80,14 @@ class ConfigurationsFragment : DaggerFragment(), SearchView.OnQueryTextListener,
         })
 
         model.defaultScopeLiveData.observe(viewLifecycleOwner, Observer { scope ->
-            if (scope != null && fragmentConfigurationsBinding.list.adapter != null) {
-                fragmentConfigurationsBinding.list.adapter!!.notifyDataSetChanged()
+            if (scope != null && list.adapter != null) {
+                list.adapter!!.notifyDataSetChanged()
             }
         })
 
         model.selectedScopeLiveData.observe(viewLifecycleOwner, Observer { scope ->
-            if (scope != null && fragmentConfigurationsBinding.list.adapter != null) {
-                fragmentConfigurationsBinding.list.adapter!!.notifyDataSetChanged()
+            if (scope != null && list.adapter != null) {
+                list.adapter!!.notifyDataSetChanged()
             }
             // fragmentConfigurationsBinding.scopeButton.text = scope!!.name
         })
@@ -102,11 +99,11 @@ class ConfigurationsFragment : DaggerFragment(), SearchView.OnQueryTextListener,
         })
 
         model.isListEmpty.observe(viewLifecycleOwner, Observer { isEmpty ->
-            val animator = fragmentConfigurationsBinding.animator
+            val animator = animator
             if (isEmpty == null || isEmpty) {
-                animator.displayedChild = animator.indexOfChild(fragmentConfigurationsBinding.noConfigurationsEmptyView)
+                animator.displayedChild = animator.indexOfChild(no_configurations_empty_view)
             } else {
-                animator.displayedChild = animator.indexOfChild(fragmentConfigurationsBinding.list)
+                animator.displayedChild = animator.indexOfChild(list)
             }
         })
     }
@@ -184,7 +181,7 @@ class ConfigurationsFragment : DaggerFragment(), SearchView.OnQueryTextListener,
             }
             R.id.action_delete_application -> {
                 model.deleteApplication(model.wrenchApplication.value!!)
-                Navigation.findNavController(fragmentConfigurationsBinding.root).navigateUp()
+                Navigation.findNavController(animator).navigateUp()
                 return true
             }
             R.id.action_change_scope -> {
@@ -200,7 +197,7 @@ class ConfigurationsFragment : DaggerFragment(), SearchView.OnQueryTextListener,
 
     override fun configurationClicked(v: View, configuration: WrenchConfigurationWithValues) {
         if (model.selectedScopeLiveData.value == null) {
-            Snackbar.make(fragmentConfigurationsBinding.root, "No selected scope found", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(animator, "No selected scope found", Snackbar.LENGTH_LONG).show()
             return
         }
 
@@ -224,7 +221,7 @@ class ConfigurationsFragment : DaggerFragment(), SearchView.OnQueryTextListener,
 
         } else {
 
-            Snackbar.make(fragmentConfigurationsBinding.root, "Not sure what to do with type: " + configuration.type!!, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(animator, "Not sure what to do with type: " + configuration.type!!, Snackbar.LENGTH_LONG).show()
         }
     }
 

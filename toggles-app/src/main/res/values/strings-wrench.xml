@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wrench_permission_label">Access Wrench</string>
+    <string name="wrench_permission_description">Access to request configuration from Wrench</string>
+</resources>

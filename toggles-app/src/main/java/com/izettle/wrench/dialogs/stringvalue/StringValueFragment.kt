@@ -9,14 +9,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.izettle.wrench.R
-import com.izettle.wrench.databinding.FragmentStringValueBinding
 import dagger.android.support.DaggerDialogFragment
+import kotlinx.android.synthetic.main.fragment_string_value.view.*
+import se.eelde.toggles.R
 import javax.inject.Inject
 
 class StringValueFragment : DaggerDialogFragment() {
-
-    private lateinit var binding: FragmentStringValueBinding
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -26,7 +24,7 @@ class StringValueFragment : DaggerDialogFragment() {
     private val viewModel by viewModels<FragmentStringValueViewModel> { viewModelFactory }
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        binding = FragmentStringValueBinding.inflate(LayoutInflater.from(context))
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_string_value, null)
 
         viewModel.init(args.configurationId, args.scopeId)
 
@@ -39,13 +37,13 @@ class StringValueFragment : DaggerDialogFragment() {
         viewModel.selectedConfigurationValueLiveData.observe(this, Observer { wrenchConfigurationValue ->
             viewModel.selectedConfigurationValue = wrenchConfigurationValue
             if (wrenchConfigurationValue != null) {
-                binding.value.setText(wrenchConfigurationValue.value)
+                view.value.setText(wrenchConfigurationValue.value)
             }
         })
 
-        binding.value.setOnEditorActionListener { _, actionId, _ ->
+        view.value.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.updateConfigurationValue(binding.value.text!!.toString())
+                viewModel.updateConfigurationValue(view.value.text!!.toString())
                 dismiss()
             }
             false
@@ -53,9 +51,9 @@ class StringValueFragment : DaggerDialogFragment() {
 
         return AlertDialog.Builder(requireActivity())
                 .setTitle(".")
-                .setView(binding.root)
+                .setView(view)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
-                    viewModel.updateConfigurationValue(binding.value.text!!.toString())
+                    viewModel.updateConfigurationValue(view.value.text!!.toString())
                     dismiss()
                 }
                 .setNegativeButton(R.string.revert) { _, _ ->

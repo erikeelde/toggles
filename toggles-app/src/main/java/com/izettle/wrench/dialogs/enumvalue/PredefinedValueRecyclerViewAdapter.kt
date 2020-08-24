@@ -7,29 +7,29 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
-import com.izettle.wrench.databinding.SimpleListItemBinding
+import kotlinx.android.synthetic.main.simple_list_item.view.*
+import se.eelde.toggles.R
 
 class PredefinedValueRecyclerViewAdapter internal constructor(
         private val listener: Listener
 ) : ListAdapter<WrenchPredefinedConfigurationValue, PredefinedValueRecyclerViewAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = SimpleListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.simple_list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
 
-        holder.binding.value.text = item.value
-        holder.binding.root.setOnClickListener { listener.onClick(it, item) }
+        holder.itemView.value.text = item.value
+        holder.itemView.setOnClickListener { listener.onClick(it, item) }
     }
 
     internal interface Listener {
         fun onClick(view: View, item: WrenchPredefinedConfigurationValue)
     }
 
-    inner class ViewHolder(internal val binding: SimpleListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WrenchPredefinedConfigurationValue>() {

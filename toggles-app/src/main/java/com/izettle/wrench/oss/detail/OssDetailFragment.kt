@@ -10,14 +10,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.izettle.wrench.databinding.FragmentOssDetailBinding
 import com.izettle.wrench.oss.LicenceMetadata
 import dagger.android.support.DaggerDialogFragment
+import kotlinx.android.synthetic.main.fragment_oss_detail.view.*
+import se.eelde.toggles.R
 import javax.inject.Inject
 
 class OssDetailFragment : DaggerDialogFragment() {
-
-    private lateinit var binding: FragmentOssDetailBinding
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -28,18 +27,18 @@ class OssDetailFragment : DaggerDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        binding = FragmentOssDetailBinding.inflate(LayoutInflater.from(context))
+        val root = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_oss_detail, null, false)
 
         val licenceMetadata = LicenceMetadata(args.dependency, args.skip.toLong(), args.length)
 
         viewModel.getThirdPartyMetadata(licenceMetadata).observe(this, Observer {
-            binding.text.text = it
-            LinkifyCompat.addLinks(binding.text, Linkify.WEB_URLS)
+            root.text.text = it
+            LinkifyCompat.addLinks(root.text, Linkify.WEB_URLS)
         })
 
         return AlertDialog.Builder(requireActivity())
                 .setTitle(licenceMetadata.dependency)
-                .setView(binding.root)
+                .setView(root)
                 .setPositiveButton("dismiss") { _, _ ->
                     dismiss()
                 }

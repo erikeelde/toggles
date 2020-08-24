@@ -1,4 +1,4 @@
-package com.izettle.wrench.provider
+package se.eelde.toggles.provider
 
 import android.content.pm.PackageManager
 import android.os.Binder

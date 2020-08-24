@@ -11,15 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.izettle.wrench.R
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
-import com.izettle.wrench.databinding.FragmentEnumValueBinding
 import dagger.android.support.DaggerDialogFragment
+import kotlinx.android.synthetic.main.fragment_enum_value.view.*
+import se.eelde.toggles.R
 import javax.inject.Inject
 
 class EnumValueFragment : DaggerDialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
-
-    private lateinit var binding: FragmentEnumValueBinding
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -30,7 +28,7 @@ class EnumValueFragment : DaggerDialogFragment(), PredefinedValueRecyclerViewAda
     private val args: EnumValueFragmentArgs by navArgs()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentEnumValueBinding.inflate(LayoutInflater.from(context))
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_enum_value, null)
 
         viewModel.init(args.configurationId, args.scopeId)
 
@@ -47,8 +45,8 @@ class EnumValueFragment : DaggerDialogFragment(), PredefinedValueRecyclerViewAda
         })
 
         adapter = PredefinedValueRecyclerViewAdapter(this)
-        binding.list.adapter = adapter
-        binding.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        view.list.adapter = adapter
+        view.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         viewModel.predefinedValues.observe(this, Observer { items ->
             if (items != null) {
@@ -58,7 +56,7 @@ class EnumValueFragment : DaggerDialogFragment(), PredefinedValueRecyclerViewAda
 
         return AlertDialog.Builder(requireActivity())
                 .setTitle(".")
-                .setView(binding.root)
+                .setView(view)
                 .setNegativeButton(R.string.revert
                 ) { _, _ ->
                     if (viewModel.selectedConfigurationValue != null) {

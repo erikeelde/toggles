@@ -9,9 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.izettle.wrench.R
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.android.synthetic.main.fragment_integer_value.view.*
+import se.eelde.toggles.R
 import javax.inject.Inject
 
 class IntegerValueFragment : DaggerDialogFragment() {

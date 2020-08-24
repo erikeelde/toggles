@@ -1,7 +1,6 @@
 package com.izettle.wrench.di
 
 import android.app.Application
-import com.izettle.wrench.WrenchApplication
 import com.izettle.wrench.applicationlist.ApplicationsFragmentModule
 import com.izettle.wrench.configurationlist.ConfigurationsFragmentModule
 import com.izettle.wrench.dialogs.booleanvalue.BooleanValueFragmentModule
@@ -16,6 +15,8 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import se.eelde.toggles.TogglesApplication
+import se.eelde.toggles.provider.TogglesProviderModule
 import javax.inject.Singleton
 
 @Singleton
@@ -31,10 +32,11 @@ import javax.inject.Singleton
             ScopeFragmentModule::class,
             StringValueFragmentModule::class,
             WrenchProviderModule::class,
+            TogglesProviderModule::class,
             OssFragmentModule::class,
             OssDetailFragmentModule::class
         ])
-interface ApplicationComponent : AndroidInjector<WrenchApplication> {
+interface ApplicationComponent : AndroidInjector<TogglesApplication> {
 
     @Component.Factory
     interface Factory {

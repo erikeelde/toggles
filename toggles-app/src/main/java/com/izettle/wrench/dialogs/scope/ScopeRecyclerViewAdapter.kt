@@ -7,27 +7,28 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchScope
-import com.izettle.wrench.databinding.SimpleListItemBinding
+import kotlinx.android.synthetic.main.simple_list_item.view.*
+import se.eelde.toggles.R
 
 class ScopeRecyclerViewAdapter(private val listener: Listener) : ListAdapter<WrenchScope, ScopeRecyclerViewAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = SimpleListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        val root = LayoutInflater.from(parent.context).inflate(R.layout.simple_list_item, parent, false)
+        return ViewHolder(root)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
 
-        holder.binding.value.text = item.name
-        holder.binding.root.setOnClickListener { listener.onClick(it, item) }
+        holder.view.value.text = item.name
+        holder.view.setOnClickListener { listener.onClick(it, item) }
     }
 
     interface Listener {
         fun onClick(view: View, wrenchScope: WrenchScope)
     }
 
-    inner class ViewHolder(val binding: SimpleListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WrenchScope>() {
