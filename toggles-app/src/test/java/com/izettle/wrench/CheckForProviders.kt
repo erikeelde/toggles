@@ -1,9 +1,10 @@
 package com.izettle.wrench
 
 import android.content.pm.ProviderInfo
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.ActivityTestRule
 import com.izettle.wrench.provider.WrenchProvider
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
@@ -17,7 +18,10 @@ import se.eelde.toggles.provider.TogglesProvider
 class CheckForProviders {
 
     @get:Rule
-    var activityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var rule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
     fun checkWrenchProviderInstalled() {
@@ -28,7 +32,6 @@ class CheckForProviders {
             assertEquals(providerInfo!!.authority, "com.izettle.wrench.configprovider")
             assertEquals(providerInfo.name, WrenchProvider::class.java.canonicalName)
         }
-
     }
 
     @Test

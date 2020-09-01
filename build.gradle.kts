@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:4.2.0-alpha07")
+        classpath("com.android.tools.build:gradle:4.1.0-rc02")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.0")
         classpath("com.google.gms:oss-licenses:0.9.2")
