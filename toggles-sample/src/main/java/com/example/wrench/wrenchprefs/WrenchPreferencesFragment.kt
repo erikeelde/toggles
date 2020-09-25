@@ -5,20 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.example.wrench.R
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_wrench_preferences.*
-import javax.inject.Inject
 
-class WrenchPreferencesFragment : DaggerFragment() {
+@AndroidEntryPoint
+class WrenchPreferencesFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<WrenchPreferencesFragmentViewModel> { viewModelFactory }
+    private val viewModel by viewModels<WrenchPreferencesFragmentViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             LayoutInflater.from(requireContext()).inflate(R.layout.fragment_wrench_preferences, container, false)

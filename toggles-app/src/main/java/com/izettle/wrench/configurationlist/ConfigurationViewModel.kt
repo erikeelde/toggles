@@ -1,13 +1,13 @@
 package com.izettle.wrench.configurationlist
 
 import android.text.TextUtils
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.izettle.wrench.database.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class ConfigurationViewModel
-@Inject internal constructor(private val applicationDao: WrenchApplicationDao, configurationDao: WrenchConfigurationDao, private val scopeDao: WrenchScopeDao) : ViewModel() {
+@ViewModelInject internal constructor(private val applicationDao: WrenchApplicationDao, configurationDao: WrenchConfigurationDao, private val scopeDao: WrenchScopeDao) : ViewModel() {
     private val queryLiveData: MutableLiveData<String> = MutableLiveData()
 
     private val configurationListLiveData: MediatorLiveData<List<WrenchConfigurationWithValues>>

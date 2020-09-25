@@ -1,39 +1,60 @@
 package com.izettle.wrench.provider
 
+import android.content.Context
 import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.Nut
 import com.izettle.wrench.core.WrenchProviderContract
 import com.izettle.wrench.database.WrenchDatabase
+import com.izettle.wrench.di.DatabaseModule
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
+import dagger.hilt.android.testing.UninstallModules
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
+import org.robolectric.annotation.Config
 import se.eelde.toggles.BuildConfig
+import javax.inject.Singleton
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
+@UninstallModules(DatabaseModule::class)
+@Config(application = HiltTestApplication::class)
 class WrenchProviderTest {
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
 
     private lateinit var wrenchProvider: WrenchProvider
 
+    @Module
+    @InstallIn(ApplicationComponent::class)
+    object TestModule {
+        @Singleton
+        @Provides
+        fun provideWrenchDb(@ApplicationContext context: Context): WrenchDatabase {
+            return Room.inMemoryDatabaseBuilder(context, WrenchDatabase::class.java).allowMainThreadQueries().build()
+        }
+    }
+
     @Before
     fun setUp() {
+        hiltRule.inject()
+
         val contentProviderController = Robolectric.buildContentProvider(WrenchProvider::class.java).create(BuildConfig.CONFIG_AUTHORITY)
         wrenchProvider = contentProviderController.get()
 
-        val wrenchDatabase = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), WrenchDatabase::class.java).allowMainThreadQueries().build()
-
-        wrenchProvider.applicationDao = wrenchDatabase.applicationDao()
-        wrenchProvider.configurationDao = wrenchDatabase.configurationDao()
-        wrenchProvider.configurationValueDao = wrenchDatabase.configurationValueDao()
-        wrenchProvider.scopeDao = wrenchDatabase.scopeDao()
-        wrenchProvider.predefinedConfigurationDao = wrenchDatabase.predefinedConfigurationValueDao()
-        wrenchProvider.togglesPreferences = FakeTogglesPreferences()
-
-        wrenchProvider.packageManagerWrapper = TestPackageManagerWrapper("TestApplication", "com.test.application")
     }
 
     @Test

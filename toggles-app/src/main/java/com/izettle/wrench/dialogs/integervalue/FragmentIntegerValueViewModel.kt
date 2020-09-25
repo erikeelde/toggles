@@ -1,6 +1,7 @@
 package com.izettle.wrench.dialogs.integervalue
 
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.izettle.wrench.Event
 import com.izettle.wrench.database.WrenchConfigurationDao
@@ -12,10 +13,9 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
-import javax.inject.Inject
 
 class FragmentIntegerValueViewModel
-@Inject internal constructor(private val configurationDao: WrenchConfigurationDao, private val configurationValueDao: WrenchConfigurationValueDao) : ViewModel() {
+@ViewModelInject internal constructor(private val configurationDao: WrenchConfigurationDao, private val configurationValueDao: WrenchConfigurationValueDao) : ViewModel() {
 
     private val inputsLiveData = MediatorLiveData<Inputs>().apply {
         value = Inputs()

@@ -11,7 +11,8 @@ import java.util.*
         indices = [Index(value = arrayOf(ConfigurationTable.COL_APP_ID, ConfigurationTable.COL_KEY), unique = true)],
         foreignKeys = [ForeignKey(entity = WrenchApplication::class, parentColumns = arrayOf(ApplicationTable.COL_ID), childColumns = arrayOf(ConfigurationTable.COL_APP_ID), onDelete = CASCADE)])
 data class WrenchConfiguration(
-        @field:PrimaryKey(autoGenerate = true) @field:ColumnInfo(name = ConfigurationTable.COL_ID)
+        @field:PrimaryKey(autoGenerate = true)
+        @field:ColumnInfo(name = ConfigurationTable.COL_ID)
         var id: Long,
 
         @field:ColumnInfo(name = ConfigurationTable.COL_APP_ID)

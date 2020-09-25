@@ -12,6 +12,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.0")
         classpath("com.google.gms:oss-licenses:0.9.2")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.28-alpha")
     }
 }
 

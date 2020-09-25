@@ -1,5 +1,6 @@
 package com.izettle.wrench.dialogs.enumvalue
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,10 +8,9 @@ import com.izettle.wrench.database.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
-import javax.inject.Inject
 
 class FragmentEnumValueViewModel
-@Inject internal constructor(
+@ViewModelInject internal constructor(
         private val configurationDao: WrenchConfigurationDao,
         private val configurationValueDao: WrenchConfigurationValueDao,
         private val predefinedConfigurationValueDao: WrenchPredefinedConfigurationValueDao)

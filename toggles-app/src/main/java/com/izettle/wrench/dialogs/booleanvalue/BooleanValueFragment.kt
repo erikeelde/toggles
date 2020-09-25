@@ -5,21 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import dagger.android.support.DaggerDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_boolean_value.view.*
 import se.eelde.toggles.R
-import javax.inject.Inject
 
-class BooleanValueFragment : DaggerDialogFragment() {
+@AndroidEntryPoint
+class BooleanValueFragment : DialogFragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<FragmentBooleanValueViewModel> { viewModelFactory }
+    private val viewModel by viewModels<FragmentBooleanValueViewModel>()
 
     private val args: BooleanValueFragmentArgs by navArgs()
 

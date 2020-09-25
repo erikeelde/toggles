@@ -5,6 +5,7 @@ plugins {
     kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.oss.licenses.plugin")
+    id("dagger.hilt.android.plugin")
 }
 
 // https://github.com/gradle/kotlin-dsl/issues/644#issuecomment-398502551
@@ -16,6 +17,10 @@ kapt {
         // Default is 100.
         option("-Xmaxerrs", 500)
     }
+}
+
+hilt {
+    enableTransformForLocalTests = true
 }
 
 android {
@@ -120,13 +125,19 @@ dependencies {
     androidTestImplementation("androidx.room:room-testing:2.3.0-alpha02")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 
+    implementation("com.google.dagger:hilt-android:2.28-alpha")
+    kapt("com.google.dagger:hilt-android-compiler:2.28-alpha")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02")
+    kapt("androidx.hilt:hilt-compiler:1.0.0-alpha02")
+
+    testImplementation("com.google.dagger:hilt-android-testing:2.28-alpha")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.28-alpha")
+
     implementation("androidx.lifecycle:lifecycle-common-java8:2.3.0-alpha07")
     kapt("androidx.room:room-compiler:2.3.0-alpha02")
 
     implementation("com.google.dagger:dagger:2.29.1")
     kapt("com.google.dagger:dagger-compiler:2.29.1")
-    implementation("com.google.dagger:dagger-android-support:2.29.1")
-    kapt("com.google.dagger:dagger-android-processor:2.29.1")
 
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
     implementation("androidx.recyclerview:recyclerview:1.2.0-alpha05")

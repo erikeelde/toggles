@@ -30,7 +30,6 @@ class CheckForProviders {
         assertNotNull(providerInfo)
         assertEquals(providerInfo!!.authority, "com.izettle.wrench.configprovider")
         assertEquals(providerInfo.name, WrenchProvider::class.java.canonicalName)
-
     }
 
     @Test

@@ -5,6 +5,8 @@ plugins {
     kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.oss.licenses.plugin")
+    id("dagger.hilt.android.plugin")
+
 }
 
 androidExtensions {
@@ -68,6 +70,13 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.0.1")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
+    implementation("com.google.dagger:hilt-android:2.28-alpha")
+    kapt("com.google.dagger:hilt-android-compiler:2.28-alpha")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02")
+    kapt("androidx.hilt:hilt-compiler:1.0.0-alpha02")
+    testImplementation("com.google.dagger:hilt-android-testing:2.28-alpha")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.28-alpha")
+
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.0")
 
@@ -80,8 +89,6 @@ dependencies {
 
     implementation("com.google.dagger:dagger:2.29.1")
     kapt("com.google.dagger:dagger-compiler:2.29.1")
-    implementation("com.google.dagger:dagger-android-support:2.29.1")
-    kapt("com.google.dagger:dagger-android-processor:2.29.1")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("androidx.core:core-ktx:1.5.0-alpha03")
