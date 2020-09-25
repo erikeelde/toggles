@@ -1,6 +1,5 @@
 package com.izettle.wrench
 
-import android.content.pm.ProviderInfo
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -27,21 +26,20 @@ class CheckForProviders {
     fun checkWrenchProviderInstalled() {
         val application = ApplicationProvider.getApplicationContext<TogglesApplication>()
 
-        application.packageManager.resolveContentProvider("com.izettle.wrench.configprovider", 0)?.let { providerInfo: ProviderInfo? ->
-            assertNotNull(providerInfo)
-            assertEquals(providerInfo!!.authority, "com.izettle.wrench.configprovider")
-            assertEquals(providerInfo.name, WrenchProvider::class.java.canonicalName)
-        }
+        val providerInfo = application.packageManager.resolveContentProvider("com.izettle.wrench.configprovider", 0)
+        assertNotNull(providerInfo)
+        assertEquals(providerInfo!!.authority, "com.izettle.wrench.configprovider")
+        assertEquals(providerInfo.name, WrenchProvider::class.java.canonicalName)
+
     }
 
     @Test
     fun checkTogglesProviderInstalled() {
         val application = ApplicationProvider.getApplicationContext<TogglesApplication>()
 
-        application.packageManager.resolveContentProvider("se.eelde.toggles.configprovider", 0)?.let { providerInfo: ProviderInfo? ->
-            assertNotNull(providerInfo)
-            assertEquals(providerInfo!!.authority, "se.eelde.toggles.configprovider")
-            assertEquals(providerInfo.name, TogglesProvider::class.java.canonicalName)
-        }
+        val providerInfo = application.packageManager.resolveContentProvider("se.eelde.toggles.configprovider", 0)
+        assertNotNull(providerInfo)
+        assertEquals(providerInfo!!.authority, "se.eelde.toggles.configprovider")
+        assertEquals(providerInfo.name, TogglesProvider::class.java.canonicalName)
     }
 }
