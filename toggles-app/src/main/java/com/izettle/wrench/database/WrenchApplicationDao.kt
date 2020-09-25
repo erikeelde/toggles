@@ -1,7 +1,7 @@
 package com.izettle.wrench.database
 
 import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -12,7 +12,7 @@ import com.izettle.wrench.database.tables.ApplicationTable
 interface WrenchApplicationDao {
 
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME)
-    fun getApplications(): DataSource.Factory<Int, WrenchApplication>
+    fun getApplications(): PagingSource<Int, WrenchApplication>
 
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE id = (:id)")
     fun getApplication(id: Long): LiveData<WrenchApplication>
