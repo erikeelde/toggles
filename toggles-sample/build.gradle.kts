@@ -53,7 +53,7 @@ android {
 }
 
 dependencies {
-    testImplementation("org.mockito:mockito-core:3.5.7")
+    testImplementation("org.mockito:mockito-core:3.5.13")
 
     testImplementation("androidx.test:core:1.3.0")
     testImplementation("androidx.test.ext:truth:1.3.0")
@@ -62,7 +62,7 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.2")
     testImplementation("org.robolectric:robolectric:4.4")
 
-    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
     implementation("com.google.android.material:material:1.3.0-alpha02")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.1")
@@ -75,14 +75,14 @@ dependencies {
     implementation(project(":toggles-prefs"))
     implementation(project(":toggles-livedata"))
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
-    implementation("com.google.dagger:dagger:2.28.3")
-    kapt("com.google.dagger:dagger-compiler:2.28.3")
-    implementation("com.google.dagger:dagger-android-support:2.28.3")
-    kapt("com.google.dagger:dagger-android-processor:2.28.3")
+    implementation("com.google.dagger:dagger:2.29.1")
+    kapt("com.google.dagger:dagger-compiler:2.29.1")
+    implementation("com.google.dagger:dagger-android-support:2.29.1")
+    kapt("com.google.dagger:dagger-android-processor:2.29.1")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
-    implementation("androidx.core:core-ktx:1.3.1")
+    implementation("androidx.core:core-ktx:1.5.0-alpha03")
 }

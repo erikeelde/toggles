@@ -49,7 +49,7 @@ android {
 
 dependencies {
     testImplementation("junit:junit:4.13")
-    implementation("androidx.annotation:annotation:1.1.0")
+    implementation("androidx.annotation:annotation:1.2.0-alpha01")
 }
 
 
