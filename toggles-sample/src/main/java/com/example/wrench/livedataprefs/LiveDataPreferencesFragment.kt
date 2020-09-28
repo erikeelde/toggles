@@ -5,20 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.example.wrench.R
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_live_data_preferences.*
-import javax.inject.Inject
 
-class LiveDataPreferencesFragment : DaggerFragment() {
+@AndroidEntryPoint
+class LiveDataPreferencesFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<LiveDataPreferencesFragmentViewModel> { viewModelFactory }
+    private val viewModel by viewModels<LiveDataPreferencesFragmentViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             LayoutInflater.from(requireContext()).inflate(R.layout.fragment_live_data_preferences, container, false)

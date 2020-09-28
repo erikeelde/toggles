@@ -10,9 +10,9 @@ import android.text.TextUtils
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -22,21 +22,18 @@ import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchConfigurationWithValues
 import com.izettle.wrench.dialogs.scope.ScopeFragment
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_configurations.*
 import se.eelde.toggles.R
-import javax.inject.Inject
 
-class ConfigurationsFragment : DaggerFragment(), SearchView.OnQueryTextListener, ConfigurationRecyclerViewAdapter.Listener {
+@AndroidEntryPoint
+class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, ConfigurationRecyclerViewAdapter.Listener {
     private var currentFilter: CharSequence? = null
     private var searchView: SearchView? = null
 
     private val args: ConfigurationsFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val model by viewModels<ConfigurationViewModel> { viewModelFactory }
+    private val model by viewModels<ConfigurationViewModel>()
 
     private fun updateConfigurations(wrenchConfigurations: List<WrenchConfigurationWithValues>) {
         var adapter = list.adapter as ConfigurationRecyclerViewAdapter?

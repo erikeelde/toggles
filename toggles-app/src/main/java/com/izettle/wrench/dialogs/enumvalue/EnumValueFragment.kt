@@ -5,24 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
-import dagger.android.support.DaggerDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_enum_value.view.*
 import se.eelde.toggles.R
-import javax.inject.Inject
 
-class EnumValueFragment : DaggerDialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
+@AndroidEntryPoint
+class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<FragmentEnumValueViewModel> { viewModelFactory }
+    private val viewModel by viewModels<FragmentEnumValueViewModel>()
     private lateinit var adapter: PredefinedValueRecyclerViewAdapter
 
     private val args: EnumValueFragmentArgs by navArgs()

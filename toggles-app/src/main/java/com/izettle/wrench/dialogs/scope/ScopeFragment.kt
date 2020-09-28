@@ -6,22 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchScope
-import dagger.android.support.DaggerDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_scope.view.*
 import se.eelde.toggles.R
-import javax.inject.Inject
 
-class ScopeFragment : DaggerDialogFragment(), ScopeRecyclerViewAdapter.Listener {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class ScopeFragment : DialogFragment(), ScopeRecyclerViewAdapter.Listener {
 
-    private val viewModel by viewModels<ScopeFragmentViewModel> { viewModelFactory }
+    private val viewModel by viewModels<ScopeFragmentViewModel>()
     private var adapter: ScopeRecyclerViewAdapter? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -30,9 +27,9 @@ class ScopeFragment : DaggerDialogFragment(), ScopeRecyclerViewAdapter.Listener 
 
         viewModel.init(requireArguments().getLong(ARGUMENT_APPLICATION_ID))
 
-        viewModel.scopes.observe(this, Observer { scopes -> adapter!!.submitList(scopes) })
+        viewModel.scopes.observe(this, { scopes -> adapter!!.submitList(scopes) })
 
-        viewModel.selectedScopeLiveData.observe(this, Observer { wrenchScope -> viewModel.selectedScope = wrenchScope })
+        viewModel.selectedScopeLiveData.observe(this, { wrenchScope -> viewModel.selectedScope = wrenchScope })
 
         adapter = ScopeRecyclerViewAdapter(this)
         root.list.adapter = adapter

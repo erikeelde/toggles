@@ -1,9 +1,6 @@
 package se.eelde.toggles.provider
 
-import android.content.ContentUris
-import android.content.ContentValues
-import android.content.Context
-import android.content.UriMatcher
+import android.content.*
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
@@ -12,34 +9,58 @@ import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.WrenchProviderContract
 import com.izettle.wrench.database.*
 import com.izettle.wrench.preferences.ITogglesPreferences
-import dagger.android.DaggerContentProvider
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ApplicationComponent
 import se.eelde.toggles.BuildConfig
 import java.util.*
-import javax.inject.Inject
 
+class TogglesProvider : ContentProvider() {
 
-class TogglesProvider : DaggerContentProvider() {
+    val applicationDao: WrenchApplicationDao by lazy {
+        applicationEntryPoint.provideWrenchApplicationDao()
+    }
 
-    @Inject
-    lateinit var applicationDao: WrenchApplicationDao
+    val scopeDao: WrenchScopeDao by lazy {
+        applicationEntryPoint.provideWrenchScopeDao()
+    }
 
-    @Inject
-    lateinit var scopeDao: WrenchScopeDao
+    val configurationDao: WrenchConfigurationDao by lazy {
+        applicationEntryPoint.provideWrenchConfigurationDao()
+    }
 
-    @Inject
-    lateinit var configurationDao: WrenchConfigurationDao
+    val configurationValueDao: WrenchConfigurationValueDao by lazy {
+        applicationEntryPoint.provideWrenchConfigurationValueDao()
+    }
 
-    @Inject
-    lateinit var configurationValueDao: WrenchConfigurationValueDao
+    val predefinedConfigurationDao: WrenchPredefinedConfigurationValueDao by lazy {
+        applicationEntryPoint.providePredefinedConfigurationValueDao()
+    }
 
-    @Inject
-    lateinit var predefinedConfigurationDao: WrenchPredefinedConfigurationValueDao
+    val packageManagerWrapper: IPackageManagerWrapper by lazy {
+        applicationEntryPoint.providePackageManagerWrapper()
+    }
 
-    @Inject
-    lateinit var packageManagerWrapper: IPackageManagerWrapper
+    val togglesPreferences: ITogglesPreferences by lazy {
+        applicationEntryPoint.providesWrenchPreferences()
+    }
 
-    @Inject
-    lateinit var togglesPreferences: ITogglesPreferences
+    val applicationEntryPoint: TogglesProviderEntryPoint by lazy {
+        EntryPointAccessors.fromApplication(context!!, TogglesProviderEntryPoint::class.java)
+    }
+
+    @EntryPoint
+    @InstallIn(ApplicationComponent::class)
+    interface TogglesProviderEntryPoint {
+        fun provideWrenchApplicationDao(): WrenchApplicationDao
+        fun provideWrenchConfigurationDao(): WrenchConfigurationDao
+        fun provideWrenchConfigurationValueDao(): WrenchConfigurationValueDao
+        fun provideWrenchScopeDao(): WrenchScopeDao
+        fun providePredefinedConfigurationValueDao(): WrenchPredefinedConfigurationValueDao
+        fun providePackageManagerWrapper(): IPackageManagerWrapper
+        fun providesWrenchPreferences(): ITogglesPreferences
+    }
 
     @Synchronized
     private fun getCallingApplication(applicationDao: WrenchApplicationDao): WrenchApplication {
@@ -60,10 +81,7 @@ class TogglesProvider : DaggerContentProvider() {
         return wrenchApplication
     }
 
-    override fun onCreate(): Boolean {
-        super.onCreate()
-        return true
-    }
+    override fun onCreate() = true
 
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
 

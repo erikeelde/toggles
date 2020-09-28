@@ -39,8 +39,8 @@ dependencies {
     testImplementation("junit:junit:4.13")
 
     implementation(project(":toggles-core"))
-    implementation("androidx.annotation:annotation:1.1.0")
-    api("androidx.lifecycle:lifecycle-livedata-core:2.2.0")
+    implementation("androidx.annotation:annotation:1.2.0-alpha01")
+    api("androidx.lifecycle:lifecycle-livedata-core:2.3.0-alpha07")
 }
 
 // The api of this module should be discussed before any potential release

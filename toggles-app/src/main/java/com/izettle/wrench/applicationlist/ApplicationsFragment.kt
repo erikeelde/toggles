@@ -4,41 +4,46 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.DaggerFragment
+import androidx.lifecycle.lifecycleScope
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_applications.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.launch
 import se.eelde.toggles.R
-import javax.inject.Inject
 
-internal class ApplicationsFragment : DaggerFragment() {
+@AndroidEntryPoint
+internal class ApplicationsFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val model by viewModels<ApplicationViewModel> { viewModelFactory }
+    private val model by viewModels<ApplicationViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_applications, container, false)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        list.layoutManager = LinearLayoutManager(requireContext())
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val adapter = ApplicationAdapter()
-        model.applications.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
+
+        lifecycleScope.launch {
+            model.applications.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
+        }
         list.adapter = adapter
 
-        model.isListEmpty.observe(viewLifecycleOwner, Observer { isEmpty ->
-            val animator = animator
-            if (isEmpty == null || isEmpty) {
-                animator.displayedChild = animator.indexOfChild(no_applications_empty_view)
-            } else {
-                animator.displayedChild = animator.indexOfChild(list)
+        lifecycleScope.launch {
+            adapter.loadStateFlow.distinctUntilChangedBy {
+                it.refresh
+            }.collect {
+                val snapshot = adapter.snapshot()
+                if (snapshot.size == 0) {
+                    animator.displayedChild = animator.indexOfChild(no_applications_empty_view)
+                } else {
+                    animator.displayedChild = animator.indexOfChild(list)
+                }
             }
-        })
+        }
     }
 }

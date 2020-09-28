@@ -1,14 +1,14 @@
 package com.example.wrench.livedataprefs
 
 import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.wrench.MyEnum
 import com.example.wrench.R
 import com.izettle.wrench.livedata.WrenchLiveData
-import javax.inject.Inject
 
-class LiveDataPreferencesFragmentViewModel @Inject constructor(private val application: Application) : ViewModel() {
+class LiveDataPreferencesFragmentViewModel @ViewModelInject constructor(private val application: Application) : ViewModel() {
 
     private val stringConfig by lazy {
         WrenchLiveData.create(application, application.resources.getString(R.string.string_configuration), "string1")

@@ -5,10 +5,13 @@ import com.izettle.wrench.preferences.ITogglesPreferences
 import com.izettle.wrench.preferences.TogglesPreferences
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
+@InstallIn(ApplicationComponent::class)
 object ApplicationModule {
     @Singleton
     @Provides

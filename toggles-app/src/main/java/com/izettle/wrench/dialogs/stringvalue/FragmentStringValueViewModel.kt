@@ -1,6 +1,7 @@
 package com.izettle.wrench.dialogs.stringvalue
 
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,10 +11,9 @@ import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
 import kotlinx.coroutines.launch
 import java.util.*
-import javax.inject.Inject
 
 class FragmentStringValueViewModel
-@Inject internal constructor(private val configurationDao: WrenchConfigurationDao, private val configurationValueDao: WrenchConfigurationValueDao) : ViewModel() {
+@ViewModelInject internal constructor(private val configurationDao: WrenchConfigurationDao, private val configurationValueDao: WrenchConfigurationValueDao) : ViewModel() {
 
     private var configurationId: Long = 0
 

@@ -5,21 +5,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_oss.*
 import se.eelde.toggles.R
-import javax.inject.Inject
 
-class OssFragment : DaggerFragment() {
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class OssFragment : Fragment() {
 
-    private val viewModel by viewModels<OssListViewModel> { viewModelFactory }
-
+    private val viewModel by viewModels<OssListViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             LayoutInflater.from(requireContext()).inflate(R.layout.fragment_oss, container, false)
