@@ -27,17 +27,26 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_enum_value, null)
 
-        viewModel.init(args.configurationId, args.scopeId)
+        viewModel.viewState.observe(this, { viewState ->
+            if (viewState != null) {
+                if (view.container.visibility == View.INVISIBLE && viewState.title != null) {
+                    view.container.visibility = View.VISIBLE
+                }
+                view.title.text = viewState.title
 
-        viewModel.configuration.observe(this, Observer { wrenchConfiguration ->
-            if (wrenchConfiguration != null) {
-                requireDialog().setTitle(wrenchConfiguration.key)
+                if (viewState.saving || viewState.reverting) {
+                    view.revert.isEnabled = false
+                }
             }
         })
 
-        viewModel.selectedConfigurationValueLiveData.observe(this, Observer { wrenchConfigurationValue ->
-            if (wrenchConfigurationValue != null) {
-                viewModel.selectedConfigurationValue = wrenchConfigurationValue
+        viewModel.viewEffects.observe(this, { viewEffect ->
+            if (viewEffect != null) {
+                viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
+                    when (contentIfNotHandled) {
+                        ViewEffect.Dismiss -> dismiss()
+                    }
+                }
             }
         })
 
@@ -51,21 +60,18 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
             }
         })
 
+
+        view.revert.setOnClickListener {
+            viewModel.revertClick()
+        }
+
         return AlertDialog.Builder(requireActivity())
-                .setTitle(".")
                 .setView(view)
-                .setNegativeButton(R.string.revert
-                ) { _, _ ->
-                    if (viewModel.selectedConfigurationValue != null) {
-                        viewModel.deleteConfigurationValue()
-                    }
-                    dismiss()
-                }
                 .create()
     }
 
     override fun onClick(view: View, item: WrenchPredefinedConfigurationValue) {
-        viewModel.updateConfigurationValue(item.value!!)
+        viewModel.saveClick(item.value!!)
         dismiss()
     }
 

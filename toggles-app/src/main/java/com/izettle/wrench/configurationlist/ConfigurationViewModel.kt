@@ -39,7 +39,7 @@ class ConfigurationViewModel
 
         listEmpty = MutableLiveData()
 
-        val configurationsLiveData = Transformations.switchMap<String, List<WrenchConfigurationWithValues>>(queryLiveData) { query ->
+        val configurationsLiveData = Transformations.switchMap(queryLiveData) { query ->
             if (TextUtils.isEmpty(query)) {
                 configurationDao.getApplicationConfigurations(applicationIdLiveData.value!!)
             } else {

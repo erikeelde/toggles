@@ -9,6 +9,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.izettle.wrench.database.tables.ConfigurationTable
 import com.izettle.wrench.database.tables.ConfigurationValueTable
+import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 @Dao
@@ -38,7 +39,7 @@ interface WrenchConfigurationDao {
     fun getWrenchConfiguration(applicationId: Long, configurationKey: String): WrenchConfiguration
 
     @Query("SELECT * FROM configuration WHERE id = :configurationId")
-    fun getConfiguration(configurationId: Long): LiveData<WrenchConfiguration>
+    fun getConfiguration(configurationId: Long): Flow<WrenchConfiguration>
 
     @Transaction
     @Query("SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId ORDER BY lastUse DESC")

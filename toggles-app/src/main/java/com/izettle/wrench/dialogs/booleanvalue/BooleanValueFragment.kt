@@ -7,8 +7,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_boolean_value.view.*
 import se.eelde.toggles.R
@@ -18,14 +16,10 @@ class BooleanValueFragment : DialogFragment() {
 
     private val viewModel by viewModels<FragmentBooleanValueViewModel>()
 
-    private val args: BooleanValueFragmentArgs by navArgs()
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_boolean_value, null)
 
-        viewModel.init(args.configurationId, args.scopeId)
-
-        viewModel.viewState.observe(this, Observer { viewState ->
+        viewModel.viewState.observe(this, { viewState ->
             if (viewState != null) {
                 val invisible = (view.container.visibility == View.INVISIBLE)
                 if (view.container.visibility == View.INVISIBLE && viewState.title != null) {
@@ -45,7 +39,7 @@ class BooleanValueFragment : DialogFragment() {
             }
         })
 
-        viewModel.viewEffects.observe(this, Observer { viewEffect ->
+        viewModel.viewEffects.observe(this, { viewEffect ->
             if (viewEffect != null) {
                 viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
                     when (contentIfNotHandled) {

@@ -1,87 +1,75 @@
 package com.izettle.wrench.dialogs.integervalue
 
 
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.izettle.wrench.Event
 import com.izettle.wrench.database.WrenchConfigurationDao
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
 import java.util.*
 
+@ExperimentalCoroutinesApi
 class FragmentIntegerValueViewModel
-@ViewModelInject internal constructor(private val configurationDao: WrenchConfigurationDao, private val configurationValueDao: WrenchConfigurationValueDao) : ViewModel() {
+@ViewModelInject internal constructor(@Assisted private val savedStateHandle: SavedStateHandle,
+                                      private val configurationDao: WrenchConfigurationDao,
+                                      private val configurationValueDao: WrenchConfigurationValueDao) : ViewModel() {
 
-    private val inputsLiveData = MediatorLiveData<Inputs>().apply {
-        value = Inputs()
-    }
-    private val configurationIdLiveData = MutableLiveData<Long>()
-    private val scopeIdLiveData = MutableLiveData<Long>()
+    private val intentChannel = Channel<ViewAction>(Channel.UNLIMITED)
 
-    private val configuration = Transformations.switchMap(inputsLiveData) { inputs ->
-        configurationDao.getConfiguration(inputs.configurationId!!)
-    }
+    private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
-    private val selectedConfigurationValueLiveData = Transformations.switchMap(inputsLiveData) { inputs ->
-        configurationValueDao.getConfigurationValue(inputs.configurationId!!, inputs.scopeId!!)
-    }
+    private val state: StateFlow<ViewState>
+        get() = _state
+
+    private val configurationId: Long = savedStateHandle.get<Long>("configurationId")!!
+    private val scopeId: Long = savedStateHandle.get<Long>("scopeId")!!
 
     private var selectedConfigurationValue: WrenchConfigurationValue? = null
 
-    internal val viewState = MediatorLiveData<ViewState>().apply {
-        value = reduce(ViewState(), PartialViewState.Empty)
-    }
+    internal val viewState = state.asLiveData()
 
     internal val viewEffects = MutableLiveData<Event<ViewEffect>>()
 
-    private val channel = ConflatedBroadcastChannel<ViewAction>().apply {
+    init {
         viewModelScope.launch {
-            for (viewAction in openSubscription()) {
+            intentChannel.consumeAsFlow().collect { viewAction ->
                 when (viewAction) {
                     is ViewAction.SaveAction -> {
-                        viewState.value = reduce(viewState.value!!, PartialViewState.Saving)
+                        _state.value = reduce(viewState.value!!, PartialViewState.Saving)
                         updateConfigurationValue(viewAction.value).join()
                         viewEffects.value = Event(ViewEffect.Dismiss)
                     }
                     ViewAction.RevertAction -> {
-                        viewState.value = reduce(viewState.value!!, PartialViewState.Reverting)
+                        _state.value = reduce(viewState.value!!, PartialViewState.Reverting)
                         deleteConfigurationValue()
                         viewEffects.value = Event(ViewEffect.Dismiss)
                     }
                 }
             }
         }
-    }
 
-    init {
-        viewState.addSource(configuration) { wrenchConfig -> viewState.value = reduce(viewState.value!!, PartialViewState.NewConfiguration(wrenchConfig.key)) }
-
-        viewState.addSource(selectedConfigurationValueLiveData) { wrenchConfigurationValue ->
-            if (wrenchConfigurationValue != null) {
-                selectedConfigurationValue = wrenchConfigurationValue
-                viewEffects.value = Event(ViewEffect.ValueChanged(wrenchConfigurationValue.value!!.toInt()))
+        viewModelScope.launch {
+            configurationDao.getConfiguration(configurationId).collect {
+                _state.value = reduce(viewState.value!!, PartialViewState.NewConfiguration(it.key))
             }
         }
-
-        inputsLiveData.addSource(Transformations.distinctUntilChanged(configurationIdLiveData)) { configurationId ->
-            inputsLiveData.value = inputsLiveData.value!!.copy(configurationId = configurationId)
-        }
-
-        inputsLiveData.addSource(Transformations.distinctUntilChanged(scopeIdLiveData)) { scopeId ->
-            inputsLiveData.value = inputsLiveData.value!!.copy(scopeId = scopeId)
+        viewModelScope.launch {
+            configurationValueDao.getConfigurationValue(configurationId, scopeId).collect {
+                if (it != null) {
+                    selectedConfigurationValue = it
+                    viewEffects.value = Event(ViewEffect.ValueChanged(it.value!!.toInt()))
+                }
+            }
         }
     }
-
-    internal fun init(configurationId: Long, scopeId: Long) {
-        configurationIdLiveData.value = configurationId
-        scopeIdLiveData.value = scopeId
-    }
-
 
     private fun reduce(previousState: ViewState, partialViewState: PartialViewState): ViewState {
         return when (partialViewState) {
@@ -101,33 +89,31 @@ class FragmentIntegerValueViewModel
     }
 
     internal fun saveClick(value: String) {
-        viewModelScope.launch {
-            channel.send(ViewAction.SaveAction(value))
-        }
+        intentChannel.offer(ViewAction.SaveAction(value))
     }
 
     internal fun revertClick() {
-        viewModelScope.launch {
-            channel.send(ViewAction.RevertAction)
-        }
+        intentChannel.offer(ViewAction.RevertAction)
     }
 
     private suspend fun updateConfigurationValue(value: String): Job = coroutineScope {
         viewModelScope.launch(Dispatchers.IO) {
             if (selectedConfigurationValue != null) {
-                configurationValueDao.updateConfigurationValue(inputsLiveData.value!!.configurationId!!, inputsLiveData.value!!.scopeId!!, value)
+                configurationValueDao.updateConfigurationValue(configurationId, scopeId, value)
 
             } else {
-                val wrenchConfigurationValue = WrenchConfigurationValue(0, inputsLiveData.value!!.configurationId!!, value, inputsLiveData.value!!.scopeId!!)
+                val wrenchConfigurationValue = WrenchConfigurationValue(0, configurationId, value, scopeId)
                 wrenchConfigurationValue.id = configurationValueDao.insert(wrenchConfigurationValue)
             }
 
-            configurationDao.touch(inputsLiveData.value!!.configurationId!!, Date())
+            configurationDao.touch(configurationId, Date())
         }
     }
 
     private suspend fun deleteConfigurationValue() = coroutineScope {
-        configurationValueDao.delete(selectedConfigurationValue!!)
+        selectedConfigurationValue?.let {
+            configurationValueDao.delete(it)
+        }
     }
 }
 
@@ -152,5 +138,3 @@ private sealed class PartialViewState {
     object Saving : PartialViewState()
     object Reverting : PartialViewState()
 }
-
-private data class Inputs(val configurationId: Long? = null, val scopeId: Long? = null)

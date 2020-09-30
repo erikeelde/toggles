@@ -17,9 +17,6 @@ interface WrenchApplicationDao {
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE id = (:id)")
     fun getApplication(id: Long): LiveData<WrenchApplication>
 
-    @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE id = (:id)")
-    fun getApplicationSync(id: Long): WrenchApplication
-
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE packageName IN (:packageName)")
     fun loadByPackageName(packageName: String): WrenchApplication
 
