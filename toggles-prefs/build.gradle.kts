@@ -2,16 +2,17 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("android.extensions")
+    id("org.jlleitschuh.gradle.ktlint")
 }
+
 android {
-    compileSdkVersion(Versions.compileSdk)
+    compileSdk = 30
 
     defaultConfig {
-        minSdkVersion(Versions.minSdk)
-        targetSdkVersion(Versions.targetSdk)
+        minSdk = 14
+        targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         getByName("release") {
@@ -51,7 +52,7 @@ dependencies {
     implementation(project(":toggles-core"))
     implementation("androidx.annotation:annotation:1.2.0-alpha01")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
-    implementation("androidx.core:core-ktx:1.5.0-alpha03")
+    implementation("androidx.core:core-ktx:1.5.0-alpha04")
 }
 
 apply(rootProject.file("gradle/gradle-mvn-push.gradle"))

@@ -60,7 +60,6 @@ class WrenchPreferencesFragmentViewModel @ViewModelInject internal constructor(p
             intConfig.postValue(togglesPreferences.getInt(application.getString(R.string.int_configuration), 1))
         }
         return intConfig
-
     }
 
     private val enumConfig: MutableLiveData<MyEnum> by lazy {

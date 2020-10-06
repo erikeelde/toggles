@@ -23,9 +23,8 @@ object ApplicationModule {
 
     @Provides
     fun provideWrenchPackageManagerWrapper(@ApplicationContext context: Context): com.izettle.wrench.provider.IPackageManagerWrapper =
-            com.izettle.wrench.provider.PackageManagerWrapper(context.packageManager)
+        com.izettle.wrench.provider.PackageManagerWrapper(context.packageManager)
 
     @Provides
     fun providesWrenchPreferences(@ApplicationContext context: Context): ITogglesPreferences = TogglesPreferences(context)
-
 }

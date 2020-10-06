@@ -19,9 +19,10 @@ class MigrationTests {
 
     @get:Rule
     var testHelper = MigrationTestHelper(
-            InstrumentationRegistry.getInstrumentation(),
-            WrenchDatabase::class.java.canonicalName!!,
-            FrameworkSQLiteOpenHelperFactory())
+        InstrumentationRegistry.getInstrumentation(),
+        WrenchDatabase::class.java.canonicalName!!,
+        FrameworkSQLiteOpenHelperFactory()
+    )
 
     @Test
     @Throws(IOException::class)
@@ -34,7 +35,6 @@ class MigrationTests {
         originalDb.close()
 
         testHelper.runMigrationsAndValidate(TEST_DB_NAME, 2, true, MIGRATION_1_2)
-
     }
 
     @Test
@@ -44,7 +44,6 @@ class MigrationTests {
         val originalDb = testHelper.createDatabase(TEST_DB_NAME, 2)
 
         val testApplicationId = DatabaseHelper.insertWrenchApplication(originalDb, "TestApplication", "com.izettle.wrench.testapplication")
-
 
         // insert data
         DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Integerkey", Bolt.TYPE.INTEGER)
@@ -80,5 +79,4 @@ class MigrationTests {
     companion object {
         private val TEST_DB_NAME = "test_db"
     }
-
 }

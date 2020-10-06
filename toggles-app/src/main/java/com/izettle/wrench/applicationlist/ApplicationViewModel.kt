@@ -1,6 +1,5 @@
 package com.izettle.wrench.applicationlist
 
-
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

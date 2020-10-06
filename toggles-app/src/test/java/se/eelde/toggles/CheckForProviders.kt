@@ -1,19 +1,22 @@
-package com.izettle.wrench
+package se.eelde.toggles
 
+import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.izettle.wrench.MainActivity
 import com.izettle.wrench.provider.WrenchProvider
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import se.eelde.toggles.TogglesApplication
+import org.robolectric.annotation.Config
 import se.eelde.toggles.provider.TogglesProvider
 
 @RunWith(AndroidJUnit4::class)
+@Config(sdk = [Build.VERSION_CODES.P])
 class CheckForProviders {
 
     @get:Rule

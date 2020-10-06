@@ -3,11 +3,10 @@ package com.izettle.wrench.dialogs.stringvalue
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.inputmethod.EditorInfo
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_string_value.view.*
 import se.eelde.toggles.R
@@ -15,50 +14,61 @@ import se.eelde.toggles.R
 @AndroidEntryPoint
 class StringValueFragment : DialogFragment() {
 
-    private val args: StringValueFragmentArgs by navArgs()
-
     private val viewModel by viewModels<FragmentStringValueViewModel>()
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_string_value, null)
 
-        viewModel.init(args.configurationId, args.scopeId)
+        viewModel.viewState.observe(
+            this,
+            { viewState ->
+                if (viewState != null) {
+                    val invisible = (view.container.visibility == View.INVISIBLE)
+                    if (view.container.visibility == View.INVISIBLE && viewState.title != null) {
+                        view.container.visibility = View.VISIBLE
+                    }
+                    view.title.text = viewState.title
 
-        viewModel.configuration.observe(this, { wrenchConfiguration ->
-            if (wrenchConfiguration != null) {
-                requireDialog().setTitle(wrenchConfiguration.key)
-            }
-        })
+                    if (invisible) {
+                        view.value.jumpDrawablesToCurrentState()
+                    }
 
-        viewModel.selectedConfigurationValueLiveData.observe(this, { wrenchConfigurationValue ->
-            viewModel.selectedConfigurationValue = wrenchConfigurationValue
-            if (wrenchConfigurationValue != null) {
-                view.value.setText(wrenchConfigurationValue.value)
+                    if (viewState.saving || viewState.reverting) {
+                        view.value.isEnabled = false
+                        view.save.isEnabled = false
+                        view.revert.isEnabled = false
+                    }
+                }
             }
-        })
+        )
 
-        view.value.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.updateConfigurationValue(view.value.text!!.toString())
-                dismiss()
+        viewModel.viewEffects.observe(
+            this,
+            { viewEffect ->
+                if (viewEffect != null) {
+                    viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
+                        when (contentIfNotHandled) {
+                            ViewEffect.Dismiss -> dismiss()
+                            is ViewEffect.ValueChanged -> view.value.setText(contentIfNotHandled.value.toString())
+                        }
+                    }
+                }
             }
-            false
+        )
+
+        view.revert.setOnClickListener {
+            viewModel.revertClick()
+        }
+
+        // view.value.setOnCheckedChangeListener { _, isChecked -> viewModel.checkedChanged(isChecked) }
+
+        view.save.setOnClickListener {
+            viewModel.saveClick(view.value.text.toString())
         }
 
         return AlertDialog.Builder(requireActivity())
-                .setTitle(".")
-                .setView(view)
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    viewModel.updateConfigurationValue(view.value.text!!.toString())
-                    dismiss()
-                }
-                .setNegativeButton(R.string.revert) { _, _ ->
-                    if (viewModel.selectedConfigurationValue != null) {
-                        viewModel.deleteConfigurationValue()
-                    }
-                    dismiss()
-                }
-                .create()
+            .setView(view)
+            .create()
     }
 
     companion object {

@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class LicenceMetadata(
-        val dependency: String,
-        val skipBytes: Long,
-        val length: Int) : Parcelable
+    val dependency: String,
+    val skipBytes: Long,
+    val length: Int
+) : Parcelable

@@ -2,8 +2,18 @@ package com.izettle.wrench.configurationlist
 
 import android.text.TextUtils
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
-import com.izettle.wrench.database.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.izettle.wrench.database.WrenchApplication
+import com.izettle.wrench.database.WrenchApplicationDao
+import com.izettle.wrench.database.WrenchConfigurationDao
+import com.izettle.wrench.database.WrenchConfigurationWithValues
+import com.izettle.wrench.database.WrenchScope
+import com.izettle.wrench.database.WrenchScopeDao
 import kotlinx.coroutines.launch
 
 class ConfigurationViewModel
@@ -39,7 +49,7 @@ class ConfigurationViewModel
 
         listEmpty = MutableLiveData()
 
-        val configurationsLiveData = Transformations.switchMap<String, List<WrenchConfigurationWithValues>>(queryLiveData) { query ->
+        val configurationsLiveData = Transformations.switchMap(queryLiveData) { query ->
             if (TextUtils.isEmpty(query)) {
                 configurationDao.getApplicationConfigurations(applicationIdLiveData.value!!)
             } else {

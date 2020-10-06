@@ -22,12 +22,10 @@ class MainActivity : AppCompatActivity() {
         // navController = findNavController(R.id.nav_host_fragment) // https://issuetracker.google.com/issues/142847973
         navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
-
         setupActionBarWithNavController(navController, drawerLayout)
 
         NavigationUI.setupWithNavController(nav_view, navController)
     }
 
     override fun onSupportNavigateUp(): Boolean = NavigationUI.navigateUp(navController, drawerLayout)
-
 }

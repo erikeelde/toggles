@@ -11,5 +11,4 @@ class OssDetailViewModel @ViewModelInject internal constructor(val application: 
     fun getThirdPartyMetadata(licenceMetadata: LicenceMetadata): LiveData<String> {
         return LicenceMetadataLiveData(application, licenceMetadata)
     }
-
 }

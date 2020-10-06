@@ -78,7 +78,6 @@ class WrenchPreferencesReturnsProviderValues {
     }
 }
 
-
 class MockContentProvider : ContentProvider() {
     companion object {
         private const val CURRENT_CONFIGURATION_ID = 1
@@ -98,7 +97,6 @@ class MockContentProvider : ContentProvider() {
 
     val bolts: MutableMap<String, Bolt> = mutableMapOf()
     private val nuts: MutableList<String> = mutableListOf()
-
 
     override fun onCreate(): Boolean {
         return true
@@ -126,11 +124,11 @@ class MockContentProvider : ContentProvider() {
         }
     }
 
-    override fun insert(uri: Uri, values: ContentValues): Uri {
+    override fun insert(uri: Uri, values: ContentValues?): Uri {
         val insertId: Long
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATIONS -> {
-                val bolt = Bolt.fromContentValues(values)
+                val bolt = Bolt.fromContentValues(values!!)
                 if (bolts.containsKey(bolt.key)) {
                     throw IllegalArgumentException("bolt exists")
                 }
@@ -139,7 +137,7 @@ class MockContentProvider : ContentProvider() {
                 bolt.id = insertId
             }
             PREDEFINED_CONFIGURATION_VALUES -> {
-                nuts.add(values.getAsString(ColumnNames.Nut.COL_VALUE))
+                nuts.add(values!!.getAsString(ColumnNames.Nut.COL_VALUE))
                 insertId = nuts.size.toLong()
             }
             else -> {

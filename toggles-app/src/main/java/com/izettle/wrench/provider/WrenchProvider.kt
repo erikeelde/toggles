@@ -1,13 +1,29 @@
 package com.izettle.wrench.provider
 
-import android.content.*
+import android.content.ContentProvider
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.Context
+import android.content.UriMatcher
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Binder
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.WrenchProviderContract
-import com.izettle.wrench.database.*
+import com.izettle.wrench.database.WrenchApplication
+import com.izettle.wrench.database.WrenchApplicationDao
+import com.izettle.wrench.database.WrenchConfiguration
+import com.izettle.wrench.database.WrenchConfigurationDao
+import com.izettle.wrench.database.WrenchConfigurationValue
+import com.izettle.wrench.database.WrenchConfigurationValueDao
+import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
+import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
+import com.izettle.wrench.database.WrenchScope
+import com.izettle.wrench.database.WrenchScopeDao
 import com.izettle.wrench.preferences.ITogglesPreferences
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -15,7 +31,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.provider.IPackageManagerWrapper
-import java.util.*
+import java.util.Date
 
 class WrenchProvider : ContentProvider() {
 
@@ -72,7 +88,6 @@ class WrenchProvider : ContentProvider() {
                 wrenchApplication = WrenchApplication(0, packageManagerWrapper.callingApplicationPackageName!!, packageManagerWrapper.applicationLabel)
 
                 wrenchApplication.id = applicationDao.insert(wrenchApplication)
-
             } catch (e: PackageManager.NameNotFoundException) {
                 e.printStackTrace()
                 throw RuntimeException(e)
@@ -176,7 +191,17 @@ class WrenchProvider : ContentProvider() {
             }
         }
 
-        context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val flags: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ContentResolver.NOTIFY_INSERT else 0
+            try {
+                // In ContentResolver.java circa L2828 getContentService() returns null while running robolectric
+                context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, flags)
+            } catch (ignored: NullPointerException) {
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, false)
+        }
 
         return ContentUris.withAppendedId(uri, insertId)
     }
@@ -203,6 +228,7 @@ class WrenchProvider : ContentProvider() {
         return super.bulkInsert(uri, values)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
 
         val callingApplication = getCallingApplication(applicationDao)
@@ -228,7 +254,17 @@ class WrenchProvider : ContentProvider() {
         }
 
         if (updatedRows > 0) {
-            context!!.contentResolver.notifyChange(uri, null, false)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val flags: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ContentResolver.NOTIFY_INSERT else 0
+                try {
+                    // In ContentResolver.java circa L2828 getContentService() returns null while running robolectric
+                    context!!.contentResolver.notifyChange(uri, null, flags)
+                } catch (ignored: NullPointerException) {
+                }
+            } else {
+                @Suppress("DEPRECATION")
+                context!!.contentResolver.notifyChange(uri, null, false)
+            }
         }
 
         return updatedRows

@@ -9,4 +9,3 @@ interface ScopeTable {
         const val COL_SELECTED_TIMESTAMP = "selectedTimestamp"
     }
 }
-

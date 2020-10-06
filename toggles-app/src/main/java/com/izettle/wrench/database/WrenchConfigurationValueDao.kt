@@ -1,28 +1,41 @@
 package com.izettle.wrench.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import com.izettle.wrench.database.tables.ConfigurationValueTable
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class WrenchConfigurationValueDao {
 
-    @Query("SELECT * FROM " + ConfigurationValueTable.TABLE_NAME +
-            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId)")
+    @Query(
+        "SELECT * FROM " + ConfigurationValueTable.TABLE_NAME +
+            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId)"
+    )
     abstract fun getConfigurationValue(configurationId: Long): LiveData<List<WrenchConfigurationValue>>
 
-    @Query("SELECT * FROM " + ConfigurationValueTable.TABLE_NAME +
-            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId) AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId)")
-    abstract fun getConfigurationValue(configurationId: Long, scopeId: Long): LiveData<WrenchConfigurationValue>
+    @Query(
+        "SELECT * FROM " + ConfigurationValueTable.TABLE_NAME +
+            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId) AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId)"
+    )
+    abstract fun getConfigurationValue(configurationId: Long, scopeId: Long): Flow<WrenchConfigurationValue?>
 
-    @Query("UPDATE " + ConfigurationValueTable.TABLE_NAME +
+    @Query(
+        "UPDATE " + ConfigurationValueTable.TABLE_NAME +
             " SET " + ConfigurationValueTable.COL_VALUE + " = (:value)" +
-            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId) AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId) ")
+            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId) AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId) "
+    )
     abstract fun updateConfigurationValueSync(configurationId: Long, scopeId: Long, value: String): Int
 
-    @Query("UPDATE " + ConfigurationValueTable.TABLE_NAME +
+    @Query(
+        "UPDATE " + ConfigurationValueTable.TABLE_NAME +
             " SET " + ConfigurationValueTable.COL_VALUE + " = (:value)" +
-            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId) AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId) ")
+            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId) AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId) "
+    )
     abstract suspend fun updateConfigurationValue(configurationId: Long, scopeId: Long, value: String): Int
 
     @Insert

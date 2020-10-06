@@ -21,7 +21,7 @@ internal class ApplicationsFragment : Fragment() {
     private val model by viewModels<ApplicationViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_applications, container, false)
+        inflater.inflate(R.layout.fragment_applications, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val adapter = ApplicationAdapter()

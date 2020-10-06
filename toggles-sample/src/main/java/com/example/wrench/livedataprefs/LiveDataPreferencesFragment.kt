@@ -1,6 +1,5 @@
 package com.example.wrench.livedataprefs
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,7 @@ class LiveDataPreferencesFragment : Fragment() {
     private val viewModel by viewModels<LiveDataPreferencesFragmentViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            LayoutInflater.from(requireContext()).inflate(R.layout.fragment_live_data_preferences, container, false)
+        LayoutInflater.from(requireContext()).inflate(R.layout.fragment_live_data_preferences, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,4 +43,3 @@ class LiveDataPreferencesFragment : Fragment() {
         }
     }
 }
-

@@ -11,4 +11,3 @@ interface ConfigurationTable {
         const val COL_TYPE = ColumnNames.Bolt.COL_TYPE
     }
 }
-

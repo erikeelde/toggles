@@ -17,6 +17,4 @@ abstract class WrenchDatabase : RoomDatabase() {
     abstract fun predefinedConfigurationValueDao(): WrenchPredefinedConfigurationValueDao
 
     abstract fun scopeDao(): WrenchScopeDao
-
-
 }
