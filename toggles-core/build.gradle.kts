@@ -2,14 +2,15 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("android.extensions")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {
-    compileSdkVersion(Versions.compileSdk)
+    compileSdk = 30
 
     defaultConfig {
-        minSdkVersion(Versions.minSdk)
-        targetSdkVersion(Versions.targetSdk)
+        minSdk = 14
+        targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

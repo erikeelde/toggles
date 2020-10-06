@@ -21,14 +21,14 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Run Android Linter
-        run: ./gradlew lint
+      - name: Run Android Checks
+        run: ./gradlew check
 
-      - name: Upload lint reports
+      - name: Upload reports
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: Lint reports
+          name: Reports
           path: '**/build/reports/*'
 
       - name: Run unit tests

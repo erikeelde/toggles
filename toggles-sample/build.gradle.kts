@@ -6,7 +6,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.oss.licenses.plugin")
     id("dagger.hilt.android.plugin")
-
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 androidExtensions {
@@ -14,11 +14,11 @@ androidExtensions {
 }
 
 android {
-    compileSdkVersion(Versions.compileSdk)
+    compileSdk = 30
     defaultConfig {
         applicationId = "se.eelde.toggles.example"
-        minSdkVersion(Versions.minSdk)
-        targetSdkVersion(Versions.targetSdk)
+        minSdk = 14
+        targetSdk = 30
         versionCode = Versions.appVersionCode
         versionName = Versions.appVersionName
 
@@ -65,17 +65,17 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.4")
 
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
-    implementation("com.google.android.material:material:1.3.0-alpha02")
+    implementation("com.google.android.material:material:1.3.0-alpha03")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.1")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
-    implementation("com.google.dagger:hilt-android:2.28-alpha")
-    kapt("com.google.dagger:hilt-android-compiler:2.28-alpha")
+    implementation("com.google.dagger:hilt-android:2.29.1-alpha")
+    kapt("com.google.dagger:hilt-android-compiler:2.29.1-alpha")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02")
     kapt("androidx.hilt:hilt-compiler:1.0.0-alpha02")
-    testImplementation("com.google.dagger:hilt-android-testing:2.28-alpha")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.28-alpha")
+    testImplementation("com.google.dagger:hilt-android-testing:2.29.1-alpha")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.29.1-alpha")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.0")
@@ -91,5 +91,5 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:2.29.1")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
-    implementation("androidx.core:core-ktx:1.5.0-alpha03")
+    implementation("androidx.core:core-ktx:1.5.0-alpha04")
 }

@@ -2,13 +2,15 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("android.extensions")
+    id("org.jlleitschuh.gradle.ktlint")
 }
+
 android {
-    compileSdkVersion(Versions.compileSdk)
+    compileSdk = 30
 
     defaultConfig {
-        minSdkVersion(Versions.minSdk)
-        targetSdkVersion(Versions.targetSdk)
+        minSdk = 14
+        targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -40,7 +42,7 @@ dependencies {
 
     implementation(project(":toggles-core"))
     implementation("androidx.annotation:annotation:1.2.0-alpha01")
-    api("androidx.lifecycle:lifecycle-livedata-core:2.3.0-alpha07")
+    api("androidx.lifecycle:lifecycle-livedata-core:2.3.0-beta01")
 }
 
 // The api of this module should be discussed before any potential release

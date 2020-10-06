@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Binder
+import android.os.Build
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.WrenchProviderContract
 import com.izettle.wrench.database.*
@@ -143,9 +144,7 @@ class TogglesProvider : ContentProvider() {
         val insertId: Long
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATIONS -> {
-                var bolt = Bolt.fromContentValues(values!!)
-
-                bolt = fixRCTypes(bolt)
+                val bolt = Bolt.fromContentValues(values!!)
 
                 var wrenchConfiguration: WrenchConfiguration? = configurationDao.getWrenchConfiguration(callingApplication.id, bolt.key)
 
@@ -175,21 +174,19 @@ class TogglesProvider : ContentProvider() {
             }
         }
 
-        context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val flags: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ContentResolver.NOTIFY_INSERT else 0
+            try {
+                // In ContentResolver.java circa L2828 getContentService() returns null while running robolectric
+                context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, flags)
+            } catch (ignored: NullPointerException) {
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, false)
+        }
 
         return ContentUris.withAppendedId(uri, insertId)
-    }
-
-    private fun fixRCTypes(bolt: Bolt): Bolt {
-        return when (bolt.type) {
-            "java.lang.String" -> bolt.copy(bolt.id, Bolt.TYPE.STRING, bolt.key, bolt.value)
-            "java.lang.Integer" -> bolt.copy(bolt.id, Bolt.TYPE.INTEGER, bolt.key, bolt.value)
-            "java.lang.Enum" -> bolt.copy(bolt.id, Bolt.TYPE.ENUM, bolt.key, bolt.value)
-            "java.lang.Boolean" -> bolt.copy(bolt.id, Bolt.TYPE.BOOLEAN, bolt.key, bolt.value)
-            else -> {
-                bolt
-            }
-        }
     }
 
     override fun bulkInsert(uri: Uri, values: Array<ContentValues>): Int {
@@ -227,7 +224,17 @@ class TogglesProvider : ContentProvider() {
         }
 
         if (updatedRows > 0) {
-            context!!.contentResolver.notifyChange(uri, null, false)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val flags: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ContentResolver.NOTIFY_INSERT else 0
+                try {
+                    // In ContentResolver.java circa L2828 getContentService() returns null while running robolectric
+                    context!!.contentResolver.notifyChange(uri, null, flags)
+                } catch (ignored: NullPointerException) {
+                }
+            } else {
+                @Suppress("DEPRECATION")
+                context!!.contentResolver.notifyChange(uri, null, false)
+            }
         }
 
         return updatedRows
