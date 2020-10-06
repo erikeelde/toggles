@@ -1,6 +1,5 @@
 package com.izettle.wrench.provider
 
-
 import androidx.annotation.IntDef
 
 const val API_INVALID = 0

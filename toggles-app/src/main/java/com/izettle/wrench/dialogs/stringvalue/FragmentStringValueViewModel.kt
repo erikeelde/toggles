@@ -2,24 +2,34 @@ package com.izettle.wrench.dialogs.stringvalue
 
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.izettle.wrench.Event
 import com.izettle.wrench.database.WrenchConfigurationDao
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
-import java.util.*
+import kotlinx.coroutines.launch
+import java.util.Date
 
 @ExperimentalCoroutinesApi
 class FragmentStringValueViewModel
-@ViewModelInject internal constructor(@Assisted private val savedStateHandle: SavedStateHandle,
-                                      private val configurationDao: WrenchConfigurationDao,
-                                      private val configurationValueDao: WrenchConfigurationValueDao) : ViewModel() {
+@ViewModelInject internal constructor(
+    @Assisted private val savedStateHandle: SavedStateHandle,
+    private val configurationDao: WrenchConfigurationDao,
+    private val configurationValueDao: WrenchConfigurationValueDao
+) : ViewModel() {
 
     private val intentChannel = Channel<ViewAction>(Channel.UNLIMITED)
 
@@ -36,7 +46,6 @@ class FragmentStringValueViewModel
     internal val viewState = state.asLiveData()
 
     internal val viewEffects = MutableLiveData<Event<ViewEffect>>()
-
 
     init {
         viewModelScope.launch {
@@ -100,7 +109,6 @@ class FragmentStringValueViewModel
         viewModelScope.launch(Dispatchers.IO) {
             if (selectedConfigurationValue != null) {
                 configurationValueDao.updateConfigurationValue(configurationId, scopeId, value)
-
             } else {
                 val wrenchConfigurationValue = WrenchConfigurationValue(0, configurationId, value, scopeId)
                 wrenchConfigurationValue.id = configurationValueDao.insert(wrenchConfigurationValue)
@@ -127,9 +135,11 @@ internal sealed class ViewEffect {
     data class ValueChanged(val value: String) : ViewEffect()
 }
 
-internal data class ViewState(val title: String? = null,
-                              val saving: Boolean = false,
-                              val reverting: Boolean = false)
+internal data class ViewState(
+    val title: String? = null,
+    val saving: Boolean = false,
+    val reverting: Boolean = false
+)
 
 private sealed class PartialViewState {
     object Empty : PartialViewState()

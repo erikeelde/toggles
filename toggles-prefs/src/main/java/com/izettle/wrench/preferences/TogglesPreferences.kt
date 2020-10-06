@@ -42,7 +42,7 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
 
     override fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defValue: T): T {
         var bolt = getBolt(contentResolver = contentResolver, boltType = Bolt.TYPE.ENUM, key = key)
-                ?: return defValue
+            ?: return defValue
 
         if (bolt.id == 0L) {
             bolt = bolt.copy(id = bolt.id, key = key, type = Bolt.TYPE.ENUM, value = defValue.toString())
@@ -60,7 +60,7 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
     override fun getString(key: String, defValue: String?): String? {
 
         var bolt = getBolt(contentResolver = contentResolver, boltType = Bolt.TYPE.STRING, key = key)
-                ?: return defValue
+            ?: return defValue
 
         if (bolt.id == 0L) {
             bolt = bolt.copy(id = bolt.id, key = key, type = Bolt.TYPE.STRING, value = defValue)
@@ -72,7 +72,7 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
 
     override fun getBoolean(key: String, defValue: Boolean): Boolean {
         var bolt = getBolt(contentResolver = contentResolver, boltType = Bolt.TYPE.BOOLEAN, key = key)
-                ?: return defValue
+            ?: return defValue
 
         if (bolt.id == 0L) {
             bolt = bolt.copy(id = bolt.id, key = key, type = Bolt.TYPE.BOOLEAN, value = defValue.toString())
@@ -84,7 +84,7 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
 
     override fun getInt(key: String, defValue: Int): Int {
         var bolt = getBolt(contentResolver = contentResolver, boltType = Bolt.TYPE.INTEGER, key = key)
-                ?: return defValue
+            ?: return defValue
 
         if (bolt.id == 0L) {
             bolt = bolt.copy(id = bolt.id, key = key, type = Bolt.TYPE.INTEGER, value = defValue.toString())

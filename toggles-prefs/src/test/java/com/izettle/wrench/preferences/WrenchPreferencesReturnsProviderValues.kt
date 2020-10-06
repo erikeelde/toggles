@@ -78,7 +78,6 @@ class WrenchPreferencesReturnsProviderValues {
     }
 }
 
-
 class MockContentProvider : ContentProvider() {
     companion object {
         private const val CURRENT_CONFIGURATION_ID = 1
@@ -98,7 +97,6 @@ class MockContentProvider : ContentProvider() {
 
     val bolts: MutableMap<String, Bolt> = mutableMapOf()
     private val nuts: MutableList<String> = mutableListOf()
-
 
     override fun onCreate(): Boolean {
         return true

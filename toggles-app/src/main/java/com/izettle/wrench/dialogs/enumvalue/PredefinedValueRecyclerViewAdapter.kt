@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.simple_list_item.view.*
 import se.eelde.toggles.R
 
 class PredefinedValueRecyclerViewAdapter internal constructor(
-        private val listener: Listener
+    private val listener: Listener
 ) : ListAdapter<WrenchPredefinedConfigurationValue, PredefinedValueRecyclerViewAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

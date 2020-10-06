@@ -1,6 +1,5 @@
 package com.example.wrench.wrenchprefs
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,7 @@ class WrenchPreferencesFragment : Fragment() {
     private val viewModel by viewModels<WrenchPreferencesFragmentViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            LayoutInflater.from(requireContext()).inflate(R.layout.fragment_wrench_preferences, container, false)
+        LayoutInflater.from(requireContext()).inflate(R.layout.fragment_wrench_preferences, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

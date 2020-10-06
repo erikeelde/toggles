@@ -53,5 +53,4 @@ dependencies {
     implementation("androidx.annotation:annotation:1.2.0-alpha01")
 }
 
-
 apply(rootProject.file("gradle/gradle-mvn-push.gradle"))

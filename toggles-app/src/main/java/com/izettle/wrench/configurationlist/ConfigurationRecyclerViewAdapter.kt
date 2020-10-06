@@ -9,8 +9,9 @@ import com.izettle.wrench.database.WrenchConfigurationWithValues
 import se.eelde.toggles.R
 
 internal class ConfigurationRecyclerViewAdapter(
-        private val listener: Listener,
-        private val model: ConfigurationViewModel) : ListAdapter<WrenchConfigurationWithValues, ConfigurationViewHolder>(DIFF_CALLBACK) {
+    private val listener: Listener,
+    private val model: ConfigurationViewModel
+) : ListAdapter<WrenchConfigurationWithValues, ConfigurationViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConfigurationViewHolder {
         return ConfigurationViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.configuration_list_item, parent, false), listener)
@@ -30,7 +31,6 @@ internal class ConfigurationRecyclerViewAdapter(
         fun configurationClicked(v: View, configuration: WrenchConfigurationWithValues)
     }
 
-
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WrenchConfigurationWithValues>() {
             override fun areItemsTheSame(oldWrenchConfigurationWithValues: WrenchConfigurationWithValues, newWrenchConfigurationWithValues: WrenchConfigurationWithValues): Boolean {
@@ -39,8 +39,8 @@ internal class ConfigurationRecyclerViewAdapter(
 
             override fun areContentsTheSame(oldWrenchConfigurationWithValues: WrenchConfigurationWithValues, newWrenchConfigurationWithValues: WrenchConfigurationWithValues): Boolean {
                 return oldWrenchConfigurationWithValues == newWrenchConfigurationWithValues &&
-                        oldWrenchConfigurationWithValues.configurationValues!!.size == newWrenchConfigurationWithValues.configurationValues!!.size &&
-                        oldWrenchConfigurationWithValues.configurationValues!!.containsAll(newWrenchConfigurationWithValues.configurationValues!!)
+                    oldWrenchConfigurationWithValues.configurationValues!!.size == newWrenchConfigurationWithValues.configurationValues!!.size &&
+                    oldWrenchConfigurationWithValues.configurationValues!!.containsAll(newWrenchConfigurationWithValues.configurationValues!!)
             }
         }
     }

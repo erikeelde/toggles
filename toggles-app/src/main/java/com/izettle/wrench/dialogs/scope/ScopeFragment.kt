@@ -36,33 +36,35 @@ class ScopeFragment : DialogFragment(), ScopeRecyclerViewAdapter.Listener {
         root.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         return AlertDialog.Builder(requireContext())
-                .setTitle(R.string.select_scope)
-                .setView(root)
-                .setPositiveButton("Add") { _, _ ->
+            .setTitle(R.string.select_scope)
+            .setView(root)
+            .setPositiveButton("Add") { _, _ ->
 
-                    val input = EditText(requireContext())
-                    input.setSingleLine()
+                val input = EditText(requireContext())
+                input.setSingleLine()
 
-                    AlertDialog.Builder(requireContext())
-                            .setTitle("Create new scope")
-                            .setView(input)
-                            .setPositiveButton("OK"
-                            ) { _, _ ->
-                                val scopeName = input.text.toString()
-                                viewModel.createScope(scopeName)
-                            }.setNegativeButton("Cancel", null)
-                            .show()
-                }
-                .setNegativeButton("Delete"
-                ) { _, _ ->
-                    val selectedScope = viewModel.selectedScope
-                    if (selectedScope != null) {
-                        if (!WrenchScope.isDefaultScope(selectedScope)) {
-                            viewModel.removeScope(selectedScope)
-                        }
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Create new scope")
+                    .setView(input)
+                    .setPositiveButton(
+                        "OK"
+                    ) { _, _ ->
+                        val scopeName = input.text.toString()
+                        viewModel.createScope(scopeName)
+                    }.setNegativeButton("Cancel", null)
+                    .show()
+            }
+            .setNegativeButton(
+                "Delete"
+            ) { _, _ ->
+                val selectedScope = viewModel.selectedScope
+                if (selectedScope != null) {
+                    if (!WrenchScope.isDefaultScope(selectedScope)) {
+                        viewModel.removeScope(selectedScope)
                     }
                 }
-                .create()
+            }
+            .create()
     }
 
     override fun onClick(view: View, wrenchScope: WrenchScope) {

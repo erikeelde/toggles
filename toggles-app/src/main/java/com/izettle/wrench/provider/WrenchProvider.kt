@@ -1,6 +1,11 @@
 package com.izettle.wrench.provider
 
-import android.content.*
+import android.content.ContentProvider
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.Context
+import android.content.UriMatcher
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
@@ -9,7 +14,16 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.WrenchProviderContract
-import com.izettle.wrench.database.*
+import com.izettle.wrench.database.WrenchApplication
+import com.izettle.wrench.database.WrenchApplicationDao
+import com.izettle.wrench.database.WrenchConfiguration
+import com.izettle.wrench.database.WrenchConfigurationDao
+import com.izettle.wrench.database.WrenchConfigurationValue
+import com.izettle.wrench.database.WrenchConfigurationValueDao
+import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
+import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
+import com.izettle.wrench.database.WrenchScope
+import com.izettle.wrench.database.WrenchScopeDao
 import com.izettle.wrench.preferences.ITogglesPreferences
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -17,7 +31,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.provider.IPackageManagerWrapper
-import java.util.*
+import java.util.Date
 
 class WrenchProvider : ContentProvider() {
 
@@ -74,7 +88,6 @@ class WrenchProvider : ContentProvider() {
                 wrenchApplication = WrenchApplication(0, packageManagerWrapper.callingApplicationPackageName!!, packageManagerWrapper.applicationLabel)
 
                 wrenchApplication.id = applicationDao.insert(wrenchApplication)
-
             } catch (e: PackageManager.NameNotFoundException) {
                 e.printStackTrace()
                 throw RuntimeException(e)

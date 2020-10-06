@@ -9,8 +9,9 @@ import com.izettle.wrench.database.WrenchScope
 import kotlinx.android.synthetic.main.configuration_list_item.view.*
 
 internal class ConfigurationViewHolder internal constructor(
-        val containerView: View,
-        val listener: ConfigurationRecyclerViewAdapter.Listener) : RecyclerView.ViewHolder(containerView) {
+    val containerView: View,
+    val listener: ConfigurationRecyclerViewAdapter.Listener
+) : RecyclerView.ViewHolder(containerView) {
 
     fun bindTo(configuration: WrenchConfigurationWithValues, model: ConfigurationViewModel) {
         containerView.title.text = configuration.key
@@ -56,5 +57,4 @@ internal class ConfigurationViewHolder internal constructor(
         containerView.default_value.text = null
         containerView.setOnClickListener(null)
     }
-
 }

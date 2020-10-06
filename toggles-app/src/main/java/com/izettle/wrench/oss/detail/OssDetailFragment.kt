@@ -28,17 +28,20 @@ class OssDetailFragment : DialogFragment() {
 
         val licenceMetadata = LicenceMetadata(args.dependency, args.skip.toLong(), args.length)
 
-        viewModel.getThirdPartyMetadata(licenceMetadata).observe(this, Observer {
-            root.text.text = it
-            LinkifyCompat.addLinks(root.text, Linkify.WEB_URLS)
-        })
+        viewModel.getThirdPartyMetadata(licenceMetadata).observe(
+            this,
+            Observer {
+                root.text.text = it
+                LinkifyCompat.addLinks(root.text, Linkify.WEB_URLS)
+            }
+        )
 
         return AlertDialog.Builder(requireActivity())
-                .setTitle(licenceMetadata.dependency)
-                .setView(root)
-                .setPositiveButton("dismiss") { _, _ ->
-                    dismiss()
-                }
-                .create()
+            .setTitle(licenceMetadata.dependency)
+            .setView(root)
+            .setPositiveButton("dismiss") { _, _ ->
+                dismiss()
+            }
+            .create()
     }
 }

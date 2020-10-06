@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.izettle.wrench.database.WrenchScope
 import com.izettle.wrench.database.WrenchScopeDao
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 
 class ScopeFragmentViewModel
 @ViewModelInject internal constructor(private val scopeDao: WrenchScopeDao) : ViewModel() {

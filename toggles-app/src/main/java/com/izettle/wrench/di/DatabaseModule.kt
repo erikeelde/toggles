@@ -18,9 +18,9 @@ object DatabaseModule {
     @Provides
     fun provideWrenchDb(@ApplicationContext context: Context): WrenchDatabase {
         return Room.databaseBuilder(context, WrenchDatabase::class.java, "wrench_database.db")
-                .addMigrations(Migrations.MIGRATION_1_2)
-                .addMigrations(Migrations.MIGRATION_2_3)
-                .build()
+            .addMigrations(Migrations.MIGRATION_1_2)
+            .addMigrations(Migrations.MIGRATION_2_3)
+            .build()
     }
 }
 

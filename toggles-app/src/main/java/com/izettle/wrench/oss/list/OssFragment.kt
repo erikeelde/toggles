@@ -19,18 +19,23 @@ class OssFragment : Fragment() {
     private val viewModel by viewModels<OssListViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            LayoutInflater.from(requireContext()).inflate(R.layout.fragment_oss, container, false)
+        LayoutInflater.from(requireContext()).inflate(R.layout.fragment_oss, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter = OssRecyclerViewAdapter(clickCallback = {
-            Log.d("Tag", "dependency = " + it.dependency)
+        val adapter = OssRecyclerViewAdapter(
+            clickCallback = {
+                Log.d("Tag", "dependency = " + it.dependency)
 
-            requireView().findNavController().navigate(OssFragmentDirections.actionActionOssToActionOssDetail(it.dependency, it.skipBytes.toInt(), it.length))
-        })
+                requireView().findNavController().navigate(OssFragmentDirections.actionActionOssToActionOssDetail(it.dependency, it.skipBytes.toInt(), it.length))
+            }
+        )
         recView.adapter = adapter
 
-        viewModel.getThirdPartyMetadata().observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
-        })
+        viewModel.getThirdPartyMetadata().observe(
+            viewLifecycleOwner,
+            Observer {
+                adapter.submitList(it)
+            }
+        )
     }
 }

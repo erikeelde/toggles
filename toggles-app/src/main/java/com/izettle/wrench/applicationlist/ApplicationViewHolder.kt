@@ -18,7 +18,6 @@ internal class ApplicationViewHolder(override val containerView: View) : Recycle
 
             applicationIcon.setImageDrawable(icon)
             status.text = ""
-
         } catch (e: PackageManager.NameNotFoundException) {
             applicationIcon.setImageResource(R.drawable.ic_report_black_24dp)
             status.setText(R.string.not_installed)

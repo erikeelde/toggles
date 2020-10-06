@@ -27,47 +27,55 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_enum_value, null)
 
-        viewModel.viewState.observe(this, { viewState ->
-            if (viewState != null) {
-                if (view.container.visibility == View.INVISIBLE && viewState.title != null) {
-                    view.container.visibility = View.VISIBLE
-                }
-                view.title.text = viewState.title
+        viewModel.viewState.observe(
+            this,
+            { viewState ->
+                if (viewState != null) {
+                    if (view.container.visibility == View.INVISIBLE && viewState.title != null) {
+                        view.container.visibility = View.VISIBLE
+                    }
+                    view.title.text = viewState.title
 
-                if (viewState.saving || viewState.reverting) {
-                    view.revert.isEnabled = false
-                }
-            }
-        })
-
-        viewModel.viewEffects.observe(this, { viewEffect ->
-            if (viewEffect != null) {
-                viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
-                    when (contentIfNotHandled) {
-                        ViewEffect.Dismiss -> dismiss()
+                    if (viewState.saving || viewState.reverting) {
+                        view.revert.isEnabled = false
                     }
                 }
             }
-        })
+        )
+
+        viewModel.viewEffects.observe(
+            this,
+            { viewEffect ->
+                if (viewEffect != null) {
+                    viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
+                        when (contentIfNotHandled) {
+                            ViewEffect.Dismiss -> dismiss()
+                        }
+                    }
+                }
+            }
+        )
 
         adapter = PredefinedValueRecyclerViewAdapter(this)
         view.list.adapter = adapter
         view.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        viewModel.predefinedValues.observe(this, Observer { items ->
-            if (items != null) {
-                adapter.submitList(items)
+        viewModel.predefinedValues.observe(
+            this,
+            Observer { items ->
+                if (items != null) {
+                    adapter.submitList(items)
+                }
             }
-        })
-
+        )
 
         view.revert.setOnClickListener {
             viewModel.revertClick()
         }
 
         return AlertDialog.Builder(requireActivity())
-                .setView(view)
-                .create()
+            .setView(view)
+            .create()
     }
 
     override fun onClick(view: View, item: WrenchPredefinedConfigurationValue) {

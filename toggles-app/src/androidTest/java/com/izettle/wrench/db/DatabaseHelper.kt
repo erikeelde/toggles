@@ -15,7 +15,6 @@ object DatabaseHelper {
         configurationValues.put(ConfigurationTable.COL_KEY, key)
         configurationValues.put(ConfigurationTable.COL_TYPE, type)
         return db.insert(ConfigurationTable.TABLE_NAME, CONFLICT_FAIL, configurationValues)
-
     }
 
     fun getWrenchConfigurationByKey(db: SupportSQLiteDatabase, key: String): Cursor {
