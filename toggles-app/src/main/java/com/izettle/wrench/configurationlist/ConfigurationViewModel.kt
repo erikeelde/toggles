@@ -16,8 +16,11 @@ import com.izettle.wrench.database.WrenchScope
 import com.izettle.wrench.database.WrenchScopeDao
 import kotlinx.coroutines.launch
 
-class ConfigurationViewModel
-@ViewModelInject internal constructor(private val applicationDao: WrenchApplicationDao, configurationDao: WrenchConfigurationDao, private val scopeDao: WrenchScopeDao) : ViewModel() {
+class ConfigurationViewModel @ViewModelInject internal constructor(
+    private val applicationDao: WrenchApplicationDao,
+    configurationDao: WrenchConfigurationDao,
+    private val scopeDao: WrenchScopeDao
+) : ViewModel() {
     private val queryLiveData: MutableLiveData<String> = MutableLiveData()
 
     private val configurationListLiveData: MediatorLiveData<List<WrenchConfigurationWithValues>>

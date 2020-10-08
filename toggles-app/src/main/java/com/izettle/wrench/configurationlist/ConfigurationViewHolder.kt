@@ -38,6 +38,7 @@ internal class ConfigurationViewHolder internal constructor(
         containerView.setOnClickListener { view -> listener.configurationClicked(view, configuration) }
     }
 
+    @Suppress("ReturnCount")
     private fun getItemForScope(scope: WrenchScope?, wrenchConfigurationValues: Set<WrenchConfigurationValue>): WrenchConfigurationValue? {
         if (scope == null) {
             return null

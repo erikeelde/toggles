@@ -4,7 +4,11 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 object Migrations {
-    val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+    const val databaseVersion1 = 1
+    const val databaseVersion2 = 2
+    const val databaseVersion3 = 3
+
+    val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             run {
                 val tableName = "application"
@@ -88,7 +92,7 @@ object Migrations {
         }
     }
 
-    val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+    val MIGRATION_2_3: Migration = object : Migration(databaseVersion2, databaseVersion3) {
         override fun migrate(database: SupportSQLiteDatabase) {
             run {
                 // Reinstate indexes - due to a bug in a previous migration (1 -> 2) these indexes may be missing.

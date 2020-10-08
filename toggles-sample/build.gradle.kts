@@ -7,10 +7,19 @@ plugins {
     id("com.google.gms.oss.licenses.plugin")
     id("dagger.hilt.android.plugin")
     id("org.jlleitschuh.gradle.ktlint")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 androidExtensions {
     isExperimental = true
+}
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.1")
+}
+
+detekt {
+    autoCorrect = true
 }
 
 android {
@@ -67,7 +76,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
     implementation("com.google.android.material:material:1.3.0-alpha03")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.2")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
     implementation("com.google.dagger:hilt-android:2.29.1-alpha")

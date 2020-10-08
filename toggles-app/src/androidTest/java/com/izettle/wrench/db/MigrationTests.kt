@@ -77,6 +77,6 @@ class MigrationTests {
     }
 
     companion object {
-        private val TEST_DB_NAME = "test_db"
+        private const val TEST_DB_NAME = "test_db"
     }
 }

@@ -7,7 +7,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -62,7 +61,7 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
 
         viewModel.predefinedValues.observe(
             this,
-            Observer { items ->
+            { items ->
                 if (items != null) {
                     adapter.submitList(items)
                 }

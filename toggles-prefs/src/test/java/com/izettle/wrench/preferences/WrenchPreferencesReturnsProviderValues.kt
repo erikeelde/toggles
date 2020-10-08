@@ -102,7 +102,13 @@ class MockContentProvider : ContentProvider() {
         return true
     }
 
-    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
+    override fun query(
+        uri: Uri,
+        projection: Array<String>?,
+        selection: String?,
+        selectionArgs: Array<String>?,
+        sortOrder: String?
+    ): Cursor? {
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATION_ID -> {
                 throw IllegalArgumentException("bolt exists")

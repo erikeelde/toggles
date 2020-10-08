@@ -21,6 +21,7 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
         contentResolver.insert(WrenchProviderContract.nutUri(), nut.toContentValues())
     }
 
+    @Suppress("ReturnCount")
     private fun getBolt(contentResolver: ContentResolver, @Bolt.BoltType boltType: String, key: String): Bolt? {
         val cursor = contentResolver.query(WrenchProviderContract.boltUri(key), null, null, null, null)
         cursor.use {
