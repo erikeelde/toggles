@@ -8,7 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.util.LinkifyCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.izettle.wrench.oss.LicenceMetadata
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +29,7 @@ class OssDetailFragment : DialogFragment() {
 
         viewModel.getThirdPartyMetadata(licenceMetadata).observe(
             this,
-            Observer {
+            {
                 root.text.text = it
                 LinkifyCompat.addLinks(root.text, Linkify.WEB_URLS)
             }

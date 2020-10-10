@@ -33,11 +33,17 @@ internal class ConfigurationRecyclerViewAdapter(
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WrenchConfigurationWithValues>() {
-            override fun areItemsTheSame(oldWrenchConfigurationWithValues: WrenchConfigurationWithValues, newWrenchConfigurationWithValues: WrenchConfigurationWithValues): Boolean {
+            override fun areItemsTheSame(
+                oldWrenchConfigurationWithValues: WrenchConfigurationWithValues,
+                newWrenchConfigurationWithValues: WrenchConfigurationWithValues
+            ): Boolean {
                 return oldWrenchConfigurationWithValues.id == newWrenchConfigurationWithValues.id
             }
 
-            override fun areContentsTheSame(oldWrenchConfigurationWithValues: WrenchConfigurationWithValues, newWrenchConfigurationWithValues: WrenchConfigurationWithValues): Boolean {
+            override fun areContentsTheSame(
+                oldWrenchConfigurationWithValues: WrenchConfigurationWithValues,
+                newWrenchConfigurationWithValues: WrenchConfigurationWithValues
+            ): Boolean {
                 return oldWrenchConfigurationWithValues == newWrenchConfigurationWithValues &&
                     oldWrenchConfigurationWithValues.configurationValues!!.size == newWrenchConfigurationWithValues.configurationValues!!.size &&
                     oldWrenchConfigurationWithValues.configurationValues!!.containsAll(newWrenchConfigurationWithValues.configurationValues!!)

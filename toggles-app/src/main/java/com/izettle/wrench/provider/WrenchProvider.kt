@@ -90,7 +90,7 @@ class WrenchProvider : ContentProvider() {
                 wrenchApplication.id = applicationDao.insert(wrenchApplication)
             } catch (e: PackageManager.NameNotFoundException) {
                 e.printStackTrace()
-                throw RuntimeException(e)
+                throw e
             }
         }
 
@@ -99,7 +99,13 @@ class WrenchProvider : ContentProvider() {
 
     override fun onCreate() = true
 
-    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
+    override fun query(
+        uri: Uri,
+        projection: Array<String>?,
+        selection: String?,
+        selectionArgs: Array<String>?,
+        sortOrder: String?
+    ): Cursor? {
 
         val callingApplication = getCallingApplication(applicationDao)
 
@@ -287,18 +293,18 @@ class WrenchProvider : ContentProvider() {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
-        when (uriMatcher.match(uri)) {
+        return when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATIONS -> {
-                return "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
+                "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
             CURRENT_CONFIGURATION_ID -> {
-                return "vnd.android.cursor.item/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
+                "vnd.android.cursor.item/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
             CURRENT_CONFIGURATION_KEY -> {
-                return "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
+                "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
             PREDEFINED_CONFIGURATION_VALUES -> {
-                return "vnd.android.cursor.dir/vnd..${BuildConfig.APPLICATION_ID}..predefinedConfigurationValue"
+                "vnd.android.cursor.dir/vnd..${BuildConfig.APPLICATION_ID}..predefinedConfigurationValue"
             }
             else -> {
                 throw UnsupportedOperationException("Not yet implemented")
@@ -313,6 +319,8 @@ class WrenchProvider : ContentProvider() {
         private const val CURRENT_CONFIGURATIONS = 3
         private const val PREDEFINED_CONFIGURATION_VALUES = 5
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+
+        private const val oneSecond = 1000
 
         init {
             uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration/#", CURRENT_CONFIGURATION_ID)
@@ -353,7 +361,7 @@ class WrenchProvider : ContentProvider() {
 
                 val customScope = WrenchScope()
                 customScope.applicationId = applicationId
-                customScope.timeStamp = Date(defaultScope.timeStamp.time + 1000)
+                customScope.timeStamp = Date(defaultScope.timeStamp.time + oneSecond)
                 customScope.name = WrenchScope.SCOPE_USER
                 customScope.id = scopeDao.insert(customScope)
 

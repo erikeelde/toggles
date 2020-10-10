@@ -4,4 +4,3 @@ object Versions {
     const val appVersionCode = 2
     const val appVersionName = "1.00.01"
 }
-

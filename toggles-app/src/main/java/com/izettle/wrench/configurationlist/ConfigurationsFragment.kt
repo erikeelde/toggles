@@ -77,7 +77,7 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
 
         model.wrenchApplication.observe(
             viewLifecycleOwner,
-            Observer { wrenchApplication ->
+            { wrenchApplication ->
                 if (wrenchApplication != null) {
                     (activity as AppCompatActivity).supportActionBar!!.title = wrenchApplication.applicationLabel
                 }
@@ -86,7 +86,7 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
 
         model.defaultScopeLiveData.observe(
             viewLifecycleOwner,
-            Observer { scope ->
+            { scope ->
                 if (scope != null && list.adapter != null) {
                     list.adapter!!.notifyDataSetChanged()
                 }
@@ -95,7 +95,7 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
 
         model.selectedScopeLiveData.observe(
             viewLifecycleOwner,
-            Observer { scope ->
+            { scope ->
                 if (scope != null && list.adapter != null) {
                     list.adapter!!.notifyDataSetChanged()
                 }
@@ -105,7 +105,7 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
 
         model.configurations.observe(
             viewLifecycleOwner,
-            Observer { wrenchConfigurationWithValues ->
+            { wrenchConfigurationWithValues ->
                 if (wrenchConfigurationWithValues != null) {
                     updateConfigurations(wrenchConfigurationWithValues)
                 }
@@ -114,7 +114,7 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
 
         model.isListEmpty.observe(
             viewLifecycleOwner,
-            Observer { isEmpty ->
+            { isEmpty ->
                 val animator = animator
                 if (isEmpty == null || isEmpty) {
                     animator.displayedChild = animator.indexOfChild(no_configurations_empty_view)
@@ -161,7 +161,7 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_restart_application -> {
                 model.wrenchApplication.observe(
                     this,
@@ -186,7 +186,7 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
                     }
                 )
 
-                return true
+                true
             }
             R.id.action_application_settings -> {
                 model.wrenchApplication.observe(
@@ -202,20 +202,20 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
                         }
                     }
                 )
-                return true
+                true
             }
             R.id.action_delete_application -> {
                 model.deleteApplication(model.wrenchApplication.value!!)
                 Navigation.findNavController(animator).navigateUp()
-                return true
+                true
             }
             R.id.action_change_scope -> {
                 val args = ConfigurationsFragmentArgs.fromBundle(requireArguments())
                 ScopeFragment.newInstance(args.applicationId).show(childFragmentManager, null)
-                return true
+                true
             }
             else -> {
-                return super.onOptionsItemSelected(item)
+                super.onOptionsItemSelected(item)
             }
         }
     }

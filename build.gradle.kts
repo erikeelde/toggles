@@ -15,11 +15,15 @@ buildscript {
     }
 }
 
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.1")
+}
+
 plugins {
     id("com.github.ben-manes.versions") version "0.33.0"
     id("se.eelde.build-optimizations") version "0.1.2"
-    id("com.github.plnice.canidropjetifier") version "0.5"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
+    id("io.gitlab.arturbosch.detekt") version "1.14.1"
 }
 
 allprojects {
@@ -27,6 +31,17 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
+    }
+}
+
+detekt {
+    autoCorrect = true
+    buildUponDefaultConfig = true
+    config = files("$projectDir/config/detekt/detekt.yml")
+    baseline = file("$projectDir/config/detekt/baseline.xml")
+
+    reports {
+        html.enabled = true
     }
 }
 

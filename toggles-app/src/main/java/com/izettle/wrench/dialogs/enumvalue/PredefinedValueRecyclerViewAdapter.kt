@@ -33,11 +33,17 @@ class PredefinedValueRecyclerViewAdapter internal constructor(
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WrenchPredefinedConfigurationValue>() {
-            override fun areItemsTheSame(oldApplication: WrenchPredefinedConfigurationValue, newApplication: WrenchPredefinedConfigurationValue): Boolean {
+            override fun areItemsTheSame(
+                oldApplication: WrenchPredefinedConfigurationValue,
+                newApplication: WrenchPredefinedConfigurationValue
+            ): Boolean {
                 return oldApplication.id == newApplication.id
             }
 
-            override fun areContentsTheSame(oldApplication: WrenchPredefinedConfigurationValue, newApplication: WrenchPredefinedConfigurationValue): Boolean {
+            override fun areContentsTheSame(
+                oldApplication: WrenchPredefinedConfigurationValue,
+                newApplication: WrenchPredefinedConfigurationValue
+            ): Boolean {
                 return oldApplication == newApplication
             }
         }

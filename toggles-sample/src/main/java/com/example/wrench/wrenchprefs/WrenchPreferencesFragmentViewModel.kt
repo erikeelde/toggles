@@ -13,7 +13,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class WrenchPreferencesFragmentViewModel @ViewModelInject internal constructor(private val application: Application, private val togglesPreferences: ITogglesPreferences) : ViewModel() {
+class WrenchPreferencesFragmentViewModel @ViewModelInject internal constructor(
+    private val application: Application,
+    private val togglesPreferences: ITogglesPreferences
+) : ViewModel() {
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)

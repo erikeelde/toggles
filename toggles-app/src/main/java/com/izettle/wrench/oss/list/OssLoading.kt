@@ -45,8 +45,10 @@ object OssLoading {
         return inputStreamPartToString(resources.openRawResource(resources.getIdentifier(resourceName, "raw", context.packageName)), skipBytes, length)
     }
 
+    private const val bufferSize = 1024
+
     private fun inputStreamPartToString(inputStream: InputStream, skipBytes: Long, length: Int): String {
-        val buffer = ByteArray(1024)
+        val buffer = ByteArray(bufferSize)
         val byteArrayOutputStream = ByteArrayOutputStream()
 
         try {
@@ -56,7 +58,7 @@ object OssLoading {
 
             var bytesLeftToRead = totalBytesToRead
             while (true) {
-                val bytesRead = inputStream.read(buffer, 0, Math.min(bytesLeftToRead, 1024))
+                val bytesRead = inputStream.read(buffer, 0, Math.min(bytesLeftToRead, bufferSize))
                 if (bytesLeftToRead <= 0 || bytesRead == -1) {
                     inputStream.close()
                     break
@@ -66,13 +68,13 @@ object OssLoading {
                 bytesLeftToRead -= bytesRead
             }
         } catch (exception: IOException) {
-            throw RuntimeException("Failed to read license or metadata text.", exception)
+            throw IOException("Failed to read license or metadata text.", exception)
         }
 
         try {
             return byteArrayOutputStream.toString("UTF-8")
         } catch (exception: UnsupportedEncodingException) {
-            throw RuntimeException("Unsupported encoding UTF8. This should always be supported.", exception)
+            throw IOException("Unsupported encoding UTF8. This should always be supported.", exception)
         }
     }
 }
