@@ -30,13 +30,3 @@ jobs:
         with:
           name: Reports
           path: '**/build/reports/*'
-
-      - name: Run unit tests
-        run: ./gradlew testDebugUnitTest
-
-      - name: Upload unit test reports
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: Unit test reports
-          path: '**/build/reports/*'

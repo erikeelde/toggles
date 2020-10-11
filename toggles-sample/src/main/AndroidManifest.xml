@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.wrench">
 
+<!--    <queries>-->
+<!--        <provider android:authorities="se.eelde.toggles.configprovider"-->
+<!--            tools:ignore="ExportedContentProvider" />-->
+<!--        <provider android:authorities="com.izettle.wrench.configprovider"-->
+<!--            tools:ignore="ExportedContentProvider" />-->
+<!--    </queries>-->
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
