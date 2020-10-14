@@ -1,14 +1,3 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.izettle.wrench.core">
-
-    <queries>
-        <provider
-            android:authorities="se.eelde.toggles.configprovider"
-            tools:ignore="ExportedContentProvider" />
-
-        <provider
-            android:authorities="com.izettle.wrench.configprovider"
-            tools:ignore="ExportedContentProvider" />
-    </queries>
-</manifest>
+    package="se.eelde.toggles.core" />

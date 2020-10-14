@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.1")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
 }
 
 detekt {
@@ -36,6 +36,9 @@ android {
         isWarningsAsErrors = true
         lintConfig = File("../lint.xml")
     }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
@@ -46,11 +49,20 @@ android {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.1")
+
+    testImplementation("androidx.test:core:1.3.0")
+    testImplementation("androidx.test.ext:truth:1.3.0")
+    testImplementation("androidx.test:rules:1.3.0")
+    testImplementation("androidx.test:runner:1.3.0")
+    testImplementation("androidx.test.ext:junit:1.1.2")
+    testImplementation("org.robolectric:robolectric:4.4")
 
     implementation(project(":toggles-core"))
     implementation("androidx.annotation:annotation:1.2.0-alpha01")
-    api("androidx.lifecycle:lifecycle-livedata-core:2.3.0-beta01")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("androidx.core:core-ktx:1.5.0-alpha04")
 }
 
 // The api of this module should be discussed before any potential release

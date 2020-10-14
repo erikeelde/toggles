@@ -4,13 +4,13 @@ import android.app.Application
 import android.os.Build.VERSION_CODES.O
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.izettle.wrench.core.WrenchProviderContract
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import se.eelde.toggles.core.TogglesProviderContract
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [O])
@@ -29,7 +29,7 @@ class WrenchPreferencesReturnsDefaultWhenMissingProviderTest {
         val applicationContext = ApplicationProvider.getApplicationContext<Application>()
         wrenchPreferences = TogglesPreferences(applicationContext)
 
-        val query = applicationContext.contentResolver.query(WrenchProviderContract.boltUri(""), null, null, null, null)
+        val query = applicationContext.contentResolver.query(TogglesProviderContract.boltUri(""), null, null, null, null)
         Assert.assertNull(query)
     }
 

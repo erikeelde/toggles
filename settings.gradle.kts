@@ -3,5 +3,6 @@ include(
     ":toggles-sample",
     ":toggles-core",
     ":toggles-prefs",
-    ":toggles-livedata"
+    ":toggles-livedata",
+    "toggles-coroutines"
 )

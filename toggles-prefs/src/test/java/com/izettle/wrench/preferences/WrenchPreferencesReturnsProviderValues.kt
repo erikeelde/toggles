@@ -12,9 +12,6 @@ import android.net.Uri
 import android.os.Build.VERSION_CODES.O
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.izettle.wrench.core.Bolt
-import com.izettle.wrench.core.ColumnNames
-import com.izettle.wrench.core.WrenchProviderContract
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -22,6 +19,9 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ContentProviderController
 import org.robolectric.annotation.Config
+import se.eelde.toggles.core.Bolt
+import se.eelde.toggles.core.ColumnNames
+import se.eelde.toggles.core.TogglesProviderContract
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [O])
@@ -39,7 +39,7 @@ class WrenchPreferencesReturnsProviderValues {
     @Before
     fun setUp() {
 
-        val info = ProviderInfo().apply { authority = WrenchProviderContract.WRENCH_AUTHORITY }
+        val info = ProviderInfo().apply { authority = TogglesProviderContract.TOGGLES_AUTHORITY }
         contentProviderController = Robolectric.buildContentProvider(MockContentProvider::class.java).create(info)
 
         wrenchPreferences = TogglesPreferences(ApplicationProvider.getApplicationContext<Application>())
@@ -88,10 +88,10 @@ class MockContentProvider : ContentProvider() {
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
         init {
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration/#", CURRENT_CONFIGURATION_ID)
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration/*", CURRENT_CONFIGURATION_KEY)
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration", CURRENT_CONFIGURATIONS)
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "predefinedConfigurationValue", PREDEFINED_CONFIGURATION_VALUES)
+            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "currentConfiguration/#", CURRENT_CONFIGURATION_ID)
+            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "currentConfiguration/*", CURRENT_CONFIGURATION_KEY)
+            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "currentConfiguration", CURRENT_CONFIGURATIONS)
+            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "predefinedConfigurationValue", PREDEFINED_CONFIGURATION_VALUES)
         }
     }
 

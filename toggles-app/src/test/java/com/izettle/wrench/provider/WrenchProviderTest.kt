@@ -25,7 +25,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
-import se.eelde.toggles.BuildConfig
 import javax.inject.Singleton
 
 @HiltAndroidTest
@@ -53,7 +52,7 @@ class WrenchProviderTest {
     fun setUp() {
         hiltRule.inject()
 
-        val contentProviderController = Robolectric.buildContentProvider(WrenchProvider::class.java).create(BuildConfig.CONFIG_AUTHORITY)
+        val contentProviderController = Robolectric.buildContentProvider(WrenchProvider::class.java).create(WrenchProviderContract.WRENCH_AUTHORITY)
         wrenchProvider = contentProviderController.get()
     }
 

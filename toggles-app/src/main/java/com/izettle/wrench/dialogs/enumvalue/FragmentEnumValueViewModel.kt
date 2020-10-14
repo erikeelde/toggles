@@ -1,5 +1,6 @@
 package com.izettle.wrench.dialogs.enumvalue
 
+import android.app.Application
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -17,7 +18,6 @@ import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,11 +25,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
+import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.provider.notifyInsert
+import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 
 @ExperimentalCoroutinesApi
 class FragmentEnumValueViewModel @ViewModelInject internal constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
+    private val application: Application,
     private val configurationDao: WrenchConfigurationDao,
     private val configurationValueDao: WrenchConfigurationValueDao,
     private val predefinedConfigurationValueDao: WrenchPredefinedConfigurationValueDao
@@ -63,11 +67,15 @@ class FragmentEnumValueViewModel @ViewModelInject internal constructor(
                     is ViewAction.SaveAction -> {
                         _state.value = reduce(viewState.value!!, PartialViewState.Saving)
                         updateConfigurationValue(viewAction.value).join()
+                        application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+
                         viewEffects.value = Event(ViewEffect.Dismiss)
                     }
                     ViewAction.RevertAction -> {
                         _state.value = reduce(viewState.value!!, PartialViewState.Reverting)
-                        deleteConfigurationValue()
+                        deleteConfigurationValue().join()
+                        application.contentResolver.notifyInsert(TogglesProviderContract.boltUri(configurationId))
+
                         viewEffects.value = Event(ViewEffect.Dismiss)
                     }
                 }
@@ -122,12 +130,16 @@ class FragmentEnumValueViewModel @ViewModelInject internal constructor(
                 wrenchConfigurationValue.id = configurationValueDao.insert(wrenchConfigurationValue)
             }
             configurationDao.touch(configurationId, Date())
+
+            application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
         }
     }
 
-    private fun deleteConfigurationValue() {
-        viewModelScope.async {
+    private suspend fun deleteConfigurationValue(): Job = coroutineScope {
+        viewModelScope.launch(Dispatchers.IO) {
             configurationValueDao.delete(selectedConfigurationValue!!)
+
+            application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
         }
     }
 }

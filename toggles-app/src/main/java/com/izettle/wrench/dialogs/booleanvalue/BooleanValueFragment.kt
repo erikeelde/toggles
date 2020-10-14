@@ -9,8 +9,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_boolean_value.view.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.R
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class BooleanValueFragment : DialogFragment() {
 

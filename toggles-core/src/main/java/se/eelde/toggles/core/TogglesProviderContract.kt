@@ -1,4 +1,4 @@
-package com.izettle.wrench.core
+package se.eelde.toggles.core
 
 import android.content.ContentValues
 import android.database.Cursor
@@ -108,20 +108,20 @@ private fun Cursor.getLongOrNull(columnName: String): Long? {
     return if (isNull(index)) null else getLong(index)
 }
 
-object WrenchProviderContract {
-    const val WRENCH_AUTHORITY = BuildConfig.WRENCH_AUTHORITY
+object TogglesProviderContract {
+    const val TOGGLES_AUTHORITY = BuildConfig.TOGGLES_AUTHORITY
 
-    const val WRENCH_API_VERSION = "API_VERSION"
+    const val TOGGLES_API_VERSION = "API_VERSION"
 
-    private val boltUri = Uri.parse("content://$WRENCH_AUTHORITY/currentConfiguration")
-    private val nutUri = Uri.parse("content://$WRENCH_AUTHORITY/predefinedConfigurationValue")
+    private val boltUri = Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
+    private val nutUri = Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
 
     @JvmStatic
     fun boltUri(id: Long): Uri {
         return boltUri
             .buildUpon()
             .appendPath(id.toString())
-            .appendQueryParameter(WRENCH_API_VERSION, BuildConfig.WRENCH_API_VERSION.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
             .build()
     }
 
@@ -130,7 +130,7 @@ object WrenchProviderContract {
         return boltUri
             .buildUpon()
             .appendPath(key)
-            .appendQueryParameter(WRENCH_API_VERSION, BuildConfig.WRENCH_API_VERSION.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
             .build()
     }
 
@@ -138,7 +138,7 @@ object WrenchProviderContract {
     fun boltUri(): Uri {
         return boltUri
             .buildUpon()
-            .appendQueryParameter(WRENCH_API_VERSION, BuildConfig.WRENCH_API_VERSION.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
             .build()
     }
 
@@ -146,7 +146,7 @@ object WrenchProviderContract {
     fun nutUri(): Uri {
         return nutUri
             .buildUpon()
-            .appendQueryParameter(WRENCH_API_VERSION, BuildConfig.WRENCH_API_VERSION.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
             .build()
     }
 }
