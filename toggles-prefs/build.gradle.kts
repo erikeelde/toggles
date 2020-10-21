@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.1")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
 }
 
 detekt {
@@ -49,7 +49,7 @@ android {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.1")
 
     testImplementation("androidx.test:core:1.3.0")
     testImplementation("androidx.test.ext:truth:1.3.0")

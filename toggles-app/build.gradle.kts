@@ -14,7 +14,7 @@ plugins {
 androidExtensions { isExperimental = true }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.1")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
 }
 
 detekt {
@@ -58,8 +58,8 @@ android {
 
         val wrenchAuthority = "com.izettle.wrench.configprovider"
         val wrenchPermission = "com.izettle.wrench.permission"
-        val togglesAuthority = "se.eelde.toggles.configprovider" // not used yet
-        val togglesPermission = "se.eelde.toggles.provider_permission" // not used yet
+        val togglesAuthority = "se.eelde.toggles.configprovider"
+        val togglesPermission = "se.eelde.toggles.provider_permission"
 
         manifestPlaceholders["wrenchAuthority"] = wrenchAuthority
         manifestPlaceholders["wrenchPermission"] = wrenchPermission
@@ -70,7 +70,6 @@ android {
     }
     packagingOptions {
         exclude("META-INF/main.kotlin_module")
-        exclude("mockito-extensions/org.mockito.plugins.MockMaker")
         exclude("META-INF/atomicfu.kotlin_module")
     }
     kotlinOptions {
@@ -110,15 +109,13 @@ android {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13")
-    testImplementation("org.mockito:mockito-core:3.5.13")
+    testImplementation("junit:junit:4.13.1")
 
     testImplementation("androidx.test:core:1.3.0")
     testImplementation("androidx.test.ext:truth:1.3.0")
     testImplementation("androidx.test:rules:1.3.0")
     testImplementation("androidx.test:runner:1.3.0")
     testImplementation("androidx.test.ext:junit:1.1.2")
-    testImplementation("org.mockito:mockito-android:3.5.13")
 //    testImplementation("androidx.room:room-testing:2.3.0-alpha02")
     testImplementation("org.robolectric:robolectric:4.4")
     testImplementation("androidx.test.espresso:espresso-core:3.3.0")
@@ -132,8 +129,7 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test:runner:1.3.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
-    androidTestImplementation("org.mockito:mockito-android:3.5.13")
-    androidTestImplementation("androidx.room:room-testing:2.3.0-alpha02")
+    androidTestImplementation("androidx.room:room-testing:2.3.0-alpha03")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 
     implementation("com.google.dagger:hilt-android:2.29.1-alpha")
@@ -145,7 +141,7 @@ dependencies {
     kaptTest("com.google.dagger:hilt-android-compiler:2.29.1-alpha")
 
     implementation("androidx.lifecycle:lifecycle-common-java8:2.3.0-beta01")
-    kapt("androidx.room:room-compiler:2.3.0-alpha02")
+    kapt("androidx.room:room-compiler:2.3.0-alpha03")
 
     implementation("com.google.dagger:dagger:2.29.1")
     kapt("com.google.dagger:dagger-compiler:2.29.1")
@@ -160,13 +156,14 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01")
     implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:2.3.0-beta01")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-beta01")
-    implementation("androidx.room:room-runtime:2.3.0-alpha02")
-    implementation("androidx.room:room-ktx:2.3.0-alpha02")
+    implementation("androidx.room:room-runtime:2.3.0-alpha03")
+    implementation("androidx.room:room-ktx:2.3.0-alpha03")
     implementation("androidx.paging:paging-runtime:3.0.0-alpha07")
 
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.1")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.1")
 
+    implementation("com.izettle.wrench:wrench-core:0.3")
     implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
 

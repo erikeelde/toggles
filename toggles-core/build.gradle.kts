@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.1")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
 }
 
 detekt {
@@ -28,6 +28,12 @@ android {
         buildConfigField("String", "WRENCH_AUTHORITY", "\"${wrenchProviderAuthority}\"")
 
         buildConfigField("int", "WRENCH_API_VERSION", "1")
+
+        val togglesProviderAuthority = "se.eelde.toggles.configprovider"
+        manifestPlaceholders["togglesProviderAuthority"] = togglesProviderAuthority
+        buildConfigField("String", "TOGGLES_AUTHORITY", "\"${togglesProviderAuthority}\"")
+
+        buildConfigField("int", "TOGGLES_API_VERSION", "1")
     }
 
     buildTypes {
@@ -58,7 +64,7 @@ android {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.1")
     implementation("androidx.annotation:annotation:1.2.0-alpha01")
 }
 

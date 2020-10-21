@@ -3,9 +3,9 @@ package com.izettle.wrench.preferences
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import com.izettle.wrench.core.Bolt
-import com.izettle.wrench.core.Nut
-import com.izettle.wrench.core.WrenchProviderContract
+import se.eelde.toggles.core.Bolt
+import se.eelde.toggles.core.Nut
+import se.eelde.toggles.core.TogglesProviderContract
 
 interface ITogglesPreferences {
     fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defValue: T): T
@@ -18,12 +18,12 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
     private val contentResolver: ContentResolver = context.contentResolver
 
     private fun insertNut(contentResolver: ContentResolver, nut: Nut) {
-        contentResolver.insert(WrenchProviderContract.nutUri(), nut.toContentValues())
+        contentResolver.insert(TogglesProviderContract.nutUri(), nut.toContentValues())
     }
 
     @Suppress("ReturnCount")
     private fun getBolt(contentResolver: ContentResolver, @Bolt.BoltType boltType: String, key: String): Bolt? {
-        val cursor = contentResolver.query(WrenchProviderContract.boltUri(key), null, null, null, null)
+        val cursor = contentResolver.query(TogglesProviderContract.boltUri(key), null, null, null, null)
         cursor.use {
             if (cursor == null) {
                 return null
@@ -38,7 +38,7 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
     }
 
     private fun insertBolt(contentResolver: ContentResolver, bolt: Bolt): Uri? {
-        return contentResolver.insert(WrenchProviderContract.boltUri(), bolt.toContentValues())
+        return contentResolver.insert(TogglesProviderContract.boltUri(), bolt.toContentValues())
     }
 
     override fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defValue: T): T {
@@ -50,12 +50,12 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
             val uri = insertBolt(contentResolver, bolt)
             bolt.id = uri!!.lastPathSegment!!.toLong()
 
-            for (enumConstant in type.enumConstants) {
+            for (enumConstant in type.enumConstants!!) {
                 insertNut(contentResolver = contentResolver, nut = Nut(configurationId = bolt.id, value = enumConstant.toString()))
             }
         }
 
-        return java.lang.Enum.valueOf<T>(type, bolt.value!!)
+        return java.lang.Enum.valueOf(type, bolt.value!!)
     }
 
     override fun getString(key: String, defValue: String?): String? {

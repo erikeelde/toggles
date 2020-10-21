@@ -9,8 +9,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_string_value.view.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.R
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class StringValueFragment : DialogFragment() {
 
@@ -59,8 +61,6 @@ class StringValueFragment : DialogFragment() {
         view.revert.setOnClickListener {
             viewModel.revertClick()
         }
-
-        // view.value.setOnCheckedChangeListener { _, isChecked -> viewModel.checkedChanged(isChecked) }
 
         view.save.setOnClickListener {
             viewModel.saveClick(view.value.text.toString())

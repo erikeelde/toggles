@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_enum_value.view.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.R
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
 

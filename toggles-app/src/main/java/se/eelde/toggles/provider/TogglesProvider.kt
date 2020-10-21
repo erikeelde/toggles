@@ -1,7 +1,6 @@
 package se.eelde.toggles.provider
 
 import android.content.ContentProvider
-import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
@@ -10,9 +9,7 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Binder
-import android.os.Build
 import com.izettle.wrench.core.Bolt
-import com.izettle.wrench.core.WrenchProviderContract
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchApplicationDao
 import com.izettle.wrench.database.WrenchConfiguration
@@ -29,6 +26,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
 import se.eelde.toggles.BuildConfig
+import se.eelde.toggles.core.TogglesProviderContract
 import java.util.Date
 
 class TogglesProvider : ContentProvider() {
@@ -193,17 +191,7 @@ class TogglesProvider : ContentProvider() {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val flags: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ContentResolver.NOTIFY_INSERT else 0
-            try {
-                // In ContentResolver.java circa L2828 getContentService() returns null while running robolectric
-                context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, flags)
-            } catch (ignored: NullPointerException) {
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, false)
-        }
+        context!!.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
 
         return ContentUris.withAppendedId(uri, insertId)
     }
@@ -243,17 +231,7 @@ class TogglesProvider : ContentProvider() {
         }
 
         if (updatedRows > 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val flags: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ContentResolver.NOTIFY_INSERT else 0
-                try {
-                    // In ContentResolver.java circa L2828 getContentService() returns null while running robolectric
-                    context!!.contentResolver.notifyChange(uri, null, flags)
-                } catch (ignored: NullPointerException) {
-                }
-            } else {
-                @Suppress("DEPRECATION")
-                context!!.contentResolver.notifyChange(uri, null, false)
-            }
+            context!!.contentResolver.notifyUpdate(uri)
         }
 
         return updatedRows
@@ -306,10 +284,10 @@ class TogglesProvider : ContentProvider() {
         private const val oneSecond = 1000
 
         init {
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration/#", CURRENT_CONFIGURATION_ID)
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration/*", CURRENT_CONFIGURATION_KEY)
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration", CURRENT_CONFIGURATIONS)
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "predefinedConfigurationValue", PREDEFINED_CONFIGURATION_VALUES)
+            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "currentConfiguration/#", CURRENT_CONFIGURATION_ID)
+            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "currentConfiguration/*", CURRENT_CONFIGURATION_KEY)
+            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "currentConfiguration", CURRENT_CONFIGURATIONS)
+            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "predefinedConfigurationValue", PREDEFINED_CONFIGURATION_VALUES)
         }
 
         @Synchronized
@@ -385,7 +363,7 @@ class TogglesProvider : ContentProvider() {
 
         @TogglesApiVersion
         private fun getApiVersion(uri: Uri): Int {
-            val queryParameter = uri.getQueryParameter(WrenchProviderContract.WRENCH_API_VERSION)
+            val queryParameter = uri.getQueryParameter(TogglesProviderContract.TOGGLES_API_VERSION)
             return if (queryParameter != null) {
                 Integer.valueOf(queryParameter)
             } else {

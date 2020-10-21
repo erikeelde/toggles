@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.example.wrench.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_live_data_preferences.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 class LiveDataPreferencesFragment : Fragment() {
@@ -18,6 +19,7 @@ class LiveDataPreferencesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         LayoutInflater.from(requireContext()).inflate(R.layout.fragment_live_data_preferences, container, false)
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

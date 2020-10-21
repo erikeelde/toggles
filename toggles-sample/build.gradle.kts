@@ -15,7 +15,7 @@ androidExtensions {
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.1")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
 }
 
 detekt {
@@ -64,8 +64,6 @@ android {
 }
 
 dependencies {
-    testImplementation("org.mockito:mockito-core:3.5.13")
-
     testImplementation("androidx.test:core:1.3.0")
     testImplementation("androidx.test.ext:truth:1.3.0")
     testImplementation("androidx.test:rules:1.3.0")
@@ -77,6 +75,7 @@ dependencies {
     implementation("com.google.android.material:material:1.3.0-alpha03")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
     implementation("com.google.dagger:hilt-android:2.29.1-alpha")
@@ -86,12 +85,12 @@ dependencies {
     testImplementation("com.google.dagger:hilt-android-testing:2.29.1-alpha")
     kaptTest("com.google.dagger:hilt-android-compiler:2.29.1-alpha")
 
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.1")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.1")
 
     implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
-    implementation(project(":toggles-livedata"))
+    implementation(project(":toggles-coroutines"))
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")

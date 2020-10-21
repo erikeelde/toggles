@@ -1,7 +1,6 @@
 package com.izettle.wrench.provider
 
 import android.content.ContentProvider
-import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
@@ -31,6 +30,8 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.provider.IPackageManagerWrapper
+import se.eelde.toggles.provider.notifyInsert
+import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 
 class WrenchProvider : ContentProvider() {
@@ -197,17 +198,7 @@ class WrenchProvider : ContentProvider() {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val flags: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ContentResolver.NOTIFY_INSERT else 0
-            try {
-                // In ContentResolver.java circa L2828 getContentService() returns null while running robolectric
-                context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, flags)
-            } catch (ignored: NullPointerException) {
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, false)
-        }
+        context!!.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
 
         return ContentUris.withAppendedId(uri, insertId)
     }
@@ -260,17 +251,7 @@ class WrenchProvider : ContentProvider() {
         }
 
         if (updatedRows > 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val flags: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ContentResolver.NOTIFY_INSERT else 0
-                try {
-                    // In ContentResolver.java circa L2828 getContentService() returns null while running robolectric
-                    context!!.contentResolver.notifyChange(uri, null, flags)
-                } catch (ignored: NullPointerException) {
-                }
-            } else {
-                @Suppress("DEPRECATION")
-                context!!.contentResolver.notifyChange(uri, null, false)
-            }
+            context!!.contentResolver.notifyUpdate(uri)
         }
 
         return updatedRows
