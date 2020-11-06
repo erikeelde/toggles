@@ -29,6 +29,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
 import se.eelde.toggles.BuildConfig
+import se.eelde.toggles.notification.showNotification
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
@@ -115,6 +116,10 @@ class WrenchProvider : ContentProvider() {
         }
 
         var cursor: Cursor?
+
+        context?.apply {
+            showNotification(this, callingApplication)
+        }
 
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATION_ID -> {

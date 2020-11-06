@@ -27,6 +27,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.notification.showNotification
 import java.util.Date
 
 class TogglesProvider : ContentProvider() {
@@ -104,12 +105,15 @@ class TogglesProvider : ContentProvider() {
     ): Cursor? {
 
         val callingApplication = getCallingApplication(applicationDao)
-
         if (!isTogglesApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
         var cursor: Cursor?
+
+        context?.apply {
+            showNotification(this, callingApplication)
+        }
 
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATION_ID -> {

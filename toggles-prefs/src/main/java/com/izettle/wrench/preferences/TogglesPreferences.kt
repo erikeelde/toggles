@@ -6,6 +6,7 @@ import android.net.Uri
 import se.eelde.toggles.core.Bolt
 import se.eelde.toggles.core.Nut
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.core.showDownloadNotification
 
 interface ITogglesPreferences {
     fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defValue: T): T
@@ -15,6 +16,7 @@ interface ITogglesPreferences {
 }
 
 class TogglesPreferences(context: Context) : ITogglesPreferences {
+    private val context = context.applicationContext
     private val contentResolver: ContentResolver = context.contentResolver
 
     private fun insertNut(contentResolver: ContentResolver, nut: Nut) {
@@ -26,6 +28,7 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
         val cursor = contentResolver.query(TogglesProviderContract.boltUri(key), null, null, null, null)
         cursor.use {
             if (cursor == null) {
+                showDownloadNotification(context = context)
                 return null
             }
 
