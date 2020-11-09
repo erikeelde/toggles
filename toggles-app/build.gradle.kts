@@ -42,10 +42,10 @@ android {
 
     defaultConfig {
         applicationId = "se.eelde.toggles"
-        minSdk = 14
+        minSdk = 16
         targetSdk = 30
-        versionCode = Versions.appVersionCode
-        versionName = Versions.appVersionName
+        versionCode = 2
+        versionName = "1.00.01"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -149,7 +149,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
     implementation("androidx.recyclerview:recyclerview:1.2.0-alpha06")
     implementation("com.google.android.material:material:1.3.0-alpha03")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-beta01")
@@ -158,7 +158,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-beta01")
     implementation("androidx.room:room-runtime:2.3.0-alpha03")
     implementation("androidx.room:room-ktx:2.3.0-alpha03")
-    implementation("androidx.paging:paging-runtime:3.0.0-alpha07")
+    implementation("androidx.paging:paging-runtime:3.0.0-alpha08")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.1")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.1")
@@ -168,7 +168,7 @@ dependencies {
     implementation(project(":toggles-prefs"))
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1")
 
     implementation("androidx.core:core-ktx:1.5.0-alpha04")
 }

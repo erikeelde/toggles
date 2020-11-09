@@ -20,6 +20,7 @@ import se.eelde.toggles.core.Bolt.Companion.fromCursor
 import se.eelde.toggles.core.Nut
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.core.TogglesProviderContract.boltUri
+import se.eelde.toggles.core.showDownloadNotification
 
 @ExperimentalCoroutinesApi
 fun booleanBoltFlow(context: Context, key: String, defaultValue: Boolean = true): Flow<Boolean> =
@@ -100,6 +101,8 @@ fun boltFlow(context: Context, @BoltType type: String, key: String): Flow<Bolt?>
     if (providerInfo != null) {
         context.contentResolver
             .registerContentObserver(boltUri(), true, boltContentObserver)
+    } else {
+        showDownloadNotification(context = context)
     }
 
     offer(getBolt(context.contentResolver, type, key))

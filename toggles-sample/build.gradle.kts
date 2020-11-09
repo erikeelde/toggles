@@ -26,10 +26,10 @@ android {
     compileSdk = 30
     defaultConfig {
         applicationId = "se.eelde.toggles.example"
-        minSdk = 14
+        minSdk = 16
         targetSdk = 30
-        versionCode = Versions.appVersionCode
-        versionName = Versions.appVersionName
+        versionCode = 2
+        versionName = "1.00.01"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -64,6 +64,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("androidx.test:core:1.3.0")
     testImplementation("androidx.test.ext:truth:1.3.0")
     testImplementation("androidx.test:rules:1.3.0")
@@ -74,7 +75,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
     implementation("com.google.android.material:material:1.3.0-alpha03")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
@@ -93,7 +94,7 @@ dependencies {
     implementation(project(":toggles-coroutines"))
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1")
 
     implementation("com.google.dagger:dagger:2.29.1")
     kapt("com.google.dagger:dagger-compiler:2.29.1")

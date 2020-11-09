@@ -1,8 +1,11 @@
 package se.eelde.toggles.provider
 
+import android.app.Application
 import android.content.Context
 import android.os.Build
+import androidx.core.content.ContextCompat
 import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.Nut
@@ -23,8 +26,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import se.eelde.toggles.BuildConfig
+import se.eelde.toggles.R
 import se.eelde.toggles.core.TogglesProviderContract
 import javax.inject.Singleton
 
@@ -55,6 +60,10 @@ class TogglesProviderTest {
 
         val contentProviderController = Robolectric.buildContentProvider(TogglesProvider::class.java).create(BuildConfig.CONFIG_AUTHORITY)
         togglesProvider = contentProviderController.get()
+
+        val context = ApplicationProvider.getApplicationContext<Application>()
+        val appIcon = ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground)
+        shadowOf(context.packageManager).setApplicationIcon(context.applicationInfo.packageName, appIcon)
     }
 
     @Test
