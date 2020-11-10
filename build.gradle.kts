@@ -6,6 +6,7 @@ buildscript {
         google()
         mavenCentral()
         jcenter()
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 
     dependencies {
@@ -14,6 +15,8 @@ buildscript {
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.0")
         classpath("com.google.gms:oss-licenses:0.9.2")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.28-alpha")
+        // https://github.com/Triple-T/gradle-play-publisher/issues/864
+        classpath("com.github.triplet.gradle:play-publisher:3.2.0-SNAPSHOT")
     }
 }
 

@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -8,6 +11,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("org.jlleitschuh.gradle.ktlint")
     id("io.gitlab.arturbosch.detekt")
+    id("com.github.triplet.play")
 }
 
 // https://github.com/gradle/kotlin-dsl/issues/644#issuecomment-398502551
@@ -33,7 +37,29 @@ hilt {
     enableTransformForLocalTests = true
 }
 
+play {
+    serviceAccountCredentials.set(file("../service_account.json"))
+    defaultToAppBundles.set(true)
+}
+
+val keystorePropertiesFile: File = rootProject.file("keystore.properties")
+// Initialize a new Properties() object called keystoreProperties.
+val keystoreProperties = Properties()
+// Load your keystore.properties file into the keystoreProperties object.
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
 android {
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = file("../toggles_keystore.jks")
+            storePassword = keystoreProperties["storePassword"] as String?
+        }
+    }
+
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
@@ -44,8 +70,8 @@ android {
         applicationId = "se.eelde.toggles"
         minSdk = 16
         targetSdk = 30
-        versionCode = 2
-        versionName = "1.00.01"
+        versionCode = 3
+        versionName = "1.00.02"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -83,6 +109,7 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
+            signingConfig = signingConfigs["release"]
         }
         getByName("debug") {
             isMinifyEnabled = false
