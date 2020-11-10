@@ -17,13 +17,13 @@ jobs:
 
       - name:
         run: |
-          echo "${{ secrets.KEYSTORE_PROPERTIES }} > keystore.properties.asc
+          echo "${{ secrets.KEYSTORE_PROPERTIES }}" > keystore.properties.asc
           gpg -d --passphrase "${{ secrets.GPG_ENCRYPTION_KEY }}" --batch keystore.properties.asc > keystore.properties
 
-          echo "${{ secrets.TOGGLES_KEYSTORE }} > toggles_keystore.jks.asc
+          echo "${{ secrets.TOGGLES_KEYSTORE }}" > toggles_keystore.jks.asc
           gpg -d --passphrase "${{ secrets.GPG_ENCRYPTION_KEY }}" --batch toggles_keystore.jks.asc > toggles_keystore.jks
 
-          echo "${{ secrets.SERVICE_ACCOUNT }} > service_account.json.asc
+          echo "${{ secrets.SERVICE_ACCOUNT }}" > service_account.json.asc
           gpg -d --passphrase "${{ secrets.GPG_ENCRYPTION_KEY }}" --batch service_account.json.asc > service_account.json
 
       - name: Check out java
@@ -34,6 +34,5 @@ jobs:
       - name: Run Android Checks
         run: ./gradlew check
 
-
-      - name: Build apks
+      - name: Publish application
         run: ./gradlew :toggles-app:publish
