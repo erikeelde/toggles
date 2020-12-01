@@ -7,12 +7,12 @@ import com.izettle.wrench.database.migrations.Migrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object DatabaseModule {
     @Singleton
     @Provides
@@ -25,7 +25,7 @@ object DatabaseModule {
 }
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object DaoModule {
     @Provides
     fun provideWrenchApplicationDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.applicationDao()
@@ -41,4 +41,7 @@ object DaoModule {
 
     @Provides
     fun providePredefinedConfigurationValueDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.predefinedConfigurationValueDao()
+
+    @Provides
+    fun provideTogglesNotificationDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.togglesNotificationsDao()
 }

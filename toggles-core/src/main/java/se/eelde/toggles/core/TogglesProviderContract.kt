@@ -113,8 +113,18 @@ object TogglesProviderContract {
 
     const val TOGGLES_API_VERSION = "API_VERSION"
 
+    private val applicationUri = Uri.parse("content://$TOGGLES_AUTHORITY/application")
     private val boltUri = Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
     private val nutUri = Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
+
+    @JvmStatic
+    fun applicationUri(id: Long): Uri? {
+        return applicationUri
+            .buildUpon()
+            .appendPath(id.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
+            .build()
+    }
 
     @JvmStatic
     fun boltUri(id: Long): Uri {

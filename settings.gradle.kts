@@ -1,8 +1,7 @@
 include(
     ":toggles-app",
-    ":toggles-sample",
     ":toggles-core",
+    "toggles-coroutines",
     ":toggles-prefs",
-    ":toggles-livedata",
-    "toggles-coroutines"
+    ":toggles-sample"
 )

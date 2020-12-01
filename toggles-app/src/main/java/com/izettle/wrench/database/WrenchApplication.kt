@@ -12,6 +12,9 @@ data class WrenchApplication constructor(
     @ColumnInfo(name = ApplicationTable.COL_ID)
     var id: Long,
 
+    @ColumnInfo(name = ApplicationTable.COL_SHORTCUT_ID)
+    var shortcutId: String,
+
     @ColumnInfo(name = ApplicationTable.COL_PACK_NAME)
     var packageName: String,
 

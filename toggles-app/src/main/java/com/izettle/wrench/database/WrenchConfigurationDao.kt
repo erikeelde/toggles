@@ -43,6 +43,20 @@ interface WrenchConfigurationDao {
     )
     fun getWrenchConfiguration(applicationId: Long, configurationKey: String): WrenchConfiguration
 
+    @Query(
+        "SELECT * " +
+            " FROM " + ConfigurationTable.TABLE_NAME +
+            " WHERE configuration.applicationId = (:applicationId) AND configuration.configurationKey = (:configurationKey)"
+    )
+    fun getWrenchConfigurationByKey(applicationId: Long, configurationKey: String) : WrenchConfiguration?
+
+    @Query(
+        "SELECT * " +
+            " FROM " + ConfigurationTable.TABLE_NAME +
+            " WHERE configuration.applicationId = (:applicationId) AND configuration.id = (:configurationId)"
+    )
+    fun getWrenchConfigurationById(applicationId: Long, configurationId: Long) : WrenchConfiguration?
+
     @Query("SELECT * FROM configuration WHERE id = :configurationId")
     fun getConfiguration(configurationId: Long): Flow<WrenchConfiguration>
 

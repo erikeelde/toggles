@@ -9,6 +9,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import se.eelde.toggles.R
+import se.eelde.toggles.notification.NotificationWorker
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, drawerLayout)
 
         NavigationUI.setupWithNavController(nav_view, navController)
+
+        NotificationWorker.scheduleNotification(this)
     }
 
     override fun onSupportNavigateUp(): Boolean = NavigationUI.navigateUp(navController, drawerLayout)

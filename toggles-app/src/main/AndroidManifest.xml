@@ -8,7 +8,6 @@
         android:description="@string/wrench_permission_description"
         android:label="@string/wrench_permission_label"
         android:protectionLevel="normal" />
-
     <permission
         android:name="${togglesPermission}"
         android:description="@string/toggles_permission_description"
@@ -31,6 +30,15 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
+        <activity
+            android:name=".BubbleActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/title_activity_bubble"
+            android:allowEmbedded="true"
+            android:documentLaunchMode="always"
+            android:resizeableActivity="true"
+            tools:targetApi="n" />
+
         <activity android:name="com.izettle.wrench.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,14 +53,17 @@
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
-
         <provider
             android:name=".provider.TogglesProvider"
             android:authorities="${togglesAuthority}"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
-
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove"
+            android:exported="false" />
     </application>
 
 </manifest>

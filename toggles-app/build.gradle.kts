@@ -116,7 +116,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
 
             versionNameSuffix = " debug"
-            applicationIdSuffix = ".debug"
+//            applicationIdSuffix = ".debug"
         }
     }
     lintOptions {
@@ -147,9 +147,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.4")
     testImplementation("androidx.test.espresso:espresso-core:3.3.0")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
-    testImplementation("androidx.lifecycle:lifecycle-runtime:2.3.0-beta01")
-    implementation("androidx.lifecycle:lifecycle-runtime:2.3.0-beta01")
-    androidTestImplementation("androidx.lifecycle:lifecycle-runtime:2.3.0-beta01")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01")
 
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test.ext:truth:1.3.0")
@@ -163,6 +161,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.30.1-alpha")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02")
     kapt("androidx.hilt:hilt-compiler:1.0.0-alpha02")
+    implementation("androidx.hilt:hilt-work:1.0.0-alpha02")
 
     testImplementation("com.google.dagger:hilt-android-testing:2.30.1-alpha")
     kaptTest("com.google.dagger:hilt-android-compiler:2.30.1-alpha")
@@ -174,7 +173,7 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:2.30.1")
 
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-beta01")
+    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha06")
     implementation("com.google.android.material:material:1.3.0-alpha04")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.cardview:cardview:1.0.0")
@@ -185,7 +184,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-beta01")
     implementation("androidx.room:room-runtime:2.3.0-alpha03")
     implementation("androidx.room:room-ktx:2.3.0-alpha03")
-    implementation("androidx.paging:paging-runtime:3.0.0-alpha10")
+    implementation("androidx.paging:paging-runtime-ktx:3.0.0-alpha09")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.2")
@@ -198,4 +197,5 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
 
     implementation("androidx.core:core-ktx:1.5.0-alpha05")
+    implementation("androidx.work:work-runtime-ktx:2.4.0")
 }
