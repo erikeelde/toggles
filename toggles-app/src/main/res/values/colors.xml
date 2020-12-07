@@ -5,5 +5,5 @@
     <color name="colorPrimary">@color/toggles_blue</color>
     <color name="colorPrimaryDark">#131061</color>
     <color name="colorAccent">#287F46</color>
-    <color name="ic_launcher_background">#1E1A87</color>
+    <color name="ic_launcher_background">#000080</color>
 </resources>
