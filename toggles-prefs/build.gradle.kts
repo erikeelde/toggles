@@ -60,8 +60,8 @@ dependencies {
 
     implementation(project(":toggles-core"))
     implementation("androidx.annotation:annotation:1.2.0-alpha01")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
-    implementation("androidx.core:core-ktx:1.5.0-alpha04")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.21")
+    implementation("androidx.core:core-ktx:1.5.0-alpha05")
 }
 
 apply(rootProject.file("gradle/gradle-mvn-push.gradle"))

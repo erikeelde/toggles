@@ -60,9 +60,9 @@ dependencies {
 
     implementation(project(":toggles-core"))
     implementation("androidx.annotation:annotation:1.2.0-alpha01")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1")
-    implementation("androidx.core:core-ktx:1.5.0-alpha04")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.21")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
+    implementation("androidx.core:core-ktx:1.5.0-alpha05")
 }
 
 // The api of this module should be discussed before any potential release

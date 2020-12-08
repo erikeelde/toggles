@@ -159,23 +159,23 @@ dependencies {
     androidTestImplementation("androidx.room:room-testing:2.3.0-alpha03")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 
-    implementation("com.google.dagger:hilt-android:2.29.1-alpha")
-    kapt("com.google.dagger:hilt-android-compiler:2.29.1-alpha")
+    implementation("com.google.dagger:hilt-android:2.30.1-alpha")
+    kapt("com.google.dagger:hilt-android-compiler:2.30.1-alpha")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02")
     kapt("androidx.hilt:hilt-compiler:1.0.0-alpha02")
 
-    testImplementation("com.google.dagger:hilt-android-testing:2.29.1-alpha")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.29.1-alpha")
+    testImplementation("com.google.dagger:hilt-android-testing:2.30.1-alpha")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.30.1-alpha")
 
     implementation("androidx.lifecycle:lifecycle-common-java8:2.3.0-beta01")
     kapt("androidx.room:room-compiler:2.3.0-alpha03")
 
-    implementation("com.google.dagger:dagger:2.29.1")
-    kapt("com.google.dagger:dagger-compiler:2.29.1")
+    implementation("com.google.dagger:dagger:2.30.1")
+    kapt("com.google.dagger:dagger-compiler:2.30.1")
 
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha06")
-    implementation("com.google.android.material:material:1.3.0-alpha03")
+    implementation("androidx.recyclerview:recyclerview:1.2.0-beta01")
+    implementation("com.google.android.material:material:1.3.0-alpha04")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
@@ -185,17 +185,17 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-beta01")
     implementation("androidx.room:room-runtime:2.3.0-alpha03")
     implementation("androidx.room:room-ktx:2.3.0-alpha03")
-    implementation("androidx.paging:paging-runtime:3.0.0-alpha08")
+    implementation("androidx.paging:paging-runtime:3.0.0-alpha10")
 
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.1")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.1")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.2")
 
     implementation("com.izettle.wrench:wrench-core:0.3")
     implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.21")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
 
-    implementation("androidx.core:core-ktx:1.5.0-alpha04")
+    implementation("androidx.core:core-ktx:1.5.0-alpha05")
 }
