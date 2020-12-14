@@ -3,6 +3,7 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
     kotlin("android")
     kotlin("android.extensions")
     kotlin("kapt")
@@ -148,6 +149,7 @@ dependencies {
     testImplementation("androidx.test.espresso:espresso-core:3.3.0")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01")
+    implementation(platform("com.google.firebase:firebase-bom:26.1.1"))
 
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test.ext:truth:1.3.0")

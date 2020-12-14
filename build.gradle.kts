@@ -10,6 +10,7 @@ buildscript {
     }
 
     dependencies {
+        classpath("com.android.tools:r8:2.1.75")
         classpath("com.android.tools.build:gradle:4.1.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.2")
@@ -17,6 +18,7 @@ buildscript {
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.30.1-alpha")
         // https://github.com/Triple-T/gradle-play-publisher/issues/864
         classpath("com.github.triplet.gradle:play-publisher:3.0.0")
+        classpath ("com.google.gms:google-services:4.3.4")
     }
 }
 
@@ -26,7 +28,7 @@ dependencies {
 
 plugins {
     id("com.github.ben-manes.versions") version "0.36.0"
-    id("se.eelde.build-optimizations") version "0.1.2"
+    id("se.eelde.build-optimizations") version "0.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
     id("io.gitlab.arturbosch.detekt") version "1.14.2"
 }
