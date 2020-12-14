@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase.CONFLICT_FAIL
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.tables.ApplicationTable
 import com.izettle.wrench.database.tables.ConfigurationTable
 import org.junit.Assert.assertNotNull
@@ -28,5 +29,17 @@ object DatabaseHelper {
         applicationValues.put(ApplicationTable.COL_APP_LABEL, applicationLabel)
         applicationValues.put(ApplicationTable.COL_PACK_NAME, packageName)
         return db.insert(ApplicationTable.TABLE_NAME, CONFLICT_FAIL, applicationValues)
+    }
+
+    fun getWrenchApplication(db: SupportSQLiteDatabase, applicationId: Long): WrenchApplication {
+        val cursor = db.query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE " + ApplicationTable.COL_ID + "=?", arrayOf<Any>(applicationId))
+
+        cursor.moveToFirst()
+        val id = cursor.getLong(cursor.getColumnIndex(ApplicationTable.COL_ID))
+        val label = cursor.getString(cursor.getColumnIndex(ApplicationTable.COL_APP_LABEL))
+        val packageName = cursor.getString(cursor.getColumnIndex(ApplicationTable.COL_PACK_NAME))
+        val shortcutId = cursor.getString(cursor.getColumnIndex(ApplicationTable.COL_SHORTCUT_ID))
+
+        return WrenchApplication(id, shortcutId,packageName, label)
     }
 }
