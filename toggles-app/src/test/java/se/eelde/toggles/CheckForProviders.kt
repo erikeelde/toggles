@@ -13,6 +13,8 @@ import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
 import com.izettle.wrench.MainActivity
 import com.izettle.wrench.provider.WrenchProvider
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
@@ -23,6 +25,7 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import se.eelde.toggles.provider.TogglesProvider
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @Config(application = HiltTestApplication::class, sdk = [Build.VERSION_CODES.P])
 class CheckForProviders {
@@ -32,6 +35,9 @@ class CheckForProviders {
 
     @get:Rule
     var rule = ActivityScenarioRule(MainActivity::class.java)
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
 
     @Before
     fun setUp() {

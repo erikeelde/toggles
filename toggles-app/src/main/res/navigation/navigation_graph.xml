@@ -38,7 +38,8 @@
             android:id="@+id/deepLink"
             app:uri="content://se.eelde.toggles.configprovider/application/{applicationId}"
             android:autoVerify="true"
-            app:action="ACTION_VIEW" />
+            app:action="ACTION_VIEW"
+            tools:targetApi="m" />
     </fragment>
     <dialog
         android:id="@+id/enumValueFragment"

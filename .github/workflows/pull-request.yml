@@ -21,8 +21,17 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Run Detekt
+        run: ./gradlew detekt
+
       - name: Run Android Checks
-        run: ./gradlew check
+        run: ./gradlew ktLintCheck
+
+      - name: Run Android Lint
+        run: ./gradlew lint
+
+      - name: Run Android Unit test
+        run: ./gradlew testDebugUnitTest
 
       - name: Upload reports
         uses: actions/upload-artifact@v2

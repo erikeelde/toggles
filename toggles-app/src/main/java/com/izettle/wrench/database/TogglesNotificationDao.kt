@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.izettle.wrench.database.tables.ApplicationTable
-import com.izettle.wrench.database.tables.ConfigurationTable
 
 @Dao
 interface TogglesNotificationDao {

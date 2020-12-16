@@ -19,7 +19,6 @@ import com.izettle.wrench.di.DatabaseModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -83,7 +82,7 @@ class WrenchProviderTest {
         fun checkTypeConversion(bolt: Bolt, expectedType: String) {
             wrenchProvider.insert(WrenchProviderContract.boltUri(), bolt.toContentValues())
 
-            val cursor = wrenchProvider.query(WrenchProviderContract.boltUri(bolt.key), null, null, null, null)!!
+            val cursor = wrenchProvider.query(WrenchProviderContract.boltUri(bolt.key), null, null, null, null)
 
             cursor.moveToFirst()
             val queryBolt = Bolt.fromCursor(cursor)
@@ -108,7 +107,7 @@ class WrenchProviderTest {
 
         var cursor = wrenchProvider.query(WrenchProviderContract.boltUri(insertBoltKey), null, null, null, null)
         Assert.assertNotNull(cursor)
-        Assert.assertEquals(1, cursor!!.count)
+        Assert.assertEquals(1, cursor.count)
 
         cursor.moveToFirst()
         var queryBolt = Bolt.fromCursor(cursor)
@@ -117,9 +116,9 @@ class WrenchProviderTest {
         Assert.assertEquals(insertBolt.value, queryBolt.value)
         Assert.assertEquals(insertBolt.type, queryBolt.type)
 
-        cursor = wrenchProvider.query(WrenchProviderContract.boltUri(Integer.parseInt(insertBoltUri!!.lastPathSegment!!).toLong()), null, null, null, null)
+        cursor = wrenchProvider.query(WrenchProviderContract.boltUri(Integer.parseInt(insertBoltUri.lastPathSegment!!).toLong()), null, null, null, null)
         Assert.assertNotNull(cursor)
-        Assert.assertEquals(1, cursor!!.count)
+        Assert.assertEquals(1, cursor.count)
 
         cursor.moveToFirst()
         queryBolt = Bolt.fromCursor(cursor)
@@ -140,7 +139,7 @@ class WrenchProviderTest {
 
         var cursor = wrenchProvider.query(WrenchProviderContract.boltUri(updateBoltKey), null, null, null, null)
         Assert.assertNotNull(cursor)
-        Assert.assertTrue(cursor!!.moveToFirst())
+        Assert.assertTrue(cursor.moveToFirst())
 
         val providerBolt = Bolt.fromCursor(cursor)
         Assert.assertEquals(insertBolt.key, providerBolt.key)
@@ -155,7 +154,7 @@ class WrenchProviderTest {
         cursor = wrenchProvider.query(WrenchProviderContract.boltUri(updateBoltKey), null, null, null, null)
         Assert.assertNotNull(cursor)
 
-        Assert.assertTrue(cursor!!.moveToFirst())
+        Assert.assertTrue(cursor.moveToFirst())
         val updatedBolt = Bolt.fromCursor(cursor)
 
         Assert.assertEquals(insertBolt.value!! + insertBolt.value!!, updatedBolt.value)

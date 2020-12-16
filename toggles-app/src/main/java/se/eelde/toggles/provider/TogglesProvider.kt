@@ -49,23 +49,23 @@ class TogglesProvider : ContentProvider() {
         applicationEntryPoint.provideWrenchConfigurationValueDao()
     }
 
-    val predefinedConfigurationDao: WrenchPredefinedConfigurationValueDao by lazy {
+    private val predefinedConfigurationDao: WrenchPredefinedConfigurationValueDao by lazy {
         applicationEntryPoint.providePredefinedConfigurationValueDao()
     }
 
-    val togglesNotificationDao: TogglesNotificationDao by lazy {
+    private val togglesNotificationDao: TogglesNotificationDao by lazy {
         applicationEntryPoint.provideTogglesNotificationDao()
     }
 
-    val packageManagerWrapper: IPackageManagerWrapper by lazy {
+    private val packageManagerWrapper: IPackageManagerWrapper by lazy {
         applicationEntryPoint.providePackageManagerWrapper()
     }
 
-    val togglesPreferences: ITogglesPreferences by lazy {
+    private val togglesPreferences: ITogglesPreferences by lazy {
         applicationEntryPoint.providesWrenchPreferences()
     }
 
-    val applicationEntryPoint: TogglesProviderEntryPoint by lazy {
+    private val applicationEntryPoint: TogglesProviderEntryPoint by lazy {
         EntryPointAccessors.fromApplication(context!!, TogglesProviderEntryPoint::class.java)
     }
 
@@ -108,13 +108,14 @@ class TogglesProvider : ContentProvider() {
 
     override fun onCreate() = true
 
+    @Suppress("LongMethod")
     override fun query(
         uri: Uri,
         projection: Array<String>?,
         selection: String?,
         selectionArgs: Array<String>?,
         sortOrder: String?
-    ): Cursor? {
+    ): Cursor {
 
         val callingApplication = getCallingApplication(applicationDao)
         if (!isTogglesApplication(callingApplication)) {
@@ -141,7 +142,7 @@ class TogglesProvider : ContentProvider() {
                     )
                 }
 
-                if (cursor.moveToFirst()){
+                if (cursor.moveToFirst()) {
                     val bolt = Bolt.fromCursor(cursor)
                     cursor.moveToPrevious()
                     context?.apply {
@@ -166,7 +167,7 @@ class TogglesProvider : ContentProvider() {
                     cursor = configurationDao.getBolt(uri.lastPathSegment!!, defaultScope!!.id)
                 }
 
-                if (cursor.moveToFirst()){
+                if (cursor.moveToFirst()) {
                     val bolt = Bolt.fromCursor(cursor)
                     cursor.moveToPrevious()
                     context?.apply {
@@ -196,7 +197,7 @@ class TogglesProvider : ContentProvider() {
         return callingApplication.packageName == BuildConfig.APPLICATION_ID
     }
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri? {
+    override fun insert(uri: Uri, values: ContentValues?): Uri {
 
         val callingApplication = getCallingApplication(applicationDao)
 
@@ -315,7 +316,7 @@ class TogglesProvider : ContentProvider() {
         throw UnsupportedOperationException("Not yet implemented")
     }
 
-    override fun getType(uri: Uri): String? {
+    override fun getType(uri: Uri): String {
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {
@@ -424,38 +425,24 @@ class TogglesProvider : ContentProvider() {
         }
 
         private fun assertValidApiVersion(togglesPreferences: ITogglesPreferences, uri: Uri) {
+            var l: Long = 0
+            val strictApiVersion = try {
+                l = Binder.clearCallingIdentity()
+                togglesPreferences.getBoolean(
+                    "Require valid wrench api version",
+                    false
+                )
+            } finally {
+                Binder.restoreCallingIdentity(l)
+            }
+
             when (getApiVersion(uri)) {
                 API_1 -> {
                     return
                 }
                 API_INVALID -> {
-                    var l: Long = 0
-                    try {
-                        l = Binder.clearCallingIdentity()
-                        if (togglesPreferences.getBoolean(
-                                "Require valid toggles api version",
-                                false
-                            )
-                        ) {
-                            throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
-                        }
-                    } finally {
-                        Binder.restoreCallingIdentity(l)
-                    }
-                }
-                else -> {
-                    var l: Long = 0
-                    try {
-                        l = Binder.clearCallingIdentity()
-                        if (togglesPreferences.getBoolean(
-                                "Require valid toggles api version",
-                                false
-                            )
-                        ) {
-                            throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
-                        }
-                    } finally {
-                        Binder.restoreCallingIdentity(l)
+                    if (strictApiVersion) {
+                        throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
                     }
                 }
             }

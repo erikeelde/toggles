@@ -20,13 +20,10 @@
     <string name="help_implementation_title">Implementation</string>
     <string name="save">save</string>
     <string name="notification_content_title">%1$s</string>
-    <string name="notification_content_text">Toggled %1$s</string>
-    <string name="channel_name">App toggled</string>
-    <string name="channel_description">Notifies that an app used toggles to configure a setting</string>
+    <string name="notification_channel_name">App toggled</string>
+    <string name="notification_channel_description">Notifies that an app used toggles to configure a setting</string>
     <string name="title_activity_bubble">Bubble activity</string>
     <string name="label_reply">label_reply</string>
     <string name="hint_input">hint_input</string>
     <string name="sender_you">sender_you</string>
-    <string name="channel_new_messages">All messages</string>
-    <string name="channel_new_messages_description">All new incoming messages.</string>
 </resources>

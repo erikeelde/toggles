@@ -169,7 +169,7 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:2.30.1")
 
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha06")
+    implementation("androidx.recyclerview:recyclerview:1.2.0-beta01")
     implementation("com.google.android.material:material:1.3.0-alpha04")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.cardview:cardview:1.0.0")
@@ -180,7 +180,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-beta01")
     implementation("androidx.room:room-runtime:2.3.0-alpha03")
     implementation("androidx.room:room-ktx:2.3.0-alpha03")
-    implementation("androidx.paging:paging-runtime-ktx:3.0.0-alpha09")
+    implementation("androidx.paging:paging-runtime-ktx:3.0.0-alpha10")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.2")

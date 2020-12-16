@@ -18,7 +18,7 @@ buildscript {
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.30.1-alpha")
         // https://github.com/Triple-T/gradle-play-publisher/issues/864
         classpath("com.github.triplet.gradle:play-publisher:3.0.0")
-        classpath ("com.google.gms:google-services:4.3.4")
+        classpath("com.google.gms:google-services:4.3.4")
     }
 }
 

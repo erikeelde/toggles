@@ -15,7 +15,6 @@ import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.Assisted
 import androidx.hilt.work.WorkerInject
-import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -23,10 +22,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.izettle.wrench.MainActivity
-import com.izettle.wrench.configurationlist.ConfigurationsFragmentArgs
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchDatabase
-import se.eelde.toggles.R
 import se.eelde.toggles.core.TogglesProviderContract
 import java.util.concurrent.TimeUnit
 
@@ -87,11 +84,6 @@ class NotificationWorker @WorkerInject constructor(
             val applicationIcon =
                 applicationContext.packageManager.getApplicationIcon(application.packageName)
             val icon = IconCompat.createWithAdaptiveBitmap(applicationIcon.toBitmap())
-
-            val navDeepLinkBuilder = NavDeepLinkBuilder(applicationContext)
-                .setGraph(R.navigation.navigation_graph)
-                .setDestination(R.id.configurationsFragment)
-                .setArguments(ConfigurationsFragmentArgs(application.id).toBundle())
 
             // Create a dynamic shortcut for each of the contacts.
             // The same shortcut ID will be used when we show a bubble notification.

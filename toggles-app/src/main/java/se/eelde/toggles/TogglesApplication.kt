@@ -15,6 +15,6 @@ class TogglesApplication : Application(), Configuration.Provider {
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
             .setWorkerFactory(workerFactory)
-            .build();
+            .build()
     }
 }

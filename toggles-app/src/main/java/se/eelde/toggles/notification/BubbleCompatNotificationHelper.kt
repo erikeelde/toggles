@@ -16,6 +16,7 @@ import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.drawable.toBitmap
+import com.izettle.wrench.MainActivity
 import com.izettle.wrench.database.TogglesNotification
 import com.izettle.wrench.database.WrenchApplication
 import se.eelde.toggles.BubbleActivity
@@ -46,17 +47,18 @@ class BubbleCompatNotificationHelper(private val context: Context) {
             notificationManagerCompat.createNotificationChannel(
                 NotificationChannel(
                     CHANNEL_NEW_MESSAGES,
-                    context.getString(R.string.channel_new_messages),
+                    context.getString(R.string.notification_channel_name),
                     // The importance must be IMPORTANCE_HIGH to show Bubbles.
                     NotificationManager.IMPORTANCE_HIGH
                 ).apply {
-                    description = context.getString(R.string.channel_new_messages_description)
+                    description = context.getString(R.string.notification_channel_description)
                 }
             )
         }
         // updateShortcuts(null)
     }
 
+    @Suppress("LongMethod")
     @WorkerThread
     fun showNotification(
         wrenchApplication: WrenchApplication,
@@ -100,8 +102,8 @@ class BubbleCompatNotificationHelper(private val context: Context) {
             // The user can turn off the bubble in system settings. In that case, this notification
             // is shown as a normal notification instead of a bubble. Make sure that this
             // notification works as a normal notification as well.
-            .setContentTitle(wrenchApplication.applicationLabel)
-            .setSmallIcon(android.R.drawable.ic_menu_send)
+            .setContentTitle(context.resources.getString(R.string.notification_content_title))
+            .setSmallIcon(R.drawable.ic_notification_24dp)
             .setCategory(Notification.CATEGORY_MESSAGE)
             .setShortcutId(wrenchApplication.shortcutId)
             // This ID helps the intelligence services of the device to correlate this notification
@@ -115,7 +117,7 @@ class BubbleCompatNotificationHelper(private val context: Context) {
                 PendingIntent.getActivity(
                     context,
                     REQUEST_CONTENT,
-                    Intent(context, BubbleActivity::class.java)
+                    Intent(context, MainActivity::class.java)
                         .setAction(Intent.ACTION_VIEW)
                         .setData(contentUri),
                     PendingIntent.FLAG_UPDATE_CURRENT
@@ -167,5 +169,4 @@ class BubbleCompatNotificationHelper(private val context: Context) {
     fun dismissNotification(id: Long) {
         notificationManagerCompat.cancel(id.toInt())
     }
-
 }

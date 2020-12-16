@@ -161,13 +161,13 @@ object Migrations {
         override fun migrate(database: SupportSQLiteDatabase) {
             run {
                 val tableName = "TogglesNotification"
-                database.execSQL("CREATE TABLE IF NOT EXISTS `${tableName}` (`id` INTEGER NOT NULL, `applicationId` INTEGER NOT NULL, `applicationPackageName` TEXT NOT NULL, `configurationId` INTEGER NOT NULL, `configurationKey` TEXT NOT NULL, `configurationValue` TEXT NOT NULL, `added` INTEGER NOT NULL, PRIMARY KEY(`id`))")
+                database.execSQL("CREATE TABLE IF NOT EXISTS `$tableName` (`id` INTEGER NOT NULL, `applicationId` INTEGER NOT NULL, `applicationPackageName` TEXT NOT NULL, `configurationId` INTEGER NOT NULL, `configurationKey` TEXT NOT NULL, `configurationValue` TEXT NOT NULL, `added` INTEGER NOT NULL, PRIMARY KEY(`id`))")
             }
             run {
                 val tableName = "application"
                 val tableNameTemp = tableName + "_temp"
 
-                database.execSQL("CREATE TABLE IF NOT EXISTS `${tableNameTemp}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `shortcutId` TEXT NOT NULL, `packageName` TEXT NOT NULL, `applicationLabel` TEXT NOT NULL)")
+                database.execSQL("CREATE TABLE IF NOT EXISTS `$tableNameTemp` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `shortcutId` TEXT NOT NULL, `packageName` TEXT NOT NULL, `applicationLabel` TEXT NOT NULL)")
                 database.execSQL("CREATE UNIQUE INDEX `index_application_temp_packageName` ON `$tableNameTemp` (`packageName`)")
 
                 database.execSQL("INSERT INTO $tableNameTemp (id, shortcutId, packageName, applicationLabel) SELECT id, packageName,  packageName, applicationLabel FROM $tableName")
@@ -178,7 +178,6 @@ object Migrations {
                 database.execSQL("CREATE UNIQUE INDEX `index_application_packageName` ON `$tableNameTemp` (`packageName`)")
 
                 database.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
-
             }
         }
     }

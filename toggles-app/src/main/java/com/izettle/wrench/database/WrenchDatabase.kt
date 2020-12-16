@@ -5,12 +5,14 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [WrenchApplication::class,
+    entities = [
+        WrenchApplication::class,
         WrenchConfiguration::class,
         WrenchConfigurationValue::class,
         WrenchPredefinedConfigurationValue::class,
         WrenchScope::class,
-        TogglesNotification::class],
+        TogglesNotification::class
+    ],
     version = 4
 )
 @TypeConverters(RoomDateConverter::class)
