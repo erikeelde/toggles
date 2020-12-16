@@ -1,7 +1,9 @@
-package com.izettle.wrench.db
+package se.eelde.toggles.db
 
+import android.os.Build
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.database.WrenchDatabase
@@ -13,8 +15,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 import java.io.IOException
 
+@RunWith(AndroidJUnit4::class)
+@Config(sdk = [Build.VERSION_CODES.P])
 class MigrationTests {
     // Unable to migrate to unitTest due to https://github.com/robolectric/robolectric/issues/2065
 

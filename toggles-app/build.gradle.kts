@@ -77,12 +77,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments["room.schemaLocation"] = "$projectDir/schemas"
-            }
-        }
-
         val wrenchAuthority = "com.izettle.wrench.configprovider"
         val wrenchPermission = "com.izettle.wrench.permission"
         val togglesAuthority = "se.eelde.toggles.configprovider"
@@ -130,9 +124,15 @@ android {
     sourceSets {
         // debug.assets.srcDirs => https://github.com/robolectric/robolectric/issues/3928
         // debug.assets.srcDirs += files("$projectDir/schemas".toString())
-        getByName("androidTest") {
+        getByName("debug") {
             assets.srcDirs(files("$projectDir/schemas"))
         }
+    }
+}
+
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
     }
 }
 
@@ -144,20 +144,14 @@ dependencies {
     testImplementation("androidx.test:rules:1.3.0")
     testImplementation("androidx.test:runner:1.3.0")
     testImplementation("androidx.test.ext:junit:1.1.2")
-//    testImplementation("androidx.room:room-testing:2.3.0-alpha02")
+    testImplementation("androidx.room:room-testing:2.3.0-alpha03")
     testImplementation("org.robolectric:robolectric:4.4")
     testImplementation("androidx.test.espresso:espresso-core:3.3.0")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("androidx.work:work-testing:2.4.0")
+
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01")
     implementation(platform("com.google.firebase:firebase-bom:26.1.1"))
-
-    androidTestImplementation("androidx.test:core:1.3.0")
-    androidTestImplementation("androidx.test.ext:truth:1.3.0")
-    androidTestImplementation("androidx.test:rules:1.3.0")
-    androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.2")
-    androidTestImplementation("androidx.room:room-testing:2.3.0-alpha03")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 
     implementation("com.google.dagger:hilt-android:2.30.1-alpha")
     kapt("com.google.dagger:hilt-android-compiler:2.30.1-alpha")

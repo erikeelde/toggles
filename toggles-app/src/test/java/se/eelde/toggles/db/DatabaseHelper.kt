@@ -1,4 +1,4 @@
-package com.izettle.wrench.db
+package se.eelde.toggles.db
 
 import android.content.ContentValues
 import android.database.Cursor

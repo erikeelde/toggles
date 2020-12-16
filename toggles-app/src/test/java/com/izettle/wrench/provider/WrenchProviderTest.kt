@@ -3,10 +3,14 @@ package com.izettle.wrench.provider
 import android.app.Application
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.work.Configuration
+import androidx.work.testing.SynchronousExecutor
+import androidx.work.testing.WorkManagerTestInitHelper
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.Nut
 import com.izettle.wrench.core.WrenchProviderContract
@@ -21,6 +25,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
+import dagger.hilt.components.SingletonComponent
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -44,7 +49,7 @@ class WrenchProviderTest {
     private lateinit var wrenchProvider: WrenchProvider
 
     @Module
-    @InstallIn(ApplicationComponent::class)
+    @InstallIn(SingletonComponent::class)
     object TestModule {
         @Singleton
         @Provides
@@ -64,6 +69,13 @@ class WrenchProviderTest {
         val appIcon = ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground)
         Shadows.shadowOf(context.packageManager)
             .setApplicationIcon(context.applicationInfo.packageName, appIcon)
+
+        val config = Configuration.Builder()
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .setExecutor(SynchronousExecutor())
+            .build()
+
+        WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
     }
 
     @Test
