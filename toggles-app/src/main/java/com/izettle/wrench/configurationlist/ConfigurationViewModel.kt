@@ -26,7 +26,7 @@ class ConfigurationViewModel @ViewModelInject internal constructor(
     private val configurationListLiveData: MediatorLiveData<List<WrenchConfigurationWithValues>>
 
     internal val wrenchApplication: LiveData<WrenchApplication> by lazy {
-        Transformations.switchMap(applicationIdLiveData) { applicationId: Long -> applicationDao.getApplication(applicationId) }
+        Transformations.switchMap(applicationIdLiveData) { applicationId: Long -> applicationDao.getApplicationLiveData(applicationId) }
     }
 
     private val applicationIdLiveData: MutableLiveData<Long> = MutableLiveData()

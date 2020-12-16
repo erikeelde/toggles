@@ -9,17 +9,17 @@
         <path
             android:pathData="m16.603,143.548v28.082H184.222v-27.951z"
             android:strokeWidth="7"
-            android:fillColor="@color/ic_launcher_background"
-            android:strokeColor="@color/ic_launcher_background" />
+            android:fillColor="@color/notification_icon_color"
+            android:strokeColor="@color/notification_icon_color" />
         <path
             android:pathData="m90.713,99.629c0,0 -67.946,-68.885 -42.959,-84.788 28.566,-15.01 53.197,84.682 53.197,84.682z"
             android:strokeWidth="7"
-            android:fillColor="@color/ic_launcher_background"
-            android:strokeColor="@color/ic_launcher_background" />
+            android:fillColor="@color/notification_icon_color"
+            android:strokeColor="@color/notification_icon_color" />
         <path
             android:pathData="m46.231,112.336v18.407H155.477V112.422Z"
             android:strokeWidth="7"
-            android:fillColor="@color/ic_launcher_background"
-            android:strokeColor="@color/ic_launcher_background" />
+            android:fillColor="@color/notification_icon_color"
+            android:strokeColor="@color/notification_icon_color" />
     </group>
 </vector>

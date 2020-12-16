@@ -34,6 +34,12 @@
         <action
             android:id="@+id/action_configurationsFragment_to_enumValueFragment"
             app:destination="@id/enumValueFragment" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="content://se.eelde.toggles.configprovider/application/{applicationId}"
+            android:autoVerify="true"
+            app:action="ACTION_VIEW"
+            tools:targetApi="m" />
     </fragment>
     <dialog
         android:id="@+id/enumValueFragment"

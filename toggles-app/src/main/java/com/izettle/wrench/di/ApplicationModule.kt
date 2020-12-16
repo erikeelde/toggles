@@ -6,14 +6,14 @@ import com.izettle.wrench.preferences.TogglesPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.PackageManagerWrapper
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object ApplicationModule {
     @Provides
     fun provideIoDispatcher() = Dispatchers.IO
