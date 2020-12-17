@@ -20,6 +20,7 @@ object DatabaseModule {
         return Room.databaseBuilder(context, WrenchDatabase::class.java, "wrench_database.db")
             .addMigrations(Migrations.MIGRATION_1_2)
             .addMigrations(Migrations.MIGRATION_2_3)
+            .addMigrations(Migrations.MIGRATION_3_4)
             .build()
     }
 }
