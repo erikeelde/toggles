@@ -30,6 +30,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import se.eelde.toggles.BuildConfig
+import se.eelde.toggles.TogglesUriMatcher
+import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
+import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
+import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
+import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
 import se.eelde.toggles.notification.configurationRequested
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.notifyInsert
@@ -355,7 +360,7 @@ class WrenchProvider : ContentProvider() {
                 "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
             PREDEFINED_CONFIGURATION_VALUES -> {
-                "vnd.android.cursor.dir/vnd..${BuildConfig.APPLICATION_ID}..predefinedConfigurationValue"
+                "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.predefinedConfigurationValue"
             }
             else -> {
                 throw UnsupportedOperationException("Not yet implemented")
@@ -365,36 +370,9 @@ class WrenchProvider : ContentProvider() {
 
     companion object {
 
-        private const val CURRENT_CONFIGURATION_ID = 1
-        private const val CURRENT_CONFIGURATION_KEY = 2
-        private const val CURRENT_CONFIGURATIONS = 3
-        private const val PREDEFINED_CONFIGURATION_VALUES = 5
-        private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+        private val uriMatcher = TogglesUriMatcher.getTogglesUriMatcher()
 
         private const val oneSecond = 1000
-
-        init {
-            uriMatcher.addURI(
-                WrenchProviderContract.WRENCH_AUTHORITY,
-                "currentConfiguration/#",
-                CURRENT_CONFIGURATION_ID
-            )
-            uriMatcher.addURI(
-                WrenchProviderContract.WRENCH_AUTHORITY,
-                "currentConfiguration/*",
-                CURRENT_CONFIGURATION_KEY
-            )
-            uriMatcher.addURI(
-                WrenchProviderContract.WRENCH_AUTHORITY,
-                "currentConfiguration",
-                CURRENT_CONFIGURATIONS
-            )
-            uriMatcher.addURI(
-                WrenchProviderContract.WRENCH_AUTHORITY,
-                "predefinedConfigurationValue",
-                PREDEFINED_CONFIGURATION_VALUES
-            )
-        }
 
         @Synchronized
         private fun getDefaultScope(
