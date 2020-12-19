@@ -2,7 +2,6 @@ package com.izettle.wrench.dialogs.enumvalue
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -12,33 +11,33 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_enum_value.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import se.eelde.toggles.R
+import se.eelde.toggles.databinding.FragmentEnumValueBinding
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
 
+    private lateinit var binding: FragmentEnumValueBinding
     private val viewModel by viewModels<FragmentEnumValueViewModel>()
     private lateinit var adapter: PredefinedValueRecyclerViewAdapter
 
     private val args: EnumValueFragmentArgs by navArgs()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_enum_value, null)
+        binding = FragmentEnumValueBinding.inflate(layoutInflater)
 
         viewModel.viewState.observe(
             this,
             { viewState ->
                 if (viewState != null) {
-                    if (view.container.visibility == View.INVISIBLE && viewState.title != null) {
-                        view.container.visibility = View.VISIBLE
+                    if (binding.container.visibility == View.INVISIBLE && viewState.title != null) {
+                        binding.container.visibility = View.VISIBLE
                     }
-                    view.title.text = viewState.title
+                    binding.title.text = viewState.title
 
                     if (viewState.saving || viewState.reverting) {
-                        view.revert.isEnabled = false
+                        binding.revert.isEnabled = false
                     }
                 }
             }
@@ -58,8 +57,8 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
         )
 
         adapter = PredefinedValueRecyclerViewAdapter(this)
-        view.list.adapter = adapter
-        view.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        binding.list.adapter = adapter
+        binding.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         viewModel.predefinedValues.observe(
             this,
@@ -70,12 +69,12 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
             }
         )
 
-        view.revert.setOnClickListener {
+        binding.revert.setOnClickListener {
             viewModel.revertClick()
         }
 
         return AlertDialog.Builder(requireActivity())
-            .setView(view)
+            .setView(binding.root)
             .create()
     }
 

@@ -5,8 +5,8 @@ plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
+    id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.oss.licenses.plugin")
     id("dagger.hilt.android.plugin")
@@ -15,8 +15,6 @@ plugins {
     id("com.github.triplet.play")
 }
 
-// https://github.com/gradle/kotlin-dsl/issues/644#issuecomment-398502551
-androidExtensions { isExperimental = true }
 
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
@@ -59,6 +57,10 @@ android {
             storeFile = file("../toggles_keystore.jks")
             storePassword = keystoreProperties["storePassword"] as String?
         }
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     testOptions {
@@ -139,7 +141,7 @@ kapt {
 dependencies {
     testImplementation("junit:junit:4.13.1")
 
-    testImplementation("androidx.test:core:1.3.0")
+    testImplementation("androidx.test:core-ktx:1.3.0")
     testImplementation("androidx.test.ext:truth:1.3.0")
     testImplementation("androidx.test:rules:1.3.0")
     testImplementation("androidx.test:runner:1.3.0")

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.izettle.wrench.oss.LicenceMetadata
-import se.eelde.toggles.R
+import se.eelde.toggles.databinding.OssListItemBinding
 
 class OssRecyclerViewAdapter(private val clickCallback: ((LicenceMetadata) -> Unit)) : ListAdapter<LicenceMetadata, OssViewHolder>(
     object : DiffUtil.ItemCallback<LicenceMetadata?>() {
@@ -15,8 +15,8 @@ class OssRecyclerViewAdapter(private val clickCallback: ((LicenceMetadata) -> Un
     }
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OssViewHolder {
-        val root = LayoutInflater.from(parent.context).inflate(R.layout.oss_list_item, parent, false)
-        return OssViewHolder(root, clickCallback)
+        val binding = OssListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return OssViewHolder(binding, clickCallback)
     }
 
     override fun onBindViewHolder(holder: OssViewHolder, position: Int) {

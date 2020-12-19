@@ -5,8 +5,9 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.core.app.launchActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Configuration
 import androidx.work.testing.SynchronousExecutor
@@ -30,18 +31,19 @@ import se.eelde.toggles.provider.TogglesProvider
 @Config(application = HiltTestApplication::class, sdk = [Build.VERSION_CODES.P])
 class CheckForProviders {
 
+    private lateinit var context: Context
+
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @get:Rule
-    var rule = ActivityScenarioRule(MainActivity::class.java)
+    private lateinit var scenario: ActivityScenario<MainActivity>
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     @Before
     fun setUp() {
-        val context = ApplicationProvider.getApplicationContext<Application>()
+        context = ApplicationProvider.getApplicationContext<Application>()
 
         val config = Configuration.Builder()
             .setMinimumLoggingLevel(Log.DEBUG)
@@ -49,13 +51,13 @@ class CheckForProviders {
             .build()
 
         WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+
+        scenario = launchActivity()
     }
 
     @Test
     fun checkWrenchProviderInstalled() {
-        val application = ApplicationProvider.getApplicationContext<Context>()
-
-        val providerInfo = application.packageManager.resolveContentProvider("com.izettle.wrench.configprovider", 0)
+        val providerInfo = context.packageManager.resolveContentProvider("com.izettle.wrench.configprovider", 0)
         assertNotNull(providerInfo)
         assertEquals(providerInfo!!.authority, "com.izettle.wrench.configprovider")
         assertEquals(providerInfo.name, WrenchProvider::class.java.canonicalName)
@@ -63,9 +65,7 @@ class CheckForProviders {
 
     @Test
     fun checkTogglesProviderInstalled() {
-        val application = ApplicationProvider.getApplicationContext<Context>()
-
-        val providerInfo = application.packageManager.resolveContentProvider("se.eelde.toggles.configprovider", 0)
+        val providerInfo = context.packageManager.resolveContentProvider("se.eelde.toggles.configprovider", 0)
         assertNotNull(providerInfo)
         assertEquals(providerInfo!!.authority, "se.eelde.toggles.configprovider")
         assertEquals(providerInfo.name, TogglesProvider::class.java.canonicalName)

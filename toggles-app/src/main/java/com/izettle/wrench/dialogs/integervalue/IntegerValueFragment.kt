@@ -2,43 +2,42 @@ package com.izettle.wrench.dialogs.integervalue
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_integer_value.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import se.eelde.toggles.R
+import se.eelde.toggles.databinding.FragmentIntegerValueBinding
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class IntegerValueFragment : DialogFragment() {
 
+    private lateinit var binding: FragmentIntegerValueBinding
     private val viewModel by viewModels<FragmentIntegerValueViewModel>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_integer_value, null)
+        binding = FragmentIntegerValueBinding.inflate(layoutInflater)
 
         viewModel.viewState.observe(
             this,
             { viewState ->
                 if (viewState != null) {
-                    val invisible = (view.container.visibility == View.INVISIBLE)
-                    if (view.container.visibility == View.INVISIBLE && viewState.title != null) {
-                        view.container.visibility = View.VISIBLE
+                    val invisible = (binding.container.visibility == View.INVISIBLE)
+                    if (binding.container.visibility == View.INVISIBLE && viewState.title != null) {
+                        binding.container.visibility = View.VISIBLE
                     }
-                    view.title.text = viewState.title
+                    binding.title.text = viewState.title
 
                     if (invisible) {
-                        view.value.jumpDrawablesToCurrentState()
+                        binding.value.jumpDrawablesToCurrentState()
                     }
 
                     if (viewState.saving || viewState.reverting) {
-                        view.value.isEnabled = false
-                        view.save.isEnabled = false
-                        view.revert.isEnabled = false
+                        binding.value.isEnabled = false
+                        binding.save.isEnabled = false
+                        binding.revert.isEnabled = false
                     }
                 }
             }
@@ -51,23 +50,23 @@ class IntegerValueFragment : DialogFragment() {
                     viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
                         when (contentIfNotHandled) {
                             ViewEffect.Dismiss -> dismiss()
-                            is ViewEffect.ValueChanged -> view.value.setText(contentIfNotHandled.value.toString())
+                            is ViewEffect.ValueChanged -> binding.value.setText(contentIfNotHandled.value.toString())
                         }
                     }
                 }
             }
         )
 
-        view.revert.setOnClickListener {
+        binding.revert.setOnClickListener {
             viewModel.revertClick()
         }
 
-        view.save.setOnClickListener {
-            viewModel.saveClick(view.value.text.toString())
+        binding.save.setOnClickListener {
+            viewModel.saveClick(binding.value.text.toString())
         }
 
         return AlertDialog.Builder(requireActivity())
-            .setView(view)
+            .setView(binding.root)
             .create()
     }
 

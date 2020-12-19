@@ -1,17 +1,12 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.oss.licenses.plugin")
     id("dagger.hilt.android.plugin")
     id("org.jlleitschuh.gradle.ktlint")
     id("io.gitlab.arturbosch.detekt")
-}
-
-androidExtensions {
-    isExperimental = true
 }
 
 dependencies {
@@ -23,6 +18,9 @@ detekt {
 }
 
 android {
+    buildFeatures {
+        viewBinding = true
+    }
     compileSdk = 30
     defaultConfig {
         applicationId = "se.eelde.toggles.example"

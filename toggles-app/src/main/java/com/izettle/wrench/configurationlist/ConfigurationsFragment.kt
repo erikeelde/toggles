@@ -28,11 +28,13 @@ import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchConfigurationWithValues
 import com.izettle.wrench.dialogs.scope.ScopeFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_configurations.*
 import se.eelde.toggles.R
+import se.eelde.toggles.databinding.FragmentConfigurationsBinding
 
 @AndroidEntryPoint
-class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, ConfigurationRecyclerViewAdapter.Listener {
+class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener,
+    ConfigurationRecyclerViewAdapter.Listener {
+    private lateinit var binding: FragmentConfigurationsBinding
     private var currentFilter: CharSequence? = null
     private var searchView: SearchView? = null
 
@@ -41,10 +43,10 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
     private val model by viewModels<ConfigurationViewModel>()
 
     private fun updateConfigurations(wrenchConfigurations: List<WrenchConfigurationWithValues>) {
-        var adapter = list.adapter as ConfigurationRecyclerViewAdapter?
+        var adapter = binding.list.adapter as ConfigurationRecyclerViewAdapter?
         if (adapter == null) {
             adapter = ConfigurationRecyclerViewAdapter(this, model)
-            list.adapter = adapter
+            binding.list.adapter = adapter
         }
         adapter.submitList(wrenchConfigurations)
     }
@@ -65,21 +67,27 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.fragment_configurations, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        FragmentConfigurationsBinding.inflate(layoutInflater, container, false)
+            .also { binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         model.setApplicationId(args.applicationId)
 
-        list.layoutManager = LinearLayoutManager(context)
+        binding.list.layoutManager = LinearLayoutManager(context)
 
         model.wrenchApplication.observe(
             viewLifecycleOwner,
             { wrenchApplication ->
                 if (wrenchApplication != null) {
-                    (activity as AppCompatActivity).supportActionBar!!.title = wrenchApplication.applicationLabel
+                    (activity as AppCompatActivity).supportActionBar!!.title =
+                        wrenchApplication.applicationLabel
                 }
             }
         )
@@ -87,8 +95,8 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
         model.defaultScopeLiveData.observe(
             viewLifecycleOwner,
             { scope ->
-                if (scope != null && list.adapter != null) {
-                    list.adapter!!.notifyDataSetChanged()
+                if (scope != null && binding.list.adapter != null) {
+                    binding.list.adapter!!.notifyDataSetChanged()
                 }
             }
         )
@@ -96,8 +104,8 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
         model.selectedScopeLiveData.observe(
             viewLifecycleOwner,
             { scope ->
-                if (scope != null && list.adapter != null) {
-                    list.adapter!!.notifyDataSetChanged()
+                if (scope != null && binding.list.adapter != null) {
+                    binding.list.adapter!!.notifyDataSetChanged()
                 }
                 // fragmentConfigurationsBinding.scopeButton.text = scope!!.name
             }
@@ -115,11 +123,11 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
         model.isListEmpty.observe(
             viewLifecycleOwner,
             { isEmpty ->
-                val animator = animator
                 if (isEmpty == null || isEmpty) {
-                    animator.displayedChild = animator.indexOfChild(no_configurations_empty_view)
+                    binding.animator.displayedChild =
+                        binding.animator.indexOfChild(binding.noConfigurationsEmptyView)
                 } else {
-                    animator.displayedChild = animator.indexOfChild(list)
+                    binding.animator.displayedChild = binding.animator.indexOfChild(binding.list)
                 }
             }
         )
@@ -173,14 +181,20 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
                                 return
                             }
 
-                            val activityManager = context!!.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                            val activityManager =
+                                context!!.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                             activityManager.killBackgroundProcesses(wrenchApplication.packageName)
 
-                            val intent = context!!.packageManager.getLaunchIntentForPackage(wrenchApplication.packageName)
+                            val intent =
+                                context!!.packageManager.getLaunchIntentForPackage(wrenchApplication.packageName)
                             if (intent != null) {
                                 context!!.startActivity(Intent.makeRestartActivityTask(intent.component))
                             } else if (this@ConfigurationsFragment.view != null) {
-                                Snackbar.make(this@ConfigurationsFragment.requireView(), R.string.application_not_installed, Snackbar.LENGTH_LONG).show()
+                                Snackbar.make(
+                                    this@ConfigurationsFragment.requireView(),
+                                    R.string.application_not_installed,
+                                    Snackbar.LENGTH_LONG
+                                ).show()
                             }
                         }
                     }
@@ -198,7 +212,12 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
                                 return
                             }
 
-                            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", wrenchApplication.packageName, null)))
+                            startActivity(
+                                Intent(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.fromParts("package", wrenchApplication.packageName, null)
+                                )
+                            )
                         }
                     }
                 )
@@ -206,7 +225,7 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
             }
             R.id.action_delete_application -> {
                 model.deleteApplication(model.wrenchApplication.value!!)
-                Navigation.findNavController(animator).navigateUp()
+                Navigation.findNavController(binding.animator).navigateUp()
                 true
             }
             R.id.action_change_scope -> {
@@ -222,27 +241,66 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener, Confi
 
     override fun configurationClicked(v: View, configuration: WrenchConfigurationWithValues) {
         if (model.selectedScopeLiveData.value == null) {
-            Snackbar.make(animator, "No selected scope found", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.animator, "No selected scope found", Snackbar.LENGTH_LONG).show()
             return
         }
 
         val selectedScopeId = model.selectedScopeLiveData.value!!.id
 
-        if (TextUtils.equals(String::class.java.name, configuration.type) || TextUtils.equals(Bolt.TYPE.STRING, configuration.type)) {
+        if (TextUtils.equals(
+                String::class.java.name,
+                configuration.type
+            ) || TextUtils.equals(Bolt.TYPE.STRING, configuration.type)
+        ) {
 
-            v.findNavController().navigate(ConfigurationsFragmentDirections.actionConfigurationsFragmentToStringValueFragment(configuration.id, selectedScopeId))
-        } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(Bolt.TYPE.INTEGER, configuration.type)) {
+            v.findNavController().navigate(
+                ConfigurationsFragmentDirections.actionConfigurationsFragmentToStringValueFragment(
+                    configuration.id,
+                    selectedScopeId
+                )
+            )
+        } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(
+                Bolt.TYPE.INTEGER,
+                configuration.type
+            )
+        ) {
 
-            v.findNavController().navigate(ConfigurationsFragmentDirections.actionConfigurationsFragmentToIntegerValueFragment(configuration.id, selectedScopeId))
-        } else if (TextUtils.equals(Boolean::class.java.name, configuration.type) || TextUtils.equals(Bolt.TYPE.BOOLEAN, configuration.type)) {
+            v.findNavController().navigate(
+                ConfigurationsFragmentDirections.actionConfigurationsFragmentToIntegerValueFragment(
+                    configuration.id,
+                    selectedScopeId
+                )
+            )
+        } else if (TextUtils.equals(
+                Boolean::class.java.name,
+                configuration.type
+            ) || TextUtils.equals(Bolt.TYPE.BOOLEAN, configuration.type)
+        ) {
 
-            v.findNavController().navigate(ConfigurationsFragmentDirections.actionConfigurationsFragmentToBooleanValueFragment(configuration.id, selectedScopeId))
-        } else if (TextUtils.equals(Enum::class.java.name, configuration.type) || TextUtils.equals(Bolt.TYPE.ENUM, configuration.type)) {
+            v.findNavController().navigate(
+                ConfigurationsFragmentDirections.actionConfigurationsFragmentToBooleanValueFragment(
+                    configuration.id,
+                    selectedScopeId
+                )
+            )
+        } else if (TextUtils.equals(Enum::class.java.name, configuration.type) || TextUtils.equals(
+                Bolt.TYPE.ENUM,
+                configuration.type
+            )
+        ) {
 
-            v.findNavController().navigate(ConfigurationsFragmentDirections.actionConfigurationsFragmentToEnumValueFragment(configuration.id, selectedScopeId))
+            v.findNavController().navigate(
+                ConfigurationsFragmentDirections.actionConfigurationsFragmentToEnumValueFragment(
+                    configuration.id,
+                    selectedScopeId
+                )
+            )
         } else {
-
-            Snackbar.make(animator, "Not sure what to do with type: " + configuration.type!!, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                binding.animator,
+                "Not sure what to do with type: " + configuration.type!!,
+                Snackbar.LENGTH_LONG
+            ).show()
         }
     }
 

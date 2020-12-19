@@ -3,7 +3,6 @@ package com.izettle.wrench.oss.detail
 import android.app.Dialog
 import android.os.Bundle
 import android.text.util.Linkify
-import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.util.LinkifyCompat
 import androidx.fragment.app.DialogFragment
@@ -11,27 +10,29 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.izettle.wrench.oss.LicenceMetadata
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_oss_detail.view.*
-import se.eelde.toggles.R
+import se.eelde.toggles.databinding.FragmentOssDetailBinding
 
 @AndroidEntryPoint
 class OssDetailFragment : DialogFragment() {
 
+    private lateinit var binding: FragmentOssDetailBinding
     private val viewModel by viewModels<OssDetailViewModel>()
 
-    val args: OssDetailFragmentArgs by navArgs()
+    private val args: OssDetailFragmentArgs by navArgs()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val root = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_oss_detail, null, false)
+        val root = FragmentOssDetailBinding.inflate(layoutInflater).also {
+            binding = it
+        }.root
 
         val licenceMetadata = LicenceMetadata(args.dependency, args.skip.toLong(), args.length)
 
         viewModel.getThirdPartyMetadata(licenceMetadata).observe(
             this,
             {
-                root.text.text = it
-                LinkifyCompat.addLinks(root.text, Linkify.WEB_URLS)
+                binding.text.text = it
+                LinkifyCompat.addLinks(binding.text, Linkify.WEB_URLS)
             }
         )
 

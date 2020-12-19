@@ -2,7 +2,6 @@ package com.izettle.wrench.dialogs.scope
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
@@ -12,32 +11,35 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_scope.view.*
 import se.eelde.toggles.R
+import se.eelde.toggles.databinding.FragmentScopeBinding
 
 @AndroidEntryPoint
 class ScopeFragment : DialogFragment(), ScopeRecyclerViewAdapter.Listener {
 
+    private lateinit var binding: FragmentScopeBinding
     private val viewModel by viewModels<ScopeFragmentViewModel>()
     private var adapter: ScopeRecyclerViewAdapter? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val root = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_scope, null, false)
+        binding = FragmentScopeBinding.inflate(layoutInflater)
 
         viewModel.init(requireArguments().getLong(ARGUMENT_APPLICATION_ID))
 
         viewModel.scopes.observe(this, { scopes -> adapter!!.submitList(scopes) })
 
-        viewModel.selectedScopeLiveData.observe(this, { wrenchScope -> viewModel.selectedScope = wrenchScope })
+        viewModel.selectedScopeLiveData.observe(
+            this,
+            { wrenchScope -> viewModel.selectedScope = wrenchScope })
 
         adapter = ScopeRecyclerViewAdapter(this)
-        root.list.adapter = adapter
-        root.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        binding.list.adapter = adapter
+        binding.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         return AlertDialog.Builder(requireContext())
             .setTitle(R.string.select_scope)
-            .setView(root)
+            .setView(binding.root)
             .setPositiveButton("Add") { _, _ ->
 
                 val input = EditText(requireContext())
