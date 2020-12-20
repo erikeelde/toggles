@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/bubbleActivity">
+    <activity
+        android:id="@+id/bubbleActivity"
+        android:name="se.eelde.toggles.bubble.BubbleActivity"
+        android:label="BubbleActivity">
+        <action
+            android:id="@+id/action_bubbleActivity_to_configurationsFragment"
+            app:destination="@id/applicationConfigurationsGraph">
+            <argument
+                android:name="applicationId"
+                app:argType="long" />
+        </action>
+    </activity>
+
+
+    <include app:graph="@navigation/application_configurations_graph" />
+</navigation>

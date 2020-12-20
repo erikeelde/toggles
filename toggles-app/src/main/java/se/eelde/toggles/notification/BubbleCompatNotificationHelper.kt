@@ -19,7 +19,7 @@ import androidx.core.graphics.drawable.toBitmap
 import com.izettle.wrench.MainActivity
 import com.izettle.wrench.database.TogglesNotification
 import com.izettle.wrench.database.WrenchApplication
-import se.eelde.toggles.BubbleActivity
+import se.eelde.toggles.bubble.BubbleActivity
 import se.eelde.toggles.R
 import se.eelde.toggles.core.TogglesProviderContract
 

@@ -10,91 +10,11 @@
         android:label="@string/applications">
         <action
             android:id="@+id/action_applicationsFragment_to_configurationsFragment"
-            app:destination="@id/configurationsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/configurationsFragment"
-        android:name="com.izettle.wrench.configurationlist.ConfigurationsFragment"
-        android:label="ConfigurationsFragment">
-        <argument
-            android:name="applicationId"
-            app:argType="long" />
-        <action
-            android:id="@+id/action_configurationsFragment_to_scopeFragment"
-            app:destination="@id/scopeFragment" />
-        <action
-            android:id="@+id/action_configurationsFragment_to_booleanValueFragment"
-            app:destination="@id/booleanValueFragment" />
-        <action
-            android:id="@+id/action_configurationsFragment_to_integerValueFragment"
-            app:destination="@id/integerValueFragment" />
-        <action
-            android:id="@+id/action_configurationsFragment_to_stringValueFragment"
-            app:destination="@id/stringValueFragment" />
-        <action
-            android:id="@+id/action_configurationsFragment_to_enumValueFragment"
-            app:destination="@id/enumValueFragment" />
-        <deepLink
-            android:id="@+id/deepLink"
-            app:uri="content://se.eelde.toggles.configprovider/application/{applicationId}"
-            android:autoVerify="true"
-            app:action="ACTION_VIEW"
-            tools:targetApi="m" />
-    </fragment>
-    <dialog
-        android:id="@+id/enumValueFragment"
-        android:name="com.izettle.wrench.dialogs.enumvalue.EnumValueFragment"
-        android:label="EnumValueFragment">
-        <argument
-            android:name="configurationId"
-            app:argType="long" />
-        <argument
-            android:name="scopeId"
-            app:argType="long" />
-    </dialog>
-    <dialog
-        android:id="@+id/stringValueFragment"
-        android:name="com.izettle.wrench.dialogs.stringvalue.StringValueFragment"
-        android:label="StringValueFragment">
-        <argument
-            android:name="configurationId"
-            app:argType="long" />
-        <argument
-            android:name="scopeId"
-            app:argType="long" />
-    </dialog>
-    <dialog
-        android:id="@+id/integerValueFragment"
-        android:name="com.izettle.wrench.dialogs.integervalue.IntegerValueFragment"
-        android:label="IntegerValueFragment">
-        <argument
-            android:name="configurationId"
-            app:argType="long" />
-        <argument
-            android:name="scopeId"
-            app:argType="long" />
-    </dialog>
-    <dialog
-        android:id="@+id/booleanValueFragment"
-        android:name="com.izettle.wrench.dialogs.booleanvalue.BooleanValueFragment"
-        android:label="BooleanValueFragment">
-        <argument
-            android:name="configurationId"
-            app:argType="long" />
-        <argument
-            android:name="scopeId"
-            app:argType="long" />
-    </dialog>
-    <fragment
-        android:id="@+id/scopeFragment"
-        android:name="com.izettle.wrench.dialogs.scope.ScopeFragment"
-        android:label="ScopeFragment">
-        <argument
-            android:name="configurationId"
-            app:argType="long" />
-        <argument
-            android:name="scopeId"
-            app:argType="long" />
+            app:destination="@id/applicationConfigurationsGraph" >
+            <argument
+                android:name="applicationId"
+                app:argType="long" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/action_oss"
@@ -128,4 +48,6 @@
         android:name="com.izettle.wrench.help.HelpFragment"
         android:label="@string/help"
         tools:layout="@layout/fragment_help" />
+
+    <include app:graph="@navigation/application_configurations_graph" />
 </navigation>
