@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Toggles</string>
-
     <string name="applications">Applications</string>
-
     <string name="no_configurations_found">No configurations found.</string>
     <string name="no_applications_found">No applications found</string>
     <string name="restart_application">Restart application</string>
@@ -11,14 +9,22 @@
     <string name="delete_application">Delete application</string>
     <string name="go_to_application_settings">Go to application settings</string>
     <string name="filter_configurations">Filter configurations</string>
-    <string name="save">save</string>
     <string name="revert">revert</string>
     <string name="select_scope">Select scope</string>
     <string name="application_icon">Application icon</string>
-    <string name="wrench_permission_label">Access Wrench</string>
-    <string name="wrench_permission_description">Access to request configuration from Wrench</string>
+    <string name="toggles_permission_label">Access Toggles</string>
+    <string name="toggles_permission_description">Access to request configuration from Toggles</string>
     <string name="help">Help</string>
     <string name="oss">Open source</string>
-    <string name="help_implementation_title">Help to get started will be here eventually. \n\nToggles is a rerelease of wrench (which I can no longer maintain). \n\nRead more about the connection on the github page: https://github.com/erikeelde/toggles</string>
 
+    <string name="help_implementation_title">Implementation</string>
+    <string name="save">save</string>
+    <string name="notification_content_title">%1$s</string>
+    <string name="notification_channel_name">App toggled</string>
+    <string name="notification_channel_description">Notifies that an app used toggles to configure a setting</string>
+    <string name="title_activity_bubble">Bubble activity</string>
+    <string name="label_reply">label_reply</string>
+    <string name="hint_input">hint_input</string>
+    <string name="sender_you">sender_you</string>
+    <string name="loading_bubble">Loading bubble</string>
 </resources>

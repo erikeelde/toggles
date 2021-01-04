@@ -1,11 +1,15 @@
 package com.izettle.wrench.database.migrations
 
-
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 object Migrations {
-    val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+    const val databaseVersion1 = 1
+    const val databaseVersion2 = 2
+    const val databaseVersion3 = 3
+    const val databaseVersion4 = 4
+
+    val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             run {
                 val tableName = "application"
@@ -89,7 +93,7 @@ object Migrations {
         }
     }
 
-    val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+    val MIGRATION_2_3: Migration = object : Migration(databaseVersion2, databaseVersion3) {
         override fun migrate(database: SupportSQLiteDatabase) {
             run {
                 // Reinstate indexes - due to a bug in a previous migration (1 -> 2) these indexes may be missing.
@@ -148,6 +152,30 @@ object Migrations {
 
                 database.execSQL("DROP INDEX `index_scope_temp_applicationId_name`")
                 database.execSQL("CREATE UNIQUE INDEX `index_scope_applicationId_name` ON `$tableNameTemp` (`applicationId`, `name`)")
+
+                database.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
+            }
+        }
+    }
+    val MIGRATION_3_4: Migration = object : Migration(databaseVersion3, databaseVersion4) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            run {
+                val tableName = "TogglesNotification"
+                database.execSQL("CREATE TABLE IF NOT EXISTS `$tableName` (`id` INTEGER NOT NULL, `applicationId` INTEGER NOT NULL, `applicationPackageName` TEXT NOT NULL, `configurationId` INTEGER NOT NULL, `configurationKey` TEXT NOT NULL, `configurationValue` TEXT NOT NULL, `added` INTEGER NOT NULL, PRIMARY KEY(`id`))")
+            }
+            run {
+                val tableName = "application"
+                val tableNameTemp = tableName + "_temp"
+
+                database.execSQL("CREATE TABLE IF NOT EXISTS `$tableNameTemp` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `shortcutId` TEXT NOT NULL, `packageName` TEXT NOT NULL, `applicationLabel` TEXT NOT NULL)")
+                database.execSQL("CREATE UNIQUE INDEX `index_application_temp_packageName` ON `$tableNameTemp` (`packageName`)")
+
+                database.execSQL("INSERT INTO $tableNameTemp (id, shortcutId, packageName, applicationLabel) SELECT id, packageName,  packageName, applicationLabel FROM $tableName")
+                database.execSQL("DROP TABLE $tableName")
+
+                // recreate index with correct name
+                database.execSQL("DROP INDEX `index_application_temp_packageName`")
+                database.execSQL("CREATE UNIQUE INDEX `index_application_packageName` ON `$tableNameTemp` (`packageName`)")
 
                 database.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
             }

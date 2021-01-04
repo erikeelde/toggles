@@ -1,17 +1,25 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("android.extensions")
+    id("io.gitlab.arturbosch.detekt")
 }
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
+}
+
+detekt {
+    autoCorrect = true
+}
+
 android {
-    compileSdkVersion(Versions.compileSdk)
+    compileSdk = 30
 
     defaultConfig {
-        minSdkVersion(Versions.minSdk)
-        targetSdkVersion(Versions.targetSdk)
+        minSdk = 16
+        targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         getByName("release") {
@@ -39,19 +47,19 @@ android {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.1")
 
-    testImplementation("androidx.test:core:1.2.0")
-    testImplementation("androidx.test.ext:truth:1.2.0")
-    testImplementation("androidx.test:rules:1.2.0")
-    testImplementation("androidx.test:runner:1.2.0")
-    testImplementation("androidx.test.ext:junit:1.1.1")
-    testImplementation("org.robolectric:robolectric:4.3.1")
+    testImplementation("androidx.test:core:1.3.0")
+    testImplementation("androidx.test.ext:truth:1.3.0")
+    testImplementation("androidx.test:rules:1.3.0")
+    testImplementation("androidx.test:runner:1.3.0")
+    testImplementation("androidx.test.ext:junit:1.1.2")
+    testImplementation("org.robolectric:robolectric:4.4")
 
     implementation(project(":toggles-core"))
-    implementation("androidx.annotation:annotation:1.1.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72")
-    implementation("androidx.core:core-ktx:1.3.0")
+    implementation("androidx.annotation:annotation:1.2.0-alpha01")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.21")
+    implementation("androidx.core:core-ktx:1.5.0-alpha05")
 }
 
 apply(rootProject.file("gradle/gradle-mvn-push.gradle"))

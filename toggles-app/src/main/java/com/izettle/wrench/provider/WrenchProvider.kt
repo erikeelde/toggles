@@ -1,74 +1,132 @@
 package com.izettle.wrench.provider
 
+import android.content.ContentProvider
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
-import android.content.UriMatcher
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Binder
-import com.izettle.wrench.BuildConfig
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.WrenchProviderContract
-import com.izettle.wrench.database.*
+import com.izettle.wrench.database.TogglesNotificationDao
+import com.izettle.wrench.database.WrenchApplication
+import com.izettle.wrench.database.WrenchApplicationDao
+import com.izettle.wrench.database.WrenchConfiguration
+import com.izettle.wrench.database.WrenchConfigurationDao
+import com.izettle.wrench.database.WrenchConfigurationValue
+import com.izettle.wrench.database.WrenchConfigurationValueDao
+import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
+import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
+import com.izettle.wrench.database.WrenchScope
+import com.izettle.wrench.database.WrenchScopeDao
 import com.izettle.wrench.preferences.ITogglesPreferences
-import dagger.android.DaggerContentProvider
-import java.util.*
-import javax.inject.Inject
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import se.eelde.toggles.BuildConfig
+import se.eelde.toggles.TogglesUriMatcher
+import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
+import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
+import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
+import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
+import se.eelde.toggles.notification.configurationRequested
+import se.eelde.toggles.provider.IPackageManagerWrapper
+import se.eelde.toggles.provider.notifyInsert
+import se.eelde.toggles.provider.notifyUpdate
+import java.util.Date
 
+class WrenchProvider : ContentProvider() {
 
-class WrenchProvider : DaggerContentProvider() {
+    val applicationDao: WrenchApplicationDao by lazy {
+        applicationEntryPoint.provideWrenchApplicationDao()
+    }
 
-    @Inject
-    lateinit var applicationDao: WrenchApplicationDao
+    val scopeDao: WrenchScopeDao by lazy {
+        applicationEntryPoint.provideWrenchScopeDao()
+    }
 
-    @Inject
-    lateinit var scopeDao: WrenchScopeDao
+    val configurationDao: WrenchConfigurationDao by lazy {
+        applicationEntryPoint.provideWrenchConfigurationDao()
+    }
 
-    @Inject
-    lateinit var configurationDao: WrenchConfigurationDao
+    val configurationValueDao: WrenchConfigurationValueDao by lazy {
+        applicationEntryPoint.provideWrenchConfigurationValueDao()
+    }
 
-    @Inject
-    lateinit var configurationValueDao: WrenchConfigurationValueDao
+    private val predefinedConfigurationDao: WrenchPredefinedConfigurationValueDao by lazy {
+        applicationEntryPoint.providePredefinedConfigurationValueDao()
+    }
 
-    @Inject
-    lateinit var predefinedConfigurationDao: WrenchPredefinedConfigurationValueDao
+    private val togglesNotificationDao: TogglesNotificationDao by lazy {
+        applicationEntryPoint.provideTogglesNotificationDao()
+    }
 
-    @Inject
-    lateinit var packageManagerWrapper: IPackageManagerWrapper
+    private val packageManagerWrapper: IPackageManagerWrapper by lazy {
+        applicationEntryPoint.providePackageManagerWrapper()
+    }
 
-    @Inject
-    lateinit var togglesPreferences: ITogglesPreferences
+    private val togglesPreferences: ITogglesPreferences by lazy {
+        applicationEntryPoint.providesWrenchPreferences()
+    }
+
+    private val applicationEntryPoint: WrenchProviderEntryPoint by lazy {
+        EntryPointAccessors.fromApplication(context!!, WrenchProviderEntryPoint::class.java)
+    }
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface WrenchProviderEntryPoint {
+        fun provideWrenchApplicationDao(): WrenchApplicationDao
+        fun provideWrenchConfigurationDao(): WrenchConfigurationDao
+        fun provideWrenchConfigurationValueDao(): WrenchConfigurationValueDao
+        fun provideWrenchScopeDao(): WrenchScopeDao
+        fun providePredefinedConfigurationValueDao(): WrenchPredefinedConfigurationValueDao
+        fun provideTogglesNotificationDao(): TogglesNotificationDao
+        fun providePackageManagerWrapper(): IPackageManagerWrapper
+        fun providesWrenchPreferences(): ITogglesPreferences
+    }
 
     @Synchronized
-    private fun getCallingApplication(applicationDao: WrenchApplicationDao): WrenchApplication? {
-        var wrenchApplication: WrenchApplication? = applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)
+    private fun getCallingApplication(applicationDao: WrenchApplicationDao): WrenchApplication {
+        var wrenchApplication: WrenchApplication? =
+            applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)
 
         if (wrenchApplication == null) {
             try {
-                wrenchApplication = WrenchApplication(0, packageManagerWrapper.callingApplicationPackageName!!, packageManagerWrapper.applicationLabel)
+                wrenchApplication = WrenchApplication(
+                    id = 0,
+                    packageName = packageManagerWrapper.callingApplicationPackageName!!,
+                    applicationLabel = packageManagerWrapper.applicationLabel,
+                    shortcutId = packageManagerWrapper.callingApplicationPackageName!!,
+                )
 
                 wrenchApplication.id = applicationDao.insert(wrenchApplication)
-
             } catch (e: PackageManager.NameNotFoundException) {
                 e.printStackTrace()
-                throw RuntimeException(e)
+                throw e
             }
-
         }
 
         return wrenchApplication
     }
 
-    override fun onCreate(): Boolean {
-        super.onCreate()
-        return true
-    }
+    override fun onCreate() = true
 
-    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
+    @Suppress("LongMethod")
+    override fun query(
+        uri: Uri,
+        projection: Array<String>?,
+        selection: String?,
+        selectionArgs: Array<String>?,
+        sortOrder: String?
+    ): Cursor {
 
-        val callingApplication = getCallingApplication(applicationDao) ?: return null
+        val callingApplication = getCallingApplication(applicationDao)
 
         if (!isWrenchApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
@@ -79,13 +137,33 @@ class WrenchProvider : DaggerContentProvider() {
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATION_ID -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                cursor = configurationDao.getBolt(java.lang.Long.valueOf(uri.lastPathSegment!!), scope!!.id)
+                cursor = configurationDao.getBolt(
+                    java.lang.Long.valueOf(uri.lastPathSegment!!),
+                    scope!!.id
+                )
 
                 if (cursor.count == 0) {
                     cursor.close()
 
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getBolt(java.lang.Long.valueOf(uri.lastPathSegment!!), defaultScope!!.id)
+                    cursor = configurationDao.getBolt(
+                        java.lang.Long.valueOf(uri.lastPathSegment!!),
+                        defaultScope!!.id
+                    )
+                }
+
+                if (cursor.moveToFirst()) {
+                    val bolt = Bolt.fromCursor(cursor)
+                    cursor.moveToPrevious()
+                    context?.apply {
+                        configurationRequested(
+                            this,
+                            configurationDao,
+                            togglesNotificationDao,
+                            callingApplication,
+                            bolt
+                        )
+                    }
                 }
             }
             CURRENT_CONFIGURATION_KEY -> {
@@ -98,9 +176,23 @@ class WrenchProvider : DaggerContentProvider() {
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
                     cursor = configurationDao.getBolt(uri.lastPathSegment!!, defaultScope!!.id)
                 }
+
+                if (cursor.moveToFirst()) {
+                    val bolt = Bolt.fromCursor(cursor)
+                    cursor.moveToPrevious()
+                    context?.apply {
+                        configurationRequested(
+                            this,
+                            configurationDao,
+                            togglesNotificationDao,
+                            callingApplication,
+                            bolt
+                        )
+                    }
+                }
             }
             else -> {
-                throw UnsupportedOperationException("Not yet implemented " + uri.toString())
+                throw UnsupportedOperationException("Not yet implemented $uri")
             }
         }
 
@@ -115,9 +207,9 @@ class WrenchProvider : DaggerContentProvider() {
         return callingApplication.packageName == BuildConfig.APPLICATION_ID
     }
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri? {
+    override fun insert(uri: Uri, values: ContentValues?): Uri {
 
-        val callingApplication = getCallingApplication(applicationDao) ?: return null
+        val callingApplication = getCallingApplication(applicationDao)
 
         if (!isWrenchApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
@@ -130,22 +222,30 @@ class WrenchProvider : DaggerContentProvider() {
 
                 bolt = fixRCTypes(bolt)
 
-                var wrenchConfiguration: WrenchConfiguration? = configurationDao.getWrenchConfiguration(callingApplication.id, bolt.key)
+                var wrenchConfiguration: WrenchConfiguration? =
+                    configurationDao.getWrenchConfiguration(callingApplication.id, bolt.key)
 
                 if (wrenchConfiguration == null) {
-                    wrenchConfiguration = WrenchConfiguration(0, callingApplication.id, bolt.key, bolt.type)
+                    wrenchConfiguration =
+                        WrenchConfiguration(0, callingApplication.id, bolt.key, bolt.type)
 
                     wrenchConfiguration.id = configurationDao.insert(wrenchConfiguration)
                 }
 
                 val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
 
-                val wrenchConfigurationValue = WrenchConfigurationValue(0, wrenchConfiguration.id, bolt.value, defaultScope!!.id)
+                val wrenchConfigurationValue = WrenchConfigurationValue(
+                    0,
+                    wrenchConfiguration.id,
+                    bolt.value,
+                    defaultScope!!.id
+                )
                 wrenchConfigurationValue.configurationId = wrenchConfiguration.id
                 wrenchConfigurationValue.value = bolt.value
                 wrenchConfigurationValue.scope = defaultScope.id
 
-                wrenchConfigurationValue.id = configurationValueDao.insertSync(wrenchConfigurationValue)
+                wrenchConfigurationValue.id =
+                    configurationValueDao.insertSync(wrenchConfigurationValue)
 
                 insertId = wrenchConfiguration.id
             }
@@ -158,7 +258,7 @@ class WrenchProvider : DaggerContentProvider() {
             }
         }
 
-        context!!.contentResolver.notifyChange(Uri.withAppendedPath(uri, insertId.toString()), null, false)
+        context!!.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
 
         return ContentUris.withAppendedId(uri, insertId)
     }
@@ -176,7 +276,7 @@ class WrenchProvider : DaggerContentProvider() {
     }
 
     override fun bulkInsert(uri: Uri, values: Array<ContentValues>): Int {
-        val callingApplication = getCallingApplication(applicationDao) ?: return 0
+        val callingApplication = getCallingApplication(applicationDao)
 
         if (!isWrenchApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
@@ -185,9 +285,15 @@ class WrenchProvider : DaggerContentProvider() {
         return super.bulkInsert(uri, values)
     }
 
-    override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun update(
+        uri: Uri,
+        values: ContentValues?,
+        selection: String?,
+        selectionArgs: Array<String>?
+    ): Int {
 
-        val callingApplication = getCallingApplication(applicationDao) ?: return 0
+        val callingApplication = getCallingApplication(applicationDao)
 
         if (!isWrenchApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
@@ -198,9 +304,18 @@ class WrenchProvider : DaggerContentProvider() {
             CURRENT_CONFIGURATION_ID -> {
                 val bolt = Bolt.fromContentValues(values!!)
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                updatedRows = configurationValueDao.updateConfigurationValueSync(java.lang.Long.parseLong(uri.lastPathSegment!!), scope!!.id, bolt.value!!)
+                updatedRows = configurationValueDao.updateConfigurationValueSync(
+                    java.lang.Long.parseLong(uri.lastPathSegment!!),
+                    scope!!.id,
+                    bolt.value!!
+                )
                 if (updatedRows == 0) {
-                    val wrenchConfigurationValue = WrenchConfigurationValue(0, java.lang.Long.parseLong(uri.lastPathSegment!!), bolt.value, scope.id)
+                    val wrenchConfigurationValue = WrenchConfigurationValue(
+                        0,
+                        java.lang.Long.parseLong(uri.lastPathSegment!!),
+                        bolt.value,
+                        scope.id
+                    )
                     configurationValueDao.insertSync(wrenchConfigurationValue)
                 }
             }
@@ -210,14 +325,14 @@ class WrenchProvider : DaggerContentProvider() {
         }
 
         if (updatedRows > 0) {
-            context!!.contentResolver.notifyChange(uri, null, false)
+            context!!.contentResolver.notifyUpdate(uri)
         }
 
         return updatedRows
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        val callingApplication = getCallingApplication(applicationDao) ?: return 0
+        val callingApplication = getCallingApplication(applicationDao)
 
         if (!isWrenchApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
@@ -226,25 +341,25 @@ class WrenchProvider : DaggerContentProvider() {
         throw UnsupportedOperationException("Not yet implemented")
     }
 
-    override fun getType(uri: Uri): String? {
-        val callingApplication = getCallingApplication(applicationDao) ?: return null
+    override fun getType(uri: Uri): String {
+        val callingApplication = getCallingApplication(applicationDao)
 
         if (!isWrenchApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
-        when (uriMatcher.match(uri)) {
+        return when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATIONS -> {
-                return "vnd.android.cursor.dir/vnd." + BuildConfig.APPLICATION_ID + ".currentConfiguration"
+                "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
             CURRENT_CONFIGURATION_ID -> {
-                return "vnd.android.cursor.item/vnd." + BuildConfig.APPLICATION_ID + ".currentConfiguration"
+                "vnd.android.cursor.item/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
             CURRENT_CONFIGURATION_KEY -> {
-                return "vnd.android.cursor.dir/vnd." + BuildConfig.APPLICATION_ID + ".currentConfiguration"
+                "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
             PREDEFINED_CONFIGURATION_VALUES -> {
-                return "vnd.android.cursor.dir/vnd." + BuildConfig.APPLICATION_ID + ".predefinedConfigurationValue"
+                "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.predefinedConfigurationValue"
             }
             else -> {
                 throw UnsupportedOperationException("Not yet implemented")
@@ -254,21 +369,16 @@ class WrenchProvider : DaggerContentProvider() {
 
     companion object {
 
-        private const val CURRENT_CONFIGURATION_ID = 1
-        private const val CURRENT_CONFIGURATION_KEY = 2
-        private const val CURRENT_CONFIGURATIONS = 3
-        private const val PREDEFINED_CONFIGURATION_VALUES = 5
-        private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+        private val uriMatcher = TogglesUriMatcher.getTogglesUriMatcher()
 
-        init {
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration/#", CURRENT_CONFIGURATION_ID)
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration/*", CURRENT_CONFIGURATION_KEY)
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "currentConfiguration", CURRENT_CONFIGURATIONS)
-            uriMatcher.addURI(WrenchProviderContract.WRENCH_AUTHORITY, "predefinedConfigurationValue", PREDEFINED_CONFIGURATION_VALUES)
-        }
+        private const val oneSecond = 1000
 
         @Synchronized
-        private fun getDefaultScope(context: Context?, scopeDao: WrenchScopeDao?, applicationId: Long): WrenchScope? {
+        private fun getDefaultScope(
+            context: Context?,
+            scopeDao: WrenchScopeDao?,
+            applicationId: Long
+        ): WrenchScope? {
             if (context == null) {
                 return null
             }
@@ -285,7 +395,11 @@ class WrenchProvider : DaggerContentProvider() {
         }
 
         @Synchronized
-        private fun getSelectedScope(context: Context?, scopeDao: WrenchScopeDao?, applicationId: Long): WrenchScope? {
+        private fun getSelectedScope(
+            context: Context?,
+            scopeDao: WrenchScopeDao?,
+            applicationId: Long
+        ): WrenchScope? {
             if (context == null) {
                 return null
             }
@@ -299,7 +413,7 @@ class WrenchProvider : DaggerContentProvider() {
 
                 val customScope = WrenchScope()
                 customScope.applicationId = applicationId
-                customScope.timeStamp = Date(defaultScope.timeStamp.time + 1000)
+                customScope.timeStamp = Date(defaultScope.timeStamp.time + oneSecond)
                 customScope.name = WrenchScope.SCOPE_USER
                 customScope.id = scopeDao.insert(customScope)
 
@@ -308,31 +422,25 @@ class WrenchProvider : DaggerContentProvider() {
             return scope
         }
 
-        private fun assertValidApiVersion(togglesPreferences: ITogglesPreferences?, uri: Uri) {
+        private fun assertValidApiVersion(togglesPreferences: ITogglesPreferences, uri: Uri) {
+            var l: Long = 0
+            val strictApiVersion = try {
+                l = Binder.clearCallingIdentity()
+                togglesPreferences.getBoolean(
+                    "Require valid wrench api version",
+                    false
+                )
+            } finally {
+                Binder.restoreCallingIdentity(l)
+            }
+
             when (getApiVersion(uri)) {
-                API_1 -> {
+                se.eelde.toggles.provider.API_1 -> {
                     return
                 }
-                API_INVALID -> {
-                    var l: Long = 0
-                    try {
-                        l = Binder.clearCallingIdentity()
-                        if (togglesPreferences!!.getBoolean("Require valid wrench api version", false)) {
-                            throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
-                        }
-                    } finally {
-                        Binder.restoreCallingIdentity(l)
-                    }
-                }
-                else -> {
-                    var l: Long = 0
-                    try {
-                        l = Binder.clearCallingIdentity()
-                        if (togglesPreferences!!.getBoolean("Require valid wrench api version", false)) {
-                            throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
-                        }
-                    } finally {
-                        Binder.restoreCallingIdentity(l)
+                se.eelde.toggles.provider.API_INVALID -> {
+                    if (strictApiVersion) {
+                        throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
                     }
                 }
             }
@@ -348,5 +456,4 @@ class WrenchProvider : DaggerContentProvider() {
             }
         }
     }
-
 }

@@ -1,5 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.izettle.wrench.preferences">
 
-    <uses-permission android:name="com.izettle.wrench.permission" />
+    <uses-permission android:name="se.eelde.toggles.provider_permission" />
+
+    <queries>
+        <package android:name="se.eelde.toggles" />
+
+        <provider
+            android:authorities="se.eelde.toggles.configprovider"
+            tools:ignore="ExportedContentProvider" />
+    </queries>
+
 </manifest>

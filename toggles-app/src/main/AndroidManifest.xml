@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.izettle.wrench">
+    package="se.eelde.toggles">
 
     <permission
         android:name="${wrenchPermission}"
         android:description="@string/wrench_permission_description"
         android:label="@string/wrench_permission_label"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="${togglesPermission}"
+        android:description="@string/toggles_permission_description"
+        android:label="@string/toggles_permission_label"
         android:protectionLevel="normal" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -15,7 +20,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name="com.izettle.wrench.WrenchApplication"
+        android:name=".TogglesApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,6 +28,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <activity
+            android:name=".bubble.BubbleActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/title_activity_bubble"
+            android:allowEmbedded="true"
+            android:documentLaunchMode="always"
+            android:resizeableActivity="true"
+            tools:targetApi="n" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="se.eelde.toggles.configprovider"
+                    android:pathPattern="/application/#"
+                    android:scheme="content" />
+            </intent-filter>
+        </activity>
 
         <activity android:name="com.izettle.wrench.MainActivity">
             <intent-filter>
@@ -38,7 +61,17 @@
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
-
+        <provider
+            android:name=".provider.TogglesProvider"
+            android:authorities="${togglesAuthority}"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove"
+            android:exported="false" />
     </application>
 
 </manifest>

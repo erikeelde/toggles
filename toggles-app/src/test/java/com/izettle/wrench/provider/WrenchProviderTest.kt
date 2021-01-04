@@ -1,39 +1,99 @@
 package com.izettle.wrench.provider
 
+import android.app.Application
+import android.content.Context
+import android.os.Build
+import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.izettle.wrench.BuildConfig
+import androidx.work.Configuration
+import androidx.work.testing.SynchronousExecutor
+import androidx.work.testing.WorkManagerTestInitHelper
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.Nut
 import com.izettle.wrench.core.WrenchProviderContract
 import com.izettle.wrench.database.WrenchDatabase
+import com.izettle.wrench.di.DatabaseModule
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
+import dagger.hilt.android.testing.UninstallModules
+import dagger.hilt.components.SingletonComponent
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
+import org.robolectric.Shadows
+import org.robolectric.annotation.Config
+import se.eelde.toggles.R
+import javax.inject.Singleton
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
+@UninstallModules(DatabaseModule::class)
+@Config(application = HiltTestApplication::class, sdk = [Build.VERSION_CODES.P])
 class WrenchProviderTest {
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
 
     private lateinit var wrenchProvider: WrenchProvider
 
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object TestModule {
+        @Singleton
+        @Provides
+        fun provideWrenchDb(@ApplicationContext context: Context): WrenchDatabase {
+            return Room.inMemoryDatabaseBuilder(context, WrenchDatabase::class.java).allowMainThreadQueries().build()
+        }
+    }
+
     @Before
     fun setUp() {
-        val contentProviderController = Robolectric.buildContentProvider(WrenchProvider::class.java).create(BuildConfig.CONFIG_AUTHORITY)
+        hiltRule.inject()
+
+        val contentProviderController = Robolectric.buildContentProvider(WrenchProvider::class.java).create(WrenchProviderContract.WRENCH_AUTHORITY)
         wrenchProvider = contentProviderController.get()
 
-        val wrenchDatabase = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), WrenchDatabase::class.java).allowMainThreadQueries().build()
+        val context = ApplicationProvider.getApplicationContext<Application>()
+        val appIcon = ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground)
+        Shadows.shadowOf(context.packageManager)
+            .setApplicationIcon(context.applicationInfo.packageName, appIcon)
 
-        wrenchProvider.applicationDao = wrenchDatabase.applicationDao()
-        wrenchProvider.configurationDao = wrenchDatabase.configurationDao()
-        wrenchProvider.configurationValueDao = wrenchDatabase.configurationValueDao()
-        wrenchProvider.scopeDao = wrenchDatabase.scopeDao()
-        wrenchProvider.predefinedConfigurationDao = wrenchDatabase.predefinedConfigurationValueDao()
-        wrenchProvider.togglesPreferences = FakeTogglesPreferences()
+        val config = Configuration.Builder()
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .setExecutor(SynchronousExecutor())
+            .build()
 
-        wrenchProvider.packageManagerWrapper = TestPackageManagerWrapper("TestApplication", "com.test.application")
+        WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+    }
+
+    @Test
+    fun testInsertBoltWithRCType() {
+        fun checkTypeConversion(bolt: Bolt, expectedType: String) {
+            wrenchProvider.insert(WrenchProviderContract.boltUri(), bolt.toContentValues())
+
+            val cursor = wrenchProvider.query(WrenchProviderContract.boltUri(bolt.key), null, null, null, null)
+
+            cursor.moveToFirst()
+            val queryBolt = Bolt.fromCursor(cursor)
+
+            Assert.assertEquals(expectedType, queryBolt.type)
+        }
+
+        checkTypeConversion(getBolt(key = "stringBoltKey", boltType = "java.lang.String"), "string")
+        checkTypeConversion(getBolt(key = "intBoltKey", boltType = "java.lang.Integer"), "integer")
+        checkTypeConversion(getBolt(key = "enumBoltKey", boltType = "java.lang.Enum"), "enum")
+        checkTypeConversion(getBolt(key = "booleanBoltKey", boltType = "java.lang.Boolean"), "boolean")
     }
 
     @Test
@@ -47,7 +107,7 @@ class WrenchProviderTest {
 
         var cursor = wrenchProvider.query(WrenchProviderContract.boltUri(insertBoltKey), null, null, null, null)
         Assert.assertNotNull(cursor)
-        Assert.assertEquals(1, cursor!!.count)
+        Assert.assertEquals(1, cursor.count)
 
         cursor.moveToFirst()
         var queryBolt = Bolt.fromCursor(cursor)
@@ -56,9 +116,9 @@ class WrenchProviderTest {
         Assert.assertEquals(insertBolt.value, queryBolt.value)
         Assert.assertEquals(insertBolt.type, queryBolt.type)
 
-        cursor = wrenchProvider.query(WrenchProviderContract.boltUri(Integer.parseInt(insertBoltUri!!.lastPathSegment!!).toLong()), null, null, null, null)
+        cursor = wrenchProvider.query(WrenchProviderContract.boltUri(Integer.parseInt(insertBoltUri.lastPathSegment!!).toLong()), null, null, null, null)
         Assert.assertNotNull(cursor)
-        Assert.assertEquals(1, cursor!!.count)
+        Assert.assertEquals(1, cursor.count)
 
         cursor.moveToFirst()
         queryBolt = Bolt.fromCursor(cursor)
@@ -79,7 +139,7 @@ class WrenchProviderTest {
 
         var cursor = wrenchProvider.query(WrenchProviderContract.boltUri(updateBoltKey), null, null, null, null)
         Assert.assertNotNull(cursor)
-        Assert.assertTrue(cursor!!.moveToFirst())
+        Assert.assertTrue(cursor.moveToFirst())
 
         val providerBolt = Bolt.fromCursor(cursor)
         Assert.assertEquals(insertBolt.key, providerBolt.key)
@@ -94,7 +154,7 @@ class WrenchProviderTest {
         cursor = wrenchProvider.query(WrenchProviderContract.boltUri(updateBoltKey), null, null, null, null)
         Assert.assertNotNull(cursor)
 
-        Assert.assertTrue(cursor!!.moveToFirst())
+        Assert.assertTrue(cursor.moveToFirst())
         val updatedBolt = Bolt.fromCursor(cursor)
 
         Assert.assertEquals(insertBolt.value!! + insertBolt.value!!, updatedBolt.value)
@@ -159,7 +219,7 @@ class WrenchProviderTest {
         return Nut(0, value)
     }
 
-    private fun getBolt(key: String): Bolt {
-        return Bolt(0L, "bolttype", key, "boltvalue")
+    private fun getBolt(key: String, boltType: String = "bolttype"): Bolt {
+        return Bolt(0L, boltType, key, "boltvalue")
     }
 }

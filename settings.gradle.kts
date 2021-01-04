@@ -1,5 +1,7 @@
-include(":toggles-app",
-        ":toggles-sample",
-        ":toggles-core",
-        ":toggles-prefs",
-        ":toggles-livedata")
+include(
+    ":toggles-app",
+    ":toggles-core",
+    "toggles-coroutines",
+    ":toggles-prefs",
+    ":toggles-sample"
+)

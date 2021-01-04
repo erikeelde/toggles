@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/bubbleFragment">
+
+    <fragment
+        android:id="@+id/bubbleFragment"
+        android:name="se.eelde.toggles.bubble.BubbleFragment"
+        tools:layout="@layout/fragment_bubble">
+        <action
+            android:id="@+id/action_bubbleFragment_to_applicationConfigurationsGraph"
+            app:destination="@id/applicationConfigurationsGraph">
+            <argument
+                android:name="applicationId"
+                app:argType="long" />
+        </action>
+    </fragment>
+
+    <include app:graph="@navigation/application_configurations_graph" />
+
+</navigation>

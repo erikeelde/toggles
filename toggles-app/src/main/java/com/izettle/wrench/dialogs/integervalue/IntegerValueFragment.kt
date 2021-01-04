@@ -2,76 +2,72 @@ package com.izettle.wrench.dialogs.integervalue
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.navArgs
-import com.izettle.wrench.R
-import dagger.android.support.DaggerDialogFragment
-import kotlinx.android.synthetic.main.fragment_integer_value.view.*
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import se.eelde.toggles.databinding.FragmentIntegerValueBinding
 
-class IntegerValueFragment : DaggerDialogFragment() {
+@ExperimentalCoroutinesApi
+@AndroidEntryPoint
+class IntegerValueFragment : DialogFragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<FragmentIntegerValueViewModel> { viewModelFactory }
-
-    private val args: IntegerValueFragmentArgs by navArgs()
+    private lateinit var binding: FragmentIntegerValueBinding
+    private val viewModel by viewModels<FragmentIntegerValueViewModel>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_integer_value, null)
+        binding = FragmentIntegerValueBinding.inflate(layoutInflater)
 
-        viewModel.init(args.configurationId, args.scopeId)
+        viewModel.viewState.observe(
+            this,
+            { viewState ->
+                if (viewState != null) {
+                    val invisible = (binding.container.visibility == View.INVISIBLE)
+                    if (binding.container.visibility == View.INVISIBLE && viewState.title != null) {
+                        binding.container.visibility = View.VISIBLE
+                    }
+                    binding.title.text = viewState.title
 
-        viewModel.viewState.observe(this, Observer { viewState ->
-            if (viewState != null) {
-                val invisible = (view.container.visibility == View.INVISIBLE)
-                if (view.container.visibility == View.INVISIBLE && viewState.title != null) {
-                    view.container.visibility = View.VISIBLE
-                }
-                view.title.text = viewState.title
+                    if (invisible) {
+                        binding.value.jumpDrawablesToCurrentState()
+                    }
 
-                if (invisible) {
-                    view.value.jumpDrawablesToCurrentState()
-                }
-
-                if (viewState.saving || viewState.reverting) {
-                    view.value.isEnabled = false
-                    view.save.isEnabled = false
-                    view.revert.isEnabled = false
-                }
-            }
-        })
-
-        viewModel.viewEffects.observe(this, Observer { viewEffect ->
-            if (viewEffect != null) {
-                viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
-                    when (contentIfNotHandled) {
-                        ViewEffect.Dismiss -> dismiss()
-                        is ViewEffect.ValueChanged -> view.value.setText(contentIfNotHandled.value.toString())
+                    if (viewState.saving || viewState.reverting) {
+                        binding.value.isEnabled = false
+                        binding.save.isEnabled = false
+                        binding.revert.isEnabled = false
                     }
                 }
             }
-        })
+        )
 
-        view.revert.setOnClickListener {
+        viewModel.viewEffects.observe(
+            this,
+            { viewEffect ->
+                if (viewEffect != null) {
+                    viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
+                        when (contentIfNotHandled) {
+                            ViewEffect.Dismiss -> dismiss()
+                            is ViewEffect.ValueChanged -> binding.value.setText(contentIfNotHandled.value.toString())
+                        }
+                    }
+                }
+            }
+        )
+
+        binding.revert.setOnClickListener {
             viewModel.revertClick()
         }
 
-        // view.value.setOnCheckedChangeListener { _, isChecked -> viewModel.checkedChanged(isChecked) }
-
-        view.save.setOnClickListener {
-            viewModel.saveClick(view.value.text.toString())
+        binding.save.setOnClickListener {
+            viewModel.saveClick(binding.value.text.toString())
         }
 
         return AlertDialog.Builder(requireActivity())
-                .setView(view)
-                .create()
+            .setView(binding.root)
+            .create()
     }
 
     companion object {

@@ -1,6 +1,5 @@
 package com.izettle.wrench.database
 
-
 import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -9,36 +8,57 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.izettle.wrench.database.tables.ConfigurationTable
 import com.izettle.wrench.database.tables.ConfigurationValueTable
-import java.util.*
+import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 @Dao
 interface WrenchConfigurationDao {
 
-    @Query("SELECT configuration.id, " +
+    @Query(
+        "SELECT configuration.id, " +
             " configuration.configurationKey, " +
             " configuration.configurationType," +
             " configurationValue.value" +
             " FROM " + ConfigurationTable.TABLE_NAME +
             " INNER JOIN " + ConfigurationValueTable.TABLE_NAME + " ON configuration.id = configurationValue.configurationId " +
-            " WHERE configuration.id = (:configurationId) AND configurationValue.scope = (:scopeId)")
+            " WHERE configuration.id = (:configurationId) AND configurationValue.scope = (:scopeId)"
+    )
     fun getBolt(configurationId: Long, scopeId: Long): Cursor
 
-    @Query("SELECT configuration.id, " +
+    @Query(
+        "SELECT configuration.id, " +
             " configuration.configurationKey, " +
             " configuration.configurationType," +
             " configurationValue.value" +
             " FROM " + ConfigurationTable.TABLE_NAME +
             " INNER JOIN " + ConfigurationValueTable.TABLE_NAME + " ON configuration.id = configurationValue.configurationId " +
-            " WHERE configuration.configurationKey = (:configurationKey) AND configurationValue.scope = (:scopeId)")
+            " WHERE configuration.configurationKey = (:configurationKey) AND configurationValue.scope = (:scopeId)"
+    )
     fun getBolt(configurationKey: String, scopeId: Long): Cursor
 
-    @Query("SELECT * " +
+    @Query(
+        "SELECT * " +
             " FROM " + ConfigurationTable.TABLE_NAME +
-            " WHERE configuration.applicationId = (:applicationId) AND configuration.configurationKey = (:configurationKey)")
+            " WHERE configuration.applicationId = (:applicationId) AND configuration.configurationKey = (:configurationKey)"
+    )
     fun getWrenchConfiguration(applicationId: Long, configurationKey: String): WrenchConfiguration
 
+    @Query(
+        "SELECT * " +
+            " FROM " + ConfigurationTable.TABLE_NAME +
+            " WHERE configuration.applicationId = (:applicationId) AND configuration.configurationKey = (:configurationKey)"
+    )
+    fun getWrenchConfigurationByKey(applicationId: Long, configurationKey: String): WrenchConfiguration?
+
+    @Query(
+        "SELECT * " +
+            " FROM " + ConfigurationTable.TABLE_NAME +
+            " WHERE configuration.applicationId = (:applicationId) AND configuration.id = (:configurationId)"
+    )
+    fun getWrenchConfigurationById(applicationId: Long, configurationId: Long): WrenchConfiguration?
+
     @Query("SELECT * FROM configuration WHERE id = :configurationId")
-    fun getConfiguration(configurationId: Long): LiveData<WrenchConfiguration>
+    fun getConfiguration(configurationId: Long): Flow<WrenchConfiguration>
 
     @Transaction
     @Query("SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId ORDER BY lastUse DESC")

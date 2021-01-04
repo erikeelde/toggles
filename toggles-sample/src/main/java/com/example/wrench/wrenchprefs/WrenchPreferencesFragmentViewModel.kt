@@ -1,6 +1,7 @@
 package com.example.wrench.wrenchprefs
 
 import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,9 +12,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class WrenchPreferencesFragmentViewModel @Inject internal constructor(private val application: Application, private val togglesPreferences: ITogglesPreferences) : ViewModel() {
+class WrenchPreferencesFragmentViewModel @ViewModelInject internal constructor(
+    private val application: Application,
+    private val togglesPreferences: ITogglesPreferences
+) : ViewModel() {
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
@@ -60,7 +63,6 @@ class WrenchPreferencesFragmentViewModel @Inject internal constructor(private va
             intConfig.postValue(togglesPreferences.getInt(application.getString(R.string.int_configuration), 1))
         }
         return intConfig
-
     }
 
     private val enumConfig: MutableLiveData<MyEnum> by lazy {

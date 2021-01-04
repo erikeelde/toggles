@@ -1,41 +1,46 @@
 package com.example.wrench.wrenchprefs
 
-
-import android.content.pm.PackageManager
-import android.content.pm.ProviderInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.example.wrench.databinding.FragmentWrenchPreferencesBinding
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-class WrenchPreferencesFragment : DaggerFragment() {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<WrenchPreferencesFragmentViewModel> { viewModelFactory }
+@AndroidEntryPoint
+class WrenchPreferencesFragment : Fragment() {
 
     private lateinit var binding: FragmentWrenchPreferencesBinding
+    private val viewModel by viewModels<WrenchPreferencesFragmentViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentWrenchPreferencesBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        FragmentWrenchPreferencesBinding.inflate(inflater, container, false).also {
+            binding = it
+        }.root
 
-        val providers = mutableMapOf<String, ProviderInfo>()
-        for (installedPackage in requireActivity().packageManager.getInstalledPackages(PackageManager.GET_PROVIDERS)) {
-            installedPackage.providers?.forEach { providerInfo: ProviderInfo? ->
-                if (providerInfo?.authority != null) {
-                    providers[providerInfo.authority] = providerInfo
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getStringConfiguration().observe(viewLifecycleOwner) {
+            binding.stringConfiguration.text = it
         }
 
-        binding.viewModel = viewModel
-        return binding.root
+        viewModel.getUrlConfiguration().observe(viewLifecycleOwner) {
+            binding.urlConfiguration.text = it
+        }
+
+        viewModel.getBooleanConfiguration().observe(viewLifecycleOwner) {
+            binding.booleanConfiguration.text = it.toString()
+        }
+
+        viewModel.getIntConfiguration().observe(viewLifecycleOwner) {
+            binding.intConfiguration.text = it.toString()
+        }
+
+        viewModel.getEnumConfiguration().observe(viewLifecycleOwner) {
+            binding.enumConfiguration.text = it.toString()
+        }
     }
 }

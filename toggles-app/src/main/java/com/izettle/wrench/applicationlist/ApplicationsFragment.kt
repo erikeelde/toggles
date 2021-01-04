@@ -4,45 +4,54 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.izettle.wrench.databinding.FragmentApplicationsBinding
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import androidx.lifecycle.lifecycleScope
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.launch
+import se.eelde.toggles.databinding.FragmentApplicationsBinding
 
-internal class ApplicationsFragment : DaggerFragment() {
+@AndroidEntryPoint
+internal class ApplicationsFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var binding: FragmentApplicationsBinding
+    private val model by viewModels<ApplicationViewModel>()
 
-    private val model by viewModels<ApplicationViewModel> { viewModelFactory }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        FragmentApplicationsBinding.inflate(layoutInflater, container, false).also {
+            binding = it
+        }.root
 
-    private lateinit var fragmentApplicationsBinding: FragmentApplicationsBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        fragmentApplicationsBinding = FragmentApplicationsBinding.inflate(inflater, container, false)
-        fragmentApplicationsBinding.list.layoutManager = LinearLayoutManager(context)
-        return fragmentApplicationsBinding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        fragmentApplicationsBinding.list.layoutManager = LinearLayoutManager(requireContext())
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val adapter = ApplicationAdapter()
-        model.applications.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
-        fragmentApplicationsBinding.list.adapter = adapter
 
-        model.isListEmpty.observe(viewLifecycleOwner, Observer { isEmpty ->
-            val animator = fragmentApplicationsBinding.animator
-            if (isEmpty == null || isEmpty) {
-                animator.displayedChild = animator.indexOfChild(fragmentApplicationsBinding.noApplicationsEmptyView)
-            } else {
-                animator.displayedChild = animator.indexOfChild(fragmentApplicationsBinding.list)
+        lifecycleScope.launch {
+            model.applications.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
             }
-        })
+        }
+        binding.list.adapter = adapter
+
+        lifecycleScope.launch {
+            adapter.loadStateFlow.distinctUntilChangedBy {
+                it.refresh
+            }.collect {
+                val snapshot = adapter.snapshot()
+                if (snapshot.size == 0) {
+                    binding.animator.displayedChild =
+                        binding.animator.indexOfChild(binding.noApplicationsEmptyView)
+                } else {
+                    binding.animator.displayedChild =
+                        binding.animator.indexOfChild(binding.list)
+                }
+            }
+        }
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_toggles_notification_channel">Toggles download</string>
+    <string name="download_toggles_notification_channel_description">Link to download toggles app if missing on the device</string>
+    <string name="notification_content_title">Download toggles application</string>
+    <string name="notification_content_text">Toggles couldn\'t be found on the device. Go download it!</string>
+</resources>

@@ -14,5 +14,4 @@ interface WrenchPredefinedConfigurationValueDao {
 
     @Insert
     fun insert(fullConfig: WrenchPredefinedConfigurationValue): Long
-
 }

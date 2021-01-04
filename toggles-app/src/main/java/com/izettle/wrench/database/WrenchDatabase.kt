@@ -4,7 +4,17 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [WrenchApplication::class, WrenchConfiguration::class, WrenchConfigurationValue::class, WrenchPredefinedConfigurationValue::class, WrenchScope::class], version = 3)
+@Database(
+    entities = [
+        WrenchApplication::class,
+        WrenchConfiguration::class,
+        WrenchConfigurationValue::class,
+        WrenchPredefinedConfigurationValue::class,
+        WrenchScope::class,
+        TogglesNotification::class
+    ],
+    version = 4
+)
 @TypeConverters(RoomDateConverter::class)
 abstract class WrenchDatabase : RoomDatabase() {
 
@@ -18,5 +28,5 @@ abstract class WrenchDatabase : RoomDatabase() {
 
     abstract fun scopeDao(): WrenchScopeDao
 
-
+    abstract fun togglesNotificationsDao(): TogglesNotificationDao
 }

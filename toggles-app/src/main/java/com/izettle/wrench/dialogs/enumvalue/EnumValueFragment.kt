@@ -2,75 +2,84 @@ package com.izettle.wrench.dialogs.enumvalue
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.izettle.wrench.R
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
-import com.izettle.wrench.databinding.FragmentEnumValueBinding
-import dagger.android.support.DaggerDialogFragment
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import se.eelde.toggles.databinding.FragmentEnumValueBinding
 
-class EnumValueFragment : DaggerDialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
+@ExperimentalCoroutinesApi
+@AndroidEntryPoint
+class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
 
     private lateinit var binding: FragmentEnumValueBinding
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<FragmentEnumValueViewModel> { viewModelFactory }
+    private val viewModel by viewModels<FragmentEnumValueViewModel>()
     private lateinit var adapter: PredefinedValueRecyclerViewAdapter
 
     private val args: EnumValueFragmentArgs by navArgs()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentEnumValueBinding.inflate(LayoutInflater.from(context))
+        binding = FragmentEnumValueBinding.inflate(layoutInflater)
 
-        viewModel.init(args.configurationId, args.scopeId)
+        viewModel.viewState.observe(
+            this,
+            { viewState ->
+                if (viewState != null) {
+                    if (binding.container.visibility == View.INVISIBLE && viewState.title != null) {
+                        binding.container.visibility = View.VISIBLE
+                    }
+                    binding.title.text = viewState.title
 
-        viewModel.configuration.observe(this, Observer { wrenchConfiguration ->
-            if (wrenchConfiguration != null) {
-                requireDialog().setTitle(wrenchConfiguration.key)
+                    if (viewState.saving || viewState.reverting) {
+                        binding.revert.isEnabled = false
+                    }
+                }
             }
-        })
+        )
 
-        viewModel.selectedConfigurationValueLiveData.observe(this, Observer { wrenchConfigurationValue ->
-            if (wrenchConfigurationValue != null) {
-                viewModel.selectedConfigurationValue = wrenchConfigurationValue
+        viewModel.viewEffects.observe(
+            this,
+            { viewEffect ->
+                if (viewEffect != null) {
+                    viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
+                        when (contentIfNotHandled) {
+                            ViewEffect.Dismiss -> dismiss()
+                        }
+                    }
+                }
             }
-        })
+        )
 
         adapter = PredefinedValueRecyclerViewAdapter(this)
         binding.list.adapter = adapter
         binding.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        viewModel.predefinedValues.observe(this, Observer { items ->
-            if (items != null) {
-                adapter.submitList(items)
+        viewModel.predefinedValues.observe(
+            this,
+            { items ->
+                if (items != null) {
+                    adapter.submitList(items)
+                }
             }
-        })
+        )
+
+        binding.revert.setOnClickListener {
+            viewModel.revertClick()
+        }
 
         return AlertDialog.Builder(requireActivity())
-                .setTitle(".")
-                .setView(binding.root)
-                .setNegativeButton(R.string.revert
-                ) { _, _ ->
-                    if (viewModel.selectedConfigurationValue != null) {
-                        viewModel.deleteConfigurationValue()
-                    }
-                    dismiss()
-                }
-                .create()
+            .setView(binding.root)
+            .create()
     }
 
     override fun onClick(view: View, item: WrenchPredefinedConfigurationValue) {
-        viewModel.updateConfigurationValue(item.value!!)
+        viewModel.saveClick(item.value!!)
         dismiss()
     }
 

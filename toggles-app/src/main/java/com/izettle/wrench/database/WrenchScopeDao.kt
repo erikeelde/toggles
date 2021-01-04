@@ -1,7 +1,11 @@
 package com.izettle.wrench.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import com.izettle.wrench.database.tables.ScopeTable
 
 @Dao
@@ -29,5 +33,5 @@ interface WrenchScopeDao {
     fun getDefaultScope(applicationId: Long): WrenchScope
 
     @Update
-    fun update(scope: WrenchScope)
+    suspend fun update(scope: WrenchScope)
 }

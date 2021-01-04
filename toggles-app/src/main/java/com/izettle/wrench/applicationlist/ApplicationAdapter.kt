@@ -2,15 +2,23 @@ package com.izettle.wrench.applicationlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.izettle.wrench.R
 import com.izettle.wrench.database.WrenchApplication
+import se.eelde.toggles.databinding.ApplicationListItemBinding
 
-internal class ApplicationAdapter : PagedListAdapter<WrenchApplication, ApplicationViewHolder>(DIFF_CALLBACK) {
+internal class ApplicationAdapter :
+    PagingDataAdapter<WrenchApplication, ApplicationViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ApplicationViewHolder {
-        return ApplicationViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.application_list_item, parent, false))
+
+        return ApplicationViewHolder(
+            ApplicationListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ApplicationViewHolder, position: Int) {
@@ -25,11 +33,17 @@ internal class ApplicationAdapter : PagedListAdapter<WrenchApplication, Applicat
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WrenchApplication>() {
-            override fun areItemsTheSame(oldApplication: WrenchApplication, newApplication: WrenchApplication): Boolean {
+            override fun areItemsTheSame(
+                oldApplication: WrenchApplication,
+                newApplication: WrenchApplication
+            ): Boolean {
                 return oldApplication.id == newApplication.id
             }
 
-            override fun areContentsTheSame(oldApplication: WrenchApplication, newApplication: WrenchApplication): Boolean {
+            override fun areContentsTheSame(
+                oldApplication: WrenchApplication,
+                newApplication: WrenchApplication
+            ): Boolean {
                 return oldApplication == newApplication
             }
         }

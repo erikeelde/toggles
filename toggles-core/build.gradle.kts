@@ -1,15 +1,23 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("android.extensions")
+    id("io.gitlab.arturbosch.detekt")
+}
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
+}
+
+detekt {
+    autoCorrect = true
 }
 
 android {
-    compileSdkVersion(Versions.compileSdk)
+    compileSdk = 30
 
     defaultConfig {
-        minSdkVersion(Versions.minSdk)
-        targetSdkVersion(Versions.targetSdk)
+        minSdk = 16
+        targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -18,6 +26,12 @@ android {
         buildConfigField("String", "WRENCH_AUTHORITY", "\"${wrenchProviderAuthority}\"")
 
         buildConfigField("int", "WRENCH_API_VERSION", "1")
+
+        val togglesProviderAuthority = "se.eelde.toggles.configprovider"
+        manifestPlaceholders["togglesProviderAuthority"] = togglesProviderAuthority
+        buildConfigField("String", "TOGGLES_AUTHORITY", "\"${togglesProviderAuthority}\"")
+
+        buildConfigField("int", "TOGGLES_API_VERSION", "1")
     }
 
     buildTypes {
@@ -48,9 +62,9 @@ android {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13")
-    implementation("androidx.annotation:annotation:1.1.0")
+    implementation("androidx.core:core-ktx:1.3.2")
+    testImplementation("junit:junit:4.13.1")
+    implementation("androidx.annotation:annotation:1.2.0-alpha01")
 }
-
 
 apply(rootProject.file("gradle/gradle-mvn-push.gradle"))

@@ -7,13 +7,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchScope
-import com.izettle.wrench.databinding.SimpleListItemBinding
+import se.eelde.toggles.databinding.SimpleListItemBinding
 
-class ScopeRecyclerViewAdapter(private val listener: Listener) : ListAdapter<WrenchScope, ScopeRecyclerViewAdapter.ViewHolder>(DIFF_CALLBACK) {
+class ScopeRecyclerViewAdapter(private val listener: Listener) :
+    ListAdapter<WrenchScope, ScopeRecyclerViewAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = SimpleListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(
+            SimpleListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -27,15 +33,22 @@ class ScopeRecyclerViewAdapter(private val listener: Listener) : ListAdapter<Wre
         fun onClick(view: View, wrenchScope: WrenchScope)
     }
 
-    inner class ViewHolder(val binding: SimpleListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: SimpleListItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WrenchScope>() {
-            override fun areItemsTheSame(oldApplication: WrenchScope, newApplication: WrenchScope): Boolean {
+            override fun areItemsTheSame(
+                oldApplication: WrenchScope,
+                newApplication: WrenchScope
+            ): Boolean {
                 return oldApplication.id == newApplication.id
             }
 
-            override fun areContentsTheSame(oldApplication: WrenchScope, newApplication: WrenchScope): Boolean {
+            override fun areContentsTheSame(
+                oldApplication: WrenchScope,
+                newApplication: WrenchScope
+            ): Boolean {
                 return oldApplication == newApplication
             }
         }

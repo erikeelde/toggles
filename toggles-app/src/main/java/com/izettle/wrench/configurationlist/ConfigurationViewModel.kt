@@ -1,19 +1,32 @@
 package com.izettle.wrench.configurationlist
 
 import android.text.TextUtils
-import androidx.lifecycle.*
-import com.izettle.wrench.database.*
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.izettle.wrench.database.WrenchApplication
+import com.izettle.wrench.database.WrenchApplicationDao
+import com.izettle.wrench.database.WrenchConfigurationDao
+import com.izettle.wrench.database.WrenchConfigurationWithValues
+import com.izettle.wrench.database.WrenchScope
+import com.izettle.wrench.database.WrenchScopeDao
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class ConfigurationViewModel
-@Inject internal constructor(private val applicationDao: WrenchApplicationDao, configurationDao: WrenchConfigurationDao, private val scopeDao: WrenchScopeDao) : ViewModel() {
+class ConfigurationViewModel @ViewModelInject internal constructor(
+    private val applicationDao: WrenchApplicationDao,
+    configurationDao: WrenchConfigurationDao,
+    private val scopeDao: WrenchScopeDao
+) : ViewModel() {
     private val queryLiveData: MutableLiveData<String> = MutableLiveData()
 
     private val configurationListLiveData: MediatorLiveData<List<WrenchConfigurationWithValues>>
 
     internal val wrenchApplication: LiveData<WrenchApplication> by lazy {
-        Transformations.switchMap(applicationIdLiveData) { applicationId: Long -> applicationDao.getApplication(applicationId) }
+        Transformations.switchMap(applicationIdLiveData) { applicationId: Long -> applicationDao.getApplicationLiveData(applicationId) }
     }
 
     private val applicationIdLiveData: MutableLiveData<Long> = MutableLiveData()
@@ -39,7 +52,7 @@ class ConfigurationViewModel
 
         listEmpty = MutableLiveData()
 
-        val configurationsLiveData = Transformations.switchMap<String, List<WrenchConfigurationWithValues>>(queryLiveData) { query ->
+        val configurationsLiveData = Transformations.switchMap(queryLiveData) { query ->
             if (TextUtils.isEmpty(query)) {
                 configurationDao.getApplicationConfigurations(applicationIdLiveData.value!!)
             } else {
