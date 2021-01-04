@@ -31,7 +31,8 @@ class ScopeFragment : DialogFragment(), ScopeRecyclerViewAdapter.Listener {
 
         viewModel.selectedScopeLiveData.observe(
             this,
-            { wrenchScope -> viewModel.selectedScope = wrenchScope })
+            { wrenchScope -> viewModel.selectedScope = wrenchScope }
+        )
 
         adapter = ScopeRecyclerViewAdapter(this)
         binding.list.adapter = adapter

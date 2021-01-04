@@ -5,12 +5,11 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.oss.licenses.plugin")
     id("dagger.hilt.android.plugin")
-    id("org.jlleitschuh.gradle.ktlint")
     id("io.gitlab.arturbosch.detekt")
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
 }
 
 detekt {
@@ -71,7 +70,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.4")
 
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
-    implementation("com.google.android.material:material:1.3.0-alpha04")
+    implementation("com.google.android.material:material:1.3.0-beta01")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")

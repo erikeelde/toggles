@@ -4,7 +4,7 @@ import android.content.UriMatcher
 import com.izettle.wrench.core.WrenchProviderContract
 import se.eelde.toggles.core.TogglesProviderContract
 
-class TogglesUriMatcher {
+class TogglesUriMatcher private constructor() {
     companion object {
         internal const val CURRENT_CONFIGURATION_ID = 1
         internal const val CURRENT_CONFIGURATION_KEY = 2
@@ -64,6 +64,5 @@ class TogglesUriMatcher {
                 PREDEFINED_CONFIGURATION_VALUES
             )
         }
-
     }
 }

@@ -49,8 +49,9 @@ class BooleanValueFragment : DialogFragment() {
                     viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
                         when (contentIfNotHandled) {
                             ViewEffect.Dismiss -> dismiss()
-                            is ViewEffect.CheckedChanged -> binding.value.isChecked =
-                                contentIfNotHandled.enabled
+                            is ViewEffect.CheckedChanged ->
+                                binding.value.isChecked =
+                                    contentIfNotHandled.enabled
                         }
                     }
                 }

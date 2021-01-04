@@ -32,7 +32,9 @@ import se.eelde.toggles.R
 import se.eelde.toggles.databinding.FragmentConfigurationsBinding
 
 @AndroidEntryPoint
-class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener,
+class ConfigurationsFragment :
+    Fragment(),
+    SearchView.OnQueryTextListener,
     ConfigurationRecyclerViewAdapter.Listener {
     private lateinit var binding: FragmentConfigurationsBinding
     private var currentFilter: CharSequence? = null
@@ -247,10 +249,7 @@ class ConfigurationsFragment : Fragment(), SearchView.OnQueryTextListener,
 
         val selectedScopeId = model.selectedScopeLiveData.value!!.id
 
-        if (TextUtils.equals(
-                String::class.java.name,
-                configuration.type
-            ) || TextUtils.equals(Bolt.TYPE.STRING, configuration.type)
+        if (TextUtils.equals(String::class.java.name, configuration.type) || TextUtils.equals(Bolt.TYPE.STRING, configuration.type)
         ) {
 
             v.findNavController().navigate(

@@ -16,7 +16,7 @@ class WrenchPreferencesFragment : Fragment() {
     private val viewModel by viewModels<WrenchPreferencesFragmentViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        FragmentWrenchPreferencesBinding.inflate(inflater, container,false).also {
+        FragmentWrenchPreferencesBinding.inflate(inflater, container, false).also {
             binding = it
         }.root
 

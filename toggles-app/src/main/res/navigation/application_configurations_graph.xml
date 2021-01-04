@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/applicationConfigurationsGraph"
-
     app:startDestination="@id/configurationsFragment">
     <argument
         android:name="applicationId"
@@ -31,12 +30,13 @@
         <action
             android:id="@+id/action_configurationsFragment_to_enumValueFragment"
             app:destination="@id/enumValueFragment" />
-        <deepLink
-            android:id="@+id/deepLink"
-            app:uri="content://se.eelde.toggles.configprovider/application/{applicationId}"
-            android:autoVerify="true"
-            app:action="ACTION_VIEW"
-            tools:targetApi="m" />
+        <!-- This would be nice but currently clashes with bubbles using that uri for their intent -->
+<!--        <deepLink-->
+<!--            android:id="@+id/deepLink"-->
+<!--            app:uri="content://se.eelde.toggles.configprovider/application/{applicationId}"-->
+<!--            android:autoVerify="true"-->
+<!--            app:action="ACTION_VIEW"-->
+<!--            tools:targetApi="m" />-->
     </fragment>
     <dialog
         android:id="@+id/enumValueFragment"

@@ -34,9 +34,6 @@ jobs:
       - name: Run Detekt
         run: ./gradlew detekt
 
-      - name: Run Android Checks
-        run: ./gradlew ktLintCheck
-
       - name: Run Android Lint
         run: ./gradlew lint
 

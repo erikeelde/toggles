@@ -26,4 +26,5 @@
     <string name="label_reply">label_reply</string>
     <string name="hint_input">hint_input</string>
     <string name="sender_you">sender_you</string>
+    <string name="loading_bubble">Loading bubble</string>
 </resources>
