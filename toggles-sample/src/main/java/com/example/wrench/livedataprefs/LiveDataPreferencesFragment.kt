@@ -6,41 +6,43 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.wrench.R
+import com.example.wrench.databinding.FragmentLiveDataPreferencesBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_live_data_preferences.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 class LiveDataPreferencesFragment : Fragment() {
 
+    private lateinit var binding: FragmentLiveDataPreferencesBinding
     private val viewModel by viewModels<LiveDataPreferencesFragmentViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        LayoutInflater.from(requireContext()).inflate(R.layout.fragment_live_data_preferences, container, false)
+        FragmentLiveDataPreferencesBinding.inflate(inflater, container, false).also {
+            binding = it
+        }.root
 
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getStringConfiguration().observe(viewLifecycleOwner) {
-            string_configuration.text = it
+            binding.stringConfiguration.text = it
         }
 
         viewModel.getUrlConfiguration().observe(viewLifecycleOwner) {
-            url_configuration.text = it
+            binding.urlConfiguration.text = it
         }
 
         viewModel.getBooleanConfiguration().observe(viewLifecycleOwner) {
-            boolean_configuration.text = it.toString()
+            binding.booleanConfiguration.text = it.toString()
         }
 
         viewModel.getIntConfiguration().observe(viewLifecycleOwner) {
-            int_configuration.text = it.toString()
+            binding.intConfiguration.text = it.toString()
         }
 
         viewModel.getEnumConfiguration().observe(viewLifecycleOwner) {
-            enum_configuration.text = it.toString()
+            binding.enumConfiguration.text = it.toString()
         }
     }
 }

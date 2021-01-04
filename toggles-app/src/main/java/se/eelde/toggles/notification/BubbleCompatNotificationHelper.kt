@@ -16,11 +16,10 @@ import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.drawable.toBitmap
-import com.izettle.wrench.MainActivity
 import com.izettle.wrench.database.TogglesNotification
 import com.izettle.wrench.database.WrenchApplication
-import se.eelde.toggles.BubbleActivity
 import se.eelde.toggles.R
+import se.eelde.toggles.bubble.BubbleActivity
 import se.eelde.toggles.core.TogglesProviderContract
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -117,7 +116,7 @@ class BubbleCompatNotificationHelper(private val context: Context) {
                 PendingIntent.getActivity(
                     context,
                     REQUEST_CONTENT,
-                    Intent(context, MainActivity::class.java)
+                    Intent(context, BubbleActivity::class.java)
                         .setAction(Intent.ACTION_VIEW)
                         .setData(contentUri),
                     PendingIntent.FLAG_UPDATE_CURRENT

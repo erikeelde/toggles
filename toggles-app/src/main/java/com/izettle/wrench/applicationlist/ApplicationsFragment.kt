@@ -8,20 +8,26 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_applications.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
-import se.eelde.toggles.R
+import se.eelde.toggles.databinding.FragmentApplicationsBinding
 
 @AndroidEntryPoint
 internal class ApplicationsFragment : Fragment() {
 
+    private lateinit var binding: FragmentApplicationsBinding
     private val model by viewModels<ApplicationViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.fragment_applications, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        FragmentApplicationsBinding.inflate(layoutInflater, container, false).also {
+            binding = it
+        }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val adapter = ApplicationAdapter()
@@ -31,7 +37,7 @@ internal class ApplicationsFragment : Fragment() {
                 adapter.submitData(pagingData)
             }
         }
-        list.adapter = adapter
+        binding.list.adapter = adapter
 
         lifecycleScope.launch {
             adapter.loadStateFlow.distinctUntilChangedBy {
@@ -39,9 +45,11 @@ internal class ApplicationsFragment : Fragment() {
             }.collect {
                 val snapshot = adapter.snapshot()
                 if (snapshot.size == 0) {
-                    animator.displayedChild = animator.indexOfChild(no_applications_empty_view)
+                    binding.animator.displayedChild =
+                        binding.animator.indexOfChild(binding.noApplicationsEmptyView)
                 } else {
-                    animator.displayedChild = animator.indexOfChild(list)
+                    binding.animator.displayedChild =
+                        binding.animator.indexOfChild(binding.list)
                 }
             }
         }

@@ -4,7 +4,6 @@ import android.content.ContentProvider
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
-import android.content.UriMatcher
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
@@ -27,6 +26,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import se.eelde.toggles.BuildConfig
+import se.eelde.toggles.TogglesUriMatcher
+import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
+import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
+import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
+import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.notification.configurationRequested
 import java.util.Date
@@ -334,7 +338,7 @@ class TogglesProvider : ContentProvider() {
                 "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
             PREDEFINED_CONFIGURATION_VALUES -> {
-                "vnd.android.cursor.dir/vnd..${BuildConfig.APPLICATION_ID}..predefinedConfigurationValue"
+                "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.predefinedConfigurationValue"
             }
             else -> {
                 throw UnsupportedOperationException("Not yet implemented")
@@ -344,36 +348,9 @@ class TogglesProvider : ContentProvider() {
 
     companion object {
 
-        private const val CURRENT_CONFIGURATION_ID = 1
-        private const val CURRENT_CONFIGURATION_KEY = 2
-        private const val CURRENT_CONFIGURATIONS = 3
-        private const val PREDEFINED_CONFIGURATION_VALUES = 5
-        private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+        private val uriMatcher = TogglesUriMatcher.getTogglesUriMatcher()
 
         private const val oneSecond = 1000
-
-        init {
-            uriMatcher.addURI(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
-                "currentConfiguration/#",
-                CURRENT_CONFIGURATION_ID
-            )
-            uriMatcher.addURI(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
-                "currentConfiguration/*",
-                CURRENT_CONFIGURATION_KEY
-            )
-            uriMatcher.addURI(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
-                "currentConfiguration",
-                CURRENT_CONFIGURATIONS
-            )
-            uriMatcher.addURI(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
-                "predefinedConfigurationValue",
-                PREDEFINED_CONFIGURATION_VALUES
-            )
-        }
 
         @Synchronized
         private fun getDefaultScope(

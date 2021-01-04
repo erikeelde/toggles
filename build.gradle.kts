@@ -23,13 +23,12 @@ buildscript {
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
 }
 
 plugins {
     id("com.github.ben-manes.versions") version "0.36.0"
     id("se.eelde.build-optimizations") version "0.2.0"
-    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
     id("io.gitlab.arturbosch.detekt") version "1.14.2"
 }
 

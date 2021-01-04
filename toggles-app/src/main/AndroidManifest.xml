@@ -30,13 +30,22 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".BubbleActivity"
+            android:name=".bubble.BubbleActivity"
             android:theme="@style/AppTheme"
             android:label="@string/title_activity_bubble"
             android:allowEmbedded="true"
             android:documentLaunchMode="always"
             android:resizeableActivity="true"
-            tools:targetApi="n" />
+            tools:targetApi="n" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="se.eelde.toggles.configprovider"
+                    android:pathPattern="/application/#"
+                    android:scheme="content" />
+            </intent-filter>
+        </activity>
 
         <activity android:name="com.izettle.wrench.MainActivity">
             <intent-filter>
