@@ -72,8 +72,8 @@ android {
         applicationId = "se.eelde.toggles"
         minSdk = 16
         targetSdk = 30
-        versionCode = 3
-        versionName = "1.00.02"
+        versionCode = 4
+        versionName = "1.01.00"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
