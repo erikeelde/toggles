@@ -13,7 +13,6 @@ import com.izettle.wrench.database.WrenchConfigurationDao
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -26,7 +25,6 @@ import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 
-@ExperimentalCoroutinesApi
 class FragmentStringValueViewModel
 @ViewModelInject internal constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,

@@ -6,28 +6,44 @@ import com.izettle.wrench.database.TogglesNotification
 import com.izettle.wrench.database.TogglesNotificationDao
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchConfigurationDao
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import se.eelde.toggles.coroutines.booleanBoltFlow
+import se.eelde.toggles.coroutines.integerBoltFlow
 import java.util.Date
 
+@OptIn(ExperimentalCoroutinesApi::class)
 fun configurationRequested(
     context: Context,
     configurationDao: WrenchConfigurationDao,
     togglesNotificationDao: TogglesNotificationDao,
     application: WrenchApplication,
     bolt: Bolt,
+    scope: CoroutineScope
 ) {
-    configurationDao.getWrenchConfigurationById(application.id, bolt.id)
-        ?.let { configuration ->
-            togglesNotificationDao.insert(
-                TogglesNotification(
-                    applicationId = application.id,
-                    applicationPackageName = application.packageName,
-                    configurationId = configuration.id,
-                    configurationKey = bolt.key,
-                    configurationValue = bolt.value!!,
-                    added = Date(),
-                )
-            )
-        }
+    scope.launch(Dispatchers.IO) {
+        val notificationsEnabled = booleanBoltFlow(context, "Enable notifications", false).first()
 
-    NotificationWorker.scheduleNotification(context)
+        if (notificationsEnabled) {
+            configurationDao.getWrenchConfigurationById(application.id, bolt.id)
+                ?.let { configuration ->
+                    togglesNotificationDao.insert(
+                        TogglesNotification(
+                            applicationId = application.id,
+                            applicationPackageName = application.packageName,
+                            configurationId = configuration.id,
+                            configurationKey = bolt.key,
+                            configurationValue = bolt.value!!,
+                            added = Date(),
+                        )
+                    )
+                }
+
+            NotificationWorker.scheduleNotification(context)
+        }
+    }
 }
+

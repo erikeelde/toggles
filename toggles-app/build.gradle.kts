@@ -75,6 +75,8 @@ android {
         versionCode = 4
         versionName = "1.01.00"
 
+        multiDexEnabled = true
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -96,6 +98,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+        freeCompilerArgs = listOfNotNull(
+            "-Xopt-in=kotlin.RequiresOptIn"
+        )
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -190,10 +195,14 @@ dependencies {
     implementation("com.izettle.wrench:wrench-core:0.3")
     implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
+    implementation(project(":toggles-coroutines"))
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.21")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
 
     implementation("androidx.core:core-ktx:1.5.0-alpha05")
     implementation("androidx.work:work-runtime-ktx:2.4.0")
+
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")
+    implementation("androidx.multidex:multidex:2.0.1")
 }

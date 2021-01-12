@@ -16,7 +16,6 @@ import com.izettle.wrench.database.WrenchConfigurationValueDao
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -30,7 +29,6 @@ import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 
-@ExperimentalCoroutinesApi
 class FragmentEnumValueViewModel @ViewModelInject internal constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
     private val application: Application,

@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.wrench.databinding.FragmentLiveDataPreferencesBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 class LiveDataPreferencesFragment : Fragment() {
@@ -16,12 +15,15 @@ class LiveDataPreferencesFragment : Fragment() {
     private lateinit var binding: FragmentLiveDataPreferencesBinding
     private val viewModel by viewModels<LiveDataPreferencesFragmentViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
         FragmentLiveDataPreferencesBinding.inflate(inflater, container, false).also {
             binding = it
         }.root
 
-    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

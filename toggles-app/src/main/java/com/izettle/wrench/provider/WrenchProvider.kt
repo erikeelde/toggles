@@ -28,6 +28,7 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.GlobalScope
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.TogglesUriMatcher
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
@@ -161,7 +162,8 @@ class WrenchProvider : ContentProvider() {
                             configurationDao,
                             togglesNotificationDao,
                             callingApplication,
-                            bolt
+                            bolt,
+                            GlobalScope
                         )
                     }
                 }
@@ -186,7 +188,8 @@ class WrenchProvider : ContentProvider() {
                             configurationDao,
                             togglesNotificationDao,
                             callingApplication,
-                            bolt
+                            bolt,
+                            GlobalScope
                         )
                     }
                 }

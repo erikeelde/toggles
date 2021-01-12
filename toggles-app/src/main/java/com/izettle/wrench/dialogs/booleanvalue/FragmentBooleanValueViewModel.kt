@@ -1,4 +1,5 @@
 package com.izettle.wrench.dialogs.booleanvalue
+
 import android.app.Application
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
@@ -12,7 +13,6 @@ import com.izettle.wrench.database.WrenchConfigurationDao
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -25,7 +25,6 @@ import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 
-@ExperimentalCoroutinesApi
 class FragmentBooleanValueViewModel
 @ViewModelInject internal constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
@@ -113,7 +112,8 @@ class FragmentBooleanValueViewModel
             if (selectedConfigurationValue != null) {
                 configurationValueDao.updateConfigurationValue(configurationId, scopeId, value)
             } else {
-                val wrenchConfigurationValue = WrenchConfigurationValue(0, configurationId, value, scopeId)
+                val wrenchConfigurationValue =
+                    WrenchConfigurationValue(0, configurationId, value, scopeId)
                 wrenchConfigurationValue.id = configurationValueDao.insert(wrenchConfigurationValue)
             }
             configurationDao.touch(configurationId, Date())
@@ -127,7 +127,11 @@ class FragmentBooleanValueViewModel
             selectedConfigurationValue?.let {
                 configurationValueDao.delete(it)
 
-                application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+                application.contentResolver.notifyUpdate(
+                    TogglesProviderContract.boltUri(
+                        configurationId
+                    )
+                )
             }
         }
     }

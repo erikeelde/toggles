@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.os.Binder
 import com.izettle.wrench.core.Bolt
@@ -25,6 +26,7 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.GlobalScope
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.TogglesUriMatcher
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
@@ -86,7 +88,6 @@ class TogglesProvider : ContentProvider() {
         fun providesWrenchPreferences(): ITogglesPreferences
     }
 
-    @Synchronized
     private fun getCallingApplication(applicationDao: WrenchApplicationDao): WrenchApplication {
         var wrenchApplication: WrenchApplication? =
             applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)
@@ -149,14 +150,17 @@ class TogglesProvider : ContentProvider() {
                 if (cursor.moveToFirst()) {
                     val bolt = Bolt.fromCursor(cursor)
                     cursor.moveToPrevious()
-                    context?.apply {
-                        configurationRequested(
-                            this,
-                            configurationDao,
-                            togglesNotificationDao,
-                            callingApplication,
-                            bolt
-                        )
+                    if (!isTogglesApplication(callingApplication)) {
+                        context?.apply {
+                            configurationRequested(
+                                this,
+                                configurationDao,
+                                togglesNotificationDao,
+                                callingApplication,
+                                bolt,
+                                GlobalScope
+                            )
+                        }
                     }
                 }
             }
@@ -174,14 +178,17 @@ class TogglesProvider : ContentProvider() {
                 if (cursor.moveToFirst()) {
                     val bolt = Bolt.fromCursor(cursor)
                     cursor.moveToPrevious()
-                    context?.apply {
-                        configurationRequested(
-                            this,
-                            configurationDao,
-                            togglesNotificationDao,
-                            callingApplication,
-                            bolt
-                        )
+                    if (!isTogglesApplication(callingApplication)) {
+                        context?.apply {
+                            configurationRequested(
+                                this,
+                                configurationDao,
+                                togglesNotificationDao,
+                                callingApplication,
+                                bolt,
+                                GlobalScope
+                            )
+                        }
                     }
                 }
             }
@@ -236,8 +243,12 @@ class TogglesProvider : ContentProvider() {
                 wrenchConfigurationValue.value = bolt.value
                 wrenchConfigurationValue.scope = defaultScope.id
 
-                wrenchConfigurationValue.id =
-                    configurationValueDao.insertSync(wrenchConfigurationValue)
+                try {
+                    wrenchConfigurationValue.id =
+                        configurationValueDao.insertSync(wrenchConfigurationValue)
+                } catch (e: SQLiteConstraintException) {
+                    // this happens when the app is initially launched because many of many calls into assertValidApiVersion()
+                }
 
                 insertId = wrenchConfiguration.id
             }
@@ -401,6 +412,7 @@ class TogglesProvider : ContentProvider() {
             return scope
         }
 
+        @Synchronized
         private fun assertValidApiVersion(togglesPreferences: ITogglesPreferences, uri: Uri) {
             var l: Long = 0
             val strictApiVersion = try {

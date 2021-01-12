@@ -11,10 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.databinding.FragmentEnumValueBinding
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
 
