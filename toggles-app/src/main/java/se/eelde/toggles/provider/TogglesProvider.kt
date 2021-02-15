@@ -34,7 +34,7 @@ import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
 import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.notification.configurationRequested
+import se.eelde.toggles.notification.ChangedHelper
 import java.util.Date
 
 class TogglesProvider : ContentProvider() {
@@ -71,6 +71,10 @@ class TogglesProvider : ContentProvider() {
         applicationEntryPoint.providesWrenchPreferences()
     }
 
+    private val changedHelper: ChangedHelper by lazy {
+        applicationEntryPoint.providerChangedHelper()
+    }
+
     private val applicationEntryPoint: TogglesProviderEntryPoint by lazy {
         EntryPointAccessors.fromApplication(context!!, TogglesProviderEntryPoint::class.java)
     }
@@ -86,6 +90,7 @@ class TogglesProvider : ContentProvider() {
         fun provideTogglesNotificationDao(): TogglesNotificationDao
         fun providePackageManagerWrapper(): IPackageManagerWrapper
         fun providesWrenchPreferences(): ITogglesPreferences
+        fun providerChangedHelper(): ChangedHelper
     }
 
     private fun getCallingApplication(applicationDao: WrenchApplicationDao): WrenchApplication {
@@ -113,7 +118,7 @@ class TogglesProvider : ContentProvider() {
 
     override fun onCreate() = true
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "NestedBlockDepth")
     override fun query(
         uri: Uri,
         projection: Array<String>?,
@@ -152,10 +157,7 @@ class TogglesProvider : ContentProvider() {
                     cursor.moveToPrevious()
                     if (!isTogglesApplication(callingApplication)) {
                         context?.apply {
-                            configurationRequested(
-                                this,
-                                configurationDao,
-                                togglesNotificationDao,
+                            changedHelper.configurationRequested(
                                 callingApplication,
                                 bolt,
                                 GlobalScope
@@ -180,10 +182,7 @@ class TogglesProvider : ContentProvider() {
                     cursor.moveToPrevious()
                     if (!isTogglesApplication(callingApplication)) {
                         context?.apply {
-                            configurationRequested(
-                                this,
-                                configurationDao,
-                                togglesNotificationDao,
+                            changedHelper.configurationRequested(
                                 callingApplication,
                                 bolt,
                                 GlobalScope

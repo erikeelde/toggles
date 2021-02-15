@@ -67,13 +67,4 @@ class StringValueFragment : DialogFragment() {
             .setView(binding.root)
             .create()
     }
-
-    companion object {
-
-        fun newInstance(args: StringValueFragmentArgs): StringValueFragment {
-            val fragment = StringValueFragment()
-            fragment.arguments = args.toBundle()
-            return fragment
-        }
-    }
 }

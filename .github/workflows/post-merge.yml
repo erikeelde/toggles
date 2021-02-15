@@ -29,3 +29,4 @@ jobs:
         with:
           name: Apks
           path: '**/build/outputs/apk/*'
+          retention-days: 14

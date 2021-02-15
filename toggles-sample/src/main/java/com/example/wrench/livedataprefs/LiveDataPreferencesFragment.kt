@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LiveDataPreferencesFragment : Fragment() {
 
-    private lateinit var binding: FragmentLiveDataPreferencesBinding
+    private var binding: FragmentLiveDataPreferencesBinding? = null
     private val viewModel by viewModels<LiveDataPreferencesFragmentViewModel>()
 
     override fun onCreateView(
@@ -24,27 +24,32 @@ class LiveDataPreferencesFragment : Fragment() {
             binding = it
         }.root
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getStringConfiguration().observe(viewLifecycleOwner) {
-            binding.stringConfiguration.text = it
+            binding!!.stringConfiguration.text = it
         }
 
         viewModel.getUrlConfiguration().observe(viewLifecycleOwner) {
-            binding.urlConfiguration.text = it
+            binding!!.urlConfiguration.text = it
         }
 
         viewModel.getBooleanConfiguration().observe(viewLifecycleOwner) {
-            binding.booleanConfiguration.text = it.toString()
+            binding!!.booleanConfiguration.text = it.toString()
         }
 
         viewModel.getIntConfiguration().observe(viewLifecycleOwner) {
-            binding.intConfiguration.text = it.toString()
+            binding!!.intConfiguration.text = it.toString()
         }
 
         viewModel.getEnumConfiguration().observe(viewLifecycleOwner) {
-            binding.enumConfiguration.text = it.toString()
+            binding!!.enumConfiguration.text = it.toString()
         }
     }
 }

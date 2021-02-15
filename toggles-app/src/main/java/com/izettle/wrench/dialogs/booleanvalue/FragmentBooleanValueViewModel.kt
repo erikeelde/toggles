@@ -1,8 +1,6 @@
 package com.izettle.wrench.dialogs.booleanvalue
 
 import android.app.Application
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -12,6 +10,7 @@ import com.izettle.wrench.Event
 import com.izettle.wrench.database.WrenchConfigurationDao
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -24,10 +23,11 @@ import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
+import javax.inject.Inject
 
-class FragmentBooleanValueViewModel
-@ViewModelInject internal constructor(
-    @Assisted private val savedStateHandle: SavedStateHandle,
+@HiltViewModel
+class FragmentBooleanValueViewModel @Inject internal constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val application: Application,
     private val configurationDao: WrenchConfigurationDao,
     private val configurationValueDao: WrenchConfigurationValueDao

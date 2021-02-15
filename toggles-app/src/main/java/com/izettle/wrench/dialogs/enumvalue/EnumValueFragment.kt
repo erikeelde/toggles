@@ -80,13 +80,4 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
         viewModel.saveClick(item.value!!)
         dismiss()
     }
-
-    companion object {
-
-        fun newInstance(args: EnumValueFragmentArgs): EnumValueFragment {
-            val fragment = EnumValueFragment()
-            fragment.arguments = args.toBundle()
-            return fragment
-        }
-    }
 }

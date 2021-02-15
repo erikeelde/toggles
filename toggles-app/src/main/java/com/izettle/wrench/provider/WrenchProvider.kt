@@ -35,7 +35,7 @@ import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
 import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
-import se.eelde.toggles.notification.configurationRequested
+import se.eelde.toggles.notification.ChangedHelper
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
@@ -75,6 +75,10 @@ class WrenchProvider : ContentProvider() {
         applicationEntryPoint.providesWrenchPreferences()
     }
 
+    private val changedHelper: ChangedHelper by lazy {
+        applicationEntryPoint.providerChangedHelper()
+    }
+
     private val applicationEntryPoint: WrenchProviderEntryPoint by lazy {
         EntryPointAccessors.fromApplication(context!!, WrenchProviderEntryPoint::class.java)
     }
@@ -90,6 +94,7 @@ class WrenchProvider : ContentProvider() {
         fun provideTogglesNotificationDao(): TogglesNotificationDao
         fun providePackageManagerWrapper(): IPackageManagerWrapper
         fun providesWrenchPreferences(): ITogglesPreferences
+        fun providerChangedHelper(): ChangedHelper
     }
 
     @Synchronized
@@ -157,10 +162,7 @@ class WrenchProvider : ContentProvider() {
                     val bolt = Bolt.fromCursor(cursor)
                     cursor.moveToPrevious()
                     context?.apply {
-                        configurationRequested(
-                            this,
-                            configurationDao,
-                            togglesNotificationDao,
+                        changedHelper.configurationRequested(
                             callingApplication,
                             bolt,
                             GlobalScope
@@ -183,10 +185,7 @@ class WrenchProvider : ContentProvider() {
                     val bolt = Bolt.fromCursor(cursor)
                     cursor.moveToPrevious()
                     context?.apply {
-                        configurationRequested(
-                            this,
-                            configurationDao,
-                            togglesNotificationDao,
+                        changedHelper.configurationRequested(
                             callingApplication,
                             bolt,
                             GlobalScope

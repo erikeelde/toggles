@@ -29,7 +29,8 @@ internal class ApplicationViewHolder(val binding: ApplicationListItemBinding) :
             val applicationId = application.id
             Navigation.findNavController(v).navigate(
                 ApplicationsFragmentDirections.actionApplicationsFragmentToConfigurationsFragment(
-                    applicationId
+                    applicationId,
+                    application.applicationLabel
                 )
             )
         }

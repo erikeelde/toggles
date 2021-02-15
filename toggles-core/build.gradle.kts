@@ -64,7 +64,7 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.3.2")
     testImplementation("junit:junit:4.13.1")
-    implementation("androidx.annotation:annotation:1.2.0-alpha01")
+    implementation("androidx.annotation:annotation:1.2.0-beta01")
 }
 
 apply(rootProject.file("gradle/gradle-mvn-push.gradle"))

@@ -67,13 +67,4 @@ class IntegerValueFragment : DialogFragment() {
             .setView(binding.root)
             .create()
     }
-
-    companion object {
-
-        fun newInstance(args: IntegerValueFragmentArgs): IntegerValueFragment {
-            val fragment = IntegerValueFragment()
-            fragment.arguments = args.toBundle()
-            return fragment
-        }
-    }
 }
