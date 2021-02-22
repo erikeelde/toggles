@@ -1,19 +1,21 @@
 package com.example.wrench.wrenchprefs
 
 import android.app.Application
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.wrench.MyEnum
 import com.example.wrench.R
 import com.izettle.wrench.preferences.ITogglesPreferences
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WrenchPreferencesFragmentViewModel @ViewModelInject internal constructor(
+@HiltViewModel
+class WrenchPreferencesFragmentViewModel @Inject internal constructor(
     private val application: Application,
     private val togglesPreferences: ITogglesPreferences
 ) : ViewModel() {

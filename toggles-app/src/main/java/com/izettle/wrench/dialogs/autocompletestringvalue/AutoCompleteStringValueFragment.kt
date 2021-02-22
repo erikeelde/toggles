@@ -27,7 +27,7 @@ class AutoCompleteStringValueFragment : DialogFragment() {
                     if (binding.container.visibility == View.INVISIBLE && viewState.title != null) {
                         binding.container.visibility = View.VISIBLE
                     }
-                    binding.title.text = "<Beta> ${viewState.title}"
+                    binding.title.text = viewState.title
 
                     if (invisible) {
                         binding.value.jumpDrawablesToCurrentState()
@@ -49,7 +49,7 @@ class AutoCompleteStringValueFragment : DialogFragment() {
                     viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
                         when (contentIfNotHandled) {
                             ViewEffect.Dismiss -> dismiss()
-                            is ViewEffect.ValueChanged -> binding.value.setText(contentIfNotHandled.value.toString())
+                            is ViewEffect.ValueChanged -> binding.value.setText(contentIfNotHandled.value)
                         }
                     }
                 }

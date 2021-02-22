@@ -1,20 +1,22 @@
 package com.example.wrench.livedataprefs
 
 import android.app.Application
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.wrench.MyEnum
 import com.example.wrench.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.coroutines.booleanBoltFlow
 import se.eelde.toggles.coroutines.enumBoltFlow
 import se.eelde.toggles.coroutines.integerBoltFlow
 import se.eelde.toggles.coroutines.stringBoltFlow
+import javax.inject.Inject
 
-class LiveDataPreferencesFragmentViewModel @ViewModelInject constructor(private val application: Application) : ViewModel() {
+@HiltViewModel
+class LiveDataPreferencesFragmentViewModel @Inject constructor(private val application: Application) : ViewModel() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val stringConfig by lazy {
