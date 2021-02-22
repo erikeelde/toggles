@@ -36,7 +36,8 @@ class PredefinedValueRecyclerViewAdapter internal constructor(
         fun onClick(view: View, item: WrenchPredefinedConfigurationValue)
     }
 
-    inner class ViewHolder(val binding: SimpleListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: SimpleListItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     companion object {
         private val DIFF_CALLBACK =
@@ -44,16 +45,12 @@ class PredefinedValueRecyclerViewAdapter internal constructor(
                 override fun areItemsTheSame(
                     oldApplication: WrenchPredefinedConfigurationValue,
                     newApplication: WrenchPredefinedConfigurationValue
-                ): Boolean {
-                    return oldApplication.id == newApplication.id
-                }
+                ) = oldApplication.id == newApplication.id
 
                 override fun areContentsTheSame(
                     oldApplication: WrenchPredefinedConfigurationValue,
                     newApplication: WrenchPredefinedConfigurationValue
-                ): Boolean {
-                    return oldApplication == newApplication
-                }
+                ) = oldApplication == newApplication
             }
     }
 }

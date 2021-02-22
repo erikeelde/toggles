@@ -18,6 +18,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -28,15 +29,22 @@ import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchConfigurationWithValues
 import com.izettle.wrench.dialogs.scope.ScopeFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import se.eelde.toggles.R
+import se.eelde.toggles.coroutines.booleanBoltFlow
 import se.eelde.toggles.databinding.FragmentConfigurationsBinding
+import se.eelde.toggles.viewLifecycle
 
 @AndroidEntryPoint
 class ConfigurationsFragment :
     Fragment(),
     SearchView.OnQueryTextListener,
     ConfigurationRecyclerViewAdapter.Listener {
-    private lateinit var binding: FragmentConfigurationsBinding
+    private var binding: FragmentConfigurationsBinding by viewLifecycle()
+
     private var currentFilter: CharSequence? = null
     private var searchView: SearchView? = null
 
@@ -241,6 +249,8 @@ class ConfigurationsFragment :
         }
     }
 
+    @Suppress("LongMethod")
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun configurationClicked(v: View, configuration: WrenchConfigurationWithValues) {
         if (model.selectedScopeLiveData.value == null) {
             Snackbar.make(binding.animator, "No selected scope found", Snackbar.LENGTH_LONG).show()
@@ -249,15 +259,36 @@ class ConfigurationsFragment :
 
         val selectedScopeId = model.selectedScopeLiveData.value!!.id
 
-        if (TextUtils.equals(String::class.java.name, configuration.type) || TextUtils.equals(Bolt.TYPE.STRING, configuration.type)
+        if (TextUtils.equals(
+                String::class.java.name,
+                configuration.type
+            ) || TextUtils.equals(Bolt.TYPE.STRING, configuration.type)
         ) {
 
-            v.findNavController().navigate(
-                ConfigurationsFragmentDirections.actionConfigurationsFragmentToStringValueFragment(
-                    configuration.id,
-                    selectedScopeId
-                )
-            )
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                booleanBoltFlow(requireContext(), "Use autocomplete in String configurations", false).first { autoCompleteEnabled ->
+                    if (autoCompleteEnabled) {
+                        launch(Dispatchers.Main) {
+                            v.findNavController().navigate(
+                                ConfigurationsFragmentDirections.actionConfigurationsFragmentToAutoCompleteStringValueFragment(
+                                    configuration.id,
+                                    selectedScopeId
+                                )
+                            )
+                        }
+                    } else {
+                        launch(Dispatchers.Main) {
+                            v.findNavController().navigate(
+                                ConfigurationsFragmentDirections.actionConfigurationsFragmentToStringValueFragment(
+                                    configuration.id,
+                                    selectedScopeId
+                                )
+                            )
+                        }
+                    }
+                    autoCompleteEnabled
+                }
+            }
         } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(
                 Bolt.TYPE.INTEGER,
                 configuration.type

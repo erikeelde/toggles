@@ -7,10 +7,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.databinding.FragmentStringValueBinding
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class StringValueFragment : DialogFragment() {
 
@@ -68,14 +66,5 @@ class StringValueFragment : DialogFragment() {
         return AlertDialog.Builder(requireActivity())
             .setView(binding.root)
             .create()
-    }
-
-    companion object {
-
-        fun newInstance(args: StringValueFragmentArgs): StringValueFragment {
-            val fragment = StringValueFragment()
-            fragment.arguments = args.toBundle()
-            return fragment
-        }
     }
 }

@@ -14,7 +14,7 @@ import androidx.work.testing.WorkManagerTestInitHelper
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.Nut
 import com.izettle.wrench.database.WrenchDatabase
-import com.izettle.wrench.di.DatabaseModule
+import se.eelde.toggles.di.DatabaseModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

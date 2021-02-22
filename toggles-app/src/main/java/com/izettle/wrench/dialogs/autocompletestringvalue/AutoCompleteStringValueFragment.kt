@@ -1,4 +1,4 @@
-package com.izettle.wrench.dialogs.booleanvalue
+package com.izettle.wrench.dialogs.autocompletestringvalue
 
 import android.app.Dialog
 import android.os.Bundle
@@ -7,21 +7,23 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import se.eelde.toggles.databinding.FragmentBooleanValueBinding
+import se.eelde.toggles.databinding.FragmentAutocompleteStringValueBinding
+import se.eelde.toggles.viewLifecycle
 
 @AndroidEntryPoint
-class BooleanValueFragment : DialogFragment() {
+class AutoCompleteStringValueFragment : DialogFragment() {
 
-    private lateinit var binding: FragmentBooleanValueBinding
-    private val viewModel by viewModels<FragmentBooleanValueViewModel>()
+    private var binding: FragmentAutocompleteStringValueBinding by viewLifecycle()
+    private val viewModel by viewModels<FragmentStringValueViewModel>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentBooleanValueBinding.inflate(layoutInflater)
+        this.binding = FragmentAutocompleteStringValueBinding.inflate(layoutInflater)
+
         viewModel.viewState.observe(
             this,
             { viewState ->
                 if (viewState != null) {
-                    val invisible = (binding.container.visibility == View.INVISIBLE)
+                    val invisible = (this.binding.container.visibility == View.INVISIBLE)
                     if (binding.container.visibility == View.INVISIBLE && viewState.title != null) {
                         binding.container.visibility = View.VISIBLE
                     }
@@ -47,9 +49,7 @@ class BooleanValueFragment : DialogFragment() {
                     viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
                         when (contentIfNotHandled) {
                             ViewEffect.Dismiss -> dismiss()
-                            is ViewEffect.CheckedChanged ->
-                                binding.value.isChecked =
-                                    contentIfNotHandled.enabled
+                            is ViewEffect.ValueChanged -> binding.value.setText(contentIfNotHandled.value)
                         }
                     }
                 }
@@ -61,7 +61,7 @@ class BooleanValueFragment : DialogFragment() {
         }
 
         binding.save.setOnClickListener {
-            viewModel.saveClick(binding.value.isChecked.toString())
+            viewModel.saveClick(binding.value.text.toString())
         }
 
         return AlertDialog.Builder(requireActivity())

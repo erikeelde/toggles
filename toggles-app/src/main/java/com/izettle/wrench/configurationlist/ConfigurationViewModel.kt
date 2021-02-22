@@ -1,7 +1,6 @@
 package com.izettle.wrench.configurationlist
 
 import android.text.TextUtils
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,9 +13,12 @@ import com.izettle.wrench.database.WrenchConfigurationDao
 import com.izettle.wrench.database.WrenchConfigurationWithValues
 import com.izettle.wrench.database.WrenchScope
 import com.izettle.wrench.database.WrenchScopeDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ConfigurationViewModel @ViewModelInject internal constructor(
+@HiltViewModel
+class ConfigurationViewModel @Inject internal constructor(
     private val applicationDao: WrenchApplicationDao,
     configurationDao: WrenchConfigurationDao,
     private val scopeDao: WrenchScopeDao

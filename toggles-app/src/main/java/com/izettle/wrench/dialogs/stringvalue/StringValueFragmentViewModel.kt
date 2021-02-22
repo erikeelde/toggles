@@ -1,7 +1,6 @@
-package com.izettle.wrench.dialogs.enumvalue
+package com.izettle.wrench.dialogs.stringvalue
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -11,8 +10,6 @@ import com.izettle.wrench.Event
 import com.izettle.wrench.database.WrenchConfigurationDao
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
-import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
-import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -24,24 +21,18 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
-class FragmentEnumValueViewModel @Inject internal constructor(
+class FragmentStringValueViewModel
+@Inject internal constructor(
     private val savedStateHandle: SavedStateHandle,
     private val application: Application,
     private val configurationDao: WrenchConfigurationDao,
-    private val configurationValueDao: WrenchConfigurationValueDao,
-    private val predefinedConfigurationValueDao: WrenchPredefinedConfigurationValueDao
-) :
-    ViewModel() {
-
-    internal val predefinedValues: LiveData<List<WrenchPredefinedConfigurationValue>> by lazy {
-        predefinedConfigurationValueDao.getByConfigurationId(configurationId)
-    }
+    private val configurationValueDao: WrenchConfigurationValueDao
+) : ViewModel() {
 
     private val intentChannel = Channel<ViewAction>(Channel.UNLIMITED)
 
@@ -66,23 +57,11 @@ class FragmentEnumValueViewModel @Inject internal constructor(
                     is ViewAction.SaveAction -> {
                         _state.value = reduce(viewState.value!!, PartialViewState.Saving)
                         updateConfigurationValue(viewAction.value).join()
-                        application.contentResolver.notifyUpdate(
-                            TogglesProviderContract.boltUri(
-                                configurationId
-                            )
-                        )
-
                         viewEffects.value = Event(ViewEffect.Dismiss)
                     }
                     ViewAction.RevertAction -> {
                         _state.value = reduce(viewState.value!!, PartialViewState.Reverting)
-                        deleteConfigurationValue().join()
-                        application.contentResolver.notifyInsert(
-                            TogglesProviderContract.boltUri(
-                                configurationId
-                            )
-                        )
-
+                        deleteConfigurationValue()
                         viewEffects.value = Event(ViewEffect.Dismiss)
                     }
                 }
@@ -98,6 +77,7 @@ class FragmentEnumValueViewModel @Inject internal constructor(
             configurationValueDao.getConfigurationValue(configurationId, scopeId).collect {
                 if (it != null) {
                     selectedConfigurationValue = it
+                    viewEffects.value = Event(ViewEffect.ValueChanged(it.value!!))
                 }
             }
         }
@@ -145,20 +125,27 @@ class FragmentEnumValueViewModel @Inject internal constructor(
 
     private suspend fun deleteConfigurationValue(): Job = coroutineScope {
         viewModelScope.launch(Dispatchers.IO) {
-            configurationValueDao.delete(selectedConfigurationValue!!)
+            selectedConfigurationValue?.let {
+                configurationValueDao.delete(it)
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+                application.contentResolver.notifyUpdate(
+                    TogglesProviderContract.boltUri(
+                        configurationId
+                    )
+                )
+            }
         }
     }
 }
 
-private sealed class ViewAction {
+internal sealed class ViewAction {
     data class SaveAction(val value: String) : ViewAction()
     object RevertAction : ViewAction()
 }
 
 internal sealed class ViewEffect {
     object Dismiss : ViewEffect()
+    data class ValueChanged(val value: String) : ViewEffect()
 }
 
 internal data class ViewState(
