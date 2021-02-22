@@ -11,13 +11,13 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools:r8:2.1.75")
-        classpath("com.android.tools.build:gradle:4.1.2")
+        classpath("com.android.tools.build:gradle:7.0.0-alpha07")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.3")
         classpath("com.google.gms:oss-licenses:0.9.2")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.32-alpha")
         // https://github.com/Triple-T/gradle-play-publisher/issues/864
-        classpath("com.github.triplet.gradle:play-publisher:3.2.0")
+        classpath("com.github.triplet.gradle:play-publisher:3.2.0-agp4.2")
         classpath("com.google.gms:google-services:4.3.5")
     }
 }
