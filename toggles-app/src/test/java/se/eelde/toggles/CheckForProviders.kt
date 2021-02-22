@@ -2,6 +2,8 @@ package se.eelde.toggles
 
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -23,6 +25,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import se.eelde.toggles.provider.TogglesProvider
 
@@ -45,6 +48,7 @@ class CheckForProviders {
     fun setUp() {
         context = ApplicationProvider.getApplicationContext<Application>()
 
+        shadowOf(context.packageManager).setApplicationIcon("se.eelde.toggles", GradientDrawable())
         val config = Configuration.Builder()
             .setMinimumLoggingLevel(Log.DEBUG)
             .setExecutor(SynchronousExecutor())
