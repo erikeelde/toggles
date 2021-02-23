@@ -11,7 +11,7 @@ plugins {
     id("com.google.gms.oss.licenses.plugin")
     id("dagger.hilt.android.plugin")
     id("io.gitlab.arturbosch.detekt")
-    id("com.github.triplet.play")
+    id("com.github.triplet.play") version "3.3.0-agp4.2"
     id("kotlin-android")
 }
 
@@ -29,10 +29,6 @@ kapt {
         // Default is 100.
         option("-Xmaxerrs", 500)
     }
-}
-
-hilt {
-    enableTransformForLocalTests = true
 }
 
 play {
