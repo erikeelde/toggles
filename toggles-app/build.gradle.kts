@@ -67,8 +67,6 @@ android {
         versionCode = 5
         versionName = "1.01.01"
 
-        multiDexEnabled = true
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -210,5 +208,4 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.5.0")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")
-    implementation("androidx.multidex:multidex:2.0.1")
 }
