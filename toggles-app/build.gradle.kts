@@ -47,12 +47,12 @@ android {
 
     buildFeatures {
         viewBinding = true
-//        compose = true
+        compose = true
     }
 
-//    composeOptions {
-//        kotlinCompilerExtensionVersion = "1.0.0-alpha12"
-//    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.0.0-alpha12"
+    }
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
@@ -62,7 +62,7 @@ android {
 
     defaultConfig {
         applicationId = "se.eelde.toggles"
-        minSdk = 16
+        minSdk = 21
         targetSdk = 30
         versionCode = 5
         versionName = "1.01.01"
@@ -135,6 +135,21 @@ kapt {
 }
 
 dependencies {
+    val composeVersion: String by rootProject.extra
+
+    implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
+    implementation("androidx.compose.runtime:runtime:$composeVersion")
+    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation("androidx.compose.foundation:foundation-layout:$composeVersion")
+    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.compose.foundation:foundation:$composeVersion")
+    implementation("androidx.compose.animation:animation:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha01")
+    implementation("androidx.navigation:navigation-compose:1.0.0-alpha07")
+
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("junit:junit:4.13.2")
 

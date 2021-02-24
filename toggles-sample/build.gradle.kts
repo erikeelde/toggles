@@ -14,7 +14,7 @@ android {
     compileSdk = 30
     defaultConfig {
         applicationId = "se.eelde.toggles.example"
-        minSdk = 16
+        minSdk = 21
         targetSdk = 30
         versionCode = 2
         versionName = "1.00.01"

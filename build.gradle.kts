@@ -2,6 +2,9 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+
+    val composeVersion by extra("1.0.0-alpha12")
+
     repositories {
         google()
         mavenCentral()
@@ -38,6 +41,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
 }
 
