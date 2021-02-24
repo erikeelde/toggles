@@ -5,15 +5,6 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.oss.licenses.plugin")
     id("dagger.hilt.android.plugin")
-    id("io.gitlab.arturbosch.detekt")
-}
-
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
-}
-
-detekt {
-    autoCorrect = true
 }
 
 android {

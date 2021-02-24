@@ -1,15 +1,6 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("io.gitlab.arturbosch.detekt")
-}
-
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
-}
-
-detekt {
-    autoCorrect = true
 }
 
 android {

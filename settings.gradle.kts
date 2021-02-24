@@ -1,3 +1,5 @@
+rootProject.name = "Toggles"
+
 include(
     ":toggles-app",
     ":toggles-core",

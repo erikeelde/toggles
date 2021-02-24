@@ -10,7 +10,6 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools:r8:2.1.75")
         classpath("com.android.tools.build:gradle:7.0.0-alpha07")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.3")
@@ -20,10 +19,6 @@ buildscript {
     }
 }
 
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
-}
-
 plugins {
     id("com.github.ben-manes.versions") version "0.36.0"
     id("se.eelde.build-optimizations") version "0.2.0"
@@ -31,10 +26,18 @@ plugins {
 }
 
 allprojects {
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+
+    dependencies {
+        detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
+    }
+    detekt {
+        autoCorrect = true
+    }
+
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 }
 

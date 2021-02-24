@@ -10,17 +10,8 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.oss.licenses.plugin")
     id("dagger.hilt.android.plugin")
-    id("io.gitlab.arturbosch.detekt")
     id("com.github.triplet.play") version "3.3.0-agp4.2"
     id("kotlin-android")
-}
-
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
-}
-
-detekt {
-    autoCorrect = true
 }
 
 kapt {
@@ -56,7 +47,12 @@ android {
 
     buildFeatures {
         viewBinding = true
+//        compose = true
     }
+
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = "1.0.0-alpha12"
+//    }
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
@@ -97,6 +93,7 @@ android {
         freeCompilerArgs = listOfNotNull(
             "-Xopt-in=kotlin.RequiresOptIn"
         )
+        useIR = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -111,7 +108,6 @@ android {
         getByName("debug") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
-
             versionNameSuffix = " debug"
 //            applicationIdSuffix = ".debug"
         }
