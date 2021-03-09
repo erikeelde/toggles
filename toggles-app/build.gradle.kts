@@ -51,7 +51,8 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.0-alpha12"
+        val composeVersion: String by rootProject.extra
+        kotlinCompilerExtensionVersion = composeVersion
     }
 
     testOptions {
@@ -145,8 +146,8 @@ dependencies {
     implementation("androidx.compose.animation:animation:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha01")
-    implementation("androidx.navigation:navigation-compose:1.0.0-alpha07")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha02")
+    implementation("androidx.navigation:navigation-compose:1.0.0-alpha08")
 
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("junit:junit:4.13.2")
@@ -163,25 +164,25 @@ dependencies {
     testImplementation("androidx.work:work-testing:2.5.0")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0")
-    implementation(platform("com.google.firebase:firebase-bom:26.5.0"))
+    implementation(platform("com.google.firebase:firebase-bom:26.6.0"))
 
-    implementation("com.google.dagger:hilt-android:2.32-alpha")
-    kapt("com.google.dagger:hilt-android-compiler:2.32-alpha")
+    implementation("com.google.dagger:hilt-android:2.33-beta")
+    kapt("com.google.dagger:hilt-android-compiler:2.33-beta")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     kapt("androidx.hilt:hilt-compiler:1.0.0-alpha03")
     implementation("androidx.hilt:hilt-work:1.0.0-alpha03")
 
-    testImplementation("com.google.dagger:hilt-android-testing:2.32-alpha")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.32-alpha")
+    testImplementation("com.google.dagger:hilt-android-testing:2.33-beta")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.33-beta")
 
     implementation("androidx.lifecycle:lifecycle-common-java8:2.3.0")
     kapt("androidx.room:room-compiler:2.3.0-beta02")
 
-    implementation("com.google.dagger:dagger:2.32")
-    kapt("com.google.dagger:dagger-compiler:2.32")
+    implementation("com.google.dagger:dagger:2.33")
+    kapt("com.google.dagger:dagger-compiler:2.33")
 
     implementation("androidx.appcompat:appcompat:1.3.0-beta01")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-beta01")
+    implementation("androidx.recyclerview:recyclerview:1.2.0-beta02")
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.cardview:cardview:1.0.0")
@@ -202,9 +203,9 @@ dependencies {
     implementation(project(":toggles-prefs"))
     implementation(project(":toggles-coroutines"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 
-    implementation("androidx.core:core-ktx:1.5.0-beta01")
+    implementation("androidx.core:core-ktx:1.5.0-beta02")
     implementation("androidx.work:work-runtime-ktx:2.5.0")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")

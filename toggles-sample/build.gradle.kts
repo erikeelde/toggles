@@ -70,12 +70,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
-    implementation("com.google.dagger:hilt-android:2.32-alpha")
-    kapt("com.google.dagger:hilt-android-compiler:2.32-alpha")
+    implementation("com.google.dagger:hilt-android:2.33-beta")
+    kapt("com.google.dagger:hilt-android-compiler:2.33-beta")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     kapt("androidx.hilt:hilt-compiler:1.0.0-alpha03")
-    testImplementation("com.google.dagger:hilt-android-testing:2.32-alpha")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.32-alpha")
+    testImplementation("com.google.dagger:hilt-android-testing:2.33-beta")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.33-beta")
     implementation("androidx.lifecycle:lifecycle-common-java8:2.3.0")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.3")
@@ -85,13 +85,13 @@ dependencies {
     implementation(project(":toggles-prefs"))
     implementation(project(":toggles-coroutines"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 
-    implementation("com.google.dagger:dagger:2.32")
-    kapt("com.google.dagger:dagger-compiler:2.32")
+    implementation("com.google.dagger:dagger:2.33")
+    kapt("com.google.dagger:dagger-compiler:2.33")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
-    implementation("androidx.core:core-ktx:1.5.0-beta01")
+    implementation("androidx.core:core-ktx:1.5.0-beta02")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")
 }
