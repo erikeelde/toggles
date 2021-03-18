@@ -1,4 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues by="lint 4.2.0-alpha07" client="gradle" format="5" variant="all" version="4.2.0-alpha07">
+<issues format="6" by="lint 7.0.0-alpha10" type="baseline" client="cli" name="cli" variant="all" version="7.0.0-alpha10">
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Lint found an issue registry (`androidx.activity.lint.ActivityIssueRegistry`) which is older than the current API level; these checks may not work correctly.&#xA;&#xA;Recompile the checks against the latest version. Custom check API version is 8 (4.1), current lint API level is 10 (7.0+)">
+        <location
+            file="../../../.gradle/caches/transforms-3/0bd5fe0c5dfea4605e889573c63b47bb/transformed/activity-1.3.0-alpha04/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Lint found an issue registry (`androidx.annotation.experimental.lint.ExperimentalIssueRegistry`) which is older than the current API level; these checks may not work correctly.&#xA;&#xA;Recompile the checks against the latest version. Custom check API version is 8 (4.1), current lint API level is 10 (7.0+)">
+        <location
+            file="../../../.gradle/caches/transforms-3/a644b3cddebcdbcd3770f3a0a4904d92/transformed/annotation-experimental-1.1.0-beta01/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Lint found an issue registry (`androidx.compose.runtime.lint.RuntimeIssueRegistry`) which is older than the current API level; these checks may not work correctly.&#xA;&#xA;Recompile the checks against the latest version. Custom check API version is 8 (4.1), current lint API level is 10 (7.0+)">
+        <location
+            file="../../../.gradle/caches/transforms-3/09d3c6d7eb47826849f3b759599ba147/transformed/runtime-1.0.0-beta02/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Lint found an issue registry (`androidx.compose.ui.lint.UiIssueRegistry`) which is older than the current API level; these checks may not work correctly.&#xA;&#xA;Recompile the checks against the latest version. Custom check API version is 8 (4.1), current lint API level is 10 (7.0+)">
+        <location
+            file="../../../.gradle/caches/transforms-3/9a5ba80687da961944542ffad01ed98f/transformed/ui-1.0.0-beta02/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Lint found an issue registry (`androidx.lifecycle.lint.LifecycleRuntimeIssueRegistry`) which is older than the current API level; these checks may not work correctly.&#xA;&#xA;Recompile the checks against the latest version. Custom check API version is 8 (4.1), current lint API level is 10 (7.0+)">
+        <location
+            file="../../../.gradle/caches/transforms-3/36b357e95175be1852aea45b10a61255/transformed/lifecycle-runtime-ktx-2.3.0/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Lint found an issue registry (`androidx.recyclerview.lint.RecyclerViewIssueRegistry`) which is older than the current API level; these checks may not work correctly.&#xA;&#xA;Recompile the checks against the latest version. Custom check API version is 8 (4.1), current lint API level is 10 (7.0+)">
+        <location
+            file="../../../.gradle/caches/transforms-3/1690dcd33d79f6547e450699da5e4fd3/transformed/recyclerview-1.2.0-beta02/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Lint found an issue registry (`androidx.work.lint.WorkManagerIssueRegistry`) which is older than the current API level; these checks may not work correctly.&#xA;&#xA;Recompile the checks against the latest version. Custom check API version is 8 (4.1), current lint API level is 10 (7.0+)">
+        <location
+            file="../../../.gradle/caches/transforms-3/931ba6ce90a6b6ca3f086edbe5fc2d9c/transformed/work-runtime-2.5.0/jars/lint.jar"/>
+    </issue>
 
 </issues>

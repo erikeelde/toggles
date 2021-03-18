@@ -73,13 +73,13 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.33-beta")
     kapt("com.google.dagger:hilt-android-compiler:2.33-beta")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-    kapt("androidx.hilt:hilt-compiler:1.0.0-alpha03")
+    kapt("androidx.hilt:hilt-compiler:1.0.0-beta01")
     testImplementation("com.google.dagger:hilt-android-testing:2.33-beta")
     kaptTest("com.google.dagger:hilt-android-compiler:2.33-beta")
     implementation("androidx.lifecycle:lifecycle-common-java8:2.3.0")
 
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.3")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.3")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.4")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.4")
 
     implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
@@ -91,7 +91,7 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:2.33")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
-    implementation("androidx.core:core-ktx:1.5.0-beta02")
+    implementation("androidx.core:core-ktx:1.5.0-beta03")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")
 }

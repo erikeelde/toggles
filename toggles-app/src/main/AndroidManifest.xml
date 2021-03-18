@@ -36,7 +36,8 @@
             android:allowEmbedded="true"
             android:documentLaunchMode="always"
             android:resizeableActivity="true"
-            tools:targetApi="n" >
+            tools:targetApi="n"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -47,7 +48,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.izettle.wrench.MainActivity">
+        <activity android:name="com.izettle.wrench.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

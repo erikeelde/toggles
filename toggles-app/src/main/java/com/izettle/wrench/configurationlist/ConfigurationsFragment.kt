@@ -1,5 +1,6 @@
 package com.izettle.wrench.configurationlist
 
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
@@ -85,6 +86,7 @@ class ConfigurationsFragment :
         FragmentConfigurationsBinding.inflate(layoutInflater, container, false)
             .also { binding = it }.root
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -266,7 +268,11 @@ class ConfigurationsFragment :
         ) {
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                booleanBoltFlow(requireContext(), "Use autocomplete in String configurations", false).first { autoCompleteEnabled ->
+                booleanBoltFlow(
+                    requireContext(),
+                    "Use autocomplete in String configurations",
+                    false
+                ).first { autoCompleteEnabled ->
                     if (autoCompleteEnabled) {
                         launch(Dispatchers.Main) {
                             v.findNavController().navigate(
@@ -306,7 +312,6 @@ class ConfigurationsFragment :
                 configuration.type
             ) || TextUtils.equals(Bolt.TYPE.BOOLEAN, configuration.type)
         ) {
-
             v.findNavController().navigate(
                 ConfigurationsFragmentDirections.actionConfigurationsFragmentToBooleanValueFragment(
                     configuration.id,
