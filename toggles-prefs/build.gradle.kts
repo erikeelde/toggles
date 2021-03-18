@@ -3,6 +3,8 @@ plugins {
     kotlin("android")
 }
 
+apply(plugin = "com.vanniktech.maven.publish")
+
 android {
     compileSdk = 30
 
@@ -51,5 +53,3 @@ dependencies {
     implementation("androidx.annotation:annotation:1.2.0-rc01")
     implementation("androidx.core:core-ktx:1.5.0-beta03")
 }
-
-apply(rootProject.file("gradle/gradle-mvn-push.gradle"))

@@ -19,6 +19,8 @@ buildscript {
         classpath("com.google.gms:oss-licenses:0.9.2")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.33-beta")
         classpath("com.google.gms:google-services:4.3.5")
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.14.2")
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.4.30")
     }
 }
 
