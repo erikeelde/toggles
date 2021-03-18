@@ -1,5 +1,6 @@
 package se.eelde.toggles.notification
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -21,6 +22,11 @@ import com.izettle.wrench.database.WrenchApplication
 import se.eelde.toggles.R
 import se.eelde.toggles.bubble.BubbleActivity
 import se.eelde.toggles.core.TogglesProviderContract
+
+// Since we're not targeting android S we need a local version of this to make a lint check happy
+// https://developer.android.com/about/versions/12/behavior-changes-12#pending-intent-mutability
+// https://developer.android.com/reference/android/app/PendingIntent#FLAG_MUTABLE
+const val MUTABILITY_FLAG_FROM_ANDROID_31 = 0x02000000
 
 @RequiresApi(Build.VERSION_CODES.R)
 class BubbleCompatNotificationHelper(private val context: Context) {
@@ -57,6 +63,7 @@ class BubbleCompatNotificationHelper(private val context: Context) {
         // updateShortcuts(null)
     }
 
+    @SuppressLint("WrongConstant")
     @Suppress("LongMethod")
     @WorkerThread
     fun showNotification(
@@ -64,11 +71,13 @@ class BubbleCompatNotificationHelper(private val context: Context) {
         togglesNotifications: List<TogglesNotification>,
         fromUser: Boolean
     ) {
-        val applicationIcon = context.packageManager.getApplicationIcon(wrenchApplication.packageName)
+        val applicationIcon =
+            context.packageManager.getApplicationIcon(wrenchApplication.packageName)
 
         val icon = IconCompat.createWithAdaptiveBitmap(applicationIcon.toBitmap())
         val user = Person.Builder().setName(context.getString(R.string.sender_you)).build()
-        val person = Person.Builder().setName(wrenchApplication.applicationLabel).setIcon(icon).build()
+        val person =
+            Person.Builder().setName(wrenchApplication.applicationLabel).setIcon(icon).build()
         val contentUri = TogglesProviderContract.applicationUri(wrenchApplication.id)
 
         val pendingIntent = PendingIntent.getActivity(
@@ -78,7 +87,7 @@ class BubbleCompatNotificationHelper(private val context: Context) {
             Intent(context, BubbleActivity::class.java)
                 .setAction(Intent.ACTION_VIEW)
                 .setData(contentUri),
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or MUTABILITY_FLAG_FROM_ANDROID_31
         )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_NEW_MESSAGES)
@@ -119,7 +128,7 @@ class BubbleCompatNotificationHelper(private val context: Context) {
                     Intent(context, BubbleActivity::class.java)
                         .setAction(Intent.ACTION_VIEW)
                         .setData(contentUri),
-                    PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_UPDATE_CURRENT or MUTABILITY_FLAG_FROM_ANDROID_31
                 )
             )
             // Direct Reply
@@ -132,7 +141,7 @@ class BubbleCompatNotificationHelper(private val context: Context) {
                             context,
                             REQUEST_CONTENT,
                             Intent(context, BubbleActivity::class.java).setData(contentUri),
-                            PendingIntent.FLAG_UPDATE_CURRENT
+                            PendingIntent.FLAG_UPDATE_CURRENT or MUTABILITY_FLAG_FROM_ANDROID_31
                         )
                     )
                     .addRemoteInput(

@@ -3,6 +3,8 @@
     <issue id="InvalidPackage" severity="ignore" />
     <issue id="GradleDependency" severity="ignore" />
     <issue id="ContentDescription" severity="ignore" />
+<!--    ObsoleteLintCustomCheck is a problem migrating to AS Arctic fox  -->
+    <issue id="ObsoleteLintCustomCheck" severity="ignore" />
     <issue id="UnusedResources" severity="ignore">
         <ignore path="build/generated/res/google-services/debug/values/values.xml" />
     </issue>

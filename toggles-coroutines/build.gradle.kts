@@ -1,22 +1,13 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("io.gitlab.arturbosch.detekt")
-}
-
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
-}
-
-detekt {
-    autoCorrect = true
 }
 
 android {
     compileSdk = 30
 
     defaultConfig {
-        minSdk = 16
+        minSdk = 21
         targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -57,9 +48,9 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.5.1")
 
     implementation(project(":toggles-core"))
-    implementation("androidx.annotation:annotation:1.2.0-beta01")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
-    implementation("androidx.core:core-ktx:1.5.0-beta01")
+    implementation("androidx.annotation:annotation:1.2.0-rc01")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
+    implementation("androidx.core:core-ktx:1.5.0-beta03")
 }
 
 // The api of this module should be discussed before any potential release

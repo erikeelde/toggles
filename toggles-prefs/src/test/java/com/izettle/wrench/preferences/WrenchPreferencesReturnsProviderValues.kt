@@ -34,6 +34,7 @@ class WrenchPreferencesReturnsProviderValues {
         FIRST, SECOND
     }
 
+
     private lateinit var contentProviderController: ContentProviderController<MockContentProvider>
 
     @Before

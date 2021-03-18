@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import com.izettle.wrench.oss.LicenceMetadata
 import com.izettle.wrench.oss.list.OssLoading
 
-class LicenceMetadataLiveData(val context: Context, val licenceMetadata: LicenceMetadata) : LiveData<String>() {
+class LicenceMetadataLiveData(val context: Context, private val licenceMetadata: LicenceMetadata) : LiveData<String>() {
 
     init {
         run {

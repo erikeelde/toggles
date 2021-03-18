@@ -1,22 +1,13 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("io.gitlab.arturbosch.detekt")
-}
-
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
-}
-
-detekt {
-    autoCorrect = true
 }
 
 android {
     compileSdk = 30
 
     defaultConfig {
-        minSdk = 16
+        minSdk = 21
         targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -62,9 +53,9 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.5.0-beta01")
+    implementation("androidx.core:core-ktx:1.5.0-beta03")
     testImplementation("junit:junit:4.13.2")
-    implementation("androidx.annotation:annotation:1.2.0-beta01")
+    implementation("androidx.annotation:annotation:1.2.0-rc01")
 }
 
 apply(rootProject.file("gradle/gradle-mvn-push.gradle"))
