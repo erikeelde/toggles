@@ -18,7 +18,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
         }
     }
-    lintOptions {
+    lint {
         baselineFile = file("lint-baseline.xml")
         isCheckReleaseBuilds = true
         isAbortOnError = true

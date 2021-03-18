@@ -29,11 +29,19 @@ fun booleanBoltFlow(context: Context, key: String, defaultValue: Boolean = true)
             when {
                 bolt == null -> defaultValue
                 bolt.id == 0L -> {
-                    context.contentResolver.insert(boltUri(), bolt.copy(bolt.id, bolt.type, key, defaultValue.toString()).toContentValues())
+                    context.contentResolver.insert(
+                        boltUri(),
+                        bolt.copy(
+                            id = bolt.id,
+                            type = bolt.type,
+                            key = key,
+                            value = defaultValue.toString()
+                        ).toContentValues()
+                    )
                     defaultValue
                 }
                 bolt.value == null -> defaultValue
-                else -> bolt.value.toBoolean()
+                else -> bolt.value!!.toBoolean()
             }
         }
 
@@ -44,7 +52,15 @@ fun stringBoltFlow(context: Context, key: String, defaultValue: String = ""): Fl
             when {
                 bolt == null -> defaultValue
                 bolt.id == 0L -> {
-                    context.contentResolver.insert(boltUri(), bolt.copy(bolt.id, bolt.type, key, defaultValue).toContentValues())
+                    context.contentResolver.insert(
+                        boltUri(),
+                        bolt.copy(
+                            id = bolt.id,
+                            type = bolt.type,
+                            key = key,
+                            value = defaultValue
+                        ).toContentValues()
+                    )
                     defaultValue
                 }
                 bolt.value == null -> defaultValue
@@ -59,7 +75,15 @@ fun integerBoltFlow(context: Context, key: String, defaultValue: Int = 0): Flow<
             when {
                 bolt == null -> defaultValue
                 bolt.id == 0L -> {
-                    context.contentResolver.insert(boltUri(), bolt.copy(bolt.id, bolt.type, key, defaultValue.toString()).toContentValues())
+                    context.contentResolver.insert(
+                        boltUri(),
+                        bolt.copy(
+                            id = bolt.id,
+                            type = bolt.type,
+                            key = key,
+                            value = defaultValue.toString()
+                        ).toContentValues()
+                    )
                     defaultValue
                 }
                 bolt.value == null -> defaultValue
@@ -68,18 +92,35 @@ fun integerBoltFlow(context: Context, key: String, defaultValue: Int = 0): Flow<
         }
 
 @ExperimentalCoroutinesApi
-fun <T : Enum<T>> enumBoltFlow(context: Context, key: String, type: Class<T>, defaultValue: T): Flow<T> =
+fun <T : Enum<T>> enumBoltFlow(
+    context: Context,
+    key: String,
+    type: Class<T>,
+    defaultValue: T
+): Flow<T> =
     boltFlow(context, Bolt.TYPE.ENUM, key)
         .map { bolt ->
             when {
                 bolt == null -> defaultValue
                 bolt.id == 0L -> {
-                    val uri = context.contentResolver.insert(boltUri(), bolt.copy(bolt.id, bolt.type, key, defaultValue.toString()).toContentValues())
+                    val uri = context.contentResolver.insert(
+                        boltUri(),
+                        bolt.copy(
+                            id = bolt.id,
+                            type = bolt.type,
+                            key = key,
+                            value = defaultValue.toString()
+                        ).toContentValues()
+                    )
                     val configurationId = uri!!.lastPathSegment!!.toLong()
 
                     for (enumConstant in type.enumConstants!!) {
-                        val nut = Nut(configurationId = configurationId, value = enumConstant.toString())
-                        context.contentResolver.insert(TogglesProviderContract.nutUri(), nut.toContentValues())
+                        val nut =
+                            Nut(configurationId = configurationId, value = enumConstant.toString())
+                        context.contentResolver.insert(
+                            TogglesProviderContract.nutUri(),
+                            nut.toContentValues()
+                        )
                     }
                     defaultValue
                 }
@@ -97,7 +138,8 @@ fun boltFlow(context: Context, @BoltType type: String, key: String): Flow<Bolt?>
         }
     }
 
-    val providerInfo = context.packageManager.resolveContentProvider(TogglesProviderContract.TOGGLES_AUTHORITY, 0)
+    val providerInfo =
+        context.packageManager.resolveContentProvider(TogglesProviderContract.TOGGLES_AUTHORITY, 0)
     if (providerInfo != null) {
         context.contentResolver
             .registerContentObserver(boltUri(), true, boltContentObserver)
@@ -112,31 +154,37 @@ fun boltFlow(context: Context, @BoltType type: String, key: String): Flow<Bolt?>
     }
 }
 
-private suspend fun getBolt(contentResolver: ContentResolver, @BoltType type: String, key: String): Bolt? = withContext(Dispatchers.IO) {
-    var cursor: Cursor? = null
-    try {
-        cursor = contentResolver.query(
-            boltUri(key),
-            null,
-            null,
-            null,
-            null
-        )
-        if (cursor == null) {
-            return@withContext null
+private suspend fun getBolt(
+    contentResolver: ContentResolver,
+    @BoltType type: String,
+    key: String
+): Bolt? =
+    withContext(Dispatchers.IO) {
+        var cursor: Cursor? = null
+        try {
+            cursor = contentResolver.query(
+                boltUri(key),
+                null,
+                null,
+                null,
+                null
+            )
+            if (cursor == null) {
+                return@withContext null
+            }
+            if (cursor.moveToFirst()) {
+                return@withContext fromCursor(cursor)
+            }
+        } finally {
+            if (cursor != null && !cursor.isClosed) {
+                cursor.close()
+            }
         }
-        if (cursor.moveToFirst()) {
-            return@withContext fromCursor(cursor)
-        }
-    } finally {
-        if (cursor != null && !cursor.isClosed) {
-            cursor.close()
-        }
+        return@withContext Bolt(0L, type, key, "")
     }
-    return@withContext Bolt(0L, type, key, "")
-}
 
-class BoltContentObserver(handler: Handler?, private val changeCallback: (uri: Uri?) -> Unit) : ContentObserver(handler) {
+class BoltContentObserver(handler: Handler?, private val changeCallback: (uri: Uri?) -> Unit) :
+    ContentObserver(handler) {
     override fun onChange(selfChange: Boolean) {
         this.onChange(selfChange, null)
     }

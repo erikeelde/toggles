@@ -18,7 +18,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
         }
     }
-    lintOptions {
+    lint {
         baselineFile = file("lint-baseline.xml")
         isCheckReleaseBuilds = true
         isAbortOnError = true
@@ -30,6 +30,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+        freeCompilerArgs = listOfNotNull(
+            "-Xopt-in=kotlin.RequiresOptIn"
+        )
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

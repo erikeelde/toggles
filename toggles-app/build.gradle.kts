@@ -111,7 +111,7 @@ android {
 //            applicationIdSuffix = ".debug"
         }
     }
-    lintOptions {
+    lint {
         baselineFile = file("lint-baseline.xml")
         isCheckReleaseBuilds = true
         isAbortOnError = true
