@@ -1,7 +1,6 @@
 package se.eelde.toggles.notification
 
 import android.content.Context
-import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.database.TogglesNotification
 import com.izettle.wrench.database.TogglesNotificationDao
 import com.izettle.wrench.database.WrenchApplication
@@ -12,7 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import se.eelde.toggles.coroutines.booleanBoltFlow
+import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.flow.toggleFlow
 import java.util.Date
 import javax.inject.Inject
 
@@ -21,26 +21,40 @@ class ChangedHelper @Inject constructor(
     private val configurationDao: WrenchConfigurationDao,
     private val togglesNotificationDao: TogglesNotificationDao,
 ) {
+    fun configurationRequested(
+        application: WrenchApplication,
+        toggle: Toggle,
+        scope: CoroutineScope
+    ) = configurationRequested(
+        application,
+        toggle.id,
+        toggle.key,
+        toggle.value,
+        scope,
+    )
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun configurationRequested(
         application: WrenchApplication,
-        bolt: Bolt,
+        toggleId: Long,
+        toggleKey: String,
+        toggleValue: String?,
         scope: CoroutineScope
     ) {
         scope.launch(Dispatchers.IO) {
             val notificationsEnabled =
-                booleanBoltFlow(context, "Enable notifications", false).first()
+                toggleFlow(context, "Enable notifications", false).first()
 
             if (notificationsEnabled) {
-                configurationDao.getWrenchConfigurationById(application.id, bolt.id)
+                configurationDao.getWrenchConfigurationById(application.id, toggleId)
                     ?.let { configuration ->
                         togglesNotificationDao.insert(
                             TogglesNotification(
                                 applicationId = application.id,
                                 applicationPackageName = application.packageName,
                                 configurationId = configuration.id,
-                                configurationKey = bolt.key,
-                                configurationValue = bolt.value!!,
+                                configurationKey = toggleKey,
+                                configurationValue = toggleValue!!,
                                 added = Date(),
                             )
                         )

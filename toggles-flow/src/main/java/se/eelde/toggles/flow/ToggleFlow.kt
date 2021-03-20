@@ -1,4 +1,4 @@
-package se.eelde.toggles.coroutines
+package se.eelde.toggles.flow
 
 import android.content.ContentResolver
 import android.content.Context
@@ -14,100 +14,100 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import se.eelde.toggles.core.Bolt
-import se.eelde.toggles.core.Bolt.BoltType
-import se.eelde.toggles.core.Bolt.Companion.fromCursor
-import se.eelde.toggles.core.Nut
+import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.core.Toggle.ToggleType
+import se.eelde.toggles.core.Toggle.Companion.fromCursor
+import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.core.TogglesProviderContract.boltUri
+import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.showDownloadNotification
 
 @ExperimentalCoroutinesApi
-fun booleanBoltFlow(context: Context, key: String, defaultValue: Boolean = true): Flow<Boolean> =
-    boltFlow(context, Bolt.TYPE.BOOLEAN, key)
-        .map { bolt ->
+fun toggleFlow(context: Context, key: String, defaultValue: Boolean = true): Flow<Boolean> =
+    providerToggleFlow(context, Toggle.TYPE.BOOLEAN, key)
+        .map { toggle ->
             when {
-                bolt == null -> defaultValue
-                bolt.id == 0L -> {
+                toggle == null -> defaultValue
+                toggle.id == 0L -> {
                     context.contentResolver.insert(
-                        boltUri(),
-                        bolt.copy(
-                            id = bolt.id,
-                            type = bolt.type,
+                        toggleUri(),
+                        toggle.copy(
+                            id = toggle.id,
+                            type = toggle.type,
                             key = key,
                             value = defaultValue.toString()
                         ).toContentValues()
                     )
                     defaultValue
                 }
-                bolt.value == null -> defaultValue
-                else -> bolt.value!!.toBoolean()
+                toggle.value == null -> defaultValue
+                else -> toggle.value!!.toBoolean()
             }
         }
 
 @ExperimentalCoroutinesApi
-fun stringBoltFlow(context: Context, key: String, defaultValue: String = ""): Flow<String> =
-    boltFlow(context, Bolt.TYPE.STRING, key)
-        .map { bolt ->
+fun toggleFlow(context: Context, key: String, defaultValue: String = ""): Flow<String> =
+    providerToggleFlow(context, Toggle.TYPE.STRING, key)
+        .map { toggle ->
             when {
-                bolt == null -> defaultValue
-                bolt.id == 0L -> {
+                toggle == null -> defaultValue
+                toggle.id == 0L -> {
                     context.contentResolver.insert(
-                        boltUri(),
-                        bolt.copy(
-                            id = bolt.id,
-                            type = bolt.type,
+                        toggleUri(),
+                        toggle.copy(
+                            id = toggle.id,
+                            type = toggle.type,
                             key = key,
                             value = defaultValue
                         ).toContentValues()
                     )
                     defaultValue
                 }
-                bolt.value == null -> defaultValue
-                else -> bolt.value!!
+                toggle.value == null -> defaultValue
+                else -> toggle.value!!
             }
         }
 
 @ExperimentalCoroutinesApi
-fun integerBoltFlow(context: Context, key: String, defaultValue: Int = 0): Flow<Int> =
-    boltFlow(context, Bolt.TYPE.INTEGER, key)
-        .map { bolt ->
+fun toggleFlow(context: Context, key: String, defaultValue: Int = 0): Flow<Int> =
+    providerToggleFlow(context, Toggle.TYPE.INTEGER, key)
+        .map { toggle ->
             when {
-                bolt == null -> defaultValue
-                bolt.id == 0L -> {
+                toggle == null -> defaultValue
+                toggle.id == 0L -> {
                     context.contentResolver.insert(
-                        boltUri(),
-                        bolt.copy(
-                            id = bolt.id,
-                            type = bolt.type,
+                        toggleUri(),
+                        toggle.copy(
+                            id = toggle.id,
+                            type = toggle.type,
                             key = key,
                             value = defaultValue.toString()
                         ).toContentValues()
                     )
                     defaultValue
                 }
-                bolt.value == null -> defaultValue
-                else -> bolt.value!!.toInt()
+                toggle.value == null -> defaultValue
+                else -> toggle.value!!.toInt()
             }
         }
 
 @ExperimentalCoroutinesApi
-fun <T : Enum<T>> enumBoltFlow(
+fun <T : Enum<T>> toggleFlow(
     context: Context,
     key: String,
     type: Class<T>,
     defaultValue: T
 ): Flow<T> =
-    boltFlow(context, Bolt.TYPE.ENUM, key)
-        .map { bolt ->
+    providerToggleFlow(context, Toggle.TYPE.ENUM, key)
+        .map { toggle ->
             when {
-                bolt == null -> defaultValue
-                bolt.id == 0L -> {
+                toggle == null -> defaultValue
+                toggle.id == 0L -> {
                     val uri = context.contentResolver.insert(
-                        boltUri(),
-                        bolt.copy(
-                            id = bolt.id,
-                            type = bolt.type,
+                        toggleUri(),
+                        toggle.copy(
+                            id = toggle.id,
+                            type = toggle.type,
                             key = key,
                             value = defaultValue.toString()
                         ).toContentValues()
@@ -115,26 +115,26 @@ fun <T : Enum<T>> enumBoltFlow(
                     val configurationId = uri!!.lastPathSegment!!.toLong()
 
                     for (enumConstant in type.enumConstants!!) {
-                        val nut =
-                            Nut(configurationId = configurationId, value = enumConstant.toString())
+                        val toggleValue =
+                            ToggleValue(configurationId = configurationId, value = enumConstant.toString())
                         context.contentResolver.insert(
-                            TogglesProviderContract.nutUri(),
-                            nut.toContentValues()
+                            TogglesProviderContract.toggleValueUri(),
+                            toggleValue.toContentValues()
                         )
                     }
                     defaultValue
                 }
-                bolt.value == null -> defaultValue
-                else -> java.lang.Enum.valueOf(type, bolt.value!!)
+                toggle.value == null -> defaultValue
+                else -> java.lang.Enum.valueOf(type, toggle.value!!)
             }
         }
 
 @ExperimentalCoroutinesApi
-fun boltFlow(context: Context, @BoltType type: String, key: String): Flow<Bolt?> = callbackFlow {
+private fun providerToggleFlow(context: Context, @ToggleType type: String, key: String): Flow<Toggle?> = callbackFlow {
 
-    val boltContentObserver = BoltContentObserver(null) {
+    val toggleContentObserver = ToggleContentObserver(null) {
         launch {
-            offer(getBolt(context.contentResolver, type, key))
+            offer(getToggle(context.contentResolver, type, key))
         }
     }
 
@@ -142,28 +142,28 @@ fun boltFlow(context: Context, @BoltType type: String, key: String): Flow<Bolt?>
         context.packageManager.resolveContentProvider(TogglesProviderContract.TOGGLES_AUTHORITY, 0)
     if (providerInfo != null) {
         context.contentResolver
-            .registerContentObserver(boltUri(), true, boltContentObserver)
+            .registerContentObserver(toggleUri(), true, toggleContentObserver)
     } else {
         showDownloadNotification(context = context)
     }
 
-    offer(getBolt(context.contentResolver, type, key))
+    offer(getToggle(context.contentResolver, type, key))
 
     awaitClose {
-        context.contentResolver.unregisterContentObserver(boltContentObserver)
+        context.contentResolver.unregisterContentObserver(toggleContentObserver)
     }
 }
 
-private suspend fun getBolt(
+private suspend fun getToggle(
     contentResolver: ContentResolver,
-    @BoltType type: String,
+    @ToggleType type: String,
     key: String
-): Bolt? =
+): Toggle? =
     withContext(Dispatchers.IO) {
         var cursor: Cursor? = null
         try {
             cursor = contentResolver.query(
-                boltUri(key),
+                toggleUri(key),
                 null,
                 null,
                 null,
@@ -180,10 +180,10 @@ private suspend fun getBolt(
                 cursor.close()
             }
         }
-        return@withContext Bolt(0L, type, key, "")
+        return@withContext Toggle(0L, type, key, "")
     }
 
-class BoltContentObserver(handler: Handler?, private val changeCallback: (uri: Uri?) -> Unit) :
+class ToggleContentObserver(handler: Handler?, private val changeCallback: (uri: Uri?) -> Unit) :
     ContentObserver(handler) {
     override fun onChange(selfChange: Boolean) {
         this.onChange(selfChange, null)

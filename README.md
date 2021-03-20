@@ -13,10 +13,10 @@ Stores settings / toggles behind a content provider.
 
 This is a development tools meant to facilitate feature switching in an external app so that configurations will be retained across clear data / uninstalls.
 
-2 premade libraries to talk to the toggles application. "Prefs" and "Coroutines":
+2 premade libraries to talk to the toggles application. "Prefs" and "Flow":
 
-## Toggles-coroutines library
-Exposes switches from toggles using a kotlin stream.
+## Toggles-flow library
+Exposes switches from toggles using a kotlin flow.
 
 ## Toggles-prefs library
 One-shot fetch of a toggle. Similar API as androids SharedPreferences.

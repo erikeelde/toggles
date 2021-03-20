@@ -1,4 +1,4 @@
-package se.eelde.toggles.coroutines
+package se.eelde.toggles.flow
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

@@ -5,7 +5,6 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.database.WrenchDatabase
 import com.izettle.wrench.database.migrations.Migrations.MIGRATION_1_2
 import com.izettle.wrench.database.migrations.Migrations.MIGRATION_2_3
@@ -17,6 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import se.eelde.toggles.core.Toggle
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
@@ -53,10 +53,10 @@ class MigrationTests {
         val testApplicationId = DatabaseHelper.insertWrenchApplication(originalDb, "TestApplication", "com.izettle.wrench.testapplication")
 
         // insert data
-        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Integerkey", Bolt.TYPE.INTEGER)
-        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Stringkey", Bolt.TYPE.STRING)
-        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Booleankey", Bolt.TYPE.BOOLEAN)
-        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Enumkey", Bolt.TYPE.ENUM)
+        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Integerkey", Toggle.TYPE.INTEGER)
+        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Stringkey", Toggle.TYPE.STRING)
+        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Booleankey", Toggle.TYPE.BOOLEAN)
+        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Enumkey", Toggle.TYPE.ENUM)
 
         originalDb.close()
 
@@ -64,22 +64,22 @@ class MigrationTests {
 
         var cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Integerkey")
         assertTrue(cursor.moveToFirst())
-        assertEquals(Bolt.TYPE.INTEGER, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
+        assertEquals(Toggle.TYPE.INTEGER, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
         cursor.close()
 
         cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Stringkey")
         assertTrue(cursor.moveToFirst())
-        assertEquals(Bolt.TYPE.STRING, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
+        assertEquals(Toggle.TYPE.STRING, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
         cursor.close()
 
         cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Booleankey")
         assertTrue(cursor.moveToFirst())
-        assertEquals(Bolt.TYPE.BOOLEAN, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
+        assertEquals(Toggle.TYPE.BOOLEAN, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
         cursor.close()
 
         cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Enumkey")
         assertTrue(cursor.moveToFirst())
-        assertEquals(Bolt.TYPE.ENUM, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
+        assertEquals(Toggle.TYPE.ENUM, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
         cursor.close()
     }
 

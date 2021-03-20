@@ -3,8 +3,8 @@ package com.izettle.wrench.preferences
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import se.eelde.toggles.core.Bolt
-import se.eelde.toggles.core.Nut
+import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.core.showDownloadNotification
 
@@ -19,13 +19,13 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
     private val context = context.applicationContext
     private val contentResolver: ContentResolver = context.contentResolver
 
-    private fun insertNut(contentResolver: ContentResolver, nut: Nut) {
-        contentResolver.insert(TogglesProviderContract.nutUri(), nut.toContentValues())
+    private fun insertToggleValue(contentResolver: ContentResolver, toggleValue: ToggleValue) {
+        contentResolver.insert(TogglesProviderContract.toggleValueUri(), toggleValue.toContentValues())
     }
 
     @Suppress("ReturnCount")
-    private fun getBolt(contentResolver: ContentResolver, @Bolt.BoltType boltType: String, key: String): Bolt? {
-        val cursor = contentResolver.query(TogglesProviderContract.boltUri(key), null, null, null, null)
+    private fun getToggle(contentResolver: ContentResolver, @Toggle.ToggleType toggleType: String, key: String): Toggle? {
+        val cursor = contentResolver.query(TogglesProviderContract.toggleUri(key), null, null, null, null)
         cursor.use {
             if (cursor == null) {
                 showDownloadNotification(context = context)
@@ -33,68 +33,68 @@ class TogglesPreferences(context: Context) : ITogglesPreferences {
             }
 
             if (cursor.moveToFirst()) {
-                return Bolt.fromCursor(cursor)
+                return Toggle.fromCursor(cursor)
             }
         }
 
-        return Bolt(0, boltType, key, null)
+        return Toggle(0, toggleType, key, null)
     }
 
-    private fun insertBolt(contentResolver: ContentResolver, bolt: Bolt): Uri? {
-        return contentResolver.insert(TogglesProviderContract.boltUri(), bolt.toContentValues())
+    private fun insertToggle(contentResolver: ContentResolver, toggle: Toggle): Uri? {
+        return contentResolver.insert(TogglesProviderContract.toggleUri(), toggle.toContentValues())
     }
 
     override fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defValue: T): T {
-        var bolt = getBolt(contentResolver = contentResolver, boltType = Bolt.TYPE.ENUM, key = key)
+        var toggle = getToggle(contentResolver = contentResolver, toggleType = Toggle.TYPE.ENUM, key = key)
             ?: return defValue
 
-        if (bolt.id == 0L) {
-            bolt = bolt.copy(id = bolt.id, key = key, type = Bolt.TYPE.ENUM, value = defValue.toString())
-            val uri = insertBolt(contentResolver, bolt)
-            bolt.id = uri!!.lastPathSegment!!.toLong()
+        if (toggle.id == 0L) {
+            toggle = toggle.copy(id = toggle.id, key = key, type = Toggle.TYPE.ENUM, value = defValue.toString())
+            val uri = insertToggle(contentResolver, toggle)
+            toggle.id = uri!!.lastPathSegment!!.toLong()
 
             for (enumConstant in type.enumConstants!!) {
-                insertNut(contentResolver = contentResolver, nut = Nut(configurationId = bolt.id, value = enumConstant.toString()))
+                insertToggleValue(contentResolver = contentResolver, toggleValue = ToggleValue(configurationId = toggle.id, value = enumConstant.toString()))
             }
         }
 
-        return java.lang.Enum.valueOf(type, bolt.value!!)
+        return java.lang.Enum.valueOf(type, toggle.value!!)
     }
 
     override fun getString(key: String, defValue: String?): String? {
 
-        var bolt = getBolt(contentResolver = contentResolver, boltType = Bolt.TYPE.STRING, key = key)
+        var toggle = getToggle(contentResolver = contentResolver, toggleType = Toggle.TYPE.STRING, key = key)
             ?: return defValue
 
-        if (bolt.id == 0L) {
-            bolt = bolt.copy(id = bolt.id, key = key, type = Bolt.TYPE.STRING, value = defValue)
-            insertBolt(contentResolver, bolt)
+        if (toggle.id == 0L) {
+            toggle = toggle.copy(id = toggle.id, key = key, type = Toggle.TYPE.STRING, value = defValue)
+            insertToggle(contentResolver, toggle)
         }
 
-        return bolt.value
+        return toggle.value
     }
 
     override fun getBoolean(key: String, defValue: Boolean): Boolean {
-        var bolt = getBolt(contentResolver = contentResolver, boltType = Bolt.TYPE.BOOLEAN, key = key)
+        var toggle = getToggle(contentResolver = contentResolver, toggleType = Toggle.TYPE.BOOLEAN, key = key)
             ?: return defValue
 
-        if (bolt.id == 0L) {
-            bolt = bolt.copy(id = bolt.id, key = key, type = Bolt.TYPE.BOOLEAN, value = defValue.toString())
-            insertBolt(contentResolver, bolt)
+        if (toggle.id == 0L) {
+            toggle = toggle.copy(id = toggle.id, key = key, type = Toggle.TYPE.BOOLEAN, value = defValue.toString())
+            insertToggle(contentResolver, toggle)
         }
 
-        return bolt.value!!.toBoolean()
+        return toggle.value!!.toBoolean()
     }
 
     override fun getInt(key: String, defValue: Int): Int {
-        var bolt = getBolt(contentResolver = contentResolver, boltType = Bolt.TYPE.INTEGER, key = key)
+        var toggle = getToggle(contentResolver = contentResolver, toggleType = Toggle.TYPE.INTEGER, key = key)
             ?: return defValue
 
-        if (bolt.id == 0L) {
-            bolt = bolt.copy(id = bolt.id, key = key, type = Bolt.TYPE.INTEGER, value = defValue.toString())
-            insertBolt(contentResolver, bolt)
+        if (toggle.id == 0L) {
+            toggle = toggle.copy(id = toggle.id, key = key, type = Toggle.TYPE.INTEGER, value = defValue.toString())
+            insertToggle(contentResolver, toggle)
         }
 
-        return bolt.value!!.toInt()
+        return toggle.value!!.toInt()
     }
 }

@@ -134,6 +134,7 @@ kapt {
 }
 
 dependencies {
+    implementation(project(":toggles-flow"))
     val composeVersion: String by rootProject.extra
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
@@ -201,7 +202,7 @@ dependencies {
     implementation("com.izettle.wrench:wrench-core:0.3")
     implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
-    implementation(project(":toggles-coroutines"))
+    implementation(project(":toggles-flow"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 

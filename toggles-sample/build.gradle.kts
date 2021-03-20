@@ -83,7 +83,7 @@ dependencies {
 
     implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
-    implementation(project(":toggles-coroutines"))
+    implementation(project(":toggles-flow"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 
