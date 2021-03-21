@@ -55,7 +55,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.5.0-beta03")
+    implementation("androidx.core:core-ktx:1.3.2")
     testImplementation("junit:junit:4.13.2")
-    implementation("androidx.annotation:annotation:1.2.0-rc01")
+    implementation("androidx.annotation:annotation:1.1.0")
 }

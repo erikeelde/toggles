@@ -50,6 +50,6 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.5.1")
 
     implementation(project(":toggles-core"))
-    implementation("androidx.annotation:annotation:1.2.0-rc01")
-    implementation("androidx.core:core-ktx:1.5.0-beta03")
+    implementation("androidx.annotation:annotation:1.1.0")
+    implementation("androidx.core:core-ktx:1.3.2")
 }
