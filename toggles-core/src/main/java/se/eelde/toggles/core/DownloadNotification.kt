@@ -15,8 +15,6 @@ import androidx.core.app.NotificationManagerCompat
 private const val CHANNEL_ID = "Download toggles channel"
 
 private fun createNotificationChannel(context: Context) {
-    // Create the NotificationChannel, but only on API 26+ because
-    // the NotificationChannel class is new and not in the support library
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val name = context.getString(R.string.download_toggles_notification_channel)
         val descriptionText =

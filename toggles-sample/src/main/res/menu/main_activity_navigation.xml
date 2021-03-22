@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_wrench_prefs"
-        android:icon="@drawable/ic_wrench_prefs_24dp"
-        android:title="@string/nav_menu_wrench_preferences" />
+        android:icon="@drawable/ic_prefs_24"
+        android:title="@string/nav_menu_toggles_prefs" />
     <item
         android:id="@+id/action_live_data"
-        android:icon="@drawable/ic_live_data_24dp"
-        android:title="@string/nav_menu_wrench_prefs_live_data" />
+        android:icon="@drawable/ic_flow_24"
+        android:title="@string/nav_menu_toggles_flow" />
     <item
         android:id="@+id/action_oss"
         android:icon="@drawable/ic_oss"

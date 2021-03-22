@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ContentProviderController
 import org.robolectric.annotation.Config
-import se.eelde.toggles.core.Bolt
+import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.ColumnNames
 import se.eelde.toggles.core.TogglesProviderContract
 
@@ -48,7 +48,7 @@ class WrenchPreferencesReturnsProviderValues {
 
     @Test
     fun `return provider enum when available`() {
-        assertEquals(0, contentProviderController.get().bolts.size)
+        assertEquals(0, contentProviderController.get().toggles.size)
 
         assertEquals(TestEnum.FIRST, wrenchPreferences.getEnum(key, TestEnum::class.java, TestEnum.FIRST))
         assertEquals(TestEnum.FIRST, wrenchPreferences.getEnum(key, TestEnum::class.java, TestEnum.SECOND))
@@ -56,7 +56,7 @@ class WrenchPreferencesReturnsProviderValues {
 
     @Test
     fun `return provider string when available`() {
-        assertEquals(0, contentProviderController.get().bolts.size)
+        assertEquals(0, contentProviderController.get().toggles.size)
 
         assertEquals("first", wrenchPreferences.getString(key, "first"))
         assertEquals("first", wrenchPreferences.getString(key, "second"))
@@ -64,7 +64,7 @@ class WrenchPreferencesReturnsProviderValues {
 
     @Test
     fun `return provider boolean when available`() {
-        assertEquals(0, contentProviderController.get().bolts.size)
+        assertEquals(0, contentProviderController.get().toggles.size)
 
         assertEquals(true, wrenchPreferences.getBoolean(key, true))
         assertEquals(true, wrenchPreferences.getBoolean(key, false))
@@ -72,7 +72,7 @@ class WrenchPreferencesReturnsProviderValues {
 
     @Test
     fun `return provider int when available`() {
-        assertEquals(0, contentProviderController.get().bolts.size)
+        assertEquals(0, contentProviderController.get().toggles.size)
 
         assertEquals(1, wrenchPreferences.getInt(key, 1))
         assertEquals(1, wrenchPreferences.getInt(key, 2))
@@ -96,8 +96,8 @@ class MockContentProvider : ContentProvider() {
         }
     }
 
-    val bolts: MutableMap<String, Bolt> = mutableMapOf()
-    private val nuts: MutableList<String> = mutableListOf()
+    val toggles: MutableMap<String, Toggle> = mutableMapOf()
+    private val toggleValues: MutableList<String> = mutableListOf()
 
     override fun onCreate(): Boolean {
         return true
@@ -109,17 +109,17 @@ class MockContentProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<String>?,
         sortOrder: String?
-    ): Cursor? {
+    ): Cursor {
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATION_ID -> {
-                throw IllegalArgumentException("bolt exists")
+                throw IllegalArgumentException("toggle exists")
             }
             CURRENT_CONFIGURATION_KEY -> {
-                val cursor = MatrixCursor(arrayOf(ColumnNames.Bolt.COL_ID, ColumnNames.Bolt.COL_KEY, ColumnNames.Bolt.COL_TYPE, ColumnNames.Bolt.COL_VALUE))
+                val cursor = MatrixCursor(arrayOf(ColumnNames.Toggle.COL_ID, ColumnNames.Toggle.COL_KEY, ColumnNames.Toggle.COL_TYPE, ColumnNames.Toggle.COL_VALUE))
 
                 uri.lastPathSegment?.let { key ->
-                    bolts[key]?.let { bolt ->
-                        cursor.addRow(arrayOf(bolt.id, bolt.key, bolt.type, bolt.value))
+                    toggles[key]?.let { toggle ->
+                        cursor.addRow(arrayOf(toggle.id, toggle.key, toggle.type, toggle.value))
                     }
                 }
 
@@ -135,17 +135,17 @@ class MockContentProvider : ContentProvider() {
         val insertId: Long
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATIONS -> {
-                val bolt = Bolt.fromContentValues(values!!)
-                if (bolts.containsKey(bolt.key)) {
-                    throw IllegalArgumentException("bolt exists")
+                val toggle = Toggle.fromContentValues(values!!)
+                if (toggles.containsKey(toggle.key)) {
+                    throw IllegalArgumentException("toggle exists")
                 }
-                bolts[bolt.key] = bolt
-                insertId = bolts.size.toLong()
-                bolt.id = insertId
+                toggles[toggle.key] = toggle
+                insertId = toggles.size.toLong()
+                toggle.id = insertId
             }
             PREDEFINED_CONFIGURATION_VALUES -> {
-                nuts.add(values!!.getAsString(ColumnNames.Nut.COL_VALUE))
-                insertId = nuts.size.toLong()
+                toggleValues.add(values!!.getAsString(ColumnNames.ToggleValue.COL_VALUE))
+                insertId = toggleValues.size.toLong()
             }
             else -> {
                 throw UnsupportedOperationException("Not yet implemented $uri")

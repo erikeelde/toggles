@@ -9,7 +9,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.os.Binder
-import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.database.TogglesNotificationDao
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchApplicationDao
@@ -33,6 +32,7 @@ import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
 import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
+import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.notification.ChangedHelper
 import java.util.Date
@@ -137,7 +137,7 @@ class TogglesProvider : ContentProvider() {
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATION_ID -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                cursor = configurationDao.getBolt(
+                cursor = configurationDao.getToggle(
                     java.lang.Long.valueOf(uri.lastPathSegment!!),
                     scope!!.id
                 )
@@ -146,20 +146,20 @@ class TogglesProvider : ContentProvider() {
                     cursor.close()
 
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getBolt(
+                    cursor = configurationDao.getToggle(
                         java.lang.Long.valueOf(uri.lastPathSegment!!),
                         defaultScope!!.id
                     )
                 }
 
                 if (cursor.moveToFirst()) {
-                    val bolt = Bolt.fromCursor(cursor)
+                    val toggle = Toggle.fromCursor(cursor)
                     cursor.moveToPrevious()
                     if (!isTogglesApplication(callingApplication)) {
                         context?.apply {
                             changedHelper.configurationRequested(
                                 callingApplication,
-                                bolt,
+                                toggle,
                                 GlobalScope
                             )
                         }
@@ -168,23 +168,23 @@ class TogglesProvider : ContentProvider() {
             }
             CURRENT_CONFIGURATION_KEY -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                cursor = configurationDao.getBolt(uri.lastPathSegment!!, scope!!.id)
+                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
 
                 if (cursor.count == 0) {
                     cursor.close()
 
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getBolt(uri.lastPathSegment!!, defaultScope!!.id)
+                    cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
                 }
 
                 if (cursor.moveToFirst()) {
-                    val bolt = Bolt.fromCursor(cursor)
+                    val toggle = Toggle.fromCursor(cursor)
                     cursor.moveToPrevious()
                     if (!isTogglesApplication(callingApplication)) {
                         context?.apply {
                             changedHelper.configurationRequested(
                                 callingApplication,
-                                bolt,
+                                toggle,
                                 GlobalScope
                             )
                         }
@@ -218,14 +218,14 @@ class TogglesProvider : ContentProvider() {
         val insertId: Long
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATIONS -> {
-                val bolt = Bolt.fromContentValues(values!!)
+                val toggle = Toggle.fromContentValues(values!!)
 
                 var wrenchConfiguration: WrenchConfiguration? =
-                    configurationDao.getWrenchConfiguration(callingApplication.id, bolt.key)
+                    configurationDao.getWrenchConfiguration(callingApplication.id, toggle.key)
 
                 if (wrenchConfiguration == null) {
                     wrenchConfiguration =
-                        WrenchConfiguration(0, callingApplication.id, bolt.key, bolt.type)
+                        WrenchConfiguration(0, callingApplication.id, toggle.key, toggle.type)
 
                     wrenchConfiguration.id = configurationDao.insert(wrenchConfiguration)
                 }
@@ -235,11 +235,11 @@ class TogglesProvider : ContentProvider() {
                 val wrenchConfigurationValue = WrenchConfigurationValue(
                     0,
                     wrenchConfiguration.id,
-                    bolt.value,
+                    toggle.value,
                     defaultScope!!.id
                 )
                 wrenchConfigurationValue.configurationId = wrenchConfiguration.id
-                wrenchConfigurationValue.value = bolt.value
+                wrenchConfigurationValue.value = toggle.value
                 wrenchConfigurationValue.scope = defaultScope.id
 
                 try {
@@ -291,18 +291,18 @@ class TogglesProvider : ContentProvider() {
         val updatedRows: Int
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATION_ID -> {
-                val bolt = Bolt.fromContentValues(values!!)
+                val toggle = Toggle.fromContentValues(values!!)
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
                 updatedRows = configurationValueDao.updateConfigurationValueSync(
                     java.lang.Long.parseLong(uri.lastPathSegment!!),
                     scope!!.id,
-                    bolt.value!!
+                    toggle.value!!
                 )
                 if (updatedRows == 0) {
                     val wrenchConfigurationValue = WrenchConfigurationValue(
                         0,
                         java.lang.Long.parseLong(uri.lastPathSegment!!),
-                        bolt.value,
+                        toggle.value,
                         scope.id
                     )
                     configurationValueDao.insertSync(wrenchConfigurationValue)

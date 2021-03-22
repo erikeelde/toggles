@@ -118,7 +118,7 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
             }
             configurationDao.touch(configurationId, Date())
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
         }
     }
 
@@ -128,7 +128,7 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
                 configurationValueDao.delete(it)
 
                 application.contentResolver.notifyUpdate(
-                    TogglesProviderContract.boltUri(
+                    TogglesProviderContract.toggleUri(
                         configurationId
                     )
                 )

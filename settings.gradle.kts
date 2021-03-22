@@ -3,7 +3,7 @@ rootProject.name = "Toggles"
 include(
     ":toggles-app",
     ":toggles-core",
-    ":toggles-coroutines",
+    ":toggles-flow",
     ":toggles-prefs",
     ":toggles-sample"
 )

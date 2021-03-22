@@ -25,7 +25,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchConfigurationWithValues
 import com.izettle.wrench.dialogs.scope.ScopeFragment
@@ -35,7 +34,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import se.eelde.toggles.R
-import se.eelde.toggles.coroutines.booleanBoltFlow
+import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.flow.toggleFlow
 import se.eelde.toggles.databinding.FragmentConfigurationsBinding
 import se.eelde.toggles.viewLifecycle
 
@@ -264,11 +264,11 @@ class ConfigurationsFragment :
         if (TextUtils.equals(
                 String::class.java.name,
                 configuration.type
-            ) || TextUtils.equals(Bolt.TYPE.STRING, configuration.type)
+            ) || TextUtils.equals(Toggle.TYPE.STRING, configuration.type)
         ) {
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                booleanBoltFlow(
+                toggleFlow(
                     requireContext(),
                     "Use autocomplete in String configurations",
                     false
@@ -296,7 +296,7 @@ class ConfigurationsFragment :
                 }
             }
         } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(
-                Bolt.TYPE.INTEGER,
+                Toggle.TYPE.INTEGER,
                 configuration.type
             )
         ) {
@@ -310,7 +310,7 @@ class ConfigurationsFragment :
         } else if (TextUtils.equals(
                 Boolean::class.java.name,
                 configuration.type
-            ) || TextUtils.equals(Bolt.TYPE.BOOLEAN, configuration.type)
+            ) || TextUtils.equals(Toggle.TYPE.BOOLEAN, configuration.type)
         ) {
             v.findNavController().navigate(
                 ConfigurationsFragmentDirections.actionConfigurationsFragmentToBooleanValueFragment(
@@ -319,7 +319,7 @@ class ConfigurationsFragment :
                 )
             )
         } else if (TextUtils.equals(Enum::class.java.name, configuration.type) || TextUtils.equals(
-                Bolt.TYPE.ENUM,
+                Toggle.TYPE.ENUM,
                 configuration.type
             )
         ) {

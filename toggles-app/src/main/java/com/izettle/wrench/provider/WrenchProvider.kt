@@ -143,7 +143,7 @@ class WrenchProvider : ContentProvider() {
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATION_ID -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                cursor = configurationDao.getBolt(
+                cursor = configurationDao.getToggle(
                     java.lang.Long.valueOf(uri.lastPathSegment!!),
                     scope!!.id
                 )
@@ -152,7 +152,7 @@ class WrenchProvider : ContentProvider() {
                     cursor.close()
 
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getBolt(
+                    cursor = configurationDao.getToggle(
                         java.lang.Long.valueOf(uri.lastPathSegment!!),
                         defaultScope!!.id
                     )
@@ -164,21 +164,23 @@ class WrenchProvider : ContentProvider() {
                     context?.apply {
                         changedHelper.configurationRequested(
                             callingApplication,
-                            bolt,
-                            GlobalScope
+                            bolt.id,
+                            bolt.key,
+                            bolt.value,
+                            GlobalScope,
                         )
                     }
                 }
             }
             CURRENT_CONFIGURATION_KEY -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                cursor = configurationDao.getBolt(uri.lastPathSegment!!, scope!!.id)
+                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
 
                 if (cursor.count == 0) {
                     cursor.close()
 
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getBolt(uri.lastPathSegment!!, defaultScope!!.id)
+                    cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
                 }
 
                 if (cursor.moveToFirst()) {
@@ -187,8 +189,10 @@ class WrenchProvider : ContentProvider() {
                     context?.apply {
                         changedHelper.configurationRequested(
                             callingApplication,
-                            bolt,
-                            GlobalScope
+                            bolt.id,
+                            bolt.key,
+                            bolt.value,
+                            GlobalScope,
                         )
                     }
                 }

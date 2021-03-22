@@ -28,7 +28,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.coroutines.integerBoltFlow
+import se.eelde.toggles.flow.toggleFlow
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
@@ -43,7 +43,7 @@ class NotificationWorker @AssistedInject constructor(
 
         @OptIn(ExperimentalCoroutinesApi::class)
         suspend fun scheduleNotification(context: Context) {
-            val notificationDebounce = integerBoltFlow(context, "Toggle request debounce timeout (milliseconds)", DEFAULT_NOTIFICATION_DEBOUNCE).first()
+            val notificationDebounce = toggleFlow(context, "Toggle request debounce timeout (milliseconds)", DEFAULT_NOTIFICATION_DEBOUNCE).first()
             val notificationWorker: OneTimeWorkRequest =
                 OneTimeWorkRequestBuilder<NotificationWorker>()
                     .setInitialDelay(notificationDebounce.toLong(), TimeUnit.MILLISECONDS)

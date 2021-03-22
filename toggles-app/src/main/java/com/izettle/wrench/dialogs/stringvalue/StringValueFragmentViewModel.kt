@@ -119,7 +119,7 @@ class FragmentStringValueViewModel
             }
             configurationDao.touch(configurationId, Date())
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
         }
     }
 
@@ -129,7 +129,7 @@ class FragmentStringValueViewModel
                 configurationValueDao.delete(it)
 
                 application.contentResolver.notifyUpdate(
-                    TogglesProviderContract.boltUri(
+                    TogglesProviderContract.toggleUri(
                         configurationId
                     )
                 )

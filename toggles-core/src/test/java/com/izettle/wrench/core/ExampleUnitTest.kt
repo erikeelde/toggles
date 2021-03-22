@@ -1,4 +1,4 @@
-package se.eelde.toggles.coroutines
+package com.izettle.wrench.core
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

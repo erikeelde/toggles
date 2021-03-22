@@ -3,6 +3,8 @@ plugins {
     kotlin("android")
 }
 
+apply(plugin = "com.vanniktech.maven.publish")
+
 android {
     compileSdk = 30
 
@@ -18,7 +20,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
         }
     }
-    lintOptions {
+    lint {
         baselineFile = file("lint-baseline.xml")
         isCheckReleaseBuilds = true
         isAbortOnError = true
@@ -30,6 +32,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+        freeCompilerArgs = listOfNotNull(
+            "-Xopt-in=kotlin.RequiresOptIn"
+        )
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -48,10 +53,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.5.1")
 
     implementation(project(":toggles-core"))
-    implementation("androidx.annotation:annotation:1.2.0-rc01")
+    implementation("androidx.annotation:annotation:1.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
-    implementation("androidx.core:core-ktx:1.5.0-beta03")
+    implementation("androidx.core:core-ktx:1.3.2")
 }
-
-// The api of this module should be discussed before any potential release
-// apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

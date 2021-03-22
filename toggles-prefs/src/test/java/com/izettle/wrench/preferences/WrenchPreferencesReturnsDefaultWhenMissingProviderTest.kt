@@ -29,7 +29,7 @@ class WrenchPreferencesReturnsDefaultWhenMissingProviderTest {
         val applicationContext = ApplicationProvider.getApplicationContext<Application>()
         wrenchPreferences = TogglesPreferences(applicationContext)
 
-        val query = applicationContext.contentResolver.query(TogglesProviderContract.boltUri(""), null, null, null, null)
+        val query = applicationContext.contentResolver.query(TogglesProviderContract.toggleUri(""), null, null, null, null)
         Assert.assertNull(query)
     }
 

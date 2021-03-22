@@ -67,7 +67,7 @@ class FragmentEnumValueViewModel @Inject internal constructor(
                         _state.value = reduce(viewState.value!!, PartialViewState.Saving)
                         updateConfigurationValue(viewAction.value).join()
                         application.contentResolver.notifyUpdate(
-                            TogglesProviderContract.boltUri(
+                            TogglesProviderContract.toggleUri(
                                 configurationId
                             )
                         )
@@ -78,7 +78,7 @@ class FragmentEnumValueViewModel @Inject internal constructor(
                         _state.value = reduce(viewState.value!!, PartialViewState.Reverting)
                         deleteConfigurationValue().join()
                         application.contentResolver.notifyInsert(
-                            TogglesProviderContract.boltUri(
+                            TogglesProviderContract.toggleUri(
                                 configurationId
                             )
                         )
@@ -139,7 +139,7 @@ class FragmentEnumValueViewModel @Inject internal constructor(
             }
             configurationDao.touch(configurationId, Date())
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
         }
     }
 
@@ -147,7 +147,7 @@ class FragmentEnumValueViewModel @Inject internal constructor(
         viewModelScope.launch(Dispatchers.IO) {
             configurationValueDao.delete(selectedConfigurationValue!!)
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
         }
     }
 }

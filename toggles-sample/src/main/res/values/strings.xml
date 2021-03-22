@@ -6,7 +6,7 @@
     <string name="int_configuration">int configuration:</string>
     <string name="enum_configuration">enum configuration:</string>
 
-    <string name="nav_menu_wrench_prefs_live_data">Live data</string>
-    <string name="nav_menu_wrench_preferences">Prefs</string>
+    <string name="nav_menu_toggles_flow">Flow</string>
+    <string name="nav_menu_toggles_prefs">Prefs</string>
     <string name="oss">oss</string>
 </resources>

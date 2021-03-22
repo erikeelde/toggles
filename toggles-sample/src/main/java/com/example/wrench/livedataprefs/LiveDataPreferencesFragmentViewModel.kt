@@ -9,10 +9,7 @@ import com.example.wrench.MyEnum
 import com.example.wrench.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import se.eelde.toggles.coroutines.booleanBoltFlow
-import se.eelde.toggles.coroutines.enumBoltFlow
-import se.eelde.toggles.coroutines.integerBoltFlow
-import se.eelde.toggles.coroutines.stringBoltFlow
+import se.eelde.toggles.flow.toggleFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +17,7 @@ class LiveDataPreferencesFragmentViewModel @Inject constructor(private val appli
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val stringConfig by lazy {
-        stringBoltFlow(application, application.resources.getString(R.string.string_configuration), "string1").asLiveData(viewModelScope.coroutineContext)
+        toggleFlow(application, application.resources.getString(R.string.string_configuration), "string1").asLiveData(viewModelScope.coroutineContext)
     }
 
     fun getStringConfiguration(): LiveData<String> {
@@ -29,7 +26,7 @@ class LiveDataPreferencesFragmentViewModel @Inject constructor(private val appli
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val intConfig by lazy {
-        integerBoltFlow(application, application.resources.getString(R.string.int_configuration), 1).asLiveData(viewModelScope.coroutineContext)
+        toggleFlow(application, application.resources.getString(R.string.int_configuration), 1).asLiveData(viewModelScope.coroutineContext)
     }
 
     fun getIntConfiguration(): LiveData<Int> {
@@ -38,7 +35,7 @@ class LiveDataPreferencesFragmentViewModel @Inject constructor(private val appli
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val booleanConfig by lazy {
-        booleanBoltFlow(application, application.resources.getString(R.string.boolean_configuration), true).asLiveData(viewModelScope.coroutineContext)
+        toggleFlow(application, application.resources.getString(R.string.boolean_configuration), true).asLiveData(viewModelScope.coroutineContext)
     }
 
     fun getBooleanConfiguration(): LiveData<Boolean> {
@@ -47,7 +44,7 @@ class LiveDataPreferencesFragmentViewModel @Inject constructor(private val appli
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val urlConfig by lazy {
-        stringBoltFlow(application, application.resources.getString(R.string.url_configuration), "http://www.example.com/path?param=value").asLiveData(viewModelScope.coroutineContext)
+        toggleFlow(application, application.resources.getString(R.string.url_configuration), "http://www.example.com/path?param=value").asLiveData(viewModelScope.coroutineContext)
     }
 
     fun getUrlConfiguration(): LiveData<String> {
@@ -56,7 +53,7 @@ class LiveDataPreferencesFragmentViewModel @Inject constructor(private val appli
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val enumConfig by lazy {
-        enumBoltFlow(application, application.resources.getString(R.string.enum_configuration), MyEnum::class.java, MyEnum.FIRST).asLiveData(viewModelScope.coroutineContext)
+        toggleFlow(application, application.resources.getString(R.string.enum_configuration), MyEnum::class.java, MyEnum.FIRST).asLiveData(viewModelScope.coroutineContext)
     }
 
     fun getEnumConfiguration(): LiveData<MyEnum> {

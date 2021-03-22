@@ -111,7 +111,7 @@ android {
 //            applicationIdSuffix = ".debug"
         }
     }
-    lintOptions {
+    lint {
         baselineFile = file("lint-baseline.xml")
         isCheckReleaseBuilds = true
         isAbortOnError = true
@@ -134,6 +134,7 @@ kapt {
 }
 
 dependencies {
+    implementation(project(":toggles-flow"))
     val composeVersion: String by rootProject.extra
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
@@ -201,11 +202,11 @@ dependencies {
     implementation("com.izettle.wrench:wrench-core:0.3")
     implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
-    implementation(project(":toggles-coroutines"))
+    implementation(project(":toggles-flow"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 
-    implementation("androidx.core:core-ktx:1.5.0-beta03")
+    implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.work:work-runtime-ktx:2.5.0")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")

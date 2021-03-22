@@ -42,7 +42,7 @@ android {
             applicationIdSuffix = ".debug"
         }
     }
-    lintOptions {
+    lint {
         baselineFile = file("lint-baseline.xml")
         isCheckReleaseBuilds = true
         isAbortOnError = true
@@ -83,7 +83,7 @@ dependencies {
 
     implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
-    implementation(project(":toggles-coroutines"))
+    implementation(project(":toggles-flow"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 
@@ -91,7 +91,7 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:2.33")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
-    implementation("androidx.core:core-ktx:1.5.0-beta03")
+    implementation("androidx.core:core-ktx:1.3.2")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")
 }
