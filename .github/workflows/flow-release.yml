@@ -2,6 +2,8 @@ name: Flow library release
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ develop ]
 
 jobs:
   # This workflow contains a single job called "build"
