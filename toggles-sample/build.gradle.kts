@@ -81,7 +81,6 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.4")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.4")
 
-    implementation(project(":toggles-core"))
     implementation(project(":toggles-prefs"))
     implementation(project(":toggles-flow"))
 

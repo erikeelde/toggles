@@ -11,8 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import se.eelde.toggles.TogglesImpl
 import se.eelde.toggles.core.Toggle
-import se.eelde.toggles.flow.toggleFlow
 import java.util.Date
 import javax.inject.Inject
 
@@ -43,7 +43,7 @@ class ChangedHelper @Inject constructor(
     ) {
         scope.launch(Dispatchers.IO) {
             val notificationsEnabled =
-                toggleFlow(context, "Enable notifications", false).first()
+                TogglesImpl(context).toggle("Enable notifications", false).first()
 
             if (notificationsEnabled) {
                 configurationDao.getWrenchConfigurationById(application.id, toggleId)

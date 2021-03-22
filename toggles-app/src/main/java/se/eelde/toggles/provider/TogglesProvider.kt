@@ -20,13 +20,13 @@ import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
 import com.izettle.wrench.database.WrenchScope
 import com.izettle.wrench.database.WrenchScopeDao
-import com.izettle.wrench.preferences.ITogglesPreferences
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.GlobalScope
 import se.eelde.toggles.BuildConfig
+import se.eelde.toggles.TogglesPreferences
 import se.eelde.toggles.TogglesUriMatcher
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
@@ -67,7 +67,7 @@ class TogglesProvider : ContentProvider() {
         applicationEntryPoint.providePackageManagerWrapper()
     }
 
-    private val togglesPreferences: ITogglesPreferences by lazy {
+    private val togglesPreferences: TogglesPreferences by lazy {
         applicationEntryPoint.providesWrenchPreferences()
     }
 
@@ -89,7 +89,7 @@ class TogglesProvider : ContentProvider() {
         fun providePredefinedConfigurationValueDao(): WrenchPredefinedConfigurationValueDao
         fun provideTogglesNotificationDao(): TogglesNotificationDao
         fun providePackageManagerWrapper(): IPackageManagerWrapper
-        fun providesWrenchPreferences(): ITogglesPreferences
+        fun providesWrenchPreferences(): TogglesPreferences
         fun providerChangedHelper(): ChangedHelper
     }
 
@@ -412,7 +412,7 @@ class TogglesProvider : ContentProvider() {
         }
 
         @Synchronized
-        private fun assertValidApiVersion(togglesPreferences: ITogglesPreferences, uri: Uri) {
+        private fun assertValidApiVersion(togglesPreferences: TogglesPreferences, uri: Uri) {
             var l: Long = 0
             val strictApiVersion = try {
                 l = Binder.clearCallingIdentity()

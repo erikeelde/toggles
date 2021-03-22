@@ -1,11 +1,10 @@
-package com.izettle.wrench.preferences
+package se.eelde.toggles
 
 import android.app.Application
-import android.os.Build.VERSION_CODES.O
+import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,10 +12,10 @@ import org.robolectric.annotation.Config
 import se.eelde.toggles.core.TogglesProviderContract
 
 @RunWith(AndroidJUnit4::class)
-@Config(sdk = [O])
-class WrenchPreferencesReturnsDefaultWhenMissingProviderTest {
+@Config(sdk = [Build.VERSION_CODES.O])
+class TogglesPreferencesReturnsDefaultWhenMissingProviderTest {
 
-    private lateinit var wrenchPreferences: TogglesPreferences
+    private lateinit var togglesPreferences: TogglesPreferences
     private val key = "myKey"
 
     private enum class TestEnum {
@@ -27,7 +26,7 @@ class WrenchPreferencesReturnsDefaultWhenMissingProviderTest {
     fun setUp() {
 
         val applicationContext = ApplicationProvider.getApplicationContext<Application>()
-        wrenchPreferences = TogglesPreferences(applicationContext)
+        togglesPreferences = TogglesPreferencesImpl(applicationContext)
 
         val query = applicationContext.contentResolver.query(TogglesProviderContract.toggleUri(""), null, null, null, null)
         Assert.assertNull(query)
@@ -35,25 +34,31 @@ class WrenchPreferencesReturnsDefaultWhenMissingProviderTest {
 
     @Test
     fun `always return default enum when missing backing content provider`() {
-        assertEquals(TestEnum.FIRST, wrenchPreferences.getEnum(key, TestEnum::class.java, TestEnum.FIRST))
-        assertEquals(TestEnum.SECOND, wrenchPreferences.getEnum(key, TestEnum::class.java, TestEnum.SECOND))
+        Assert.assertEquals(
+            TestEnum.FIRST,
+            togglesPreferences.getEnum(key, TestEnum::class.java, TestEnum.FIRST)
+        )
+        Assert.assertEquals(
+            TestEnum.SECOND,
+            togglesPreferences.getEnum(key, TestEnum::class.java, TestEnum.SECOND)
+        )
     }
 
     @Test
     fun `always return default string when missing backing content provider`() {
-        assertEquals("first", wrenchPreferences.getString(key, "first"))
-        assertEquals("second", wrenchPreferences.getString(key, "second"))
+        Assert.assertEquals("first", togglesPreferences.getString(key, "first"))
+        Assert.assertEquals("second", togglesPreferences.getString(key, "second"))
     }
 
     @Test
     fun `always return default boolean when missing backing content provider`() {
-        assertEquals(true, wrenchPreferences.getBoolean(key, true))
-        assertEquals(false, wrenchPreferences.getBoolean(key, false))
+        Assert.assertEquals(true, togglesPreferences.getBoolean(key, true))
+        Assert.assertEquals(false, togglesPreferences.getBoolean(key, false))
     }
 
     @Test
     fun `always return default int when missing backing content provider`() {
-        assertEquals(1, wrenchPreferences.getInt(key, 1))
-        assertEquals(2, wrenchPreferences.getInt(key, 2))
+        Assert.assertEquals(1, togglesPreferences.getInt(key, 1))
+        Assert.assertEquals(2, togglesPreferences.getInt(key, 2))
     }
 }

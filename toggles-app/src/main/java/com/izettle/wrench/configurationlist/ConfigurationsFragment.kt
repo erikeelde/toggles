@@ -34,8 +34,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import se.eelde.toggles.R
+import se.eelde.toggles.TogglesImpl
 import se.eelde.toggles.core.Toggle
-import se.eelde.toggles.flow.toggleFlow
 import se.eelde.toggles.databinding.FragmentConfigurationsBinding
 import se.eelde.toggles.viewLifecycle
 
@@ -268,8 +268,7 @@ class ConfigurationsFragment :
         ) {
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                toggleFlow(
-                    requireContext(),
+                TogglesImpl(requireContext()).toggle(
                     "Use autocomplete in String configurations",
                     false
                 ).first { autoCompleteEnabled ->
