@@ -49,7 +49,6 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.2")
     testImplementation("org.robolectric:robolectric:4.5.1")
 
-    implementation(project(":toggles-core"))
+    implementation("se.eelde.toggles:toggles-core:0.0.1")
     implementation("androidx.annotation:annotation:1.1.0")
-    implementation("androidx.core:core-ktx:1.3.2")
 }

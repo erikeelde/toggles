@@ -1,4 +1,4 @@
-package com.izettle.wrench.preferences
+package se.eelde.toggles
 
 import android.app.Application
 import android.content.ContentProvider
@@ -25,9 +25,9 @@ import se.eelde.toggles.core.TogglesProviderContract
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [O])
-class WrenchPreferencesReturnsProviderValues {
+class TogglesPreferencesReturnsProviderValues {
 
-    private lateinit var wrenchPreferences: TogglesPreferences
+    private lateinit var togglesPreferences: TogglesPreferences
     private val key = "myKey"
 
     private enum class TestEnum {
@@ -43,39 +43,45 @@ class WrenchPreferencesReturnsProviderValues {
         val info = ProviderInfo().apply { authority = TogglesProviderContract.TOGGLES_AUTHORITY }
         contentProviderController = Robolectric.buildContentProvider(MockContentProvider::class.java).create(info)
 
-        wrenchPreferences = TogglesPreferences(ApplicationProvider.getApplicationContext<Application>())
+        togglesPreferences = TogglesPreferencesImpl(ApplicationProvider.getApplicationContext<Application>())
     }
 
     @Test
     fun `return provider enum when available`() {
         assertEquals(0, contentProviderController.get().toggles.size)
 
-        assertEquals(TestEnum.FIRST, wrenchPreferences.getEnum(key, TestEnum::class.java, TestEnum.FIRST))
-        assertEquals(TestEnum.FIRST, wrenchPreferences.getEnum(key, TestEnum::class.java, TestEnum.SECOND))
+        assertEquals(
+            TestEnum.FIRST, togglesPreferences.getEnum(key, TestEnum::class.java,
+                TestEnum.FIRST
+            ))
+        assertEquals(
+            TestEnum.FIRST, togglesPreferences.getEnum(key, TestEnum::class.java,
+                TestEnum.SECOND
+            ))
     }
 
     @Test
     fun `return provider string when available`() {
         assertEquals(0, contentProviderController.get().toggles.size)
 
-        assertEquals("first", wrenchPreferences.getString(key, "first"))
-        assertEquals("first", wrenchPreferences.getString(key, "second"))
+        assertEquals("first", togglesPreferences.getString(key, "first"))
+        assertEquals("first", togglesPreferences.getString(key, "second"))
     }
 
     @Test
     fun `return provider boolean when available`() {
         assertEquals(0, contentProviderController.get().toggles.size)
 
-        assertEquals(true, wrenchPreferences.getBoolean(key, true))
-        assertEquals(true, wrenchPreferences.getBoolean(key, false))
+        assertEquals(true, togglesPreferences.getBoolean(key, true))
+        assertEquals(true, togglesPreferences.getBoolean(key, false))
     }
 
     @Test
     fun `return provider int when available`() {
         assertEquals(0, contentProviderController.get().toggles.size)
 
-        assertEquals(1, wrenchPreferences.getInt(key, 1))
-        assertEquals(1, wrenchPreferences.getInt(key, 2))
+        assertEquals(1, togglesPreferences.getInt(key, 1))
+        assertEquals(1, togglesPreferences.getInt(key, 2))
     }
 }
 
