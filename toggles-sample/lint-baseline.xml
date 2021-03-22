@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues by="lint 4.2.0-alpha07" client="gradle" format="5" variant="all" version="4.2.0-alpha07">
+<issues format="6" by="lint 7.0.0-alpha10" type="baseline" client="cli" name="cli" variant="all" version="7.0.0-alpha10">
 
 </issues>

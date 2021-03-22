@@ -4,23 +4,25 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import androidx.annotation.StringDef
+import androidx.core.database.getLongOrNull
+import androidx.core.database.getStringOrNull
 
 class ColumnNames {
-    object Bolt {
+    object Toggle {
         const val COL_KEY = "configurationKey"
         const val COL_ID = "id"
         const val COL_VALUE = "value"
         const val COL_TYPE = "configurationType"
     }
 
-    object Nut {
+    object ToggleValue {
         const val COL_ID = "id"
         const val COL_VALUE = "value"
         const val COL_CONFIG_ID = "configurationId"
     }
 }
 
-data class Nut(
+data class ToggleValue(
     val id: Long = 0,
     val configurationId: Long = 0,
     val value: String? = null
@@ -31,18 +33,18 @@ data class Nut(
     fun toContentValues(): ContentValues {
         val contentValues = ContentValues()
         if (id > 0) {
-            contentValues.put(ColumnNames.Nut.COL_ID, id)
+            contentValues.put(ColumnNames.ToggleValue.COL_ID, id)
         }
-        contentValues.put(ColumnNames.Nut.COL_CONFIG_ID, configurationId)
-        contentValues.put(ColumnNames.Nut.COL_VALUE, value)
+        contentValues.put(ColumnNames.ToggleValue.COL_CONFIG_ID, configurationId)
+        contentValues.put(ColumnNames.ToggleValue.COL_VALUE, value)
 
         return contentValues
     }
 }
 
-data class Bolt(
+data class Toggle(
     var id: Long = 0,
-    @BoltType val type: String,
+    @ToggleType val type: String,
     val key: String = "",
     val value: String? = null
 ) {
@@ -50,17 +52,17 @@ data class Bolt(
     fun toContentValues(): ContentValues {
         val contentValues = ContentValues()
 
-        contentValues.put(ColumnNames.Bolt.COL_ID, id)
-        contentValues.put(ColumnNames.Bolt.COL_KEY, key)
-        contentValues.put(ColumnNames.Bolt.COL_VALUE, value)
-        contentValues.put(ColumnNames.Bolt.COL_TYPE, type)
+        contentValues.put(ColumnNames.Toggle.COL_ID, id)
+        contentValues.put(ColumnNames.Toggle.COL_KEY, key)
+        contentValues.put(ColumnNames.Toggle.COL_VALUE, value)
+        contentValues.put(ColumnNames.Toggle.COL_TYPE, type)
 
         return contentValues
     }
 
     @StringDef(TYPE.BOOLEAN, TYPE.STRING, TYPE.INTEGER, TYPE.ENUM)
     @Retention(AnnotationRetention.SOURCE)
-    annotation class BoltType
+    annotation class ToggleType
 
     object TYPE {
         const val BOOLEAN = "boolean"
@@ -70,42 +72,26 @@ data class Bolt(
     }
 
     companion object {
-
         @JvmStatic
-        fun fromContentValues(values: ContentValues): Bolt {
-
-            return Bolt(
-                id = values.getAsLong(ColumnNames.Bolt.COL_ID) ?: 0,
-                type = values.getAsString(ColumnNames.Bolt.COL_TYPE),
-                key = values.getAsString(ColumnNames.Bolt.COL_KEY),
-                value = values.getAsString(ColumnNames.Bolt.COL_VALUE)
+        fun fromContentValues(values: ContentValues): Toggle {
+            return Toggle(
+                id = values.getAsLong(ColumnNames.Toggle.COL_ID) ?: 0,
+                type = values.getAsString(ColumnNames.Toggle.COL_TYPE),
+                key = values.getAsString(ColumnNames.Toggle.COL_KEY),
+                value = values.getAsString(ColumnNames.Toggle.COL_VALUE)
             )
         }
 
         @JvmStatic
-        fun fromCursor(cursor: Cursor): Bolt {
-            return Bolt(
-                id = cursor.getLongOrThrow(ColumnNames.Bolt.COL_ID),
-                type = cursor.getStringOrThrow(ColumnNames.Bolt.COL_TYPE),
-                key = cursor.getStringOrThrow(ColumnNames.Bolt.COL_KEY),
-                value = cursor.getStringOrNull(ColumnNames.Bolt.COL_VALUE)
+        fun fromCursor(cursor: Cursor): Toggle {
+            return Toggle(
+                id = cursor.getLongOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_ID))!!,
+                type = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_TYPE))!!,
+                key = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_KEY))!!,
+                value = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_VALUE))
             )
         }
     }
-}
-
-private fun Cursor.getStringOrThrow(columnName: String): String = getStringOrNull(columnName)!!
-
-private fun Cursor.getStringOrNull(columnName: String): String? {
-    val index = getColumnIndexOrThrow(columnName)
-    return if (isNull(index)) null else getString(index)
-}
-
-private fun Cursor.getLongOrThrow(columnName: String): Long = getLongOrNull(columnName)!!
-
-private fun Cursor.getLongOrNull(columnName: String): Long? {
-    val index = getColumnIndexOrThrow(columnName)
-    return if (isNull(index)) null else getLong(index)
 }
 
 object TogglesProviderContract {
@@ -114,11 +100,11 @@ object TogglesProviderContract {
     const val TOGGLES_API_VERSION = "API_VERSION"
 
     private val applicationUri = Uri.parse("content://$TOGGLES_AUTHORITY/application")
-    private val boltUri = Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
-    private val nutUri = Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
+    private val configurationUri = Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
+    private val configurationValueUri = Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
 
     @JvmStatic
-    fun applicationUri(id: Long): Uri? {
+    fun applicationUri(id: Long): Uri {
         return applicationUri
             .buildUpon()
             .appendPath(id.toString())
@@ -127,8 +113,8 @@ object TogglesProviderContract {
     }
 
     @JvmStatic
-    fun boltUri(id: Long): Uri {
-        return boltUri
+    fun toggleUri(id: Long): Uri {
+        return configurationUri
             .buildUpon()
             .appendPath(id.toString())
             .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
@@ -136,8 +122,8 @@ object TogglesProviderContract {
     }
 
     @JvmStatic
-    fun boltUri(key: String): Uri {
-        return boltUri
+    fun toggleUri(key: String): Uri {
+        return configurationUri
             .buildUpon()
             .appendPath(key)
             .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
@@ -145,16 +131,16 @@ object TogglesProviderContract {
     }
 
     @JvmStatic
-    fun boltUri(): Uri {
-        return boltUri
+    fun toggleUri(): Uri {
+        return configurationUri
             .buildUpon()
             .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
             .build()
     }
 
     @JvmStatic
-    fun nutUri(): Uri {
-        return nutUri
+    fun toggleValueUri(): Uri {
+        return configurationValueUri
             .buildUpon()
             .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
             .build()

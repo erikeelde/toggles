@@ -1,13 +1,13 @@
 package com.izettle.wrench.database.tables
 
-import com.izettle.wrench.core.ColumnNames
+import se.eelde.toggles.core.ColumnNames
 
 interface PredefinedConfigurationValueTable {
     companion object {
 
         const val TABLE_NAME = "predefinedConfigurationValue"
-        const val COL_ID = ColumnNames.Nut.COL_ID
-        const val COL_CONFIG_ID = ColumnNames.Nut.COL_CONFIG_ID
-        const val COL_VALUE = ColumnNames.Nut.COL_VALUE
+        const val COL_ID = ColumnNames.ToggleValue.COL_ID
+        const val COL_CONFIG_ID = ColumnNames.ToggleValue.COL_CONFIG_ID
+        const val COL_VALUE = ColumnNames.ToggleValue.COL_VALUE
     }
 }

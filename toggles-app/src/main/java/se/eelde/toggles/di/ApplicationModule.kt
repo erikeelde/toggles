@@ -1,4 +1,4 @@
-package com.izettle.wrench.di
+package se.eelde.toggles.di
 
 import android.content.Context
 import com.izettle.wrench.preferences.ITogglesPreferences

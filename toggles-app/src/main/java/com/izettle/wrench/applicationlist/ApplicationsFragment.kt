@@ -13,11 +13,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
 import se.eelde.toggles.databinding.FragmentApplicationsBinding
+import se.eelde.toggles.viewLifecycle
 
 @AndroidEntryPoint
 internal class ApplicationsFragment : Fragment() {
 
-    private lateinit var binding: FragmentApplicationsBinding
+    private var binding: FragmentApplicationsBinding by viewLifecycle()
+
     private val model by viewModels<ApplicationViewModel>()
 
     override fun onCreateView(

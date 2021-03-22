@@ -1,8 +1,6 @@
 package com.izettle.wrench.dialogs.enumvalue
 
 import android.app.Application
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -15,8 +13,8 @@ import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -29,10 +27,11 @@ import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
+import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
-class FragmentEnumValueViewModel @ViewModelInject internal constructor(
-    @Assisted private val savedStateHandle: SavedStateHandle,
+@HiltViewModel
+class FragmentEnumValueViewModel @Inject internal constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val application: Application,
     private val configurationDao: WrenchConfigurationDao,
     private val configurationValueDao: WrenchConfigurationValueDao,
@@ -67,14 +66,22 @@ class FragmentEnumValueViewModel @ViewModelInject internal constructor(
                     is ViewAction.SaveAction -> {
                         _state.value = reduce(viewState.value!!, PartialViewState.Saving)
                         updateConfigurationValue(viewAction.value).join()
-                        application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+                        application.contentResolver.notifyUpdate(
+                            TogglesProviderContract.toggleUri(
+                                configurationId
+                            )
+                        )
 
                         viewEffects.value = Event(ViewEffect.Dismiss)
                     }
                     ViewAction.RevertAction -> {
                         _state.value = reduce(viewState.value!!, PartialViewState.Reverting)
                         deleteConfigurationValue().join()
-                        application.contentResolver.notifyInsert(TogglesProviderContract.boltUri(configurationId))
+                        application.contentResolver.notifyInsert(
+                            TogglesProviderContract.toggleUri(
+                                configurationId
+                            )
+                        )
 
                         viewEffects.value = Event(ViewEffect.Dismiss)
                     }
@@ -126,12 +133,13 @@ class FragmentEnumValueViewModel @ViewModelInject internal constructor(
             if (selectedConfigurationValue != null) {
                 configurationValueDao.updateConfigurationValue(configurationId, scopeId, value)
             } else {
-                val wrenchConfigurationValue = WrenchConfigurationValue(0, configurationId, value, scopeId)
+                val wrenchConfigurationValue =
+                    WrenchConfigurationValue(0, configurationId, value, scopeId)
                 wrenchConfigurationValue.id = configurationValueDao.insert(wrenchConfigurationValue)
             }
             configurationDao.touch(configurationId, Date())
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
         }
     }
 
@@ -139,7 +147,7 @@ class FragmentEnumValueViewModel @ViewModelInject internal constructor(
         viewModelScope.launch(Dispatchers.IO) {
             configurationValueDao.delete(selectedConfigurationValue!!)
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.boltUri(configurationId))
+            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
         }
     }
 }

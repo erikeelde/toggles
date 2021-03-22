@@ -2,6 +2,9 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+
+    val composeVersion by extra("1.0.0-beta02")
+
     repositories {
         google()
         mavenCentral()
@@ -10,29 +13,33 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools:r8:2.1.75")
-        classpath("com.android.tools.build:gradle:4.1.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.2")
+        classpath("com.android.tools.build:gradle:7.0.0-alpha10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.4")
         classpath("com.google.gms:oss-licenses:0.9.2")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.30.1-alpha")
-        // https://github.com/Triple-T/gradle-play-publisher/issues/864
-        classpath("com.github.triplet.gradle:play-publisher:3.0.0")
-        classpath("com.google.gms:google-services:4.3.4")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.33-beta")
+        classpath("com.google.gms:google-services:4.3.5")
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.14.2")
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.4.30")
     }
 }
 
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
-}
-
 plugins {
-    id("com.github.ben-manes.versions") version "0.36.0"
+    id("com.github.ben-manes.versions") version "0.38.0"
     id("se.eelde.build-optimizations") version "0.2.0"
-    id("io.gitlab.arturbosch.detekt") version "1.14.2"
+    id("io.gitlab.arturbosch.detekt") version "1.16.0"
 }
 
 allprojects {
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+
+    dependencies {
+        detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.16.0")
+    }
+    detekt {
+        autoCorrect = true
+    }
+
     repositories {
         google()
         mavenCentral()

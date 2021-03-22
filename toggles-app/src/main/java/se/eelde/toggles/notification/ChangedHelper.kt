@@ -1,33 +1,67 @@
 package se.eelde.toggles.notification
 
 import android.content.Context
-import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.database.TogglesNotification
 import com.izettle.wrench.database.TogglesNotificationDao
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchConfigurationDao
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.flow.toggleFlow
 import java.util.Date
+import javax.inject.Inject
 
-fun configurationRequested(
-    context: Context,
-    configurationDao: WrenchConfigurationDao,
-    togglesNotificationDao: TogglesNotificationDao,
-    application: WrenchApplication,
-    bolt: Bolt,
+class ChangedHelper @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val configurationDao: WrenchConfigurationDao,
+    private val togglesNotificationDao: TogglesNotificationDao,
 ) {
-    configurationDao.getWrenchConfigurationById(application.id, bolt.id)
-        ?.let { configuration ->
-            togglesNotificationDao.insert(
-                TogglesNotification(
-                    applicationId = application.id,
-                    applicationPackageName = application.packageName,
-                    configurationId = configuration.id,
-                    configurationKey = bolt.key,
-                    configurationValue = bolt.value!!,
-                    added = Date(),
-                )
-            )
-        }
+    fun configurationRequested(
+        application: WrenchApplication,
+        toggle: Toggle,
+        scope: CoroutineScope
+    ) = configurationRequested(
+        application,
+        toggle.id,
+        toggle.key,
+        toggle.value,
+        scope,
+    )
 
-    NotificationWorker.scheduleNotification(context)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun configurationRequested(
+        application: WrenchApplication,
+        toggleId: Long,
+        toggleKey: String,
+        toggleValue: String?,
+        scope: CoroutineScope
+    ) {
+        scope.launch(Dispatchers.IO) {
+            val notificationsEnabled =
+                toggleFlow(context, "Enable notifications", false).first()
+
+            if (notificationsEnabled) {
+                configurationDao.getWrenchConfigurationById(application.id, toggleId)
+                    ?.let { configuration ->
+                        togglesNotificationDao.insert(
+                            TogglesNotification(
+                                applicationId = application.id,
+                                applicationPackageName = application.packageName,
+                                configurationId = configuration.id,
+                                configurationKey = toggleKey,
+                                configurationValue = toggleValue!!,
+                                added = Date(),
+                            )
+                        )
+                    }
+
+                NotificationWorker.scheduleNotification(context)
+            }
+        }
+    }
 }

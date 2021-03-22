@@ -23,7 +23,7 @@ interface WrenchConfigurationDao {
             " INNER JOIN " + ConfigurationValueTable.TABLE_NAME + " ON configuration.id = configurationValue.configurationId " +
             " WHERE configuration.id = (:configurationId) AND configurationValue.scope = (:scopeId)"
     )
-    fun getBolt(configurationId: Long, scopeId: Long): Cursor
+    fun getToggle(configurationId: Long, scopeId: Long): Cursor
 
     @Query(
         "SELECT configuration.id, " +
@@ -34,7 +34,7 @@ interface WrenchConfigurationDao {
             " INNER JOIN " + ConfigurationValueTable.TABLE_NAME + " ON configuration.id = configurationValue.configurationId " +
             " WHERE configuration.configurationKey = (:configurationKey) AND configurationValue.scope = (:scopeId)"
     )
-    fun getBolt(configurationKey: String, scopeId: Long): Cursor
+    fun getToggle(configurationKey: String, scopeId: Long): Cursor
 
     @Query(
         "SELECT * " +

@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.izettle.wrench.preferences">
+
+    <instrumentation android:name="androidx.test.runner.AndroidJUnitRunner"
+        android:targetPackage="com.izettle.wrench.preferences"
+        android:label="Tests for Shell" />
+
+</manifest>

@@ -14,6 +14,9 @@
             <argument
                 android:name="applicationId"
                 app:argType="long" />
+            <argument
+                android:name="applicationLabel"
+                app:argType="string" />
         </action>
     </fragment>
     <fragment
@@ -26,7 +29,7 @@
             app:destination="@id/action_oss_detail" />
     </fragment>
 
-    <dialog
+    <fragment
         android:id="@+id/action_oss_detail"
         android:name="com.izettle.wrench.oss.detail.OssDetailFragment"
         android:label="@string/oss"
@@ -41,7 +44,7 @@
         <argument
             android:name="length"
             app:argType="integer" />
-    </dialog>
+    </fragment>
 
     <fragment
         android:id="@+id/action_help"

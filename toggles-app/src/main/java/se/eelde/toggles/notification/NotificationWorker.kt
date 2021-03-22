@@ -13,8 +13,7 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -24,21 +23,30 @@ import androidx.work.WorkerParameters
 import com.izettle.wrench.MainActivity
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchDatabase
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.flow.toggleFlow
 import java.util.concurrent.TimeUnit
 
-class NotificationWorker @WorkerInject constructor(
+@HiltWorker
+class NotificationWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     val wrenchDatabase: WrenchDatabase,
-) :
-    CoroutineWorker(appContext, workerParams) {
+) : CoroutineWorker(appContext, workerParams) {
 
     companion object {
-        fun scheduleNotification(context: Context) {
+        private const val DEFAULT_NOTIFICATION_DEBOUNCE = 1000
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        suspend fun scheduleNotification(context: Context) {
+            val notificationDebounce = toggleFlow(context, "Toggle request debounce timeout (milliseconds)", DEFAULT_NOTIFICATION_DEBOUNCE).first()
             val notificationWorker: OneTimeWorkRequest =
                 OneTimeWorkRequestBuilder<NotificationWorker>()
-                    .setInitialDelay(2, TimeUnit.SECONDS)
+                    .setInitialDelay(notificationDebounce.toLong(), TimeUnit.MILLISECONDS)
                     .build()
 
             WorkManager

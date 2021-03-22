@@ -11,10 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.databinding.FragmentEnumValueBinding
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
 
@@ -81,14 +79,5 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
     override fun onClick(view: View, item: WrenchPredefinedConfigurationValue) {
         viewModel.saveClick(item.value!!)
         dismiss()
-    }
-
-    companion object {
-
-        fun newInstance(args: EnumValueFragmentArgs): EnumValueFragment {
-            val fragment = EnumValueFragment()
-            fragment.arguments = args.toBundle()
-            return fragment
-        }
     }
 }

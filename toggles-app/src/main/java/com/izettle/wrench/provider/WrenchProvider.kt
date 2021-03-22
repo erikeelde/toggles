@@ -28,13 +28,14 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.GlobalScope
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.TogglesUriMatcher
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
 import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
-import se.eelde.toggles.notification.configurationRequested
+import se.eelde.toggles.notification.ChangedHelper
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
@@ -74,6 +75,10 @@ class WrenchProvider : ContentProvider() {
         applicationEntryPoint.providesWrenchPreferences()
     }
 
+    private val changedHelper: ChangedHelper by lazy {
+        applicationEntryPoint.providerChangedHelper()
+    }
+
     private val applicationEntryPoint: WrenchProviderEntryPoint by lazy {
         EntryPointAccessors.fromApplication(context!!, WrenchProviderEntryPoint::class.java)
     }
@@ -89,6 +94,7 @@ class WrenchProvider : ContentProvider() {
         fun provideTogglesNotificationDao(): TogglesNotificationDao
         fun providePackageManagerWrapper(): IPackageManagerWrapper
         fun providesWrenchPreferences(): ITogglesPreferences
+        fun providerChangedHelper(): ChangedHelper
     }
 
     @Synchronized
@@ -137,7 +143,7 @@ class WrenchProvider : ContentProvider() {
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATION_ID -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                cursor = configurationDao.getBolt(
+                cursor = configurationDao.getToggle(
                     java.lang.Long.valueOf(uri.lastPathSegment!!),
                     scope!!.id
                 )
@@ -146,7 +152,7 @@ class WrenchProvider : ContentProvider() {
                     cursor.close()
 
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getBolt(
+                    cursor = configurationDao.getToggle(
                         java.lang.Long.valueOf(uri.lastPathSegment!!),
                         defaultScope!!.id
                     )
@@ -156,37 +162,37 @@ class WrenchProvider : ContentProvider() {
                     val bolt = Bolt.fromCursor(cursor)
                     cursor.moveToPrevious()
                     context?.apply {
-                        configurationRequested(
-                            this,
-                            configurationDao,
-                            togglesNotificationDao,
+                        changedHelper.configurationRequested(
                             callingApplication,
-                            bolt
+                            bolt.id,
+                            bolt.key,
+                            bolt.value,
+                            GlobalScope,
                         )
                     }
                 }
             }
             CURRENT_CONFIGURATION_KEY -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                cursor = configurationDao.getBolt(uri.lastPathSegment!!, scope!!.id)
+                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
 
                 if (cursor.count == 0) {
                     cursor.close()
 
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getBolt(uri.lastPathSegment!!, defaultScope!!.id)
+                    cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
                 }
 
                 if (cursor.moveToFirst()) {
                     val bolt = Bolt.fromCursor(cursor)
                     cursor.moveToPrevious()
                     context?.apply {
-                        configurationRequested(
-                            this,
-                            configurationDao,
-                            togglesNotificationDao,
+                        changedHelper.configurationRequested(
                             callingApplication,
-                            bolt
+                            bolt.id,
+                            bolt.key,
+                            bolt.value,
+                            GlobalScope,
                         )
                     }
                 }

@@ -1,22 +1,15 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("io.gitlab.arturbosch.detekt")
 }
 
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
-}
-
-detekt {
-    autoCorrect = true
-}
+apply(plugin = "com.vanniktech.maven.publish")
 
 android {
     compileSdk = 30
 
     defaultConfig {
-        minSdk = 16
+        minSdk = 21
         targetSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -45,7 +38,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
         }
     }
-    lintOptions {
+    lint {
         baselineFile = file("lint-baseline.xml")
         isCheckReleaseBuilds = true
         isAbortOnError = true
@@ -63,8 +56,6 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.3.2")
-    testImplementation("junit:junit:4.13.1")
-    implementation("androidx.annotation:annotation:1.2.0-alpha01")
+    testImplementation("junit:junit:4.13.2")
+    implementation("androidx.annotation:annotation:1.1.0")
 }
-
-apply(rootProject.file("gradle/gradle-mvn-push.gradle"))

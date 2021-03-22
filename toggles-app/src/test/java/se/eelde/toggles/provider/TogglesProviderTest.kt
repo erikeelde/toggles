@@ -11,10 +11,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Configuration
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
-import com.izettle.wrench.core.Bolt
-import com.izettle.wrench.core.Nut
 import com.izettle.wrench.database.WrenchDatabase
-import com.izettle.wrench.di.DatabaseModule
+import se.eelde.toggles.di.DatabaseModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,6 +32,8 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.R
+import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract
 import javax.inject.Singleton
 
@@ -83,16 +83,16 @@ class TogglesProviderTest {
     }
 
     @Test
-    fun testInsertBolt() {
-        val insertBoltKey = "insertBoltKey"
+    fun testInsertToggle() {
+        val insertToggleKey = "insertToggleKey"
 
-        val uri = TogglesProviderContract.boltUri()
-        val insertBolt = getBolt(insertBoltKey)
-        val insertBoltUri = togglesProvider.insert(uri, insertBolt.toContentValues())
-        Assert.assertNotNull(insertBoltUri)
+        val uri = TogglesProviderContract.toggleUri()
+        val insertToggle = getToggle(insertToggleKey)
+        val insertToggleUri = togglesProvider.insert(uri, insertToggle.toContentValues())
+        Assert.assertNotNull(insertToggleUri)
 
         var cursor = togglesProvider.query(
-            TogglesProviderContract.boltUri(insertBoltKey),
+            TogglesProviderContract.toggleUri(insertToggleKey),
             null,
             null,
             null,
@@ -102,38 +102,38 @@ class TogglesProviderTest {
         Assert.assertEquals(1, cursor.count)
 
         cursor.moveToFirst()
-        var queryBolt = Bolt.fromCursor(cursor)
+        var queryToggle = Toggle.fromCursor(cursor)
 
-        Assert.assertEquals(insertBolt.key, queryBolt.key)
-        Assert.assertEquals(insertBolt.value, queryBolt.value)
-        Assert.assertEquals(insertBolt.type, queryBolt.type)
+        Assert.assertEquals(insertToggle.key, queryToggle.key)
+        Assert.assertEquals(insertToggle.value, queryToggle.value)
+        Assert.assertEquals(insertToggle.type, queryToggle.type)
 
-        val boltUri = TogglesProviderContract.boltUri(
-            Integer.parseInt(insertBoltUri.lastPathSegment!!).toLong()
+        val toggleUri = TogglesProviderContract.toggleUri(
+            Integer.parseInt(insertToggleUri.lastPathSegment!!).toLong()
         )
-        cursor = togglesProvider.query(boltUri, null, null, null, null)
+        cursor = togglesProvider.query(toggleUri, null, null, null, null)
         Assert.assertNotNull(cursor)
         Assert.assertEquals(1, cursor.count)
 
         cursor.moveToFirst()
-        queryBolt = Bolt.fromCursor(cursor)
+        queryToggle = Toggle.fromCursor(cursor)
 
-        Assert.assertEquals(insertBolt.key, queryBolt.key)
-        Assert.assertEquals(insertBolt.value, queryBolt.value)
-        Assert.assertEquals(insertBolt.type, queryBolt.type)
+        Assert.assertEquals(insertToggle.key, queryToggle.key)
+        Assert.assertEquals(insertToggle.value, queryToggle.value)
+        Assert.assertEquals(insertToggle.type, queryToggle.type)
     }
 
     @Test
-    fun testUpdateBolt() {
-        val updateBoltKey = "updateBoltKey"
+    fun testUpdateToggle() {
+        val updateToggleKey = "updateToggleKey"
 
-        val uri = TogglesProviderContract.boltUri()
-        val insertBolt = getBolt(updateBoltKey)
-        val insertBoltUri = togglesProvider.insert(uri, insertBolt.toContentValues())
-        Assert.assertNotNull(insertBoltUri)
+        val uri = TogglesProviderContract.toggleUri()
+        val insertToggle = getToggle(updateToggleKey)
+        val insertToggleUri = togglesProvider.insert(uri, insertToggle.toContentValues())
+        Assert.assertNotNull(insertToggleUri)
 
         var cursor = togglesProvider.query(
-            TogglesProviderContract.boltUri(updateBoltKey),
+            TogglesProviderContract.toggleUri(updateToggleKey),
             null,
             null,
             null,
@@ -142,28 +142,28 @@ class TogglesProviderTest {
         Assert.assertNotNull(cursor)
         Assert.assertTrue(cursor.moveToFirst())
 
-        val providerBolt = Bolt.fromCursor(cursor)
-        Assert.assertEquals(insertBolt.key, providerBolt.key)
-        Assert.assertEquals(insertBolt.value, providerBolt.value)
-        Assert.assertEquals(insertBolt.type, providerBolt.type)
+        val providerToggle = Toggle.fromCursor(cursor)
+        Assert.assertEquals(insertToggle.key, providerToggle.key)
+        Assert.assertEquals(insertToggle.value, providerToggle.value)
+        Assert.assertEquals(insertToggle.type, providerToggle.type)
 
-        val updateBolt = Bolt(
-            providerBolt.id,
-            providerBolt.type,
-            providerBolt.key,
-            providerBolt.value!! + providerBolt.value!!
+        val updateToggle = Toggle(
+            providerToggle.id,
+            providerToggle.type,
+            providerToggle.key,
+            providerToggle.value!! + providerToggle.value!!
         )
 
         val update = togglesProvider.update(
-            TogglesProviderContract.boltUri(updateBolt.id),
-            updateBolt.toContentValues(),
+            TogglesProviderContract.toggleUri(updateToggle.id),
+            updateToggle.toContentValues(),
             null,
             null
         )
         Assert.assertEquals(1, update)
 
         cursor = togglesProvider.query(
-            TogglesProviderContract.boltUri(updateBoltKey),
+            TogglesProviderContract.toggleUri(updateToggleKey),
             null,
             null,
             null,
@@ -172,102 +172,102 @@ class TogglesProviderTest {
         Assert.assertNotNull(cursor)
 
         Assert.assertTrue(cursor.moveToFirst())
-        val updatedBolt = Bolt.fromCursor(cursor)
+        val updatedToggle = Toggle.fromCursor(cursor)
 
-        Assert.assertEquals(insertBolt.value!! + insertBolt.value!!, updatedBolt.value)
+        Assert.assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingInsertForBoltWithId() {
+    fun testMissingInsertForToggleWithId() {
         togglesProvider.insert(
-            TogglesProviderContract.boltUri(0),
-            getBolt("dummyBolt").toContentValues()
+            TogglesProviderContract.toggleUri(0),
+            getToggle("dummyToggle").toContentValues()
         )
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingInsertForBoltWithKey() {
+    fun testMissingInsertForToggleWithKey() {
         togglesProvider.insert(
-            TogglesProviderContract.boltUri("fake"),
-            getBolt("dummyBolt").toContentValues()
+            TogglesProviderContract.toggleUri("fake"),
+            getToggle("dummyToggle").toContentValues()
         )
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingUpdateForBoltWithKey() {
+    fun testMissingUpdateForToggleWithKey() {
         togglesProvider.update(
-            TogglesProviderContract.boltUri("fake"),
-            getBolt("dummyBolt").toContentValues(),
+            TogglesProviderContract.toggleUri("fake"),
+            getToggle("dummyToggle").toContentValues(),
             null,
             null
         )
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingUpdateForBolts() {
+    fun testMissingUpdateForToggles() {
         togglesProvider.update(
-            TogglesProviderContract.boltUri(),
-            getBolt("dummyBolt").toContentValues(),
+            TogglesProviderContract.toggleUri(),
+            getToggle("dummyToggle").toContentValues(),
             null,
             null
         )
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingUpdateForNuts() {
+    fun testMissingUpdateForToggleValues() {
         togglesProvider.update(
-            TogglesProviderContract.nutUri(),
-            getNut("dummyNut").toContentValues(),
+            TogglesProviderContract.toggleValueUri(),
+            getToggleValue("dummyToggleValue").toContentValues(),
             null,
             null
         )
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingQueryForBolts() {
+    fun testMissingQueryForToggles() {
         togglesProvider.update(
-            TogglesProviderContract.boltUri(),
-            getBolt("dummyBolt").toContentValues(),
+            TogglesProviderContract.toggleUri(),
+            getToggle("dummyToggle").toContentValues(),
             null,
             null
         )
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingQueryForNuts() {
+    fun testMissingQueryForToggleValues() {
         togglesProvider.update(
-            TogglesProviderContract.nutUri(),
-            getNut("dummyNut").toContentValues(),
+            TogglesProviderContract.toggleValueUri(),
+            getToggleValue("dummyToggleValue").toContentValues(),
             null,
             null
         )
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingDeleteForBoltWithId() {
-        togglesProvider.delete(TogglesProviderContract.boltUri(0), null, null)
+    fun testMissingDeleteForToggleWithId() {
+        togglesProvider.delete(TogglesProviderContract.toggleUri(0), null, null)
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingDeleteForBoltWithKey() {
-        togglesProvider.delete(TogglesProviderContract.boltUri("fake"), null, null)
+    fun testMissingDeleteForToggleWithKey() {
+        togglesProvider.delete(TogglesProviderContract.toggleUri("fake"), null, null)
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingDeleteForBolts() {
-        togglesProvider.delete(TogglesProviderContract.boltUri(), null, null)
+    fun testMissingDeleteForToggles() {
+        togglesProvider.delete(TogglesProviderContract.toggleUri(), null, null)
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingDeleteForNuts() {
-        togglesProvider.delete(TogglesProviderContract.nutUri(), null, null)
+    fun testMissingDeleteForToggleValues() {
+        togglesProvider.delete(TogglesProviderContract.toggleValueUri(), null, null)
     }
 
-    private fun getNut(value: String): Nut {
-        return Nut(0, value)
+    private fun getToggleValue(value: String): ToggleValue {
+        return ToggleValue(0, value)
     }
 
-    private fun getBolt(key: String): Bolt {
-        return Bolt(0L, "bolttype", key, "boltvalue")
+    private fun getToggle(key: String): Toggle {
+        return Toggle(0L, "toggletype", key, "togglevalue")
     }
 }
