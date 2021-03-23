@@ -38,6 +38,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
+kotlin {
+    // https://kotlinlang.org/docs/whatsnew14.html#explicit-api-mode-for-library-authors
+    explicitApi()
+}
 
 dependencies {
     testImplementation("junit:junit:4.13.2")

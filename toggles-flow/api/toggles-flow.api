@@ -1,0 +1,25 @@
+public abstract interface class se/eelde/toggles/Toggles {
+	public abstract fun toggle (Landroid/content/Context;Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Enum;)Lkotlinx/coroutines/flow/Flow;
+	public abstract fun toggle (Ljava/lang/String;I)Lkotlinx/coroutines/flow/Flow;
+	public abstract fun toggle (Ljava/lang/String;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public abstract fun toggle (Ljava/lang/String;Z)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class se/eelde/toggles/TogglesImpl {
+	public fun <init> (Landroid/content/Context;)V
+	public final fun toggle (Ljava/lang/String;I)Lkotlinx/coroutines/flow/Flow;
+	public final fun toggle (Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Enum;)Lkotlinx/coroutines/flow/Flow;
+	public final fun toggle (Ljava/lang/String;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public final fun toggle (Ljava/lang/String;Z)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun toggle$default (Lse/eelde/toggles/TogglesImpl;Ljava/lang/String;IILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun toggle$default (Lse/eelde/toggles/TogglesImpl;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun toggle$default (Lse/eelde/toggles/TogglesImpl;Ljava/lang/String;ZILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class se/eelde/toggles/flow/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
