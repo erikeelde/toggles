@@ -53,6 +53,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
+kotlin {
+    // https://kotlinlang.org/docs/whatsnew14.html#explicit-api-mode-for-library-authors
+    explicitApi()
+}
 
 dependencies {
     implementation("androidx.core:core-ktx:1.3.2")

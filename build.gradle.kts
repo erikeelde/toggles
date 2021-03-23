@@ -9,11 +9,10 @@ buildscript {
         google()
         mavenCentral()
         jcenter()
-        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0-alpha10")
+        classpath("com.android.tools.build:gradle:7.0.0-alpha11")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.4")
         classpath("com.google.gms:oss-licenses:0.9.2")
@@ -28,6 +27,8 @@ plugins {
     id("com.github.ben-manes.versions") version "0.38.0"
     id("se.eelde.build-optimizations") version "0.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.16.0"
+    // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.5.0"
 }
 
 allprojects {
@@ -45,6 +46,11 @@ allprojects {
         mavenCentral()
         jcenter()
     }
+}
+
+apiValidation {
+    ignoredProjects.add("toggles-app")
+    ignoredProjects.add("toggles-sample")
 }
 
 detekt {

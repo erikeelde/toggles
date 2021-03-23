@@ -2,8 +2,6 @@ name: Core library release
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ develop ]
 
 jobs:
   # This workflow contains a single job called "build"
@@ -22,14 +20,8 @@ jobs:
         with:
           java-version: 11
 
-      - name: Run Detekt
-        run: ./gradlew :toggles-core:detekt
-
-      - name: Run Android Lint
-        run: ./gradlew :toggles-core:lint
-
-      - name: Run Android Unit test
-        run: ./gradlew :toggles-core:testDebugUnitTest
+      - name: Run Checks
+        run: ./gradlew :toggles-core:check --exclude-task testReleaseUnitTest
 
       - name: Setup environment
         run: |
