@@ -33,7 +33,7 @@ jobs:
 
       - name: Setup environment
         run: |
-          mkdir ~/.gradle
+          mkdir -p ~/.gradle
           touch ~/.gradle/gradle.properties
           echo "signing.keyId=${{secrets.SIGNING_KEYID}}" >> ~/.gradle/gradle.properties
           echo "signing.password=${{secrets.SIGNING_PASSWORD}}" >> ~/.gradle/gradle.properties
