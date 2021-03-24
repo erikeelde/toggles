@@ -25,10 +25,6 @@ android {
         getByName("release") {
             isMinifyEnabled = false
         }
-
-        getByName("debug") {
-            isMinifyEnabled = false
-        }
     }
     lint {
         baselineFile = file("lint-baseline.xml")
