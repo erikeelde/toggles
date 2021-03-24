@@ -1,4 +1,4 @@
-package se.eelde.toggles
+package se.eelde.toggles.flow
 
 import kotlinx.coroutines.flow.Flow
 

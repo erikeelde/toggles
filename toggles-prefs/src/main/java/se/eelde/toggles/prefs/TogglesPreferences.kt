@@ -1,4 +1,4 @@
-package se.eelde.toggles
+package se.eelde.toggles.prefs
 
 interface TogglesPreferences {
     fun getBoolean(key: String, defValue: Boolean): Boolean

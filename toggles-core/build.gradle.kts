@@ -14,12 +14,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val wrenchProviderAuthority = "com.izettle.wrench.configprovider"
-        manifestPlaceholders["wrenchProviderAuthority"] = wrenchProviderAuthority
-        buildConfigField("String", "WRENCH_AUTHORITY", "\"${wrenchProviderAuthority}\"")
-
-        buildConfigField("int", "WRENCH_API_VERSION", "1")
-
         val togglesProviderAuthority = "se.eelde.toggles.configprovider"
         manifestPlaceholders["togglesProviderAuthority"] = togglesProviderAuthority
         buildConfigField("String", "TOGGLES_AUTHORITY", "\"${togglesProviderAuthority}\"")
@@ -30,12 +24,6 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
-        }
-
-        getByName("debug") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
         }
     }
     lint {

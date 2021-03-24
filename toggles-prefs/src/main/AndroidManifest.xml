@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="se.eelde.toggles">
+    package="se.eelde.toggles.prefs">
 
     <uses-permission android:name="se.eelde.toggles.provider_permission" />
 

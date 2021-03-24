@@ -29,7 +29,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.GlobalScope
 import se.eelde.toggles.BuildConfig
-import se.eelde.toggles.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.TogglesUriMatcher
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID

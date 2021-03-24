@@ -26,14 +26,13 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.GlobalScope
 import se.eelde.toggles.BuildConfig
-import se.eelde.toggles.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.TogglesUriMatcher
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
 import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
 import se.eelde.toggles.core.Toggle
-import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.notification.ChangedHelper
 import java.util.Date
 
@@ -438,7 +437,7 @@ class TogglesProvider : ContentProvider() {
 
         @TogglesApiVersion
         private fun getApiVersion(uri: Uri): Int {
-            val queryParameter = uri.getQueryParameter(TogglesProviderContract.TOGGLES_API_VERSION)
+            val queryParameter = uri.getQueryParameter("API_VERSION")
             return if (queryParameter != null) {
                 Integer.valueOf(queryParameter)
             } else {

@@ -17,7 +17,6 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
         }
     }
     lint {

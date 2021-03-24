@@ -4,8 +4,6 @@ public final class se/eelde/toggles/core/BuildConfig {
 	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
 	public static final field TOGGLES_API_VERSION I
 	public static final field TOGGLES_AUTHORITY Ljava/lang/String;
-	public static final field WRENCH_API_VERSION I
-	public static final field WRENCH_AUTHORITY Ljava/lang/String;
 	public fun <init> ()V
 }
 
@@ -95,8 +93,6 @@ public final class se/eelde/toggles/core/ToggleValue {
 
 public final class se/eelde/toggles/core/TogglesProviderContract {
 	public static final field INSTANCE Lse/eelde/toggles/core/TogglesProviderContract;
-	public static final field TOGGLES_API_VERSION Ljava/lang/String;
-	public static final field TOGGLES_AUTHORITY Ljava/lang/String;
 	public static final fun applicationUri (J)Landroid/net/Uri;
 	public static final fun toggleUri ()Landroid/net/Uri;
 	public static final fun toggleUri (J)Landroid/net/Uri;
