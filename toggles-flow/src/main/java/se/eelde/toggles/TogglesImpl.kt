@@ -23,12 +23,12 @@ import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 import se.eelde.toggles.core.showDownloadNotification
 
-class TogglesImpl(context: Context) {
+class TogglesImpl(context: Context) : Toggles {
     private val context = context.applicationContext
     private val contentResolver = this.context.contentResolver
 
     @ExperimentalCoroutinesApi
-    fun toggle(key: String, defaultValue: Boolean = true): Flow<Boolean> =
+    override fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> =
         providerToggleFlow(context, Toggle.TYPE.BOOLEAN, key)
             .map { toggle ->
                 when {
@@ -46,7 +46,7 @@ class TogglesImpl(context: Context) {
             }
 
     @ExperimentalCoroutinesApi
-    fun toggle(key: String, defaultValue: Int = 0): Flow<Int> =
+    override fun toggle(key: String, defaultValue: Int): Flow<Int> =
         providerToggleFlow(context, Toggle.TYPE.INTEGER, key)
             .map { toggle ->
                 when {
@@ -64,7 +64,7 @@ class TogglesImpl(context: Context) {
             }
 
     @ExperimentalCoroutinesApi
-    fun toggle(key: String, defaultValue: String = ""): Flow<String> =
+    override fun toggle(key: String, defaultValue: String): Flow<String> =
         providerToggleFlow(context, Toggle.TYPE.STRING, key)
             .map { toggle ->
                 when {
@@ -82,7 +82,7 @@ class TogglesImpl(context: Context) {
             }
 
     @ExperimentalCoroutinesApi
-    fun <T : Enum<T>> toggle(
+    override fun <T : Enum<T>> toggle(
         key: String,
         type: Class<T>,
         defaultValue: T
