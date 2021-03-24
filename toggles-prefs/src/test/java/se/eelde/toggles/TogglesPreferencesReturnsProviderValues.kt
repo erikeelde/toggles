@@ -22,6 +22,8 @@ import org.robolectric.annotation.Config
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.ColumnNames
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.prefs.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferencesImpl
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [O])

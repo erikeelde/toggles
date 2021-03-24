@@ -10,6 +10,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.prefs.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferencesImpl
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.O])

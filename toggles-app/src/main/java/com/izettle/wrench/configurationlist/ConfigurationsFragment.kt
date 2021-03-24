@@ -34,7 +34,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import se.eelde.toggles.R
-import se.eelde.toggles.TogglesImpl
+import se.eelde.toggles.flow.TogglesImpl
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.databinding.FragmentConfigurationsBinding
 import se.eelde.toggles.viewLifecycle

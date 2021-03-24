@@ -7,8 +7,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
-import se.eelde.toggles.TogglesPreferences
-import se.eelde.toggles.TogglesPreferencesImpl
+import se.eelde.toggles.prefs.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferencesImpl
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.PackageManagerWrapper
 

@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.wrench.MyEnum
 import com.example.wrench.R
-import se.eelde.toggles.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

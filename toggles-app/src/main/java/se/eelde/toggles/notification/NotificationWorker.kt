@@ -27,7 +27,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import se.eelde.toggles.TogglesImpl
+import se.eelde.toggles.flow.TogglesImpl
 import se.eelde.toggles.core.TogglesProviderContract
 import java.util.concurrent.TimeUnit
 

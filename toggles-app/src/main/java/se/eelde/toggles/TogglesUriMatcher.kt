@@ -2,7 +2,6 @@ package se.eelde.toggles
 
 import android.content.UriMatcher
 import com.izettle.wrench.core.WrenchProviderContract
-import se.eelde.toggles.core.TogglesProviderContract
 
 class TogglesUriMatcher private constructor() {
     companion object {
@@ -18,27 +17,27 @@ class TogglesUriMatcher private constructor() {
 
         init {
             uriMatcher.addURI(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
+                BuildConfig.CONFIG_AUTHORITY,
                 "application/#",
                 APPLICATION_ID
             )
             uriMatcher.addURI(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
+                BuildConfig.CONFIG_AUTHORITY,
                 "currentConfiguration/#",
                 CURRENT_CONFIGURATION_ID
             )
             uriMatcher.addURI(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
+                BuildConfig.CONFIG_AUTHORITY,
                 "currentConfiguration/*",
                 CURRENT_CONFIGURATION_KEY
             )
             uriMatcher.addURI(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
+                BuildConfig.CONFIG_AUTHORITY,
                 "currentConfiguration",
                 CURRENT_CONFIGURATIONS
             )
             uriMatcher.addURI(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
+                BuildConfig.CONFIG_AUTHORITY,
                 "predefinedConfigurationValue",
                 PREDEFINED_CONFIGURATION_VALUES
             )

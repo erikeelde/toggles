@@ -1,4 +1,4 @@
-package se.eelde.toggles
+package se.eelde.toggles.prefs
 
 import android.content.ContentResolver
 import android.content.Context

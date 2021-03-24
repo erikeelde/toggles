@@ -9,7 +9,7 @@ import com.example.wrench.MyEnum
 import com.example.wrench.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import se.eelde.toggles.TogglesImpl
+import se.eelde.toggles.flow.TogglesImpl
 import javax.inject.Inject
 
 @HiltViewModel

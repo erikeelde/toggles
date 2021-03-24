@@ -1,8 +1,8 @@
 package com.example.wrench.di
 
 import android.app.Application
-import se.eelde.toggles.TogglesPreferences
-import se.eelde.toggles.TogglesPreferencesImpl
+import se.eelde.toggles.prefs.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferencesImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
