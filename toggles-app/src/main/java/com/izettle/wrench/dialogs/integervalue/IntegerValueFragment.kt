@@ -2,10 +2,13 @@ package com.izettle.wrench.dialogs.integervalue
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.izettle.wrench.dialogs.setWidthPercent
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.databinding.FragmentIntegerValueBinding
 
@@ -15,8 +18,14 @@ class IntegerValueFragment : DialogFragment() {
     private lateinit var binding: FragmentIntegerValueBinding
     private val viewModel by viewModels<FragmentIntegerValueViewModel>()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentIntegerValueBinding.inflate(layoutInflater)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = FragmentIntegerValueBinding.inflate(layoutInflater).also { binding = it }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setWidthPercent(90)
 
         viewModel.viewState.observe(
             this,
@@ -62,9 +71,5 @@ class IntegerValueFragment : DialogFragment() {
         binding.save.setOnClickListener {
             viewModel.saveClick(binding.value.text.toString())
         }
-
-        return AlertDialog.Builder(requireActivity())
-            .setView(binding.root)
-            .create()
     }
 }

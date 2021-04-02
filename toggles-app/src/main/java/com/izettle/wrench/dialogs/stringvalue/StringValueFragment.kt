@@ -2,10 +2,13 @@ package com.izettle.wrench.dialogs.stringvalue
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.izettle.wrench.dialogs.setWidthPercent
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.databinding.FragmentStringValueBinding
 
@@ -15,8 +18,14 @@ class StringValueFragment : DialogFragment() {
     private lateinit var binding: FragmentStringValueBinding
     private val viewModel by viewModels<FragmentStringValueViewModel>()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        this.binding = FragmentStringValueBinding.inflate(layoutInflater)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = FragmentStringValueBinding.inflate(layoutInflater).also { binding = it }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setWidthPercent(90)
 
         viewModel.viewState.observe(
             this,
@@ -62,9 +71,5 @@ class StringValueFragment : DialogFragment() {
         binding.save.setOnClickListener {
             viewModel.saveClick(binding.value.text.toString())
         }
-
-        return AlertDialog.Builder(requireActivity())
-            .setView(binding.root)
-            .create()
     }
 }

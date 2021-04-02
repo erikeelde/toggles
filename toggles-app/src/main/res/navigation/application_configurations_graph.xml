@@ -36,9 +36,6 @@
         <action
             android:id="@+id/action_configurationsFragment_to_enumValueFragment"
             app:destination="@id/enumValueFragment" />
-        <action
-            android:id="@+id/action_configurationsFragment_to_autoCompleteStringValueFragment"
-            app:destination="@id/autoCompleteStringValueFragment" />
         <!-- This would be nice but currently clashes with bubbles using that uri for their intent -->
 <!--        <deepLink-->
 <!--            android:id="@+id/deepLink"-->
@@ -102,16 +99,4 @@
             android:name="scopeId"
             app:argType="long" />
     </fragment>
-    <dialog
-        android:id="@+id/autoCompleteStringValueFragment"
-        android:name="com.izettle.wrench.dialogs.autocompletestringvalue.AutoCompleteStringValueFragment"
-        android:label="AutoCompleteStringValueFragment" >
-        <argument
-            android:name="configurationId"
-            app:argType="long" />
-        <argument
-            android:name="scopeId"
-            app:argType="long" />
-    </dialog>
-
 </navigation>

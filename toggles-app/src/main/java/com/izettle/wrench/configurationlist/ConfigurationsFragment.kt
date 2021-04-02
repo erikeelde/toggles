@@ -266,40 +266,17 @@ class ConfigurationsFragment :
                 configuration.type
             ) || TextUtils.equals(Toggle.TYPE.STRING, configuration.type)
         ) {
-
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                TogglesImpl(requireContext()).toggle(
-                    "Use autocomplete in String configurations",
-                    false
-                ).first { autoCompleteEnabled ->
-                    if (autoCompleteEnabled) {
-                        launch(Dispatchers.Main) {
-                            v.findNavController().navigate(
-                                ConfigurationsFragmentDirections.actionConfigurationsFragmentToAutoCompleteStringValueFragment(
-                                    configuration.id,
-                                    selectedScopeId
-                                )
-                            )
-                        }
-                    } else {
-                        launch(Dispatchers.Main) {
-                            v.findNavController().navigate(
-                                ConfigurationsFragmentDirections.actionConfigurationsFragmentToStringValueFragment(
-                                    configuration.id,
-                                    selectedScopeId
-                                )
-                            )
-                        }
-                    }
-                    autoCompleteEnabled
-                }
-            }
+            v.findNavController().navigate(
+                ConfigurationsFragmentDirections.actionConfigurationsFragmentToStringValueFragment(
+                    configuration.id,
+                    selectedScopeId
+                )
+            )
         } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(
                 Toggle.TYPE.INTEGER,
                 configuration.type
             )
         ) {
-
             v.findNavController().navigate(
                 ConfigurationsFragmentDirections.actionConfigurationsFragmentToIntegerValueFragment(
                     configuration.id,
@@ -322,7 +299,6 @@ class ConfigurationsFragment :
                 configuration.type
             )
         ) {
-
             v.findNavController().navigate(
                 ConfigurationsFragmentDirections.actionConfigurationsFragmentToEnumValueFragment(
                     configuration.id,

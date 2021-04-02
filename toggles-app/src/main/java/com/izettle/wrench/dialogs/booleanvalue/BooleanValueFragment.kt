@@ -1,11 +1,14 @@
 package com.izettle.wrench.dialogs.booleanvalue
 
-import android.app.Dialog
+import android.content.res.Resources
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AlertDialog
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.izettle.wrench.dialogs.setWidthPercent
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.databinding.FragmentBooleanValueBinding
 
@@ -15,8 +18,15 @@ class BooleanValueFragment : DialogFragment() {
     private lateinit var binding: FragmentBooleanValueBinding
     private val viewModel by viewModels<FragmentBooleanValueViewModel>()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentBooleanValueBinding.inflate(layoutInflater)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = FragmentBooleanValueBinding.inflate(layoutInflater).also { binding = it }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setWidthPercent(90)
+
         viewModel.viewState.observe(
             this,
             { viewState ->
@@ -64,8 +74,5 @@ class BooleanValueFragment : DialogFragment() {
             viewModel.saveClick(binding.value.isChecked.toString())
         }
 
-        return AlertDialog.Builder(requireActivity())
-            .setView(binding.root)
-            .create()
     }
 }
