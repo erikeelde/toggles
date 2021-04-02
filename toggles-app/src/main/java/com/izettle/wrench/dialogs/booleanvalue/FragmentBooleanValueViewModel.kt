@@ -25,16 +25,6 @@ import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 import javax.inject.Inject
 
-
-private sealed class ViewAction {
-    data class SaveAction(val value: String) : ViewAction()
-    object RevertAction : ViewAction()
-}
-
-internal sealed class ViewEffect {
-    object Dismiss : ViewEffect()
-}
-
 internal data class ViewState(
     val title: String? = null,
     val checked: Boolean? = null,
@@ -58,8 +48,6 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
     private val configurationValueDao: WrenchConfigurationValueDao
 ) : ViewModel() {
 
-    private val intentChannel = Channel<ViewAction>(Channel.UNLIMITED)
-
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
     internal val state: StateFlow<ViewState>
@@ -70,26 +58,7 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
 
     private var selectedConfigurationValue: WrenchConfigurationValue? = null
 
-    internal val viewEffects = MutableLiveData<Event<ViewEffect>>()
-
     init {
-        viewModelScope.launch {
-            intentChannel.consumeAsFlow().collect { viewAction ->
-                when (viewAction) {
-                    is ViewAction.SaveAction -> {
-                        _state.value = reduce(state.value, PartialViewState.Saving)
-                        updateConfigurationValue(viewAction.value).join()
-                        viewEffects.value = Event(ViewEffect.Dismiss)
-                    }
-                    ViewAction.RevertAction -> {
-                        _state.value = reduce(state.value, PartialViewState.Reverting)
-                        deleteConfigurationValue().join()
-                        viewEffects.value = Event(ViewEffect.Dismiss)
-                    }
-                }
-            }
-        }
-
         viewModelScope.launch {
             configurationDao.getConfiguration(configurationId).collect {
                 _state.value = reduce(state.value, PartialViewState.NewConfiguration(it.key))
@@ -132,13 +101,11 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
     internal suspend fun saveClick(value: Boolean) {
         _state.value = reduce(state.value, PartialViewState.Saving)
         updateConfigurationValue(value.toString()).join()
-        viewEffects.value = Event(ViewEffect.Dismiss)
     }
 
     internal suspend fun revertClick() {
         _state.value = reduce(state.value, PartialViewState.Reverting)
         deleteConfigurationValue().join()
-        viewEffects.value = Event(ViewEffect.Dismiss)
     }
 
     private suspend fun updateConfigurationValue(value: String): Job = coroutineScope {
