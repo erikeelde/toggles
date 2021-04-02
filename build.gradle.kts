@@ -3,7 +3,9 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 
-    val composeVersion by extra("1.0.0-beta02")
+    val roomVersion by extra("2.3.0-rc01")
+    val composeVersion by extra("1.0.0-beta03")
+    val lifecycleVersion by extra("2.3.1")
 
     repositories {
         google()
@@ -12,7 +14,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0-alpha11")
+        classpath("com.android.tools.build:gradle:7.0.0-alpha12")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.4")
         classpath("com.google.gms:oss-licenses:0.9.2")
