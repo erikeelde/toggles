@@ -2,6 +2,7 @@ package com.izettle.wrench.dialogs.scope
 
 import android.database.sqlite.SQLiteException
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.izettle.wrench.database.WrenchScope
@@ -13,10 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScopeFragmentViewModel @Inject internal constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val scopeDao: WrenchScopeDao
 ) : ViewModel() {
 
-    private var applicationId: Long = 0
+    private val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!
 
     internal val selectedScopeLiveData: LiveData<WrenchScope> by lazy {
         scopeDao.getSelectedScopeLiveData(applicationId)
@@ -26,10 +28,6 @@ class ScopeFragmentViewModel @Inject internal constructor(
 
     internal val scopes: LiveData<List<WrenchScope>>
         get() = scopeDao.getScopes(applicationId)
-
-    fun init(applicationId: Long) {
-        this.applicationId = applicationId
-    }
 
     internal fun selectScope(wrenchScope: WrenchScope) {
         viewModelScope.launch {

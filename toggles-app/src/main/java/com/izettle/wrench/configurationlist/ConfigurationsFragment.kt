@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -241,8 +242,11 @@ class ConfigurationsFragment :
                 true
             }
             R.id.action_change_scope -> {
-                val args = ConfigurationsFragmentArgs.fromBundle(requireArguments())
-                ScopeFragment.newInstance(args.applicationId).show(childFragmentManager, null)
+                findNavController().navigate(
+                    ConfigurationsFragmentDirections.actionConfigurationsFragmentToScopeFragment(
+                        args.applicationId
+                    )
+                )
                 true
             }
             else -> {

@@ -1,23 +1,21 @@
 package com.izettle.wrench.dialogs.enumvalue
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
-import com.izettle.wrench.dialogs.setWidthPercent
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.databinding.FragmentEnumValueBinding
 
 @AndroidEntryPoint
-class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.Listener {
+class EnumValueFragment : Fragment(), PredefinedValueRecyclerViewAdapter.Listener {
 
     private lateinit var binding: FragmentEnumValueBinding
     private val viewModel by viewModels<FragmentEnumValueViewModel>()
@@ -32,10 +30,8 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
     ) = FragmentEnumValueBinding.inflate(layoutInflater).also { binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setWidthPercent(90)
-
         viewModel.viewState.observe(
-            this,
+            viewLifecycleOwner,
             { viewState ->
                 if (viewState != null) {
                     if (binding.container.visibility == View.INVISIBLE && viewState.title != null) {
@@ -51,12 +47,12 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
         )
 
         viewModel.viewEffects.observe(
-            this,
+            viewLifecycleOwner,
             { viewEffect ->
                 if (viewEffect != null) {
                     viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
                         when (contentIfNotHandled) {
-                            ViewEffect.Dismiss -> dismiss()
+                            ViewEffect.Dismiss -> findNavController().popBackStack()
                         }
                     }
                 }
@@ -68,7 +64,7 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
         binding.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         viewModel.predefinedValues.observe(
-            this,
+            viewLifecycleOwner,
             { items ->
                 if (items != null) {
                     adapter.submitList(items)
@@ -83,6 +79,6 @@ class EnumValueFragment : DialogFragment(), PredefinedValueRecyclerViewAdapter.L
 
     override fun onClick(view: View, item: WrenchPredefinedConfigurationValue) {
         viewModel.saveClick(item.value!!)
-        dismiss()
+        findNavController().popBackStack()
     }
 }

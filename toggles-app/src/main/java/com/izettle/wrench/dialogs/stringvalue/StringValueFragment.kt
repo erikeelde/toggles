@@ -1,19 +1,17 @@
 package com.izettle.wrench.dialogs.stringvalue
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.izettle.wrench.dialogs.setWidthPercent
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.databinding.FragmentStringValueBinding
 
 @AndroidEntryPoint
-class StringValueFragment : DialogFragment() {
+class StringValueFragment : Fragment() {
 
     private lateinit var binding: FragmentStringValueBinding
     private val viewModel by viewModels<FragmentStringValueViewModel>()
@@ -25,10 +23,8 @@ class StringValueFragment : DialogFragment() {
     ) = FragmentStringValueBinding.inflate(layoutInflater).also { binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setWidthPercent(90)
-
         viewModel.viewState.observe(
-            this,
+            viewLifecycleOwner,
             { viewState ->
                 if (viewState != null) {
                     val invisible = (this.binding.container.visibility == View.INVISIBLE)
@@ -51,12 +47,12 @@ class StringValueFragment : DialogFragment() {
         )
 
         viewModel.viewEffects.observe(
-            this,
+            viewLifecycleOwner,
             { viewEffect ->
                 if (viewEffect != null) {
                     viewEffect.getContentIfNotHandled()?.let { contentIfNotHandled ->
                         when (contentIfNotHandled) {
-                            ViewEffect.Dismiss -> dismiss()
+                            ViewEffect.Dismiss -> findNavController().popBackStack()
                             is ViewEffect.ValueChanged -> binding.value.setText(contentIfNotHandled.value.toString())
                         }
                     }

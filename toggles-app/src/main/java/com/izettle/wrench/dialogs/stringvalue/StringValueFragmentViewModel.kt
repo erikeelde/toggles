@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FragmentStringValueViewModel
 @Inject internal constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val application: Application,
     private val configurationDao: WrenchConfigurationDao,
     private val configurationValueDao: WrenchConfigurationValueDao

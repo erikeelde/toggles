@@ -50,7 +50,7 @@
         android:id="@+id/action_help"
         android:name="com.izettle.wrench.help.HelpFragment"
         android:label="@string/help"
-        tools:layout="@layout/fragment_help" />
+        tools:layout="@layout/fragment_compose" />
 
     <include app:graph="@navigation/application_configurations_graph" />
 </navigation>

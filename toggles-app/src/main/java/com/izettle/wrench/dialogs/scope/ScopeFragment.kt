@@ -1,24 +1,22 @@
 package com.izettle.wrench.dialogs.scope
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.izettle.wrench.database.WrenchScope
-import com.izettle.wrench.dialogs.setWidthPercent
 import dagger.hilt.android.AndroidEntryPoint
-import se.eelde.toggles.R
 import se.eelde.toggles.databinding.FragmentScopeBinding
 
 @AndroidEntryPoint
-class ScopeFragment : DialogFragment(), ScopeRecyclerViewAdapter.Listener {
+class ScopeFragment : Fragment(), ScopeRecyclerViewAdapter.Listener {
 
     private lateinit var binding: FragmentScopeBinding
     private val viewModel by viewModels<ScopeFragmentViewModel>()
@@ -31,14 +29,10 @@ class ScopeFragment : DialogFragment(), ScopeRecyclerViewAdapter.Listener {
     ) = FragmentScopeBinding.inflate(layoutInflater).also { binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setWidthPercent(90)
-
-        viewModel.init(requireArguments().getLong(ARGUMENT_APPLICATION_ID))
-
-        viewModel.scopes.observe(this, { scopes -> adapter!!.submitList(scopes) })
+        viewModel.scopes.observe(viewLifecycleOwner, { scopes -> adapter!!.submitList(scopes) })
 
         viewModel.selectedScopeLiveData.observe(
-            this,
+            viewLifecycleOwner,
             { wrenchScope -> viewModel.selectedScope = wrenchScope }
         )
 
@@ -74,19 +68,6 @@ class ScopeFragment : DialogFragment(), ScopeRecyclerViewAdapter.Listener {
 
     override fun onClick(view: View, wrenchScope: WrenchScope) {
         viewModel.selectScope(wrenchScope)
-        dismiss()
-    }
-
-    companion object {
-
-        private const val ARGUMENT_APPLICATION_ID = "ARGUMENT_APPLICATION_ID"
-
-        fun newInstance(applicationId: Long): ScopeFragment {
-            val fragment = ScopeFragment()
-            val args = Bundle()
-            args.putLong(ARGUMENT_APPLICATION_ID, applicationId)
-            fragment.arguments = args
-            return fragment
-        }
+        findNavController().popBackStack()
     }
 }
