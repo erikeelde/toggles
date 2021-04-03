@@ -25,19 +25,34 @@ import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 import javax.inject.Inject
 
+
+internal data class ViewState(
+    val title: String? = null,
+    val integerValue: Int? = null,
+    val saving: Boolean = false,
+    val reverting: Boolean = false
+)
+
+private sealed class PartialViewState {
+    object Empty : PartialViewState()
+    data class NewConfiguration(val title: String?) : PartialViewState()
+    data class NewConfigurationValue(val value: Int) : PartialViewState()
+    object Saving : PartialViewState()
+    object Reverting : PartialViewState()
+}
+
+
 @HiltViewModel
 class FragmentIntegerValueViewModel @Inject internal constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val application: Application,
     private val configurationDao: WrenchConfigurationDao,
     private val configurationValueDao: WrenchConfigurationValueDao
 ) : ViewModel() {
 
-    private val intentChannel = Channel<ViewAction>(Channel.UNLIMITED)
-
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
-    private val state: StateFlow<ViewState>
+    internal val state: StateFlow<ViewState>
         get() = _state
 
     private val configurationId: Long = savedStateHandle.get<Long>("configurationId")!!
@@ -45,38 +60,18 @@ class FragmentIntegerValueViewModel @Inject internal constructor(
 
     private var selectedConfigurationValue: WrenchConfigurationValue? = null
 
-    internal val viewState = state.asLiveData()
-
-    internal val viewEffects = MutableLiveData<Event<ViewEffect>>()
-
     init {
         viewModelScope.launch {
-            intentChannel.consumeAsFlow().collect { viewAction ->
-                when (viewAction) {
-                    is ViewAction.SaveAction -> {
-                        _state.value = reduce(viewState.value!!, PartialViewState.Saving)
-                        updateConfigurationValue(viewAction.value).join()
-                        viewEffects.value = Event(ViewEffect.Dismiss)
-                    }
-                    ViewAction.RevertAction -> {
-                        _state.value = reduce(viewState.value!!, PartialViewState.Reverting)
-                        deleteConfigurationValue().join()
-                        viewEffects.value = Event(ViewEffect.Dismiss)
-                    }
-                }
+            configurationDao.getConfiguration(configurationId).collect {
+                _state.value = reduce(state.value, PartialViewState.NewConfiguration(it.key))
             }
         }
 
-        viewModelScope.launch {
-            configurationDao.getConfiguration(configurationId).collect {
-                _state.value = reduce(viewState.value!!, PartialViewState.NewConfiguration(it.key))
-            }
-        }
         viewModelScope.launch {
             configurationValueDao.getConfigurationValue(configurationId, scopeId).collect {
                 if (it != null) {
                     selectedConfigurationValue = it
-                    viewEffects.value = Event(ViewEffect.ValueChanged(it.value!!.toInt()))
+                    _state.value = reduce(state.value, PartialViewState.NewConfigurationValue(it.value!!.toInt()))
                 }
             }
         }
@@ -96,15 +91,24 @@ class FragmentIntegerValueViewModel @Inject internal constructor(
             is PartialViewState.Reverting -> {
                 previousState.copy(reverting = true)
             }
+            is PartialViewState.NewConfigurationValue -> {
+                previousState.copy(integerValue = partialViewState.value)
+            }
         }
     }
 
-    internal fun saveClick(value: String) {
-        intentChannel.offer(ViewAction.SaveAction(value))
+    fun setIntegerValue(newValue: Int) {
+        _state.value = reduce(state.value, PartialViewState.NewConfigurationValue(newValue))
     }
 
-    internal fun revertClick() {
-        intentChannel.offer(ViewAction.RevertAction)
+    internal suspend fun saveClick() {
+        _state.value = reduce(state.value, PartialViewState.Saving)
+        updateConfigurationValue(state.value.integerValue.toString()).join()
+    }
+
+    internal suspend fun revertClick() {
+        _state.value = reduce(state.value, PartialViewState.Reverting)
+        deleteConfigurationValue().join()
     }
 
     private suspend fun updateConfigurationValue(value: String): Job = coroutineScope {
@@ -135,28 +139,4 @@ class FragmentIntegerValueViewModel @Inject internal constructor(
             }
         }
     }
-}
-
-internal sealed class ViewAction {
-    data class SaveAction(val value: String) : ViewAction()
-    object RevertAction : ViewAction()
-}
-
-internal sealed class ViewEffect {
-    object Dismiss : ViewEffect()
-    data class ValueChanged(val value: Int) : ViewEffect()
-}
-
-internal data class ViewState(
-    val title: String? = null,
-    val saving: Boolean = false,
-    val reverting: Boolean = false
-)
-
-private sealed class PartialViewState {
-    object Empty : PartialViewState()
-    data class NewConfiguration(val title: String?) : PartialViewState()
-
-    object Saving : PartialViewState()
-    object Reverting : PartialViewState()
 }
