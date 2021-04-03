@@ -1,25 +1,25 @@
-package se.eelde.toggles.dialogs.booleanvalue
+package se.eelde.toggles.dialogs.stringvalue
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
-import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.izettle.wrench.dialogs.booleanvalue.FragmentBooleanValueViewModel
+import com.izettle.wrench.dialogs.stringvalue.FragmentStringValueViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun BooleanValueView(navController: NavController, viewModel: FragmentBooleanValueViewModel) {
+fun StringValueView(navController: NavController, viewModel: FragmentStringValueViewModel) {
 
     val uiState = viewModel.state.collectAsState()
 
@@ -34,11 +34,12 @@ fun BooleanValueView(navController: NavController, viewModel: FragmentBooleanVal
                     style = MaterialTheme.typography.h6,
                     text = it.title ?: "TODO()"
                 )
-
-                Switch(
-                    modifier = Modifier.padding(8.dp).align(End),
-                    checked = uiState.value.checked ?: false,
-                    onCheckedChange = { viewModel.checkedChanged(it) })
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = it.stringValue ?: "",
+                    onValueChange = { viewModel.setStringValue(it) },
+                )
                 Row {
 
                     Button(modifier = Modifier.padding(8.dp), onClick = {
@@ -52,7 +53,7 @@ fun BooleanValueView(navController: NavController, viewModel: FragmentBooleanVal
 
                     Button(modifier = Modifier.padding(8.dp), onClick = {
                         scope.launch {
-                            viewModel.saveClick(it.checked!!)
+                            viewModel.saveClick()
                             navController.popBackStack()
                         }
                     }) {
