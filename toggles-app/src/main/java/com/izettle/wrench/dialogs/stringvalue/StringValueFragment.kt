@@ -8,12 +8,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.R
 import se.eelde.toggles.TogglesTheme
-import se.eelde.toggles.databinding.FragmentStringValueBinding
-import se.eelde.toggles.dialogs.booleanvalue.BooleanValueView
 import se.eelde.toggles.dialogs.stringvalue.StringValueView
 
 @AndroidEntryPoint
