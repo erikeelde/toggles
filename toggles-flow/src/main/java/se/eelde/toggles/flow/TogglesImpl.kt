@@ -129,7 +129,7 @@ class TogglesImpl(context: Context) : Toggles {
 
         val providerInfo =
             context.packageManager.resolveContentProvider(
-                TogglesProviderContract.TOGGLES_AUTHORITY,
+                toggleUri().authority!!,
                 0
             )
         if (providerInfo != null) {

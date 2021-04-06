@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/action_oss"
-        android:name="com.izettle.wrench.oss.list.OssFragment"
+        android:name="se.eelde.toggles.oss.list.OssFragment"
         android:label="@string/oss"
         tools:layout="@layout/fragment_oss">
         <action
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/action_oss_detail"
-        android:name="com.izettle.wrench.oss.detail.OssDetailFragment"
+        android:name="se.eelde.toggles.oss.detail.OssDetailFragment"
         android:label="@string/oss"
         tools:layout="@layout/fragment_oss_detail">
 

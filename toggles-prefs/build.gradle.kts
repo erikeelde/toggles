@@ -57,7 +57,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.5.1")
 
     //implementation("se.eelde.toggles:toggles-core:0.0.1")
-    //implementation("se.eelde.toggles:toggles-core:0.0.1-SNAPSHOT")
-    implementation(project(":toggles-core"))
+    implementation("se.eelde.toggles:toggles-core:0.0.2-SNAPSHOT")
+    //implementation(project(":toggles-core"))
     implementation("androidx.annotation:annotation:1.1.0")
 }
