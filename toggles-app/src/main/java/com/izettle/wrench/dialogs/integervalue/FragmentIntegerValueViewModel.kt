@@ -66,7 +66,15 @@ class FragmentIntegerValueViewModel @Inject internal constructor(
             configurationValueDao.getConfigurationValue(configurationId, scopeId).collect {
                 if (it != null) {
                     selectedConfigurationValue = it
-                    _state.value = reduce(state.value, PartialViewState.NewConfigurationValue(it.value!!.toInt()))
+                    try {
+                        _state.value = reduce(
+                            state.value,
+                            PartialViewState.NewConfigurationValue(it.value!!.toInt())
+                        )
+                    } catch (e: NumberFormatException) {
+                        // delete the value if we encounter a numberformat exception
+                        deleteConfigurationValue()
+                    }
                 }
             }
         }
@@ -98,7 +106,13 @@ class FragmentIntegerValueViewModel @Inject internal constructor(
 
     internal suspend fun saveClick() {
         _state.value = reduce(state.value, PartialViewState.Saving)
-        updateConfigurationValue(state.value.integerValue.toString()).join()
+        // updateConfigurationValue(state.value.integerValue).join()
+
+        state.value.integerValue?.let {
+            updateConfigurationValue(it).join()
+        } ?: run {
+            deleteConfigurationValue()
+        }
     }
 
     internal suspend fun revertClick() {
@@ -106,13 +120,13 @@ class FragmentIntegerValueViewModel @Inject internal constructor(
         deleteConfigurationValue().join()
     }
 
-    private suspend fun updateConfigurationValue(value: String): Job = coroutineScope {
+    private suspend fun updateConfigurationValue(value: Int): Job = coroutineScope {
         viewModelScope.launch(Dispatchers.IO) {
             if (selectedConfigurationValue != null) {
-                configurationValueDao.updateConfigurationValue(configurationId, scopeId, value)
+                configurationValueDao.updateConfigurationValue(configurationId, scopeId, value.toString())
             } else {
                 val wrenchConfigurationValue =
-                    WrenchConfigurationValue(0, configurationId, value, scopeId)
+                    WrenchConfigurationValue(0, configurationId, value.toString(), scopeId)
                 wrenchConfigurationValue.id = configurationValueDao.insert(wrenchConfigurationValue)
             }
             configurationDao.touch(configurationId, Date())

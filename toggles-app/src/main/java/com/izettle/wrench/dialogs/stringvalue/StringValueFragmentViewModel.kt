@@ -97,7 +97,11 @@ class FragmentStringValueViewModel
 
     internal suspend fun saveClick() {
         _state.value = reduce(state.value, PartialViewState.Saving)
-        updateConfigurationValue(state.value.stringValue!!).join()
+        state.value.stringValue?.let {
+            updateConfigurationValue(it).join()
+        } ?: run {
+            deleteConfigurationValue()
+        }
     }
 
     internal suspend fun revertClick() {
