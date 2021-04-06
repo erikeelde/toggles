@@ -1,4 +1,4 @@
-package com.izettle.wrench.help
+package se.eelde.toggles.help
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import se.eelde.toggles.R
-import se.eelde.toggles.help.HelpView
 
 class HelpFragment : Fragment() {
     override fun onCreateView(

@@ -1,4 +1,4 @@
-package com.izettle.wrench.dialogs.integervalue
+package se.eelde.toggles.dialogs.integervalue
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,10 +8,10 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.izettle.wrench.dialogs.integervalue.FragmentIntegerValueViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.R
 import se.eelde.toggles.TogglesTheme
-import se.eelde.toggles.dialogs.integervalue.IntegerValueView
 
 @AndroidEntryPoint
 class IntegerValueFragment : Fragment() {
