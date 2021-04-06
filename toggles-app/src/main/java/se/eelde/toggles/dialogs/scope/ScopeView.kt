@@ -40,7 +40,7 @@ fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewMod
                     text = stringResource(id = R.string.select_scope)
                 )
                 LazyColumn {
-                    uiState.value.scopes.forEach {0
+                    uiState.value.scopes.forEach { 0
                         item {
                             ListItem(modifier = Modifier.clickable {
                                 scope.launch {

@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 internal data class ViewState(
     val applications: List<WrenchApplication> = listOf(),
 )
@@ -45,5 +44,4 @@ internal class ApplicationViewModel @Inject constructor(applicationDao: WrenchAp
             PartialViewState.Empty -> viewState
         }
     }
-
 }

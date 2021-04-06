@@ -7,7 +7,6 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-
 @Suppress("MagicNumber")
 // https://material.io/design/color/dark-theme.html#anatomy
 private val DarkColorPalette = darkColors(

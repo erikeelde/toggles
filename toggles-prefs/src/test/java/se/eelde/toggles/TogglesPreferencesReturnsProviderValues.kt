@@ -42,7 +42,7 @@ class TogglesPreferencesReturnsProviderValues {
     @Before
     fun setUp() {
 
-        val info = ProviderInfo().apply { authority = TogglesProviderContract.TOGGLES_AUTHORITY }
+        val info = ProviderInfo().apply { authority = TogglesProviderContract.toggleUri().authority!! }
         contentProviderController = Robolectric.buildContentProvider(MockContentProvider::class.java).create(info)
 
         togglesPreferences = TogglesPreferencesImpl(ApplicationProvider.getApplicationContext<Application>())
@@ -97,10 +97,10 @@ class MockContentProvider : ContentProvider() {
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
         init {
-            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "currentConfiguration/#", CURRENT_CONFIGURATION_ID)
-            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "currentConfiguration/*", CURRENT_CONFIGURATION_KEY)
-            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "currentConfiguration", CURRENT_CONFIGURATIONS)
-            uriMatcher.addURI(TogglesProviderContract.TOGGLES_AUTHORITY, "predefinedConfigurationValue", PREDEFINED_CONFIGURATION_VALUES)
+            uriMatcher.addURI(TogglesProviderContract.toggleUri().authority!!, "currentConfiguration/#", CURRENT_CONFIGURATION_ID)
+            uriMatcher.addURI(TogglesProviderContract.toggleUri().authority!!, "currentConfiguration/*", CURRENT_CONFIGURATION_KEY)
+            uriMatcher.addURI(TogglesProviderContract.toggleUri().authority!!, "currentConfiguration", CURRENT_CONFIGURATIONS)
+            uriMatcher.addURI(TogglesProviderContract.toggleUri().authority!!, "predefinedConfigurationValue", PREDEFINED_CONFIGURATION_VALUES)
         }
     }
 

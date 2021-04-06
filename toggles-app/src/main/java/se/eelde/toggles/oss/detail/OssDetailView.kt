@@ -28,7 +28,4 @@ internal fun OssDetailView(viewModel: OssDetailViewModel) {
             }
         }
     }
-
-
-
 }

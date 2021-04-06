@@ -109,7 +109,7 @@ class FragmentStringValueViewModel
         deleteConfigurationValue()
     }
 
-    private suspend fun  updateConfigurationValue(value: String): Job = coroutineScope {
+    private suspend fun updateConfigurationValue(value: String): Job = coroutineScope {
         viewModelScope.launch(Dispatchers.IO) {
             if (selectedConfigurationValue != null) {
                 configurationValueDao.updateConfigurationValue(configurationId, scopeId, value)

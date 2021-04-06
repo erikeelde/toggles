@@ -18,7 +18,6 @@ import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.Toggle.Companion.fromCursor
 import se.eelde.toggles.core.Toggle.ToggleType
 import se.eelde.toggles.core.ToggleValue
-import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 import se.eelde.toggles.core.showDownloadNotification

@@ -13,10 +13,9 @@ class HelpFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) : View = inflater.inflate(R.layout.fragment_compose, container, false).apply {
+    ): View = inflater.inflate(R.layout.fragment_compose, container, false).apply {
         findViewById<ComposeView>(R.id.compose).setContent {
             HelpView()
         }
     }
-
 }

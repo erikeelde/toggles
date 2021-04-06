@@ -1,8 +1,6 @@
 package se.eelde.toggles.applicationlist
 
 import android.content.pm.PackageManager
-import android.graphics.drawable.AdaptiveIconDrawable
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -43,7 +41,7 @@ internal fun ApplicationListView(navController: NavController, viewModel: Applic
                         var secondaryText = ""
                         try {
                             val packageManager = context.packageManager
-                            val icon : Drawable = packageManager.getApplicationIcon(application.packageName)
+                            val icon: Drawable = packageManager.getApplicationIcon(application.packageName)
                             lol = icon.toBitmap(width = 128, height = 128).asImageBitmap()
                         } catch (e: PackageManager.NameNotFoundException) {
                             secondaryText = stringResource(id = R.string.not_installed)

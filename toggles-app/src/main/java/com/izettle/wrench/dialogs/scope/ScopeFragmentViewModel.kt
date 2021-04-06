@@ -1,7 +1,5 @@
 package com.izettle.wrench.dialogs.scope
 
-import android.database.sqlite.SQLiteException
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

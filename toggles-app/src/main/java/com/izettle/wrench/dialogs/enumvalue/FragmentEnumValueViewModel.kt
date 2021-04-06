@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate

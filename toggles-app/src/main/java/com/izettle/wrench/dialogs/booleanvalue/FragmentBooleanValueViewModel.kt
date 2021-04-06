@@ -132,4 +132,3 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
         }
     }
 }
-

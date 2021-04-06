@@ -20,7 +20,6 @@ import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 import javax.inject.Inject
 
-
 internal data class ViewState(
     val title: String? = null,
     val integerValue: Int? = null,
@@ -35,7 +34,6 @@ private sealed class PartialViewState {
     object Saving : PartialViewState()
     object Reverting : PartialViewState()
 }
-
 
 @HiltViewModel
 class FragmentIntegerValueViewModel @Inject internal constructor(
