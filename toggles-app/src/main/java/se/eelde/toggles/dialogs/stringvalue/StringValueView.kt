@@ -1,5 +1,6 @@
 package se.eelde.toggles.dialogs.stringvalue
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +29,6 @@ fun StringValueView(navController: NavController, viewModel: FragmentStringValue
     uiState.value.let {
         Surface(modifier = Modifier.padding(16.dp)) {
             Column {
-
                 Text(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.h6,
@@ -40,7 +40,7 @@ fun StringValueView(navController: NavController, viewModel: FragmentStringValue
                     value = it.stringValue ?: "",
                     onValueChange = { viewModel.setStringValue(it) },
                 )
-                Row {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
 
                     Button(modifier = Modifier.padding(8.dp), onClick = {
                         scope.launch {

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/action_applications"
-        android:name="com.izettle.wrench.applicationlist.ApplicationsFragment"
+        android:name="se.eelde.toggles.applicationlist.ApplicationsFragment"
         android:label="@string/applications">
         <action
             android:id="@+id/action_applicationsFragment_to_configurationsFragment"

@@ -11,8 +11,8 @@ import androidx.compose.ui.graphics.Color
 @Suppress("MagicNumber")
 // https://material.io/design/color/dark-theme.html#anatomy
 private val DarkColorPalette = darkColors(
-    primary = Color(0xFF1E1A87),
-    primaryVariant = Color(0xFF131061),
+    primary = Color(0xFF7673C5),
+    primaryVariant = Color(0xFF595792),
     secondary = Color(0xFF07BD46),
 )
 

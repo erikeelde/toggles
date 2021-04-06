@@ -1,7 +1,9 @@
 package se.eelde.toggles.dialogs.booleanvalue
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -36,11 +38,12 @@ fun BooleanValueView(navController: NavController, viewModel: FragmentBooleanVal
                 )
 
                 Switch(
-                    modifier = Modifier.padding(8.dp).align(End),
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(End),
                     checked = uiState.value.checked ?: false,
                     onCheckedChange = { viewModel.checkedChanged(it) })
-                Row {
-
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     Button(modifier = Modifier.padding(8.dp), onClick = {
                         scope.launch {
                             viewModel.revertClick()

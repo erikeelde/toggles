@@ -54,12 +54,15 @@ android {
     }
 }
 
+repositories {
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
+}
+
 dependencies {
 
     val composeVersion: String by rootProject.extra
     val roomVersion: String by rootProject.extra
     val lifecycleVersion: String by rootProject.extra
-
 
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("androidx.test:core:1.3.0")
@@ -89,6 +92,8 @@ dependencies {
 
     implementation(project(":toggles-prefs"))
     implementation(project(":toggles-flow"))
+//    implementation("se.eelde.toggles:toggles-flow:0.0.1-SNAPSHOT")
+//    implementation("se.eelde.toggles:toggles-prefs:0.0.1-SNAPSHOT")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 

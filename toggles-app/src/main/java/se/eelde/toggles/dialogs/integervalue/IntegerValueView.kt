@@ -1,5 +1,6 @@
 package se.eelde.toggles.dialogs.integervalue
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +31,6 @@ fun IntegerValueView(navController: NavController, viewModel: FragmentIntegerVal
     uiState.value.let {
         Surface(modifier = Modifier.padding(16.dp)) {
             Column {
-
                 Text(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.h6,
@@ -43,8 +43,7 @@ fun IntegerValueView(navController: NavController, viewModel: FragmentIntegerVal
                     value = if (it.integerValue != null) it.integerValue.toString() else "",
                     onValueChange = { viewModel.setIntegerValue(it.toInt()) },
                 )
-                Row {
-
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     Button(modifier = Modifier.padding(8.dp), onClick = {
                         scope.launch {
                             viewModel.revertClick()

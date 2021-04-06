@@ -1,8 +1,10 @@
 package se.eelde.toggles.dialogs.enumvalue
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
@@ -31,7 +33,6 @@ fun EnumValueView(navController: NavController, viewModel: FragmentEnumValueView
     uiState.value.let {
         Surface(modifier = Modifier.padding(16.dp)) {
             Column {
-
                 Text(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.h6,
@@ -51,7 +52,7 @@ fun EnumValueView(navController: NavController, viewModel: FragmentEnumValueView
                         }
                     }
                 }
-                Row {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     Button(modifier = Modifier.padding(8.dp), onClick = {
                         scope.launch {
                             viewModel.revertClick()
