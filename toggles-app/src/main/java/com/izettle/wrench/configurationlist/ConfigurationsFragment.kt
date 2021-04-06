@@ -19,7 +19,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -28,14 +27,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchConfigurationWithValues
-import com.izettle.wrench.dialogs.scope.ScopeFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import se.eelde.toggles.R
-import se.eelde.toggles.flow.TogglesImpl
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.databinding.FragmentConfigurationsBinding
 import se.eelde.toggles.viewLifecycle

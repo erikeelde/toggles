@@ -90,7 +90,7 @@
     </fragment>
     <fragment
         android:id="@+id/scopeFragment"
-        android:name="com.izettle.wrench.dialogs.scope.ScopeFragment"
+        android:name="se.eelde.toggles.dialogs.scope.ScopeFragment"
         android:label="ScopeFragment">
         <argument
             android:name="applicationId"

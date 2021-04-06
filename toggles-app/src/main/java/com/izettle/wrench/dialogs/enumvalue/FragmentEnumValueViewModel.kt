@@ -32,7 +32,7 @@ internal data class ViewState(
     val reverting: Boolean = false
 )
 
-private sealed class PartialViewState {
+internal sealed class PartialViewState {
     object Empty : PartialViewState()
     data class NewConfiguration(val title: String?) : PartialViewState()
     class ConfigurationValues(val configurationValues: List<WrenchPredefinedConfigurationValue>) :
