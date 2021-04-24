@@ -59,5 +59,5 @@ dependencies {
     //implementation("se.eelde.toggles:toggles-core:0.0.1")
     implementation("se.eelde.toggles:toggles-core:0.0.2-SNAPSHOT")
     //implementation(project(":toggles-core"))
-    implementation("androidx.annotation:annotation:1.1.0")
+    implementation("androidx.annotation:annotation:1.2.0")
 }

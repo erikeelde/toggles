@@ -20,7 +20,6 @@ import se.eelde.toggles.core.Toggle.ToggleType
 import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
-import se.eelde.toggles.core.showDownloadNotification
 
 class TogglesImpl(context: Context) : Toggles {
     private val context = context.applicationContext
@@ -134,8 +133,6 @@ class TogglesImpl(context: Context) : Toggles {
         if (providerInfo != null) {
             contentResolver
                 .registerContentObserver(toggleUri(), true, toggleContentObserver)
-        } else {
-            showDownloadNotification(context = context)
         }
 
         offer(getToggle(contentResolver, type, key))

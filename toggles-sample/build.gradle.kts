@@ -3,7 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
-    id("com.google.gms.oss.licenses.plugin")
+    id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
 }
 
@@ -72,23 +72,23 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.2")
     testImplementation("org.robolectric:robolectric:4.5.1")
 
-    implementation("androidx.appcompat:appcompat:1.3.0-beta01")
+    implementation("androidx.appcompat:appcompat:1.3.0-rc01")
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
-    implementation("com.google.dagger:hilt-android:2.33-beta")
-    kapt("com.google.dagger:hilt-android-compiler:2.33-beta")
+    implementation("com.google.dagger:hilt-android:2.35")
+    kapt("com.google.dagger:hilt-android-compiler:2.35")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     kapt("androidx.hilt:hilt-compiler:1.0.0-beta01")
-    testImplementation("com.google.dagger:hilt-android-testing:2.33-beta")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.33-beta")
+    testImplementation("com.google.dagger:hilt-android-testing:2.35")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.35")
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
 
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.4")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
     implementation(project(":toggles-prefs"))
     implementation(project(":toggles-flow"))
@@ -97,11 +97,11 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 
-    implementation("com.google.dagger:dagger:2.33")
-    kapt("com.google.dagger:dagger-compiler:2.33")
+    implementation("com.google.dagger:dagger:2.35")
+    kapt("com.google.dagger:dagger-compiler:2.35")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("androidx.core:core-ktx:1.3.2")
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
 }
