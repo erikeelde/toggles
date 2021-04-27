@@ -10,7 +10,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
-    id("com.github.triplet.play") version "3.3.0-agp4.2"
+    id("com.github.triplet.play")
     id("kotlin-android")
 }
 

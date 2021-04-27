@@ -31,6 +31,8 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.16.0"
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.5.0"
+    id("com.github.triplet.play") version "3.4.0-agp7.0" apply false
+
 }
 
 allprojects {
