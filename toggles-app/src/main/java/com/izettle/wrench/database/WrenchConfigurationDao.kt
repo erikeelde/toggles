@@ -1,7 +1,6 @@
 package com.izettle.wrench.database
 
 import android.database.Cursor
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -62,11 +61,11 @@ interface WrenchConfigurationDao {
 
     @Transaction
     @Query("SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId ORDER BY lastUse DESC")
-    fun getApplicationConfigurations(applicationId: Long): LiveData<List<WrenchConfigurationWithValues>>
+    fun getApplicationConfigurations(applicationId: Long): Flow<List<WrenchConfigurationWithValues>>
 
     @Transaction
     @Query("SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId AND configurationKey LIKE :query ORDER BY lastUse DESC")
-    fun getApplicationConfigurations(applicationId: Long, query: String): LiveData<List<WrenchConfigurationWithValues>>
+    fun getApplicationConfigurations(applicationId: Long, query: String): Flow<List<WrenchConfigurationWithValues>>
 
     @Insert
     fun insert(wrenchConfiguration: WrenchConfiguration): Long

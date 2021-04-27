@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import se.eelde.toggles.R
 import se.eelde.toggles.TogglesUriMatcher
 
@@ -25,7 +25,7 @@ class BubbleFragment : Fragment() {
         when (TogglesUriMatcher.getTogglesUriMatcher().match(requireActivity().intent.data)) {
             TogglesUriMatcher.APPLICATION_ID -> {
                 val applicationId = 1L
-                Navigation.findNavController(view).navigate(
+                findNavController().navigate(
                     BubbleFragmentDirections.actionBubbleFragmentToApplicationConfigurationsGraph(
                         applicationId
                     )

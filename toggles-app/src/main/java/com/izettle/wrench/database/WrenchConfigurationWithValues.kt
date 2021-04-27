@@ -13,8 +13,8 @@ data class WrenchConfigurationWithValues constructor(
     var key: String?,
 
     @ColumnInfo(name = ConfigurationTable.COL_TYPE)
-    var type: String?
-) {
+    var type: String?,
+
     @Relation(parentColumn = "id", entityColumn = "configurationId")
     var configurationValues: Set<WrenchConfigurationValue>? = null
-}
+)

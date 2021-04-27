@@ -2,10 +2,7 @@ package com.izettle.wrench.configurationlist
 
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.izettle.wrench.database.WrenchApplication
@@ -15,34 +12,38 @@ import com.izettle.wrench.database.WrenchConfigurationWithValues
 import com.izettle.wrench.database.WrenchScope
 import com.izettle.wrench.database.WrenchScopeDao
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal data class ViewState(
     val configurations: List<WrenchConfigurationWithValues> = listOf(),
+    val defaultScope: WrenchScope? = null,
+    val selectedScope: WrenchScope? = null,
 )
 
 internal sealed class PartialViewState {
     object Empty : PartialViewState()
-    class Configurations(val configurations: List<WrenchConfigurationWithValues>) :
+    data class Configurations(val configurations: List<WrenchConfigurationWithValues>) :
         PartialViewState()
+
+    data class SelectedScope(val scope: WrenchScope) : PartialViewState()
+    data class DefaultScope(val scope: WrenchScope) : PartialViewState()
 }
 
-
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ConfigurationViewModel @Inject internal constructor(
     private val applicationDao: WrenchApplicationDao,
     configurationDao: WrenchConfigurationDao,
-    private val scopeDao: WrenchScopeDao,
+    scopeDao: WrenchScopeDao,
     val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val queryLiveData: MutableLiveData<String> = MutableLiveData()
-
-    private val configurationListLiveData: MediatorLiveData<List<WrenchConfigurationWithValues>>
-
-    private val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!
+    internal val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!
 
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
@@ -52,38 +53,36 @@ class ConfigurationViewModel @Inject internal constructor(
     internal val wrenchApplication: LiveData<WrenchApplication> =
         applicationDao.getApplicationLiveData(applicationId)
 
-    internal val selectedScopeLiveData: LiveData<WrenchScope> =
-        scopeDao.getSelectedScopeLiveData(applicationId)
-
-    internal val defaultScopeLiveData: LiveData<WrenchScope> =
-        scopeDao.getDefaultScopeLiveData(applicationId)
-
-    private val listEmpty: MutableLiveData<Boolean>
-
-    internal val configurations: LiveData<List<WrenchConfigurationWithValues>>
-        get() = configurationListLiveData
-
-    internal val isListEmpty: LiveData<Boolean>
-        get() = listEmpty
+    private val queryString: MutableStateFlow<String> = MutableStateFlow("")
 
     init {
         setQuery(savedStateHandle.get<String>("query") ?: "")
+        viewModelScope.launch {
+            queryString.value = (savedStateHandle.get<String>("query") ?: "")
+        }
 
-        listEmpty = MutableLiveData()
-
-        val configurationsLiveData = Transformations.switchMap(queryLiveData) { query ->
-            if (TextUtils.isEmpty(query)) {
-                configurationDao.getApplicationConfigurations(applicationId)
-            } else {
-                configurationDao.getApplicationConfigurations(applicationId, "%$query%")
+        viewModelScope.launch {
+            scopeDao.getSelectedScopeFlow(applicationId = applicationId).collect { scope ->
+                _state.value = reduce(_state.value, PartialViewState.SelectedScope(scope))
             }
         }
 
-        configurationListLiveData = MediatorLiveData()
-        configurationListLiveData.addSource(configurationsLiveData) { wrenchConfigurationWithValues ->
-            listEmpty.value =
-                wrenchConfigurationWithValues == null || wrenchConfigurationWithValues.isEmpty()
-            configurationListLiveData.setValue(wrenchConfigurationWithValues)
+        viewModelScope.launch {
+            scopeDao.getDefaultScopeFlow(applicationId = applicationId).collect { scope ->
+                _state.value = reduce(_state.value, PartialViewState.DefaultScope(scope))
+            }
+        }
+
+        viewModelScope.launch {
+            queryString.flatMapLatest { queryString ->
+                if (TextUtils.isEmpty(queryString)) {
+                    configurationDao.getApplicationConfigurations(applicationId)
+                } else {
+                    configurationDao.getApplicationConfigurations(applicationId, "%$queryString%")
+                }
+            }.collect { value ->
+                _state.value = reduce(_state.value, PartialViewState.Configurations(value))
+            }
         }
     }
 
@@ -93,11 +92,15 @@ class ConfigurationViewModel @Inject internal constructor(
                 configurations = partialViewState.configurations
             )
             PartialViewState.Empty -> viewState
+            is PartialViewState.DefaultScope -> viewState.copy(defaultScope = partialViewState.scope)
+            is PartialViewState.SelectedScope -> viewState.copy(selectedScope = partialViewState.scope)
         }
     }
 
     fun setQuery(query: String) {
-        queryLiveData.value = query
+        viewModelScope.launch {
+            queryString.value = query
+        }
         savedStateHandle["query"] = query
     }
 
