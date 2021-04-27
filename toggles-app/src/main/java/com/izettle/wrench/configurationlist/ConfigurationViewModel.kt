@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,31 +15,51 @@ import com.izettle.wrench.database.WrenchConfigurationWithValues
 import com.izettle.wrench.database.WrenchScope
 import com.izettle.wrench.database.WrenchScopeDao
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+internal data class ViewState(
+    val applications: List<WrenchApplication> = listOf(),
+)
+
+internal sealed class PartialViewState {
+    object Empty : PartialViewState()
+    class Applications(val configurations: List<WrenchApplication>) :
+        PartialViewState()
+}
+
 
 @HiltViewModel
 class ConfigurationViewModel @Inject internal constructor(
     private val applicationDao: WrenchApplicationDao,
     configurationDao: WrenchConfigurationDao,
-    private val scopeDao: WrenchScopeDao
+    private val scopeDao: WrenchScopeDao,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val queryLiveData: MutableLiveData<String> = MutableLiveData()
 
     private val configurationListLiveData: MediatorLiveData<List<WrenchConfigurationWithValues>>
 
-    internal val wrenchApplication: LiveData<WrenchApplication> by lazy {
-        Transformations.switchMap(applicationIdLiveData) { applicationId: Long -> applicationDao.getApplicationLiveData(applicationId) }
-    }
+    private val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!
 
-    private val applicationIdLiveData: MutableLiveData<Long> = MutableLiveData()
-    internal val selectedScopeLiveData: LiveData<WrenchScope> by lazy {
-        Transformations.switchMap(applicationIdLiveData) { applicationId: Long -> scopeDao.getSelectedScopeLiveData(applicationId) }
-    }
+    private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
-    internal val defaultScopeLiveData: LiveData<WrenchScope> by lazy {
-        Transformations.switchMap(applicationIdLiveData) { applicationId: Long -> scopeDao.getDefaultScopeLiveData(applicationId) }
-    }
+    internal val state: StateFlow<ViewState>
+        get() = _state
+
+    internal val wrenchApplication: LiveData<WrenchApplication> =
+        applicationDao.getApplicationLiveData(applicationId)
+
+
+    internal val selectedScopeLiveData: LiveData<WrenchScope> =
+        scopeDao.getSelectedScopeLiveData(applicationId)
+
+
+    internal val defaultScopeLiveData: LiveData<WrenchScope> =
+        scopeDao.getDefaultScopeLiveData(applicationId)
+
 
     private val listEmpty: MutableLiveData<Boolean>
 
@@ -56,21 +77,27 @@ class ConfigurationViewModel @Inject internal constructor(
 
         val configurationsLiveData = Transformations.switchMap(queryLiveData) { query ->
             if (TextUtils.isEmpty(query)) {
-                configurationDao.getApplicationConfigurations(applicationIdLiveData.value!!)
+                configurationDao.getApplicationConfigurations(applicationId)
             } else {
-                configurationDao.getApplicationConfigurations(applicationIdLiveData.value!!, "%$query%")
+                configurationDao.getApplicationConfigurations(applicationId, "%$query%")
             }
         }
 
         configurationListLiveData = MediatorLiveData()
         configurationListLiveData.addSource(configurationsLiveData) { wrenchConfigurationWithValues ->
-            listEmpty.value = wrenchConfigurationWithValues == null || wrenchConfigurationWithValues.isEmpty()
+            listEmpty.value =
+                wrenchConfigurationWithValues == null || wrenchConfigurationWithValues.isEmpty()
             configurationListLiveData.setValue(wrenchConfigurationWithValues)
         }
     }
 
-    internal fun setApplicationId(applicationIdLiveData: Long) {
-        this.applicationIdLiveData.value = applicationIdLiveData
+    private fun reduce(viewState: ViewState, partialViewState: PartialViewState): ViewState {
+        return when (partialViewState) {
+            is PartialViewState.Applications -> viewState.copy(
+                applications = partialViewState.configurations
+            )
+            PartialViewState.Empty -> viewState
+        }
     }
 
     fun setQuery(query: String) {

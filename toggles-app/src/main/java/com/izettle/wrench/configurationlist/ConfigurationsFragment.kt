@@ -85,8 +85,6 @@ class ConfigurationsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        model.setApplicationId(args.applicationId)
-
         binding.list.layoutManager = LinearLayoutManager(context)
 
         model.wrenchApplication.observe(
