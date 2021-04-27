@@ -26,13 +26,6 @@ public final class se/eelde/toggles/core/ColumnNames$ToggleValue {
 	public static final field INSTANCE Lse/eelde/toggles/core/ColumnNames$ToggleValue;
 }
 
-public final class se/eelde/toggles/core/DownloadNotificationKt {
-	public static final fun getStartActivityPendingIntent (Landroid/content/Context;Landroid/content/Intent;)Landroid/app/PendingIntent;
-	public static final fun getStartActivityPendingIntentPostM (Landroid/content/Context;Landroid/content/Intent;)Landroid/app/PendingIntent;
-	public static final fun getStartActivityPendingIntentPreM (Landroid/content/Context;Landroid/content/Intent;)Landroid/app/PendingIntent;
-	public static final fun showDownloadNotification (Landroid/content/Context;)V
-}
-
 public final class se/eelde/toggles/core/Toggle {
 	public static final field Companion Lse/eelde/toggles/core/Toggle$Companion;
 	public fun <init> (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V

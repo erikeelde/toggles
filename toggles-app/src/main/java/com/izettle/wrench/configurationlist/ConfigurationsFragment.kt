@@ -19,22 +19,17 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchConfigurationWithValues
-import com.izettle.wrench.dialogs.scope.ScopeFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import se.eelde.toggles.R
-import se.eelde.toggles.flow.TogglesImpl
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.databinding.FragmentConfigurationsBinding
 import se.eelde.toggles.viewLifecycle
@@ -241,8 +236,11 @@ class ConfigurationsFragment :
                 true
             }
             R.id.action_change_scope -> {
-                val args = ConfigurationsFragmentArgs.fromBundle(requireArguments())
-                ScopeFragment.newInstance(args.applicationId).show(childFragmentManager, null)
+                findNavController().navigate(
+                    ConfigurationsFragmentDirections.actionConfigurationsFragmentToScopeFragment(
+                        args.applicationId
+                    )
+                )
                 true
             }
             else -> {
@@ -266,40 +264,17 @@ class ConfigurationsFragment :
                 configuration.type
             ) || TextUtils.equals(Toggle.TYPE.STRING, configuration.type)
         ) {
-
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                TogglesImpl(requireContext()).toggle(
-                    "Use autocomplete in String configurations",
-                    false
-                ).first { autoCompleteEnabled ->
-                    if (autoCompleteEnabled) {
-                        launch(Dispatchers.Main) {
-                            v.findNavController().navigate(
-                                ConfigurationsFragmentDirections.actionConfigurationsFragmentToAutoCompleteStringValueFragment(
-                                    configuration.id,
-                                    selectedScopeId
-                                )
-                            )
-                        }
-                    } else {
-                        launch(Dispatchers.Main) {
-                            v.findNavController().navigate(
-                                ConfigurationsFragmentDirections.actionConfigurationsFragmentToStringValueFragment(
-                                    configuration.id,
-                                    selectedScopeId
-                                )
-                            )
-                        }
-                    }
-                    autoCompleteEnabled
-                }
-            }
+            v.findNavController().navigate(
+                ConfigurationsFragmentDirections.actionConfigurationsFragmentToStringValueFragment(
+                    configuration.id,
+                    selectedScopeId
+                )
+            )
         } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(
                 Toggle.TYPE.INTEGER,
                 configuration.type
             )
         ) {
-
             v.findNavController().navigate(
                 ConfigurationsFragmentDirections.actionConfigurationsFragmentToIntegerValueFragment(
                     configuration.id,
@@ -322,7 +297,6 @@ class ConfigurationsFragment :
                 configuration.type
             )
         ) {
-
             v.findNavController().navigate(
                 ConfigurationsFragmentDirections.actionConfigurationsFragmentToEnumValueFragment(
                     configuration.id,

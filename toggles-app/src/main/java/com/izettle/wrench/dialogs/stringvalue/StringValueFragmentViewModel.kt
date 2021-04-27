@@ -1,44 +1,52 @@
 package com.izettle.wrench.dialogs.stringvalue
 
 import android.app.Application
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.izettle.wrench.Event
 import com.izettle.wrench.database.WrenchConfigurationDao
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 import javax.inject.Inject
 
+internal data class ViewState(
+    val title: String? = null,
+    val stringValue: String? = null,
+    val saving: Boolean = false,
+    val reverting: Boolean = false
+)
+
+private sealed class PartialViewState {
+    object Empty : PartialViewState()
+    data class NewConfiguration(val title: String?) : PartialViewState()
+    data class NewConfigurationValue(val value: String) : PartialViewState()
+    object Saving : PartialViewState()
+    object Reverting : PartialViewState()
+}
+
 @HiltViewModel
 class FragmentStringValueViewModel
 @Inject internal constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val application: Application,
     private val configurationDao: WrenchConfigurationDao,
     private val configurationValueDao: WrenchConfigurationValueDao
 ) : ViewModel() {
 
-    private val intentChannel = Channel<ViewAction>(Channel.UNLIMITED)
-
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
-    private val state: StateFlow<ViewState>
+    internal val state: StateFlow<ViewState>
         get() = _state
 
     private val configurationId: Long = savedStateHandle.get<Long>("configurationId")!!
@@ -46,38 +54,18 @@ class FragmentStringValueViewModel
 
     private var selectedConfigurationValue: WrenchConfigurationValue? = null
 
-    internal val viewState = state.asLiveData()
-
-    internal val viewEffects = MutableLiveData<Event<ViewEffect>>()
-
     init {
         viewModelScope.launch {
-            intentChannel.consumeAsFlow().collect { viewAction ->
-                when (viewAction) {
-                    is ViewAction.SaveAction -> {
-                        _state.value = reduce(viewState.value!!, PartialViewState.Saving)
-                        updateConfigurationValue(viewAction.value).join()
-                        viewEffects.value = Event(ViewEffect.Dismiss)
-                    }
-                    ViewAction.RevertAction -> {
-                        _state.value = reduce(viewState.value!!, PartialViewState.Reverting)
-                        deleteConfigurationValue()
-                        viewEffects.value = Event(ViewEffect.Dismiss)
-                    }
-                }
+            configurationDao.getConfiguration(configurationId).collect {
+                _state.value = reduce(state.value, PartialViewState.NewConfiguration(it.key))
             }
         }
 
-        viewModelScope.launch {
-            configurationDao.getConfiguration(configurationId).collect {
-                _state.value = reduce(viewState.value!!, PartialViewState.NewConfiguration(it.key))
-            }
-        }
         viewModelScope.launch {
             configurationValueDao.getConfigurationValue(configurationId, scopeId).collect {
                 if (it != null) {
                     selectedConfigurationValue = it
-                    viewEffects.value = Event(ViewEffect.ValueChanged(it.value!!))
+                    _state.value = reduce(state.value, PartialViewState.NewConfigurationValue(it.value!!))
                 }
             }
         }
@@ -97,15 +85,28 @@ class FragmentStringValueViewModel
             is PartialViewState.Reverting -> {
                 previousState.copy(reverting = true)
             }
+            is PartialViewState.NewConfigurationValue -> {
+                previousState.copy(stringValue = partialViewState.value)
+            }
         }
     }
 
-    internal fun saveClick(value: String) {
-        intentChannel.offer(ViewAction.SaveAction(value))
+    fun setStringValue(newValue: String) {
+        _state.value = reduce(state.value, PartialViewState.NewConfigurationValue(newValue))
     }
 
-    internal fun revertClick() {
-        intentChannel.offer(ViewAction.RevertAction)
+    internal suspend fun saveClick() {
+        _state.value = reduce(state.value, PartialViewState.Saving)
+        state.value.stringValue?.let {
+            updateConfigurationValue(it).join()
+        } ?: run {
+            deleteConfigurationValue()
+        }
+    }
+
+    internal suspend fun revertClick() {
+        _state.value = reduce(state.value, PartialViewState.Reverting)
+        deleteConfigurationValue()
     }
 
     private suspend fun updateConfigurationValue(value: String): Job = coroutineScope {
@@ -136,28 +137,4 @@ class FragmentStringValueViewModel
             }
         }
     }
-}
-
-internal sealed class ViewAction {
-    data class SaveAction(val value: String) : ViewAction()
-    object RevertAction : ViewAction()
-}
-
-internal sealed class ViewEffect {
-    object Dismiss : ViewEffect()
-    data class ValueChanged(val value: String) : ViewEffect()
-}
-
-internal data class ViewState(
-    val title: String? = null,
-    val saving: Boolean = false,
-    val reverting: Boolean = false
-)
-
-private sealed class PartialViewState {
-    object Empty : PartialViewState()
-    data class NewConfiguration(val title: String?) : PartialViewState()
-
-    object Saving : PartialViewState()
-    object Reverting : PartialViewState()
 }

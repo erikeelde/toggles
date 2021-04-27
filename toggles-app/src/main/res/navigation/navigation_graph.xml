@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/action_applications"
-        android:name="com.izettle.wrench.applicationlist.ApplicationsFragment"
+        android:name="se.eelde.toggles.applicationlist.ApplicationsFragment"
         android:label="@string/applications">
         <action
             android:id="@+id/action_applicationsFragment_to_configurationsFragment"
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/action_oss"
-        android:name="com.izettle.wrench.oss.list.OssFragment"
+        android:name="se.eelde.toggles.oss.list.OssFragment"
         android:label="@string/oss"
         tools:layout="@layout/fragment_oss">
         <action
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/action_oss_detail"
-        android:name="com.izettle.wrench.oss.detail.OssDetailFragment"
+        android:name="se.eelde.toggles.oss.detail.OssDetailFragment"
         android:label="@string/oss"
         tools:layout="@layout/fragment_oss_detail">
 
@@ -48,9 +48,9 @@
 
     <fragment
         android:id="@+id/action_help"
-        android:name="com.izettle.wrench.help.HelpFragment"
+        android:name="se.eelde.toggles.help.HelpFragment"
         android:label="@string/help"
-        tools:layout="@layout/fragment_help" />
+        tools:layout="@layout/fragment_compose" />
 
     <include app:graph="@navigation/application_configurations_graph" />
 </navigation>

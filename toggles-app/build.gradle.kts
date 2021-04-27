@@ -8,9 +8,9 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
-    id("com.google.gms.oss.licenses.plugin")
+    id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
-    id("com.github.triplet.play") version "3.3.0-agp4.2"
+    id("com.github.triplet.play")
     id("kotlin-android")
 }
 
@@ -136,7 +136,6 @@ kapt {
 }
 
 dependencies {
-    implementation(project(":toggles-flow"))
     val composeVersion: String by rootProject.extra
     val roomVersion: String by rootProject.extra
     val lifecycleVersion: String by rootProject.extra
@@ -151,8 +150,8 @@ dependencies {
     implementation("androidx.compose.animation:animation:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha03")
-    implementation("androidx.navigation:navigation-compose:1.0.0-alpha09")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04")
+    implementation("androidx.navigation:navigation-compose:1.0.0-alpha10")
 
     testImplementation("junit:junit:4.13.2")
 
@@ -168,25 +167,25 @@ dependencies {
     testImplementation("androidx.work:work-testing:2.5.0")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation(platform("com.google.firebase:firebase-bom:26.8.0"))
+    implementation(platform("com.google.firebase:firebase-bom:27.1.0"))
 
-    implementation("com.google.dagger:hilt-android:2.33-beta")
-    kapt("com.google.dagger:hilt-android-compiler:2.33-beta")
+    implementation("com.google.dagger:hilt-android:2.35")
+    kapt("com.google.dagger:hilt-android-compiler:2.35")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     kapt("androidx.hilt:hilt-compiler:1.0.0-beta01")
     implementation("androidx.hilt:hilt-work:1.0.0-beta01")
 
-    testImplementation("com.google.dagger:hilt-android-testing:2.33-beta")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.33-beta")
+    testImplementation("com.google.dagger:hilt-android-testing:2.35")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.35")
 
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
-    implementation("com.google.dagger:dagger:2.33")
-    kapt("com.google.dagger:dagger-compiler:2.33")
+    implementation("com.google.dagger:dagger:2.35")
+    kapt("com.google.dagger:dagger-compiler:2.35")
 
-    implementation("androidx.appcompat:appcompat:1.3.0-beta01")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-beta02")
+    implementation("androidx.appcompat:appcompat:1.3.0-rc01")
+    implementation("androidx.recyclerview:recyclerview:1.2.0")
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.cardview:cardview:1.0.0")
@@ -197,10 +196,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.paging:paging-runtime-ktx:3.0.0-beta02")
+    implementation("androidx.paging:paging-runtime-ktx:3.0.0-rc01")
 
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.4")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
     implementation("com.izettle.wrench:wrench-core:0.3")
     implementation(project(":toggles-core"))
@@ -212,5 +211,5 @@ dependencies {
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.work:work-runtime-ktx:2.5.0")
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.6")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
 }

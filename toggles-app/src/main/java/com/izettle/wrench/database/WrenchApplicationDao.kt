@@ -7,12 +7,16 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.izettle.wrench.database.tables.ApplicationTable
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WrenchApplicationDao {
 
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME)
-    fun getApplications(): PagingSource<Int, WrenchApplication>
+    fun getApplicationsPagingSource(): PagingSource<Int, WrenchApplication>
+
+    @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME)
+    fun getApplications(): Flow<List<WrenchApplication>>
 
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE id = (:id)")
     fun getApplicationLiveData(id: Long): LiveData<WrenchApplication>

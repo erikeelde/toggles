@@ -6,7 +6,6 @@ import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
-import se.eelde.toggles.core.showDownloadNotification
 
 class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
     private val context = context.applicationContext
@@ -99,7 +98,6 @@ class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
         val cursor = contentResolver.query(toggleUri(key), null, null, null, null)
         cursor.use {
             if (cursor == null) {
-                showDownloadNotification(context = context)
                 return null
             }
 

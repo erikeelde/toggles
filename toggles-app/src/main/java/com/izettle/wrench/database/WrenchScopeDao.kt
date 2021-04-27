@@ -7,12 +7,13 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.izettle.wrench.database.tables.ScopeTable
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WrenchScopeDao {
 
     @Query("SELECT * FROM " + ScopeTable.TABLE_NAME + " WHERE " + ScopeTable.COL_APP_ID + " = (:applicationId) AND " + ScopeTable.COL_NAME + " != '" + WrenchScope.SCOPE_DEFAULT + "'")
-    fun getScopes(applicationId: Long): LiveData<List<WrenchScope>>
+    fun getScopes(applicationId: Long): Flow<List<WrenchScope>>
 
     @Insert
     fun insert(scope: WrenchScope): Long
