@@ -57,20 +57,10 @@ class ConfigurationsFragment :
         adapter.submitList(wrenchConfigurations)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putCharSequence(STATE_FILTER, searchView!!.query)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-
-        if (savedInstanceState != null) {
-            currentFilter = savedInstanceState.getCharSequence(STATE_FILTER)
-        }
     }
 
     override fun onCreateView(
@@ -308,9 +298,5 @@ class ConfigurationsFragment :
                 Snackbar.LENGTH_LONG
             ).show()
         }
-    }
-
-    companion object {
-        private const val STATE_FILTER = "STATE_FILTER"
     }
 }

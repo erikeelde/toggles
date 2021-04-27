@@ -21,12 +21,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal data class ViewState(
-    val applications: List<WrenchApplication> = listOf(),
+    val configurations: List<WrenchConfigurationWithValues> = listOf(),
 )
 
 internal sealed class PartialViewState {
     object Empty : PartialViewState()
-    class Applications(val configurations: List<WrenchApplication>) :
+    class Configurations(val configurations: List<WrenchConfigurationWithValues>) :
         PartialViewState()
 }
 
@@ -36,7 +36,7 @@ class ConfigurationViewModel @Inject internal constructor(
     private val applicationDao: WrenchApplicationDao,
     configurationDao: WrenchConfigurationDao,
     private val scopeDao: WrenchScopeDao,
-    savedStateHandle: SavedStateHandle,
+    val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val queryLiveData: MutableLiveData<String> = MutableLiveData()
 
@@ -52,14 +52,11 @@ class ConfigurationViewModel @Inject internal constructor(
     internal val wrenchApplication: LiveData<WrenchApplication> =
         applicationDao.getApplicationLiveData(applicationId)
 
-
     internal val selectedScopeLiveData: LiveData<WrenchScope> =
         scopeDao.getSelectedScopeLiveData(applicationId)
 
-
     internal val defaultScopeLiveData: LiveData<WrenchScope> =
         scopeDao.getDefaultScopeLiveData(applicationId)
-
 
     private val listEmpty: MutableLiveData<Boolean>
 
@@ -70,8 +67,7 @@ class ConfigurationViewModel @Inject internal constructor(
         get() = listEmpty
 
     init {
-
-        setQuery("")
+        setQuery(savedStateHandle.get<String>("query") ?: "")
 
         listEmpty = MutableLiveData()
 
@@ -93,8 +89,8 @@ class ConfigurationViewModel @Inject internal constructor(
 
     private fun reduce(viewState: ViewState, partialViewState: PartialViewState): ViewState {
         return when (partialViewState) {
-            is PartialViewState.Applications -> viewState.copy(
-                applications = partialViewState.configurations
+            is PartialViewState.Configurations -> viewState.copy(
+                configurations = partialViewState.configurations
             )
             PartialViewState.Empty -> viewState
         }
@@ -102,6 +98,7 @@ class ConfigurationViewModel @Inject internal constructor(
 
     fun setQuery(query: String) {
         queryLiveData.value = query
+        savedStateHandle["query"] = query
     }
 
     internal fun deleteApplication(wrenchApplication: WrenchApplication) {
