@@ -45,10 +45,6 @@ kotlin {
     explicitApi()
 }
 
-repositories {
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
-}
-
 dependencies {
     testImplementation("junit:junit:4.13.2")
 
@@ -59,8 +55,8 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.2")
     testImplementation("org.robolectric:robolectric:4.5.1")
 
-    //implementation("se.eelde.toggles:toggles-core:0.0.1")
-    implementation("se.eelde.toggles:toggles-core:0.0.2-SNAPSHOT")
+    implementation("se.eelde.toggles:toggles-core:0.0.2")
+    //implementation("se.eelde.toggles:toggles-core:0.0.2-SNAPSHOT")
     //implementation(project(":toggles-core"))
     implementation("androidx.annotation:annotation:1.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
