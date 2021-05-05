@@ -36,15 +36,13 @@ jobs:
 
       - name: Setup environment
         run: |
-          mkdir -p ~/.gradle
-          touch ~/.gradle/gradle.properties
-          echo "signing.keyId=${{secrets.SIGNING_KEYID}}" >> ~/.gradle/gradle.properties
-          echo "signing.password=${{secrets.SIGNING_PASSWORD}}" >> ~/.gradle/gradle.properties
-          echo "signing.secretKeyRingFile=~/.gradle/secring.gpg" >> ~/.gradle/gradle.properties
-          echo "mavenCentralRepositoryUsername=${{secrets.MAVEN_CENTRAL_REPOSITORY_USERNAME}}" >> ~/.gradle/gradle.properties
-          echo "mavenCentralRepositoryPassword=${{secrets.MAVEN_CENTRAL_REPOSITORY_PASSWORD}}" >> ~/.gradle/gradle.properties
-          echo "${{secrets.SECRING_GPG_B64}}" > ~/.gradle/secring.gpg.b64
-          base64 -d ~/.gradle/secring.gpg.b64 > ~/.gradle/secring.gpg
+          echo "signing.keyId=${{secrets.SIGNING_KEYID}}" >> gradle.properties
+          echo "signing.password=${{secrets.SIGNING_PASSWORD}}" >> gradle.properties
+          echo "signing.secretKeyRingFile=secring.gpg" >> gradle.properties
+          echo "mavenCentralRepositoryUsername=${{secrets.MAVEN_CENTRAL_REPOSITORY_USERNAME}}" >> gradle.properties
+          echo "mavenCentralRepositoryPassword=${{secrets.MAVEN_CENTRAL_REPOSITORY_PASSWORD}}" >> gradle.properties
+          echo "${{secrets.SECRING_GPG_B64}}" > secring.gpg.b64
+          base64 -d secring.gpg.b64 > secring.gpg
 
       - name: Publish core library
         run: ./gradlew :toggles-prefs:publish --no-daemon --no-parallel
