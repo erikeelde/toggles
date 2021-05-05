@@ -35,4 +35,4 @@ jobs:
         run: ./gradlew check --exclude-task testReleaseUnitTest
 
       - name: Publish application
-        run: ./gradlew :toggles-app:publish
+        run: ./gradlew :toggles-app:publishRelease
