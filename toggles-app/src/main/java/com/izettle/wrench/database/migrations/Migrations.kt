@@ -8,6 +8,7 @@ object Migrations {
     const val databaseVersion2 = 2
     const val databaseVersion3 = 3
     const val databaseVersion4 = 4
+    const val databaseVersion5 = 5
 
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(database: SupportSQLiteDatabase) {
@@ -178,6 +179,14 @@ object Migrations {
                 database.execSQL("CREATE UNIQUE INDEX `index_application_packageName` ON `$tableNameTemp` (`packageName`)")
 
                 database.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
+            }
+        }
+    }
+    val MIGRATION_4_5: Migration = object : Migration(databaseVersion4, databaseVersion5) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            run {
+                val tableName = "TogglesNotification"
+                database.execSQL("DROP TABLE IF  EXISTS `$tableName`")
             }
         }
     }

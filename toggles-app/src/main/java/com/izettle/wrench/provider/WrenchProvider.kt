@@ -12,7 +12,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.WrenchProviderContract
-import com.izettle.wrench.database.TogglesNotificationDao
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchApplicationDao
 import com.izettle.wrench.database.WrenchConfiguration
@@ -27,15 +26,13 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.GlobalScope
 import se.eelde.toggles.BuildConfig
-import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.TogglesUriMatcher
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
 import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
-import se.eelde.toggles.notification.ChangedHelper
+import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
@@ -63,20 +60,12 @@ class WrenchProvider : ContentProvider() {
         applicationEntryPoint.providePredefinedConfigurationValueDao()
     }
 
-    private val togglesNotificationDao: TogglesNotificationDao by lazy {
-        applicationEntryPoint.provideTogglesNotificationDao()
-    }
-
     private val packageManagerWrapper: IPackageManagerWrapper by lazy {
         applicationEntryPoint.providePackageManagerWrapper()
     }
 
     private val togglesPreferences: TogglesPreferences by lazy {
         applicationEntryPoint.providesWrenchPreferences()
-    }
-
-    private val changedHelper: ChangedHelper by lazy {
-        applicationEntryPoint.providerChangedHelper()
     }
 
     private val applicationEntryPoint: WrenchProviderEntryPoint by lazy {
@@ -91,10 +80,8 @@ class WrenchProvider : ContentProvider() {
         fun provideWrenchConfigurationValueDao(): WrenchConfigurationValueDao
         fun provideWrenchScopeDao(): WrenchScopeDao
         fun providePredefinedConfigurationValueDao(): WrenchPredefinedConfigurationValueDao
-        fun provideTogglesNotificationDao(): TogglesNotificationDao
         fun providePackageManagerWrapper(): IPackageManagerWrapper
         fun providesWrenchPreferences(): TogglesPreferences
-        fun providerChangedHelper(): ChangedHelper
     }
 
     @Synchronized
@@ -157,20 +144,6 @@ class WrenchProvider : ContentProvider() {
                         defaultScope!!.id
                     )
                 }
-
-                if (cursor.moveToFirst()) {
-                    val bolt = Bolt.fromCursor(cursor)
-                    cursor.moveToPrevious()
-                    context?.apply {
-                        changedHelper.configurationRequested(
-                            callingApplication,
-                            bolt.id,
-                            bolt.key,
-                            bolt.value,
-                            GlobalScope,
-                        )
-                    }
-                }
             }
             CURRENT_CONFIGURATION_KEY -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
@@ -181,20 +154,6 @@ class WrenchProvider : ContentProvider() {
 
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
                     cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
-                }
-
-                if (cursor.moveToFirst()) {
-                    val bolt = Bolt.fromCursor(cursor)
-                    cursor.moveToPrevious()
-                    context?.apply {
-                        changedHelper.configurationRequested(
-                            callingApplication,
-                            bolt.id,
-                            bolt.key,
-                            bolt.value,
-                            GlobalScope,
-                        )
-                    }
                 }
             }
             else -> {
