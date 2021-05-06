@@ -1,14 +1,14 @@
 package se.eelde.toggles.di
 
 import android.content.Context
-import com.izettle.wrench.preferences.ITogglesPreferences
-import com.izettle.wrench.preferences.TogglesPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
+import se.eelde.toggles.prefs.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferencesImpl
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.PackageManagerWrapper
 
@@ -19,12 +19,14 @@ object ApplicationModule {
     fun provideIoDispatcher() = Dispatchers.IO
 
     @Provides
-    fun providePackageManagerWrapper(@ApplicationContext context: Context): IPackageManagerWrapper = PackageManagerWrapper(context.packageManager)
+    fun providePackageManagerWrapper(@ApplicationContext context: Context): IPackageManagerWrapper =
+        PackageManagerWrapper(context.packageManager)
 
     @Provides
     fun provideWrenchPackageManagerWrapper(@ApplicationContext context: Context): com.izettle.wrench.provider.IPackageManagerWrapper =
         com.izettle.wrench.provider.PackageManagerWrapper(context.packageManager)
 
     @Provides
-    fun providesWrenchPreferences(@ApplicationContext context: Context): ITogglesPreferences = TogglesPreferences(context)
+    fun providesWrenchPreferences(@ApplicationContext context: Context): TogglesPreferences =
+        TogglesPreferencesImpl(context)
 }

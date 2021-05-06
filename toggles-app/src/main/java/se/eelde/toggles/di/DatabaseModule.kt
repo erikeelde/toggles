@@ -21,6 +21,7 @@ object DatabaseModule {
             .addMigrations(Migrations.MIGRATION_1_2)
             .addMigrations(Migrations.MIGRATION_2_3)
             .addMigrations(Migrations.MIGRATION_3_4)
+            .addMigrations(Migrations.MIGRATION_4_5)
             .build()
     }
 }
@@ -42,7 +43,4 @@ object DaoModule {
 
     @Provides
     fun providePredefinedConfigurationValueDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.predefinedConfigurationValueDao()
-
-    @Provides
-    fun provideTogglesNotificationDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.togglesNotificationsDao()
 }

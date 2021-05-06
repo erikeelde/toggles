@@ -17,7 +17,6 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
         }
     }
     lint {
@@ -38,6 +37,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
+kotlin {
+    // https://kotlinlang.org/docs/whatsnew14.html#explicit-api-mode-for-library-authors
+    explicitApi()
+}
 
 dependencies {
     testImplementation("junit:junit:4.13.2")
@@ -49,7 +52,8 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.2")
     testImplementation("org.robolectric:robolectric:4.5.1")
 
-    implementation(project(":toggles-core"))
-    implementation("androidx.annotation:annotation:1.1.0")
-    implementation("androidx.core:core-ktx:1.3.2")
+    implementation("se.eelde.toggles:toggles-core:0.0.2")
+    //implementation("se.eelde.toggles:toggles-core:0.0.2-SNAPSHOT")
+    //implementation(project(":toggles-core"))
+    implementation("androidx.annotation:annotation:1.2.0")
 }

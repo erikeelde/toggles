@@ -4,8 +4,6 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import androidx.annotation.StringDef
-import androidx.core.database.getLongOrNull
-import androidx.core.database.getStringOrNull
 
 class ColumnNames {
     object Toggle {
@@ -85,19 +83,33 @@ data class Toggle(
         @JvmStatic
         fun fromCursor(cursor: Cursor): Toggle {
             return Toggle(
-                id = cursor.getLongOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_ID))!!,
-                type = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_TYPE))!!,
-                key = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_KEY))!!,
-                value = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_VALUE))
+                id = cursor.getLongOrThrow(ColumnNames.Toggle.COL_ID),
+                type = cursor.getStringOrThrow(ColumnNames.Toggle.COL_TYPE),
+                key = cursor.getStringOrThrow(ColumnNames.Toggle.COL_KEY),
+                value = cursor.getStringOrNull(ColumnNames.Toggle.COL_VALUE)
             )
         }
     }
 }
 
-object TogglesProviderContract {
-    const val TOGGLES_AUTHORITY = BuildConfig.TOGGLES_AUTHORITY
+private fun Cursor.getStringOrThrow(columnName: String): String = getStringOrNull(columnName)!!
 
-    const val TOGGLES_API_VERSION = "API_VERSION"
+private fun Cursor.getStringOrNull(columnName: String): String? {
+    val index = getColumnIndexOrThrow(columnName)
+    return if (isNull(index)) null else getString(index)
+}
+
+private fun Cursor.getLongOrThrow(columnName: String): Long = getLongOrNull(columnName)!!
+
+private fun Cursor.getLongOrNull(columnName: String): Long? {
+    val index = getColumnIndexOrThrow(columnName)
+    return if (isNull(index)) null else getLong(index)
+}
+
+object TogglesProviderContract {
+    private const val TOGGLES_AUTHORITY = BuildConfig.TOGGLES_AUTHORITY
+    private const val TOGGLES_API_VERSION_QUERY_PARAM = "API_VERSION"
+    private const val TOGGLES_API_VERSION = BuildConfig.TOGGLES_API_VERSION.toString()
 
     private val applicationUri = Uri.parse("content://$TOGGLES_AUTHORITY/application")
     private val configurationUri = Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
@@ -108,7 +120,7 @@ object TogglesProviderContract {
         return applicationUri
             .buildUpon()
             .appendPath(id.toString())
-            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
             .build()
     }
 
@@ -117,7 +129,7 @@ object TogglesProviderContract {
         return configurationUri
             .buildUpon()
             .appendPath(id.toString())
-            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
             .build()
     }
 
@@ -126,7 +138,7 @@ object TogglesProviderContract {
         return configurationUri
             .buildUpon()
             .appendPath(key)
-            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
             .build()
     }
 
@@ -134,7 +146,7 @@ object TogglesProviderContract {
     fun toggleUri(): Uri {
         return configurationUri
             .buildUpon()
-            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
             .build()
     }
 
@@ -142,7 +154,7 @@ object TogglesProviderContract {
     fun toggleValueUri(): Uri {
         return configurationValueUri
             .buildUpon()
-            .appendQueryParameter(TOGGLES_API_VERSION, BuildConfig.TOGGLES_API_VERSION.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
             .build()
     }
 }

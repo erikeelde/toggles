@@ -36,9 +36,6 @@
         <action
             android:id="@+id/action_configurationsFragment_to_enumValueFragment"
             app:destination="@id/enumValueFragment" />
-        <action
-            android:id="@+id/action_configurationsFragment_to_autoCompleteStringValueFragment"
-            app:destination="@id/autoCompleteStringValueFragment" />
         <!-- This would be nice but currently clashes with bubbles using that uri for their intent -->
 <!--        <deepLink-->
 <!--            android:id="@+id/deepLink"-->
@@ -47,9 +44,9 @@
 <!--            app:action="ACTION_VIEW"-->
 <!--            tools:targetApi="m" />-->
     </fragment>
-    <dialog
+    <fragment
         android:id="@+id/enumValueFragment"
-        android:name="com.izettle.wrench.dialogs.enumvalue.EnumValueFragment"
+        android:name="se.eelde.toggles.dialogs.enumvalue.EnumValueFragment"
         android:label="EnumValueFragment">
         <argument
             android:name="configurationId"
@@ -57,10 +54,10 @@
         <argument
             android:name="scopeId"
             app:argType="long" />
-    </dialog>
-    <dialog
+    </fragment>
+    <fragment
         android:id="@+id/stringValueFragment"
-        android:name="com.izettle.wrench.dialogs.stringvalue.StringValueFragment"
+        android:name="se.eelde.toggles.dialogs.stringvalue.StringValueFragment"
         android:label="StringValueFragment">
         <argument
             android:name="configurationId"
@@ -68,10 +65,10 @@
         <argument
             android:name="scopeId"
             app:argType="long" />
-    </dialog>
-    <dialog
+    </fragment>
+    <fragment
         android:id="@+id/integerValueFragment"
-        android:name="com.izettle.wrench.dialogs.integervalue.IntegerValueFragment"
+        android:name="se.eelde.toggles.dialogs.integervalue.IntegerValueFragment"
         android:label="IntegerValueFragment">
         <argument
             android:name="configurationId"
@@ -79,10 +76,10 @@
         <argument
             android:name="scopeId"
             app:argType="long" />
-    </dialog>
-    <dialog
+    </fragment>
+    <fragment
         android:id="@+id/booleanValueFragment"
-        android:name="com.izettle.wrench.dialogs.booleanvalue.BooleanValueFragment"
+        android:name="se.eelde.toggles.dialogs.booleanvalue.BooleanValueFragment"
         android:label="BooleanValueFragment">
         <argument
             android:name="configurationId"
@@ -90,28 +87,13 @@
         <argument
             android:name="scopeId"
             app:argType="long" />
-    </dialog>
+    </fragment>
     <fragment
         android:id="@+id/scopeFragment"
-        android:name="com.izettle.wrench.dialogs.scope.ScopeFragment"
+        android:name="se.eelde.toggles.dialogs.scope.ScopeFragment"
         android:label="ScopeFragment">
         <argument
-            android:name="configurationId"
-            app:argType="long" />
-        <argument
-            android:name="scopeId"
+            android:name="applicationId"
             app:argType="long" />
     </fragment>
-    <dialog
-        android:id="@+id/autoCompleteStringValueFragment"
-        android:name="com.izettle.wrench.dialogs.autocompletestringvalue.AutoCompleteStringValueFragment"
-        android:label="AutoCompleteStringValueFragment" >
-        <argument
-            android:name="configurationId"
-            app:argType="long" />
-        <argument
-            android:name="scopeId"
-            app:argType="long" />
-    </dialog>
-
 </navigation>

@@ -1,0 +1,22 @@
+public final class se/eelde/toggles/prefs/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public abstract interface class se/eelde/toggles/prefs/TogglesPreferences {
+	public abstract fun getBoolean (Ljava/lang/String;Z)Z
+	public abstract fun getEnum (Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Enum;)Ljava/lang/Enum;
+	public abstract fun getInt (Ljava/lang/String;I)I
+	public abstract fun getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class se/eelde/toggles/prefs/TogglesPreferencesImpl : se/eelde/toggles/prefs/TogglesPreferences {
+	public fun <init> (Landroid/content/Context;)V
+	public fun getBoolean (Ljava/lang/String;Z)Z
+	public fun getEnum (Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Enum;)Ljava/lang/Enum;
+	public fun getInt (Ljava/lang/String;I)I
+	public fun getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+}
+

@@ -2,12 +2,9 @@ package com.izettle.wrench.dialogs.enumvalue
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.izettle.wrench.Event
 import com.izettle.wrench.database.WrenchConfigurationDao
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationValueDao
@@ -16,18 +13,33 @@ import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 import javax.inject.Inject
+
+internal data class ViewState(
+    val title: String? = null,
+    val configurationValues: List<WrenchPredefinedConfigurationValue> = listOf(),
+    val saving: Boolean = false,
+    val reverting: Boolean = false
+)
+
+internal sealed class PartialViewState {
+    object Empty : PartialViewState()
+    data class NewConfiguration(val title: String?) : PartialViewState()
+    class ConfigurationValues(val configurationValues: List<WrenchPredefinedConfigurationValue>) :
+        PartialViewState()
+
+    object Saving : PartialViewState()
+    object Reverting : PartialViewState()
+}
 
 @HiltViewModel
 class FragmentEnumValueViewModel @Inject internal constructor(
@@ -40,14 +52,12 @@ class FragmentEnumValueViewModel @Inject internal constructor(
     ViewModel() {
 
     internal val predefinedValues: LiveData<List<WrenchPredefinedConfigurationValue>> by lazy {
-        predefinedConfigurationValueDao.getByConfigurationId(configurationId)
+        predefinedConfigurationValueDao.getLiveDataByConfigurationId(configurationId)
     }
-
-    private val intentChannel = Channel<ViewAction>(Channel.UNLIMITED)
 
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
-    private val state: StateFlow<ViewState>
+    internal val state: StateFlow<ViewState>
         get() = _state
 
     private val configurationId: Long = savedStateHandle.get<Long>("configurationId")!!
@@ -55,43 +65,16 @@ class FragmentEnumValueViewModel @Inject internal constructor(
 
     private var selectedConfigurationValue: WrenchConfigurationValue? = null
 
-    internal val viewState = state.asLiveData()
-
-    internal val viewEffects = MutableLiveData<Event<ViewEffect>>()
-
     init {
         viewModelScope.launch {
-            intentChannel.consumeAsFlow().collect { viewAction ->
-                when (viewAction) {
-                    is ViewAction.SaveAction -> {
-                        _state.value = reduce(viewState.value!!, PartialViewState.Saving)
-                        updateConfigurationValue(viewAction.value).join()
-                        application.contentResolver.notifyUpdate(
-                            TogglesProviderContract.toggleUri(
-                                configurationId
-                            )
-                        )
-
-                        viewEffects.value = Event(ViewEffect.Dismiss)
-                    }
-                    ViewAction.RevertAction -> {
-                        _state.value = reduce(viewState.value!!, PartialViewState.Reverting)
-                        deleteConfigurationValue().join()
-                        application.contentResolver.notifyInsert(
-                            TogglesProviderContract.toggleUri(
-                                configurationId
-                            )
-                        )
-
-                        viewEffects.value = Event(ViewEffect.Dismiss)
-                    }
-                }
+            predefinedConfigurationValueDao.getByConfigurationId(configurationId).collect {
+                _state.value = reduce(_state.value, PartialViewState.ConfigurationValues(it))
             }
         }
 
         viewModelScope.launch {
             configurationDao.getConfiguration(configurationId).collect {
-                _state.value = reduce(viewState.value!!, PartialViewState.NewConfiguration(it.key))
+                _state.value = reduce(_state.value, PartialViewState.NewConfiguration(it.key))
             }
         }
         viewModelScope.launch {
@@ -117,15 +100,30 @@ class FragmentEnumValueViewModel @Inject internal constructor(
             is PartialViewState.Reverting -> {
                 previousState.copy(reverting = true)
             }
+            is PartialViewState.ConfigurationValues -> {
+                previousState.copy(configurationValues = partialViewState.configurationValues)
+            }
         }
     }
 
-    internal fun saveClick(value: String) {
-        intentChannel.offer(ViewAction.SaveAction(value))
+    internal suspend fun saveClick(value: String) {
+        _state.value = reduce(_state.value, PartialViewState.Saving)
+        updateConfigurationValue(value).join()
+        application.contentResolver.notifyUpdate(
+            TogglesProviderContract.toggleUri(
+                configurationId
+            )
+        )
     }
 
-    internal fun revertClick() {
-        intentChannel.offer(ViewAction.RevertAction)
+    internal suspend fun revertClick() {
+        _state.value = reduce(_state.value, PartialViewState.Reverting)
+        deleteConfigurationValue().join()
+        application.contentResolver.notifyInsert(
+            TogglesProviderContract.toggleUri(
+                configurationId
+            )
+        )
     }
 
     private suspend fun updateConfigurationValue(value: String): Job = coroutineScope {
@@ -139,38 +137,25 @@ class FragmentEnumValueViewModel @Inject internal constructor(
             }
             configurationDao.touch(configurationId, Date())
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
+            application.contentResolver.notifyUpdate(
+                TogglesProviderContract.toggleUri(
+                    configurationId
+                )
+            )
         }
     }
 
     private suspend fun deleteConfigurationValue(): Job = coroutineScope {
         viewModelScope.launch(Dispatchers.IO) {
-            configurationValueDao.delete(selectedConfigurationValue!!)
+            selectedConfigurationValue?.let {
+                configurationValueDao.delete(it)
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
+                application.contentResolver.notifyUpdate(
+                    TogglesProviderContract.toggleUri(
+                        it.configurationId
+                    )
+                )
+            }
         }
     }
-}
-
-private sealed class ViewAction {
-    data class SaveAction(val value: String) : ViewAction()
-    object RevertAction : ViewAction()
-}
-
-internal sealed class ViewEffect {
-    object Dismiss : ViewEffect()
-}
-
-internal data class ViewState(
-    val title: String? = null,
-    val saving: Boolean = false,
-    val reverting: Boolean = false
-)
-
-private sealed class PartialViewState {
-    object Empty : PartialViewState()
-    data class NewConfiguration(val title: String?) : PartialViewState()
-
-    object Saving : PartialViewState()
-    object Reverting : PartialViewState()
 }

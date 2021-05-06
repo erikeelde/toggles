@@ -1,8 +1,8 @@
 package com.example.wrench.di
 
 import android.app.Application
-import com.izettle.wrench.preferences.ITogglesPreferences
-import com.izettle.wrench.preferences.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferencesImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,5 +16,5 @@ object ApplicationModule {
     fun provideIoDispatcher() = Dispatchers.IO
 
     @Provides
-    fun provideWrenchPreferences(application: Application): ITogglesPreferences = TogglesPreferences(application)
+    fun provideWrenchPreferences(application: Application): TogglesPreferences = TogglesPreferencesImpl(application)
 }

@@ -11,9 +11,8 @@ import androidx.room.TypeConverters
         WrenchConfigurationValue::class,
         WrenchPredefinedConfigurationValue::class,
         WrenchScope::class,
-        TogglesNotification::class
     ],
-    version = 4
+    version = 5
 )
 @TypeConverters(RoomDateConverter::class)
 abstract class WrenchDatabase : RoomDatabase() {
@@ -27,6 +26,4 @@ abstract class WrenchDatabase : RoomDatabase() {
     abstract fun predefinedConfigurationValueDao(): WrenchPredefinedConfigurationValueDao
 
     abstract fun scopeDao(): WrenchScopeDao
-
-    abstract fun togglesNotificationsDao(): TogglesNotificationDao
 }

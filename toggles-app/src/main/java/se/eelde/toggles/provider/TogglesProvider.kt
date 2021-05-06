@@ -9,7 +9,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.os.Binder
-import com.izettle.wrench.database.TogglesNotificationDao
 import com.izettle.wrench.database.WrenchApplication
 import com.izettle.wrench.database.WrenchApplicationDao
 import com.izettle.wrench.database.WrenchConfiguration
@@ -20,12 +19,10 @@ import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
 import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
 import com.izettle.wrench.database.WrenchScope
 import com.izettle.wrench.database.WrenchScopeDao
-import com.izettle.wrench.preferences.ITogglesPreferences
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.GlobalScope
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.TogglesUriMatcher
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
@@ -33,8 +30,7 @@ import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
 import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
 import se.eelde.toggles.core.Toggle
-import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.notification.ChangedHelper
+import se.eelde.toggles.prefs.TogglesPreferences
 import java.util.Date
 
 class TogglesProvider : ContentProvider() {
@@ -59,20 +55,12 @@ class TogglesProvider : ContentProvider() {
         applicationEntryPoint.providePredefinedConfigurationValueDao()
     }
 
-    private val togglesNotificationDao: TogglesNotificationDao by lazy {
-        applicationEntryPoint.provideTogglesNotificationDao()
-    }
-
     private val packageManagerWrapper: IPackageManagerWrapper by lazy {
         applicationEntryPoint.providePackageManagerWrapper()
     }
 
-    private val togglesPreferences: ITogglesPreferences by lazy {
+    private val togglesPreferences: TogglesPreferences by lazy {
         applicationEntryPoint.providesWrenchPreferences()
-    }
-
-    private val changedHelper: ChangedHelper by lazy {
-        applicationEntryPoint.providerChangedHelper()
     }
 
     private val applicationEntryPoint: TogglesProviderEntryPoint by lazy {
@@ -87,10 +75,8 @@ class TogglesProvider : ContentProvider() {
         fun provideWrenchConfigurationValueDao(): WrenchConfigurationValueDao
         fun provideWrenchScopeDao(): WrenchScopeDao
         fun providePredefinedConfigurationValueDao(): WrenchPredefinedConfigurationValueDao
-        fun provideTogglesNotificationDao(): TogglesNotificationDao
         fun providePackageManagerWrapper(): IPackageManagerWrapper
-        fun providesWrenchPreferences(): ITogglesPreferences
-        fun providerChangedHelper(): ChangedHelper
+        fun providesWrenchPreferences(): TogglesPreferences
     }
 
     private fun getCallingApplication(applicationDao: WrenchApplicationDao): WrenchApplication {
@@ -151,20 +137,6 @@ class TogglesProvider : ContentProvider() {
                         defaultScope!!.id
                     )
                 }
-
-                if (cursor.moveToFirst()) {
-                    val toggle = Toggle.fromCursor(cursor)
-                    cursor.moveToPrevious()
-                    if (!isTogglesApplication(callingApplication)) {
-                        context?.apply {
-                            changedHelper.configurationRequested(
-                                callingApplication,
-                                toggle,
-                                GlobalScope
-                            )
-                        }
-                    }
-                }
             }
             CURRENT_CONFIGURATION_KEY -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
@@ -175,20 +147,6 @@ class TogglesProvider : ContentProvider() {
 
                     val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
                     cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
-                }
-
-                if (cursor.moveToFirst()) {
-                    val toggle = Toggle.fromCursor(cursor)
-                    cursor.moveToPrevious()
-                    if (!isTogglesApplication(callingApplication)) {
-                        context?.apply {
-                            changedHelper.configurationRequested(
-                                callingApplication,
-                                toggle,
-                                GlobalScope
-                            )
-                        }
-                    }
                 }
             }
             else -> {
@@ -412,7 +370,7 @@ class TogglesProvider : ContentProvider() {
         }
 
         @Synchronized
-        private fun assertValidApiVersion(togglesPreferences: ITogglesPreferences, uri: Uri) {
+        private fun assertValidApiVersion(togglesPreferences: TogglesPreferences, uri: Uri) {
             var l: Long = 0
             val strictApiVersion = try {
                 l = Binder.clearCallingIdentity()
@@ -438,7 +396,7 @@ class TogglesProvider : ContentProvider() {
 
         @TogglesApiVersion
         private fun getApiVersion(uri: Uri): Int {
-            val queryParameter = uri.getQueryParameter(TogglesProviderContract.TOGGLES_API_VERSION)
+            val queryParameter = uri.getQueryParameter("API_VERSION")
             return if (queryParameter != null) {
                 Integer.valueOf(queryParameter)
             } else {

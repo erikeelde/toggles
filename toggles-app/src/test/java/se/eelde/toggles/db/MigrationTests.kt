@@ -9,6 +9,7 @@ import com.izettle.wrench.database.WrenchDatabase
 import com.izettle.wrench.database.migrations.Migrations.MIGRATION_1_2
 import com.izettle.wrench.database.migrations.Migrations.MIGRATION_2_3
 import com.izettle.wrench.database.migrations.Migrations.MIGRATION_3_4
+import com.izettle.wrench.database.migrations.Migrations.MIGRATION_4_5
 import com.izettle.wrench.database.tables.ConfigurationTable
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -97,6 +98,13 @@ class MigrationTests {
         assertEquals("TestApplication", application.applicationLabel)
         assertEquals("se.eelde.toggles.testapplication", application.shortcutId)
         assertEquals("se.eelde.toggles.testapplication", application.packageName)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test4to5() {
+        testHelper.createDatabase(TEST_DB_NAME, 4)
+        testHelper.runMigrationsAndValidate(TEST_DB_NAME, 5, true, MIGRATION_4_5)
     }
 
     companion object {

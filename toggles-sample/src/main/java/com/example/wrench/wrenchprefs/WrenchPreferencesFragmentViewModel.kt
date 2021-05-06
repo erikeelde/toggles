@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.wrench.MyEnum
 import com.example.wrench.R
-import com.izettle.wrench.preferences.ITogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WrenchPreferencesFragmentViewModel @Inject internal constructor(
     private val application: Application,
-    private val togglesPreferences: ITogglesPreferences
+    private val togglesPreferences: TogglesPreferences
 ) : ViewModel() {
 
     private val job = Job()

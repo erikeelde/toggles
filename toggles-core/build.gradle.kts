@@ -14,12 +14,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val wrenchProviderAuthority = "com.izettle.wrench.configprovider"
-        manifestPlaceholders["wrenchProviderAuthority"] = wrenchProviderAuthority
-        buildConfigField("String", "WRENCH_AUTHORITY", "\"${wrenchProviderAuthority}\"")
-
-        buildConfigField("int", "WRENCH_API_VERSION", "1")
-
         val togglesProviderAuthority = "se.eelde.toggles.configprovider"
         manifestPlaceholders["togglesProviderAuthority"] = togglesProviderAuthority
         buildConfigField("String", "TOGGLES_AUTHORITY", "\"${togglesProviderAuthority}\"")
@@ -30,12 +24,6 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
-        }
-
-        getByName("debug") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
         }
     }
     lint {
@@ -53,9 +41,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
+kotlin {
+    // https://kotlinlang.org/docs/whatsnew14.html#explicit-api-mode-for-library-authors
+    explicitApi()
+}
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.3.2")
     testImplementation("junit:junit:4.13.2")
-    implementation("androidx.annotation:annotation:1.1.0")
+    implementation("androidx.annotation:annotation:1.2.0")
 }
