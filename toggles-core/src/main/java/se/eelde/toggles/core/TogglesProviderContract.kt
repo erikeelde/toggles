@@ -4,8 +4,6 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import androidx.annotation.StringDef
-import androidx.core.database.getLongOrNull
-import androidx.core.database.getStringOrNull
 
 class ColumnNames {
     object Toggle {
@@ -85,13 +83,27 @@ data class Toggle(
         @JvmStatic
         fun fromCursor(cursor: Cursor): Toggle {
             return Toggle(
-                id = cursor.getLongOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_ID))!!,
-                type = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_TYPE))!!,
-                key = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_KEY))!!,
-                value = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(ColumnNames.Toggle.COL_VALUE))
+                id = cursor.getLongOrThrow(ColumnNames.Toggle.COL_ID),
+                type = cursor.getStringOrThrow(ColumnNames.Toggle.COL_TYPE),
+                key = cursor.getStringOrThrow(ColumnNames.Toggle.COL_KEY),
+                value = cursor.getStringOrNull(ColumnNames.Toggle.COL_VALUE)
             )
         }
     }
+}
+
+private fun Cursor.getStringOrThrow(columnName: String): String = getStringOrNull(columnName)!!
+
+private fun Cursor.getStringOrNull(columnName: String): String? {
+    val index = getColumnIndexOrThrow(columnName)
+    return if (isNull(index)) null else getString(index)
+}
+
+private fun Cursor.getLongOrThrow(columnName: String): Long = getLongOrNull(columnName)!!
+
+private fun Cursor.getLongOrNull(columnName: String): Long? {
+    val index = getColumnIndexOrThrow(columnName)
+    return if (isNull(index)) null else getLong(index)
 }
 
 object TogglesProviderContract {
