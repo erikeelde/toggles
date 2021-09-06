@@ -4,7 +4,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 buildscript {
 
     val roomVersion by extra("2.4.0-alpha01")
-    val composeVersion by extra("1.0.0-beta05")
+    val composeVersion by extra("1.0.2")
     val lifecycleVersion by extra("2.3.1")
     val daggerVersion by extra("2.35")
 
@@ -16,7 +16,7 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:7.0.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.38.1")
         classpath("com.google.gms:google-services:4.3.10")
