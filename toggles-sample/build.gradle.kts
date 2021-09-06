@@ -11,11 +11,11 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    compileSdk = 30
+    compileSdk = 31
     defaultConfig {
         applicationId = "se.eelde.toggles.example"
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 31
         versionCode = 2
         versionName = "1.00.01"
 
