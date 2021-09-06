@@ -139,6 +139,7 @@ dependencies {
     val composeVersion: String by rootProject.extra
     val roomVersion: String by rootProject.extra
     val lifecycleVersion: String by rootProject.extra
+    val daggerVersion: String by rootProject.extra
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
@@ -169,19 +170,19 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation(platform("com.google.firebase:firebase-bom:27.1.0"))
 
-    implementation("com.google.dagger:hilt-android:2.35")
-    kapt("com.google.dagger:hilt-android-compiler:2.35")
+    implementation("com.google.dagger:hilt-android:$daggerVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
     implementation("androidx.hilt:hilt-work:1.0.0")
 
-    testImplementation("com.google.dagger:hilt-android-testing:2.35")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.35")
+    testImplementation("com.google.dagger:hilt-android-testing:$daggerVersion")
+    kaptTest("com.google.dagger:hilt-android-compiler:$daggerVersion")
 
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
-    implementation("com.google.dagger:dagger:2.35")
+    implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:2.38.1")
 
     implementation("androidx.appcompat:appcompat:1.3.0-rc01")
