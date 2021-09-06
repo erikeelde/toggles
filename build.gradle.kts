@@ -3,7 +3,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 
-    val roomVersion by extra("2.4.0-alpha01")
+    val roomVersion by extra("2.4.0-alpha04")
     val composeVersion by extra("1.0.2")
     val lifecycleVersion by extra("2.3.1")
     val daggerVersion by extra("2.35")
