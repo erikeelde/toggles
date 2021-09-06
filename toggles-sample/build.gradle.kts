@@ -98,7 +98,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 
     implementation("com.google.dagger:dagger:2.35")
-    kapt("com.google.dagger:dagger-compiler:2.35")
+    kapt("com.google.dagger:dagger-compiler:2.38.1")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("androidx.core:core-ktx:1.3.2")
