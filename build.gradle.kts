@@ -39,7 +39,7 @@ allprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
 
     dependencies {
-        detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.16.0")
+        detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.18.1")
     }
     detekt {
         autoCorrect = true
