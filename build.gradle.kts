@@ -6,7 +6,7 @@ buildscript {
     val roomVersion by extra("2.4.0-alpha04")
     val composeVersion by extra("1.0.2")
     val lifecycleVersion by extra("2.3.1")
-    val daggerVersion by extra("2.35")
+    val daggerVersion by extra("2.38.1")
 
     repositories {
         google()
