@@ -36,7 +36,6 @@ class TogglesPreferencesReturnsProviderValues {
         FIRST, SECOND
     }
 
-
     private lateinit var contentProviderController: ContentProviderController<MockContentProvider>
 
     @Before
