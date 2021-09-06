@@ -59,3 +59,11 @@ jobs:
       - name: Publish flow library
         if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-flow:publish --no-daemon --no-parallel
+
+      - name: Publish prefs library
+        if: github.repository == 'erikeelde/toggles'
+        run: ./gradlew :toggles-prefs-noop:publish --no-daemon --no-parallel
+
+      - name: Publish flow library
+        if: github.repository == 'erikeelde/toggles'
+        run: ./gradlew :toggles-flow-noop:publish --no-daemon --no-parallel
