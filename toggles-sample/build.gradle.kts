@@ -69,7 +69,7 @@ dependencies {
     testImplementation("androidx.test.ext:truth:1.4.0")
     testImplementation("androidx.test:rules:1.3.0")
     testImplementation("androidx.test:runner:1.4.0")
-    testImplementation("androidx.test.ext:junit:1.1.2")
+    testImplementation("androidx.test.ext:junit:1.1.3")
     testImplementation("org.robolectric:robolectric:4.5.1")
 
     implementation("androidx.appcompat:appcompat:1.3.0-rc01")
