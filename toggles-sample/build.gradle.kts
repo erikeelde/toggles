@@ -90,8 +90,9 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
 //    implementation(project(":toggles-prefs"))
-//    implementation(project(":toggles-flow"))
-    implementation("se.eelde.toggles:toggles-flow:0.0.1")
+    implementation(project(":toggles-flow"))
+//    implementation(project(":toggles-flow-noop"))
+//    implementation("se.eelde.toggles:toggles-flow:0.0.1")
     implementation("se.eelde.toggles:toggles-prefs:0.0.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
