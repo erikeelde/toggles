@@ -209,7 +209,7 @@ dependencies {
     implementation("se.eelde.toggles:toggles-flow:0.0.1")
     implementation("se.eelde.toggles:toggles-prefs:0.0.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.work:work-runtime-ktx:2.5.0")
