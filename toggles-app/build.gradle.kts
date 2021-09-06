@@ -52,7 +52,7 @@ android {
 
     composeOptions {
         val composeVersion: String by rootProject.extra
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = "1.0.2"
     }
 
     testOptions {
@@ -136,10 +136,10 @@ kapt {
 }
 
 dependencies {
-    val composeVersion: String by rootProject.extra
-    val roomVersion: String by rootProject.extra
-    val lifecycleVersion: String by rootProject.extra
-    val daggerVersion: String by rootProject.extra
+    val roomVersion ="2.4.0-alpha04"
+    val composeVersion = "1.0.2"
+    val lifecycleVersion = "2.3.1"
+    val daggerVersion = "2.38.1"
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
     implementation("androidx.compose.runtime:runtime:$composeVersion")

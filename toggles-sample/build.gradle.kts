@@ -60,10 +60,8 @@ repositories {
 
 dependencies {
 
-    val composeVersion: String by rootProject.extra
-    val roomVersion: String by rootProject.extra
-    val lifecycleVersion: String by rootProject.extra
-    val daggerVersion: String by rootProject.extra
+    val lifecycleVersion = "2.3.1"
+    val daggerVersion = "2.38.1"
 
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("androidx.test:core:1.4.0")
