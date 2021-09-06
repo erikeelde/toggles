@@ -173,7 +173,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.35")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
-    implementation("androidx.hilt:hilt-work:1.0.0-beta01")
+    implementation("androidx.hilt:hilt-work:1.0.0")
 
     testImplementation("com.google.dagger:hilt-android-testing:2.35")
     kaptTest("com.google.dagger:hilt-android-compiler:2.35")
