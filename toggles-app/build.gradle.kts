@@ -52,19 +52,19 @@ android {
 
     composeOptions {
         val composeVersion: String by rootProject.extra
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = "1.0.2"
     }
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
 
-    compileSdk = 30
+    compileSdk = 31
 
     defaultConfig {
         applicationId = "se.eelde.toggles"
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 31
         versionCode = 6
         versionName = "1.01.02"
 
@@ -136,9 +136,10 @@ kapt {
 }
 
 dependencies {
-    val composeVersion: String by rootProject.extra
-    val roomVersion: String by rootProject.extra
-    val lifecycleVersion: String by rootProject.extra
+    val roomVersion ="2.4.0-alpha04"
+    val composeVersion = "1.0.2"
+    val lifecycleVersion = "2.3.1"
+    val daggerVersion = "2.38.1"
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
@@ -150,44 +151,44 @@ dependencies {
     implementation("androidx.compose.animation:animation:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04")
-    implementation("androidx.navigation:navigation-compose:1.0.0-alpha10")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha08")
 
     testImplementation("junit:junit:4.13.2")
 
-    testImplementation("androidx.test:core-ktx:1.3.0")
-    testImplementation("androidx.test.ext:truth:1.3.0")
-    testImplementation("androidx.test:rules:1.3.0")
-    testImplementation("androidx.test:runner:1.3.0")
-    testImplementation("androidx.test.ext:junit:1.1.2")
+    testImplementation("androidx.test:core-ktx:1.4.0")
+    testImplementation("androidx.test.ext:truth:1.4.0")
+    testImplementation("androidx.test:rules:1.4.0")
+    testImplementation("androidx.test:runner:1.4.0")
+    testImplementation("androidx.test.ext:junit:1.1.3")
     testImplementation("androidx.room:room-testing:$roomVersion")
-    testImplementation("org.robolectric:robolectric:4.5.1")
-    testImplementation("androidx.test.espresso:espresso-core:3.3.0")
+    testImplementation("org.robolectric:robolectric:4.6.1")
+    testImplementation("androidx.test.espresso:espresso-core:3.4.0")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
-    testImplementation("androidx.work:work-testing:2.5.0")
+    testImplementation("androidx.work:work-testing:2.6.0")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation(platform("com.google.firebase:firebase-bom:27.1.0"))
+    implementation(platform("com.google.firebase:firebase-bom:28.4.0"))
 
-    implementation("com.google.dagger:hilt-android:2.35")
-    kapt("com.google.dagger:hilt-android-compiler:2.35")
+    implementation("com.google.dagger:hilt-android:$daggerVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-    kapt("androidx.hilt:hilt-compiler:1.0.0-beta01")
-    implementation("androidx.hilt:hilt-work:1.0.0-beta01")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation("androidx.hilt:hilt-work:1.0.0")
 
-    testImplementation("com.google.dagger:hilt-android-testing:2.35")
-    kaptTest("com.google.dagger:hilt-android-compiler:2.35")
+    testImplementation("com.google.dagger:hilt-android-testing:$daggerVersion")
+    kaptTest("com.google.dagger:hilt-android-compiler:$daggerVersion")
 
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
-    implementation("com.google.dagger:dagger:2.35")
-    kapt("com.google.dagger:dagger-compiler:2.35")
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:2.38.1")
 
-    implementation("androidx.appcompat:appcompat:1.3.0-rc01")
-    implementation("androidx.recyclerview:recyclerview:1.2.0")
-    implementation("com.google.android.material:material:1.3.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
@@ -196,7 +197,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.paging:paging-runtime-ktx:3.0.0-rc01")
+    implementation("androidx.paging:paging-runtime-ktx:3.0.1")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
@@ -209,10 +210,10 @@ dependencies {
     implementation("se.eelde.toggles:toggles-flow:0.0.1")
     implementation("se.eelde.toggles:toggles-prefs:0.0.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 
-    implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.work:work-runtime-ktx:2.5.0")
+    implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.work:work-runtime-ktx:2.6.0")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
 }

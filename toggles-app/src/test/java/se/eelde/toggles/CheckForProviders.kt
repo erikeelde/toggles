@@ -2,7 +2,6 @@ package se.eelde.toggles
 
 import android.app.Application
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.Log

@@ -6,11 +6,11 @@ plugins {
 apply(plugin = "com.vanniktech.maven.publish")
 
 android {
-    compileSdk = 30
+    compileSdk = 31
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 31
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,16 +48,16 @@ kotlin {
 dependencies {
     testImplementation("junit:junit:4.13.2")
 
-    testImplementation("androidx.test:core:1.3.0")
-    testImplementation("androidx.test.ext:truth:1.3.0")
-    testImplementation("androidx.test:rules:1.3.0")
-    testImplementation("androidx.test:runner:1.3.0")
-    testImplementation("androidx.test.ext:junit:1.1.2")
-    testImplementation("org.robolectric:robolectric:4.5.1")
+    testImplementation("androidx.test:core:1.4.0")
+    testImplementation("androidx.test.ext:truth:1.4.0")
+    testImplementation("androidx.test:rules:1.4.0")
+    testImplementation("androidx.test:runner:1.4.0")
+    testImplementation("androidx.test.ext:junit:1.1.3")
+    testImplementation("org.robolectric:robolectric:4.6.1")
 
     implementation("se.eelde.toggles:toggles-core:0.0.2")
     //implementation("se.eelde.toggles:toggles-core:0.0.2-SNAPSHOT")
     //implementation(project(":toggles-core"))
     implementation("androidx.annotation:annotation:1.2.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 }
