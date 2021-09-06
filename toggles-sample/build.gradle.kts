@@ -73,7 +73,7 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.3")
     testImplementation("org.robolectric:robolectric:4.5.1")
 
-    implementation("androidx.appcompat:appcompat:1.3.0-rc01")
+    implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.0")
