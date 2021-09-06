@@ -65,7 +65,7 @@ dependencies {
     val lifecycleVersion: String by rootProject.extra
 
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    testImplementation("androidx.test:core:1.3.0")
+    testImplementation("androidx.test:core:1.4.0")
     testImplementation("androidx.test.ext:truth:1.3.0")
     testImplementation("androidx.test:rules:1.3.0")
     testImplementation("androidx.test:runner:1.3.0")
