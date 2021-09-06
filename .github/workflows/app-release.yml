@@ -35,4 +35,5 @@ jobs:
         run: ./gradlew check --exclude-task testReleaseUnitTest
 
       - name: Publish application
+        if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-app:publishRelease
