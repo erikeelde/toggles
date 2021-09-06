@@ -100,7 +100,7 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:2.38.1")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
-    implementation("androidx.core:core-ktx:1.3.2")
+    implementation("androidx.core:core-ktx:1.6.0")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
 }
