@@ -59,12 +59,12 @@ android {
         unitTests.isIncludeAndroidResources = true
     }
 
-    compileSdk = 30
+    compileSdk = 31
 
     defaultConfig {
         applicationId = "se.eelde.toggles"
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 31
         versionCode = 6
         versionName = "1.01.02"
 
