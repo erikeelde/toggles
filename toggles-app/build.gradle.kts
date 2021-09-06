@@ -164,7 +164,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.5.1")
     testImplementation("androidx.test.espresso:espresso-core:3.4.0")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
-    testImplementation("androidx.work:work-testing:2.5.0")
+    testImplementation("androidx.work:work-testing:2.6.0")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation(platform("com.google.firebase:firebase-bom:27.1.0"))
