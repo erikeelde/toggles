@@ -49,7 +49,6 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
-        maven("https://s01.oss.sonatype.org/service/local/repositories/seeelde-1001/content")
     }
 }
 
