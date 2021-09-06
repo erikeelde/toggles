@@ -24,6 +24,7 @@ jobs:
         run: ./gradlew :toggles-core:check --exclude-task testReleaseUnitTest
 
       - name: Setup environment
+        if: github.repository == 'erikeelde/toggles'
         run: |
           echo "signing.keyId=${{secrets.SIGNING_KEYID}}" >> gradle.properties
           echo "signing.password=${{secrets.SIGNING_PASSWORD}}" >> gradle.properties
@@ -34,4 +35,5 @@ jobs:
           base64 -d secring.gpg.b64 > secring.gpg
 
       - name: Publish core library
+        if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-core:publish --no-daemon --no-parallel

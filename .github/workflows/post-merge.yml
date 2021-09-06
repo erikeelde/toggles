@@ -35,6 +35,7 @@ jobs:
           retention-days: 14
 
       - name: Setup environment
+        if: github.repository == 'erikeelde/toggles'
         run: |
           echo "signing.keyId=${{secrets.SIGNING_KEYID}}" >> gradle.properties
           echo "signing.password=${{secrets.SIGNING_PASSWORD}}" >> gradle.properties
@@ -45,10 +46,13 @@ jobs:
           base64 -d secring.gpg.b64 > secring.gpg
 
       - name: Publish core library
+        if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-prefs:publish --no-daemon --no-parallel
 
       - name: Publish prefs library
+        if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-prefs:publish --no-daemon --no-parallel
 
       - name: Publish flow library
+        if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-flow:publish --no-daemon --no-parallel
