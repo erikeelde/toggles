@@ -1,4 +1,4 @@
-name: Prefs library release
+name: Prefs noop library release
 
 on:
   workflow_dispatch:
