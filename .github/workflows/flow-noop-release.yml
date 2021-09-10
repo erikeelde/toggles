@@ -1,4 +1,4 @@
-name: Flow library release
+name: Flow noop library release
 
 on:
   workflow_dispatch:
