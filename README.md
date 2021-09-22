@@ -14,18 +14,24 @@ This is a development tools meant to facilitate feature switching in an external
 2 premade libraries to talk to the toggles application. "Prefs" and "Flow" - Backed by a common core library:
 
 ## Toggles-flow library
+[![Flow](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-flow/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-flow)
+
 Exposes switches from toggles using a kotlin flow.
 ``` 
     implementation("se.eelde.toggles:toggles-flow:0.0.1")
 ```
 
 ## Toggles-prefs library
+[![Prefs](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-prefs/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-prefs)
+
 One-shot fetch of a toggle. Similar API as androids SharedPreferences.
 ``` 
     implementation("se.eelde.toggles:toggles-prefs:0.0.1")
 ```
 
 ## Toggles-core library
+[![Core](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-core/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-core)
+
 Base library exposing common bit to help communicating with the toggles application via the provider. Generally shouldn't be needed unless implementing your own library.
 ```
     implementation("se.eelde.toggles:toggles-core:0.0.2")
