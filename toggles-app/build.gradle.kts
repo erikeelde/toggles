@@ -139,7 +139,7 @@ dependencies {
     val roomVersion ="2.4.0-alpha04"
     val composeVersion = "1.0.2"
     val lifecycleVersion = "2.3.1"
-    val daggerVersion = "2.38.1"
+    val daggerVersion = "2.39.1"
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
