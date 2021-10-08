@@ -136,7 +136,7 @@ kapt {
 }
 
 dependencies {
-    val roomVersion ="2.4.0-alpha04"
+    val roomVersion ="2.4.0-alpha05"
     val composeVersion = "1.0.3"
     val lifecycleVersion = "2.3.1"
     val daggerVersion = "2.39.1"
