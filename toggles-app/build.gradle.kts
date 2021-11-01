@@ -138,7 +138,7 @@ kapt {
 dependencies {
     val roomVersion ="2.4.0-alpha04"
     val composeVersion = "1.0.4"
-    val lifecycleVersion = "2.3.1"
+    val lifecycleVersion = "2.4.0"
     val daggerVersion = "2.40"
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
