@@ -5,6 +5,11 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
+    id("com.gladed.androidgitversion") version "0.4.14"
+}
+
+androidGitVersion {
+    tagPattern = "^v[0-9]+.*"
 }
 
 android {
@@ -16,21 +21,23 @@ android {
         applicationId = "se.eelde.toggles.example"
         minSdk = 21
         targetSdk = 31
-        versionCode = 2
-        versionName = "1.00.01"
+        versionName = androidGitVersion.name()
+        versionCode = androidGitVersion.code()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
         freeCompilerArgs = listOfNotNull(
             "-Xopt-in=kotlin.RequiresOptIn"
         )
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
+
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     buildTypes {
         getByName("release") {
