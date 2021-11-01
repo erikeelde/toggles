@@ -168,7 +168,7 @@ dependencies {
     testImplementation("androidx.work:work-testing:2.7.0")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation(platform("com.google.firebase:firebase-bom:28.4.2"))
+    implementation(platform("com.google.firebase:firebase-bom:29.0.0"))
 
     implementation("com.google.dagger:hilt-android:$daggerVersion")
     kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
