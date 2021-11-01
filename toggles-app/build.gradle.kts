@@ -52,7 +52,7 @@ android {
 
     composeOptions {
         val composeVersion: String by rootProject.extra
-        kotlinCompilerExtensionVersion = "1.0.2"
+        kotlinCompilerExtensionVersion = "1.0.4"
     }
 
     testOptions {
@@ -136,7 +136,8 @@ kapt {
 }
 
 dependencies {
-    val roomVersion ="2.4.0-alpha04"
+    val roomVersion ="2.4.0-beta01"
+    val pagingVersion ="2.1.2"
     val composeVersion = "1.0.4"
     val lifecycleVersion = "2.4.0"
     val daggerVersion = "2.40"
@@ -195,8 +196,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation("androidx.room:room-paging:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
+
     implementation("androidx.paging:paging-runtime-ktx:3.0.1")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
