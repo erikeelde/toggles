@@ -12,7 +12,14 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.github.triplet.play")
     id("kotlin-android")
+    id("com.gladed.androidgitversion") version "0.4.14"
 }
+
+androidGitVersion {
+    tagPattern = "^v[0-9]+.*"
+}
+
+val composeVersion = "1.0.4"
 
 kapt {
     javacOptions {
@@ -51,8 +58,7 @@ android {
     }
 
     composeOptions {
-        val composeVersion: String by rootProject.extra
-        kotlinCompilerExtensionVersion = "1.0.4"
+        kotlinCompilerExtensionVersion = composeVersion
     }
 
     testOptions {
@@ -65,8 +71,9 @@ android {
         applicationId = "se.eelde.toggles"
         minSdk = 21
         targetSdk = 31
-        versionCode = 6
-        versionName = "1.01.02"
+        versionName = androidGitVersion.name()
+        versionCode = androidGitVersion.code()
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -88,15 +95,16 @@ android {
         exclude("META-INF/atomicfu.kotlin_module")
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
         freeCompilerArgs = listOfNotNull(
             "-Xopt-in=kotlin.RequiresOptIn"
         )
-        useIR = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
+
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     buildTypes {
         getByName("release") {
@@ -138,7 +146,6 @@ kapt {
 dependencies {
     val roomVersion ="2.4.0-beta01"
     val pagingVersion ="2.1.2"
-    val composeVersion = "1.0.4"
     val lifecycleVersion = "2.4.0"
     val daggerVersion = "2.40"
 
