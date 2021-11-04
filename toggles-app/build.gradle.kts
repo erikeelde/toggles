@@ -19,7 +19,7 @@ androidGitVersion {
     tagPattern = "^v[0-9]+.*"
 }
 
-val composeVersion = "1.0.4"
+val composeVersion = "1.0.5"
 
 kapt {
     javacOptions {
