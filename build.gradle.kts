@@ -28,7 +28,7 @@ plugins {
     // id("se.eelde.build-optimizations") version "0.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.18.1"
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.1"
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
     id("com.github.triplet.play") version "3.6.0" apply false
 
 }
