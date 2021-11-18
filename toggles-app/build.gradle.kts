@@ -173,7 +173,7 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.6.1")
     testImplementation("androidx.test.espresso:espresso-core:3.4.0")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
-    testImplementation("androidx.work:work-testing:2.7.0")
+    testImplementation("androidx.work:work-testing:2.7.1")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation(platform("com.google.firebase:firebase-bom:29.0.0"))
