@@ -145,7 +145,7 @@ kapt {
 
 dependencies {
     val roomVersion ="2.4.0-beta02"
-    val pagingVersion ="2.1.2"
+    val pagingVersion ="3.1.0"
     val lifecycleVersion = "2.4.0"
     val daggerVersion = "2.40"
 
@@ -208,7 +208,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
 
-    implementation("androidx.paging:paging-runtime-ktx:3.0.1")
+    implementation("androidx.paging:paging-runtime-ktx:3.1.0")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
