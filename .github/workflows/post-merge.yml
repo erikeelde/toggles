@@ -2,7 +2,7 @@ name: Post merge workflow
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
 
 jobs:
   # This workflow contains a single job called "build"
