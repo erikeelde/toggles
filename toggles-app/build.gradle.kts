@@ -13,6 +13,7 @@ plugins {
     id("com.github.triplet.play")
     id("kotlin-android")
     id("com.gladed.androidgitversion") version "0.4.14"
+    id("com.google.firebase.crashlytics")
 }
 
 androidGitVersion {
@@ -177,6 +178,8 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation(platform("com.google.firebase:firebase-bom:29.0.0"))
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
     implementation("com.google.dagger:hilt-android:$daggerVersion")
     kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
@@ -227,4 +230,6 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.7.1")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }

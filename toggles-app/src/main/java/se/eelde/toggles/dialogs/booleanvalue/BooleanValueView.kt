@@ -55,7 +55,9 @@ fun BooleanValueView(navController: NavController, viewModel: FragmentBooleanVal
 
                     Button(modifier = Modifier.padding(8.dp), onClick = {
                         scope.launch {
-                            viewModel.saveClick(it.checked!!)
+                            it.checked?.let {
+                                viewModel.saveClick(it)
+                            }
                             navController.popBackStack()
                         }
                     }) {

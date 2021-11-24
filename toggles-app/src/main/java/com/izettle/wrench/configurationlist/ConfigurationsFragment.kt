@@ -16,11 +16,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.izettle.wrench.database.WrenchApplication
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.R
 import se.eelde.toggles.TogglesTheme
@@ -91,60 +89,39 @@ class ConfigurationsFragment :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_restart_application -> {
-                viewModel.wrenchApplication.observe(
-                    this,
-                    object : Observer<WrenchApplication> {
-                        override fun onChanged(wrenchApplication: WrenchApplication?) {
-                            viewModel.wrenchApplication.removeObserver(this)
+                val wrenchApplication = viewModel.wrenchApplication
 
-                            if (wrenchApplication == null) {
-                                return
-                            }
+                val activityManager =
+                    requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                activityManager.killBackgroundProcesses(wrenchApplication.packageName)
 
-                            val activityManager =
-                                context!!.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-                            activityManager.killBackgroundProcesses(wrenchApplication.packageName)
-
-                            val intent =
-                                context!!.packageManager.getLaunchIntentForPackage(wrenchApplication.packageName)
-                            if (intent != null) {
-                                context!!.startActivity(Intent.makeRestartActivityTask(intent.component))
-                            } else if (this@ConfigurationsFragment.view != null) {
-                                Snackbar.make(
-                                    this@ConfigurationsFragment.requireView(),
-                                    R.string.application_not_installed,
-                                    Snackbar.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                )
+                val intent =
+                    requireContext().packageManager.getLaunchIntentForPackage(wrenchApplication.packageName)
+                if (intent != null) {
+                    requireContext().startActivity(Intent.makeRestartActivityTask(intent.component))
+                } else if (this@ConfigurationsFragment.view != null) {
+                    Snackbar.make(
+                        this@ConfigurationsFragment.requireView(),
+                        R.string.application_not_installed,
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
 
                 true
             }
             R.id.action_application_settings -> {
-                viewModel.wrenchApplication.observe(
-                    this,
-                    object : Observer<WrenchApplication> {
-                        override fun onChanged(wrenchApplication: WrenchApplication?) {
-                            viewModel.wrenchApplication.removeObserver(this)
-                            if (wrenchApplication == null) {
-                                return
-                            }
+                val wrenchApplication = viewModel.wrenchApplication
 
-                            startActivity(
-                                Intent(
-                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                    Uri.fromParts("package", wrenchApplication.packageName, null)
-                                )
-                            )
-                        }
-                    }
+                startActivity(
+                    Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", wrenchApplication.packageName, null)
+                    )
                 )
                 true
             }
             R.id.action_delete_application -> {
-                viewModel.deleteApplication(viewModel.wrenchApplication.value!!)
+                viewModel.deleteApplication(viewModel.wrenchApplication)
                 findNavController().navigateUp()
                 true
             }

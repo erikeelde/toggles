@@ -1,6 +1,5 @@
 package com.izettle.wrench.database
 
-import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
@@ -19,10 +18,7 @@ interface WrenchApplicationDao {
     fun getApplications(): Flow<List<WrenchApplication>>
 
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE id = (:id)")
-    fun getApplicationLiveData(id: Long): LiveData<WrenchApplication>
-
-    @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE id = (:id)")
-    fun getApplication(id: Long): WrenchApplication
+    suspend fun getApplication(id: Long): WrenchApplication?
 
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE packageName IN (:packageName)")
     fun loadByPackageName(packageName: String): WrenchApplication

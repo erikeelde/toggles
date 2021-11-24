@@ -1,7 +1,6 @@
 package com.izettle.wrench.configurationlist
 
 import android.text.TextUtils
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -50,13 +49,16 @@ class ConfigurationViewModel @Inject internal constructor(
     internal val state: StateFlow<ViewState>
         get() = _state
 
-    internal val wrenchApplication: LiveData<WrenchApplication> =
-        applicationDao.getApplicationLiveData(applicationId)
+    internal lateinit var wrenchApplication: WrenchApplication
 
     private val queryString: MutableStateFlow<String> = MutableStateFlow("")
 
     init {
         setQuery(savedStateHandle.get<String>("query") ?: "")
+        viewModelScope.launch {
+            wrenchApplication = applicationDao.getApplication(applicationId)!!
+        }
+
         viewModelScope.launch {
             queryString.value = (savedStateHandle.get<String>("query") ?: "")
         }

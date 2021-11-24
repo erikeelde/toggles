@@ -113,4 +113,6 @@ dependencies {
     implementation("androidx.core:core-ktx:1.7.0")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }
