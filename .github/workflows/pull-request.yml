@@ -2,7 +2,7 @@ name: Pull request workflow
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ main ]
 
 jobs:
   # This workflow contains a single job called "build"
