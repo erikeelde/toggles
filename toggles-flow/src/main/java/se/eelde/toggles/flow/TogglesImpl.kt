@@ -121,7 +121,7 @@ class TogglesImpl(context: Context) : Toggles {
 
         val toggleContentObserver = ToggleContentObserver(null) {
             launch {
-                offer(getToggle(contentResolver, type, key))
+                trySend(getToggle(contentResolver, type, key))
             }
         }
 
@@ -135,7 +135,7 @@ class TogglesImpl(context: Context) : Toggles {
                 .registerContentObserver(toggleUri(), true, toggleContentObserver)
         }
 
-        offer(getToggle(contentResolver, type, key))
+        trySend(getToggle(contentResolver, type, key))
 
         awaitClose {
             contentResolver.unregisterContentObserver(toggleContentObserver)
