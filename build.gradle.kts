@@ -2,9 +2,6 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-
-
-
     repositories {
         google()
         mavenCentral()
@@ -31,7 +28,6 @@ plugins {
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
     id("com.github.triplet.play") version "3.6.0" apply false
-
 }
 
 allprojects {

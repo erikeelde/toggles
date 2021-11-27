@@ -216,7 +216,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
-    implementation("com.izettle.wrench:wrench-core:0.3")
+    implementation(project(":wrench-core"))
 //    implementation(project(":toggles-core"))
 //    implementation(project(":toggles-prefs"))
 //    implementation(project(":toggles-flow"))

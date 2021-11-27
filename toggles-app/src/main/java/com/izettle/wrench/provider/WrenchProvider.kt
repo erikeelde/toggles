@@ -413,7 +413,7 @@ class WrenchProvider : ContentProvider() {
 
         @WrenchApiVersion
         private fun getApiVersion(uri: Uri): Int {
-            val queryParameter = uri.getQueryParameter(WrenchProviderContract.WRENCH_API_VERSION)
+            val queryParameter = uri.getQueryParameter(WrenchProviderContract.WRENCH_API_VERSION_QUERY_PARAM)
             return if (queryParameter != null) {
                 Integer.valueOf(queryParameter)
             } else {
