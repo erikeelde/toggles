@@ -23,4 +23,5 @@ include(
     ":toggles-sample",
     ":toggles-flow-noop",
     ":toggles-prefs-noop",
+    ":wrench-core",
 )

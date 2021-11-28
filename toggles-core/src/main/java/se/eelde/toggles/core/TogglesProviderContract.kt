@@ -47,15 +47,11 @@ data class Toggle(
     val value: String? = null
 ) {
 
-    fun toContentValues(): ContentValues {
-        val contentValues = ContentValues()
-
-        contentValues.put(ColumnNames.Toggle.COL_ID, id)
-        contentValues.put(ColumnNames.Toggle.COL_KEY, key)
-        contentValues.put(ColumnNames.Toggle.COL_VALUE, value)
-        contentValues.put(ColumnNames.Toggle.COL_TYPE, type)
-
-        return contentValues
+    fun toContentValues() = ContentValues().apply {
+        put(ColumnNames.Toggle.COL_ID, id)
+        put(ColumnNames.Toggle.COL_KEY, key)
+        put(ColumnNames.Toggle.COL_VALUE, value)
+        put(ColumnNames.Toggle.COL_TYPE, type)
     }
 
     @StringDef(TYPE.BOOLEAN, TYPE.STRING, TYPE.INTEGER, TYPE.ENUM)
