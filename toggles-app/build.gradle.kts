@@ -194,7 +194,7 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
 
     implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:2.40.2")
+    kapt("com.google.dagger:dagger-compiler:2.40.3")
 
     implementation("androidx.appcompat:appcompat:1.4.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
