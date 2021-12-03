@@ -24,7 +24,7 @@ buildscript {
 plugins {
     id("com.github.ben-manes.versions") version "0.39.0"
     // id("se.eelde.build-optimizations") version "0.2.0"
-    id("io.gitlab.arturbosch.detekt") version "1.18.1"
+    id("io.gitlab.arturbosch.detekt") version "1.19.0"
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
     id("com.github.triplet.play") version "3.6.0" apply false
