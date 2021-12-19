@@ -145,10 +145,10 @@ kapt {
 }
 
 dependencies {
-    val roomVersion ="2.4.0-rc01"
+    val roomVersion ="2.4.0"
     val pagingVersion ="3.1.0"
     val lifecycleVersion = "2.4.0"
-    val daggerVersion = "2.40.4"
+    val daggerVersion = "2.40.5"
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
@@ -161,7 +161,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
-    implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
+    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
 
     testImplementation("junit:junit:4.13.2")
 
@@ -177,7 +177,7 @@ dependencies {
     testImplementation("androidx.work:work-testing:2.7.1")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation(platform("com.google.firebase:firebase-bom:29.0.1"))
+    implementation(platform("com.google.firebase:firebase-bom:29.0.3"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
 
@@ -194,7 +194,7 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
 
     implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:2.40.4")
+    kapt("com.google.dagger:dagger-compiler:2.40.5")
 
     implementation("androidx.appcompat:appcompat:1.4.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")

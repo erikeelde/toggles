@@ -68,7 +68,7 @@ repositories {
 dependencies {
 
     val lifecycleVersion = "2.4.0"
-    val daggerVersion = "2.40.4"
+    val daggerVersion = "2.40.5"
 
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("androidx.test:core:1.4.0")
@@ -107,7 +107,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 
     implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:2.40.4")
+    kapt("com.google.dagger:dagger-compiler:2.40.5")
 
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("androidx.core:core-ktx:1.7.0")
