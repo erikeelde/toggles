@@ -11,7 +11,7 @@ import androidx.navigation.findNavController
 import com.izettle.wrench.dialogs.scope.ScopeFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.R
-import se.eelde.toggles.TogglesTheme
+import se.eelde.toggles.compose_theme.TogglesTheme
 
 @AndroidEntryPoint
 class ScopeFragment : Fragment() {
