@@ -1,4 +1,4 @@
-package se.eelde.toggles
+package se.eelde.toggles.compose_theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

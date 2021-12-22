@@ -21,7 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.R
-import se.eelde.toggles.TogglesTheme
+import se.eelde.toggles.compose_theme.TogglesTheme
 import se.eelde.toggles.configurationlist.ConfigurationListView
 
 @AndroidEntryPoint

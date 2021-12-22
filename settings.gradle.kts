@@ -24,4 +24,5 @@ include(
     ":toggles-flow-noop",
     ":toggles-prefs-noop",
     ":wrench-core",
+    ":modules:compose-theme",
 )
