@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import com.izettle.wrench.oss.detail.OssDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.R
-import se.eelde.toggles.TogglesTheme
+import se.eelde.toggles.compose_theme.TogglesTheme
 
 @AndroidEntryPoint
 class OssDetailFragment : Fragment() {

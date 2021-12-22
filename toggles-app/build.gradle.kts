@@ -150,6 +150,8 @@ dependencies {
     val lifecycleVersion = "2.5.0"
     val daggerVersion = "2.42"
 
+    implementation(project(":modules:compose-theme"))
+
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
