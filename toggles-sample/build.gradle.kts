@@ -112,7 +112,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("androidx.core:core-ktx:1.7.0")
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.8")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }
