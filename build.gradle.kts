@@ -22,7 +22,7 @@ buildscript {
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.40.0"
+    id("com.github.ben-manes.versions") version "0.41.0"
     // id("se.eelde.build-optimizations") version "0.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
