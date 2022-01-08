@@ -15,14 +15,14 @@ buildscript {
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.40.5")
         classpath("com.google.gms:google-services:4.3.10")
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.18.0")
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.6.0")
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.6.10")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.4")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.1")
     }
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.39.0"
+    id("com.github.ben-manes.versions") version "0.41.0"
     // id("se.eelde.build-optimizations") version "0.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
