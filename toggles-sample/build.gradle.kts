@@ -80,7 +80,7 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:1.4.0")
     implementation("com.google.android.material:material:1.5.0")
-    implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
