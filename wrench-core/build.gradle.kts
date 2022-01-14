@@ -41,5 +41,5 @@ kotlin {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("androidx.appcompat:appcompat:1.4.1")
 }
