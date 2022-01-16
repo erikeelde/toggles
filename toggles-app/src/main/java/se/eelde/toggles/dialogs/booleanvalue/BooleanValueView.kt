@@ -16,12 +16,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.izettle.wrench.dialogs.booleanvalue.FragmentBooleanValueViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun BooleanValueView(navController: NavController, viewModel: FragmentBooleanValueViewModel) {
+fun BooleanValueView(navController: NavController,
+                     configurationId: Long,
+                     scopeId: Long,
+                     viewModel: FragmentBooleanValueViewModel = hiltViewModel()) {
 
     val uiState = viewModel.state.collectAsState()
 

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = 32
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 32
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -18,11 +18,11 @@ android {
         }
     }
     lint {
-        baselineFile = file("lint-baseline.xml")
-        isCheckReleaseBuilds = true
-        isAbortOnError = true
-        isWarningsAsErrors = true
-        lintConfig = File("../lint.xml")
+//        baselineFile = file("lint-baseline.xml")
+//        isCheckReleaseBuilds = true
+//        isAbortOnError = true
+//        isWarningsAsErrors = true
+//        lintConfig = File("../lint.xml")
     }
     testOptions {
         unitTests.isIncludeAndroidResources = true

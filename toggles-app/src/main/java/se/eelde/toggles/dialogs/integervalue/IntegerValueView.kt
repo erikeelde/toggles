@@ -1,28 +1,26 @@
 package se.eelde.toggles.dialogs.integervalue
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.izettle.wrench.dialogs.integervalue.FragmentIntegerValueViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun IntegerValueView(navController: NavController, viewModel: FragmentIntegerValueViewModel) {
+fun IntegerValueView(
+    navController: NavController,
+    configurationId: Long,
+    scopeId: Long,
+    viewModel: FragmentIntegerValueViewModel = hiltViewModel()
+) {
 
     val uiState = viewModel.state.collectAsState()
 

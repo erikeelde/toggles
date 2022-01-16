@@ -7,7 +7,6 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("kotlin-parcelize")
-    id("androidx.navigation.safeargs.kotlin")
     id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
     id("com.github.triplet.play")
@@ -20,7 +19,7 @@ androidGitVersion {
     tagPattern = "^v[0-9]+.*"
 }
 
-val composeVersion = "1.0.5"
+val composeVersion = "1.2.0-alpha01"
 
 kapt {
     javacOptions {
@@ -66,12 +65,12 @@ android {
         unitTests.isIncludeAndroidResources = true
     }
 
-    compileSdk = 31
+    compileSdk = 32
 
     defaultConfig {
         applicationId = "se.eelde.toggles"
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 32
         versionName = androidGitVersion.name()
         versionCode = androidGitVersion.code()
 
@@ -92,8 +91,9 @@ android {
         buildConfigField("String", "CONFIG_AUTHORITY", "\"$togglesAuthority\"")
     }
     packagingOptions {
-        exclude("META-INF/main.kotlin_module")
-        exclude("META-INF/atomicfu.kotlin_module")
+        resources {
+            excludes += setOf("META-INF/main.kotlin_module", "META-INF/atomicfu.kotlin_module")
+        }
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
@@ -121,11 +121,11 @@ android {
         }
     }
     lint {
-        baselineFile = file("lint-baseline.xml")
-        isCheckReleaseBuilds = true
-        isAbortOnError = true
-        isWarningsAsErrors = true
-        lintConfig = File("../lint.xml")
+//        baselineFile = file("lint-baseline.xml")
+//        isCheckReleaseBuilds = true
+//        isAbortOnError = true
+//        isWarningsAsErrors = true
+//        lintConfig = File("../lint.xml")
     }
     sourceSets {
         // debug.assets.srcDirs => https://github.com/robolectric/robolectric/issues/3928
@@ -157,14 +157,15 @@ dependencies {
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.foundation:foundation-layout:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha01")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.animation:animation:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
-    implementation("androidx.navigation:navigation-compose:2.5.0-alpha02")
-
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+    //implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-beta01")
     testImplementation("junit:junit:4.13.2")
 
     testImplementation("androidx.test:core-ktx:1.4.0")
@@ -200,7 +201,7 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
-    implementation("com.google.android.material:material:1.5.0")
+    // implementation("com.google.android.material:material:1.5.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.3")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
