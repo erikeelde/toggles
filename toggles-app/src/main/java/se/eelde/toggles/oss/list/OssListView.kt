@@ -25,13 +25,7 @@ internal fun OssListView(navController: NavController, viewModel: OssListViewMod
                 it.forEach { licenseMetadata ->
                     item {
                         ListItem(modifier = Modifier.clickable {
-                            navController.navigate(
-                                OssFragmentDirections.actionActionOssToActionOssDetail(
-                                    licenseMetadata.dependency,
-                                    licenseMetadata.skipBytes.toInt(),
-                                    licenseMetadata.length
-                                )
-                            )
+                            TODO()
                         }) {
                             Text(licenseMetadata.dependency)
                         }

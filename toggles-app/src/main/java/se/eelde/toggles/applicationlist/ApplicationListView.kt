@@ -10,6 +10,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -21,13 +22,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.izettle.wrench.applicationlist.ApplicationViewModel
 import se.eelde.toggles.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-internal fun ApplicationListView(navController: NavController, viewModel: ApplicationViewModel) {
+internal fun ApplicationListView(
+    navController: NavController, viewModel: ApplicationViewModel = hiltViewModel()
+) {
     val uiState = viewModel.state.collectAsState()
 
     val context = LocalContext.current
@@ -41,7 +45,8 @@ internal fun ApplicationListView(navController: NavController, viewModel: Applic
                         var secondaryText = ""
                         try {
                             val packageManager = context.packageManager
-                            val icon: Drawable = packageManager.getApplicationIcon(application.packageName)
+                            val icon: Drawable =
+                                packageManager.getApplicationIcon(application.packageName)
                             lol = icon.toBitmap(width = 128, height = 128).asImageBitmap()
                         } catch (e: PackageManager.NameNotFoundException) {
                             secondaryText = stringResource(id = R.string.not_installed)
@@ -60,12 +65,7 @@ internal fun ApplicationListView(navController: NavController, viewModel: Applic
                                 )
                             }
                         }, modifier = Modifier.clickable {
-                            navController.navigate(
-                                ApplicationsFragmentDirections.actionApplicationsFragmentToConfigurationsFragment(
-                                    applicationId = application.id,
-                                    applicationLabel = application.applicationLabel
-                                )
-                            )
+                            navController.navigate("configurations/${application.id}")
                         }) {
                             Text(application.applicationLabel)
                         }

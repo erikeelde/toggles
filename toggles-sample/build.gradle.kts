@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("androidx.navigation.safeargs.kotlin")
+//    id("androidx.navigation.safeargs.kotlin")
     id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
     id("com.gladed.androidgitversion") version "0.4.14"
@@ -16,11 +16,11 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    compileSdk = 31
+    compileSdk = 32
     defaultConfig {
         applicationId = "se.eelde.toggles.example"
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 32
         versionName = androidGitVersion.name()
         versionCode = androidGitVersion.code()
 
@@ -50,11 +50,11 @@ android {
         }
     }
     lint {
-        baselineFile = file("lint-baseline.xml")
-        isCheckReleaseBuilds = true
-        isAbortOnError = true
-        isWarningsAsErrors = true
-        lintConfig = File("../lint.xml")
+//        baselineFile = file("lint-baseline.xml")
+//        isCheckReleaseBuilds = true
+//        isAbortOnError = true
+//        isWarningsAsErrors = true
+//        lintConfig = File("../lint.xml")
     }
     testOptions {
         unitTests.isIncludeAndroidResources = true

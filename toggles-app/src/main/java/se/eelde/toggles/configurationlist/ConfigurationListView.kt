@@ -19,9 +19,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.izettle.wrench.configurationlist.ConfigurationViewModel
-import com.izettle.wrench.configurationlist.ConfigurationsFragmentDirections
 import com.izettle.wrench.database.WrenchConfigurationValue
 import com.izettle.wrench.database.WrenchConfigurationWithValues
 import com.izettle.wrench.database.WrenchScope
@@ -31,8 +31,7 @@ import se.eelde.toggles.core.Toggle
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun ConfigurationListView(
-    navController: NavController,
-    viewModel: ConfigurationViewModel
+    navController: NavController, applicationId: Long, viewModel: ConfigurationViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.state.collectAsState()
 
@@ -56,7 +55,8 @@ internal fun ConfigurationListView(
                                     configuration = configuration,
                                     selectedScope = uiState.value.selectedScope
                                 )
-                            }.fillMaxWidth(1.0f)
+                            }
+                            .fillMaxWidth(1.0f)
                             .padding(16.dp)
                     ) {
                         Text(
@@ -79,12 +79,12 @@ internal fun ConfigurationListView(
                             )
                         }
 
-                    if (selectedScope != null) {
-                        Text(
-                            style = MaterialTheme.typography.h6,
-                            text = selectedScope.value ?: ""
-                        )
-                    }
+                        if (selectedScope != null) {
+                            Text(
+                                style = MaterialTheme.typography.h6,
+                                text = selectedScope.value ?: ""
+                            )
+                        }
                     }
                 }
             }
@@ -127,45 +127,25 @@ fun configurationClicked(
             configuration.type
         ) || TextUtils.equals(Toggle.TYPE.STRING, configuration.type)
     ) {
-        navController.navigate(
-            ConfigurationsFragmentDirections.actionConfigurationsFragmentToStringValueFragment(
-                configuration.id,
-                selectedScope!!.id
-            )
-        )
+        navController.navigate("configuration/${configuration.id}/${selectedScope!!.id}/string")
     } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(
             Toggle.TYPE.INTEGER,
             configuration.type
         )
     ) {
-        navController.navigate(
-            ConfigurationsFragmentDirections.actionConfigurationsFragmentToIntegerValueFragment(
-                configuration.id,
-                selectedScope!!.id
-            )
-        )
+        navController.navigate("configuration/${configuration.id}/${selectedScope!!.id}/integer")
     } else if (TextUtils.equals(
             Boolean::class.java.name,
             configuration.type
         ) || TextUtils.equals(Toggle.TYPE.BOOLEAN, configuration.type)
     ) {
-        navController.navigate(
-            ConfigurationsFragmentDirections.actionConfigurationsFragmentToBooleanValueFragment(
-                configuration.id,
-                selectedScope!!.id
-            )
-        )
+        navController.navigate("configuration/${configuration.id}/${selectedScope!!.id}/boolean")
     } else if (TextUtils.equals(Enum::class.java.name, configuration.type) || TextUtils.equals(
             Toggle.TYPE.ENUM,
             configuration.type
         )
     ) {
-        navController.navigate(
-            ConfigurationsFragmentDirections.actionConfigurationsFragmentToEnumValueFragment(
-                configuration.id,
-                selectedScope!!.id
-            )
-        )
+        navController.navigate("configuration/${configuration.id}/${selectedScope!!.id}/enum")
     } else {
 //        Snackbar.make(
 //            binding.animator,
