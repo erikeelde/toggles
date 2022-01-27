@@ -161,7 +161,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
-    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
+    implementation("androidx.navigation:navigation-compose:2.5.0-alpha01")
 
     testImplementation("junit:junit:4.13.2")
 
