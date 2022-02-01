@@ -2,19 +2,18 @@ package se.eelde.toggles.oss.detail
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.izettle.wrench.oss.detail.OssDetailViewModel
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-internal fun OssDetailView(viewModel: OssDetailViewModel) {
+internal fun OssDetailView(viewModel: OssDetailViewModel = hiltViewModel()) {
 
     val uiState = viewModel.state.collectAsState()
 
