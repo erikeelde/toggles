@@ -9,16 +9,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.os.Binder
-import com.izettle.wrench.database.WrenchApplication
-import com.izettle.wrench.database.WrenchApplicationDao
-import com.izettle.wrench.database.WrenchConfiguration
-import com.izettle.wrench.database.WrenchConfigurationDao
-import com.izettle.wrench.database.WrenchConfigurationValue
-import com.izettle.wrench.database.WrenchConfigurationValueDao
-import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
-import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
-import com.izettle.wrench.database.WrenchScope
-import com.izettle.wrench.database.WrenchScopeDao
+
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -30,6 +21,16 @@ import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
 import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
 import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.database.WrenchApplication
+import se.eelde.toggles.database.WrenchApplicationDao
+import se.eelde.toggles.database.WrenchConfiguration
+import se.eelde.toggles.database.WrenchConfigurationDao
+import se.eelde.toggles.database.WrenchConfigurationValue
+import se.eelde.toggles.database.WrenchConfigurationValueDao
+import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
+import se.eelde.toggles.database.WrenchPredefinedConfigurationValueDao
+import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.WrenchScopeDao
 import se.eelde.toggles.prefs.TogglesPreferences
 import java.util.Date
 
