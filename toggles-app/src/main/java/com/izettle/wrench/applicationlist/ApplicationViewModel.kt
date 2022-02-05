@@ -2,13 +2,13 @@ package com.izettle.wrench.applicationlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.izettle.wrench.database.WrenchApplication
-import com.izettle.wrench.database.WrenchApplicationDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import se.eelde.toggles.database.WrenchApplication
+import se.eelde.toggles.database.WrenchApplicationDao
 import javax.inject.Inject
 
 internal data class ViewState(

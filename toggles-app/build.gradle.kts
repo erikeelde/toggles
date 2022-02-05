@@ -136,14 +136,6 @@ android {
     }
 }
 
-kapt {
-    arguments {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-        arg("room.expandProjection", "true")
-    }
-}
-
 dependencies {
     val roomVersion ="2.4.1"
     val pagingVersion ="3.1.0"
@@ -151,6 +143,7 @@ dependencies {
     val daggerVersion = "2.40.5"
 
     implementation(project(":modules:compose-theme"))
+    implementation(project(":modules:database"))
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
@@ -173,7 +166,6 @@ dependencies {
     testImplementation("androidx.test:rules:1.4.0")
     testImplementation("androidx.test:runner:1.4.0")
     testImplementation("androidx.test.ext:junit:1.1.3")
-    testImplementation("androidx.room:room-testing:$roomVersion")
     testImplementation("org.robolectric:robolectric:4.7.3")
     testImplementation("androidx.test.espresso:espresso-core:3.4.0")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
@@ -194,7 +186,7 @@ dependencies {
     kaptTest("com.google.dagger:hilt-android-compiler:$daggerVersion")
 
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
+
 
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:2.40.5")
@@ -209,8 +201,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
-    implementation("androidx.room:room-paging:$roomVersion")
-    implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
 

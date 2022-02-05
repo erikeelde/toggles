@@ -2,8 +2,8 @@ package se.eelde.toggles.di
 
 import android.content.Context
 import androidx.room.Room
-import com.izettle.wrench.database.WrenchDatabase
-import com.izettle.wrench.database.migrations.Migrations
+import se.eelde.toggles.database.WrenchDatabase
+import se.eelde.toggles.database.migrations.Migrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
