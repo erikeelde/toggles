@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.izettle.wrench.database.WrenchConfigurationDao
-import com.izettle.wrench.database.WrenchConfigurationValue
-import com.izettle.wrench.database.WrenchConfigurationValueDao
-import com.izettle.wrench.database.WrenchPredefinedConfigurationValue
-import com.izettle.wrench.database.WrenchPredefinedConfigurationValueDao
+import se.eelde.toggles.database.WrenchConfigurationDao
+import se.eelde.toggles.database.WrenchConfigurationValue
+import se.eelde.toggles.database.WrenchConfigurationValueDao
+import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
+import se.eelde.toggles.database.WrenchPredefinedConfigurationValueDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

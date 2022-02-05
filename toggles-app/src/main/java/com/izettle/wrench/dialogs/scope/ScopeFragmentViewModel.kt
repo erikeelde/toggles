@@ -3,8 +3,8 @@ package com.izettle.wrench.dialogs.scope
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.izettle.wrench.database.WrenchScope
-import com.izettle.wrench.database.WrenchScopeDao
+import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.WrenchScopeDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
