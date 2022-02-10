@@ -94,7 +94,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.4.1")
-    implementation("androidx.navigation:navigation-ui-ktx:2.4.0")
+    implementation("androidx.navigation:navigation-ui-ktx:2.4.1")
 
 //    implementation(project(":toggles-prefs"))
 //    implementation(project(":toggles-flow"))
