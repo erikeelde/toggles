@@ -9,7 +9,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.os.Binder
-
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -95,7 +94,6 @@ class TogglesProvider : ContentProvider() {
 
                 wrenchApplication.id = applicationDao.insert(wrenchApplication)
             } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
                 throw e
             }
         }
@@ -205,7 +203,8 @@ class TogglesProvider : ContentProvider() {
                     wrenchConfigurationValue.id =
                         configurationValueDao.insertSync(wrenchConfigurationValue)
                 } catch (e: SQLiteConstraintException) {
-                    // this happens when the app is initially launched because many of many calls into assertValidApiVersion()
+                    // this happens when the app is initially launched because many of many calls
+                    // into assertValidApiVersion()
                 }
 
                 insertId = wrenchConfiguration.id

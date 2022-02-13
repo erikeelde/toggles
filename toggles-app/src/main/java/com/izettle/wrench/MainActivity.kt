@@ -8,9 +8,17 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.*
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.NavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -27,7 +35,7 @@ import kotlinx.coroutines.launch
 import se.eelde.toggles.DrawerView
 import se.eelde.toggles.R
 import se.eelde.toggles.applicationlist.ApplicationListView
-import se.eelde.toggles.compose_theme.TogglesTheme
+import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.configurationlist.ConfigurationListView
 import se.eelde.toggles.dialogs.booleanvalue.BooleanValueView
 import se.eelde.toggles.dialogs.enumvalue.EnumValueView
@@ -47,8 +55,7 @@ fun Navigation(navController: NavHostController) {
             arguments = listOf(navArgument("applicationId") { type = NavType.LongType })
         ) { backStackEntry ->
             ConfigurationListView(
-                navController,
-                backStackEntry.arguments?.getLong("applicationId")!!
+                navController
             )
         }
         composable(
@@ -59,9 +66,7 @@ fun Navigation(navController: NavHostController) {
             )
         ) { backStackEntry ->
             BooleanValueView(
-                navController,
-                backStackEntry.arguments?.getLong("configurationId")!!,
-                backStackEntry.arguments?.getLong("scopeId")!!
+                navController
             )
         }
         composable(
@@ -72,9 +77,7 @@ fun Navigation(navController: NavHostController) {
             )
         ) { backStackEntry ->
             IntegerValueView(
-                navController,
-                backStackEntry.arguments?.getLong("configurationId")!!,
-                backStackEntry.arguments?.getLong("scopeId")!!
+                navController
             )
         }
         composable(
@@ -85,9 +88,7 @@ fun Navigation(navController: NavHostController) {
             )
         ) { backStackEntry ->
             StringValueView(
-                navController,
-                backStackEntry.arguments?.getLong("configurationId")!!,
-                backStackEntry.arguments?.getLong("scopeId")!!
+                navController
             )
         }
         composable(
@@ -98,9 +99,7 @@ fun Navigation(navController: NavHostController) {
             )
         ) { backStackEntry ->
             EnumValueView(
-                navController,
-                backStackEntry.arguments?.getLong("configurationId")!!,
-                backStackEntry.arguments?.getLong("scopeId")!!
+                navController
             )
         }
         composable(
@@ -148,30 +147,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = colorScheme.background
                 ) {
-
                     Scaffold(
                         topBar = {
                             TogglesAppBar(navController, drawerState)
-//                            TopAppBar(title = { Text(stringResource(id = R.string.app_name)) }, navigationIcon = if (navController.previousBackStackEntry != null) {
-//                                {
-//                                    IconButton(onClick = { navController.navigateUp() }) {
-//                                        Icon(
-//                                            imageVector = Icons.Filled.ArrowBack,
-//                                            contentDescription = "Back"
-//                                        )
-//                                    }
-//                                }
-//                            } else {
-//                                {
-//                                    IconButton(onClick = { scope.launch { scaffoldState.drawerState.open() } }) {
-//                                        Icon(Icons.Filled.Menu, contentDescription = null)
-//                                    }
-//                                }
-//                            })
                         },
                     ) {
-                        // Screen content
-
                         Navigation(navController)
                     }
                 }
@@ -201,7 +181,8 @@ class MainActivity : ComponentActivity() {
                 scope.launch {
                     drawerState.close()
                 }
-            })
+            }
+        )
     }
 
     @Composable
@@ -225,7 +206,8 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun TogglesAppBar(root: Boolean, navigationIconClicked: () -> Unit) {
-        TopAppBar(title = { Text(stringResource(id = R.string.app_name)) },
+        TopAppBar(
+            title = { Text(stringResource(id = R.string.app_name)) },
             navigationIcon = if (root) {
                 {
                     IconButton(onClick = { navigationIconClicked() }) {
@@ -239,6 +221,7 @@ class MainActivity : ComponentActivity() {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                     }
                 }
-            })
+            }
+        )
     }
 }

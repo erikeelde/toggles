@@ -6,7 +6,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("kotlin-android")
-    id("io.gitlab.arturbosch.detekt")
+    id("toggles.detekt-conventions")
 }
 
 kapt {
@@ -15,17 +15,6 @@ kapt {
         // Default is 100.
         option("-Xmaxerrs", 500)
     }
-}
-
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
-}
-
-detekt {
-    autoCorrect = true
-    buildUponDefaultConfig = true
-    config = files("$projectDir/config/detekt/detekt.yml")
-    baseline = file("$projectDir/config/detekt/baseline.xml")
 }
 
 val composeVersion = "1.2.0-alpha03"
