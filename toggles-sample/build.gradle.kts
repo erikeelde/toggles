@@ -1,11 +1,9 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
-//    id("androidx.navigation.safeargs.kotlin")
+    id("toggles.android.application-conventions")
     id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
     id("com.gladed.androidgitversion") version "0.4.14"
+    id("toggles.ownership-conventions")
 }
 
 androidGitVersion {
@@ -16,28 +14,13 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    compileSdk = 32
     defaultConfig {
         applicationId = "se.eelde.toggles.example"
-        minSdk = 21
-        targetSdk = 32
         versionName = androidGitVersion.name()
         versionCode = androidGitVersion.code()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-        freeCompilerArgs = listOfNotNull(
-            "-Xopt-in=kotlin.RequiresOptIn"
-        )
-    }
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
     }
     buildTypes {
         getByName("release") {
@@ -49,16 +32,6 @@ android {
             applicationIdSuffix = ".debug"
         }
     }
-    lint {
-//        baselineFile = file("lint-baseline.xml")
-//        isCheckReleaseBuilds = true
-//        isAbortOnError = true
-//        isWarningsAsErrors = true
-//        lintConfig = File("../lint.xml")
-    }
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
-    }
 }
 
 repositories {
@@ -66,10 +39,12 @@ repositories {
 }
 
 dependencies {
+    val composeVersion = "1.2.0-alpha03"
 
     val lifecycleVersion = "2.5.0"
     val daggerVersion = "2.42"
 
+    implementation("androidx.compose.runtime:runtime:$composeVersion")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("androidx.test:core:1.4.0")
     testImplementation("androidx.test.ext:truth:1.4.0")
