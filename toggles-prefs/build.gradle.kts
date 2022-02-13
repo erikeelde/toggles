@@ -1,46 +1,9 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    id("toggles.android.library-conventions")
+    id("toggles.ownership-conventions")
 }
 
 apply(plugin = "com.vanniktech.maven.publish")
-
-android {
-    compileSdk = 32
-
-    defaultConfig {
-        minSdk = 21
-        targetSdk = 32
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    lint {
-//        baselineFile = file("lint-baseline.xml")
-//        isCheckReleaseBuilds = true
-//        isAbortOnError = true
-//        isWarningsAsErrors = true
-//        lintConfig = File("../lint.xml")
-    }
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-}
-kotlin {
-    // https://kotlinlang.org/docs/whatsnew14.html#explicit-api-mode-for-library-authors
-    explicitApi()
-}
 
 dependencies {
     testImplementation("junit:junit:4.13.2")

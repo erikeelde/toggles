@@ -8,15 +8,9 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldState
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -140,17 +134,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TogglesTheme {
+                val navController: NavHostController = rememberNavController()
+
+                val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+                NavigationDrawer(
+                    drawerState = drawerState,
+                    drawerContent = { DrawerLaLa(navController, drawerState) },
+                ) {
+                    Navigation(navController)
+                }
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = colorScheme.background
                 ) {
-                    val navController: NavHostController = rememberNavController()
-                    val scaffoldState = rememberScaffoldState()
-                    val scope = rememberCoroutineScope()
+
                     Scaffold(
-                        scaffoldState = scaffoldState,
                         topBar = {
-                            TogglesAppBar(navController, scaffoldState)
+                            TogglesAppBar(navController, drawerState)
 //                            TopAppBar(title = { Text(stringResource(id = R.string.app_name)) }, navigationIcon = if (navController.previousBackStackEntry != null) {
 //                                {
 //                                    IconButton(onClick = { navController.navigateUp() }) {
@@ -168,27 +169,6 @@ class MainActivity : ComponentActivity() {
 //                                }
 //                            })
                         },
-                        drawerContent = {
-                            DrawerView(
-                                openApplications = {
-                                    navController.navigate("applications")
-                                    scope.launch {
-                                        scaffoldState.drawerState.close()
-                                    }
-                                },
-                                openOss = {
-                                    navController.navigate("oss")
-                                    scope.launch {
-                                        scaffoldState.drawerState.close()
-                                    }
-                                },
-                                openHelp = {
-                                    navController.navigate("help")
-                                    scope.launch {
-                                        scaffoldState.drawerState.close()
-                                    }
-                                })
-                        }
                     ) {
                         // Screen content
 
@@ -199,9 +179,34 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @ExperimentalMaterial3Api
+    @Composable
+    fun DrawerLaLa(navController: NavHostController, drawerState: DrawerState) {
+        val scope = rememberCoroutineScope()
+        DrawerView(
+            openApplications = {
+                navController.navigate("applications")
+                scope.launch {
+                    drawerState.close()
+                }
+            },
+            openOss = {
+                navController.navigate("oss")
+                scope.launch {
+                    drawerState.close()
+                }
+            },
+            openHelp = {
+                navController.navigate("help")
+                scope.launch {
+                    drawerState.close()
+                }
+            })
+    }
+
     @Composable
     @OptIn(ExperimentalMaterial3Api::class)
-    fun TogglesAppBar(navController: NavHostController, scaffoldState: ScaffoldState) {
+    fun TogglesAppBar(navController: NavHostController, drawerState: DrawerState) {
         val currentRoute = navController.currentBackStackEntryAsState()
 
         val rootId = currentRoute.value?.destination?.parent?.startDestinationRoute
@@ -211,7 +216,7 @@ class MainActivity : ComponentActivity() {
         val scope = rememberCoroutineScope()
         TogglesAppBar(root = rootItem) {
             if (rootItem) {
-                scope.launch { scaffoldState.drawerState.open() }
+                scope.launch { drawerState.open() }
             } else {
                 navController.navigateUp()
             }

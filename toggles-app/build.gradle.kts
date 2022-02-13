@@ -2,31 +2,18 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
+    id("toggles.android.application-conventions")
     id("com.google.gms.google-services")
-    kotlin("android")
-    kotlin("kapt")
     id("kotlin-parcelize")
     id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
     id("com.github.triplet.play")
-    id("kotlin-android")
     id("com.gladed.androidgitversion") version "0.4.14"
     id("com.google.firebase.crashlytics")
 }
 
 androidGitVersion {
     tagPattern = "^v[0-9]+.*"
-}
-
-val composeVersion = "1.2.0-alpha01"
-
-kapt {
-    javacOptions {
-        // Increase the max count of errors from annotation processors.
-        // Default is 100.
-        option("-Xmaxerrs", 500)
-    }
 }
 
 play {
@@ -52,30 +39,11 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
-    }
-
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
-    }
-
-    compileSdk = 32
-
     defaultConfig {
         applicationId = "se.eelde.toggles"
-        minSdk = 21
-        targetSdk = 32
         versionName = androidGitVersion.name()
         versionCode = androidGitVersion.code()
 
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         val wrenchAuthority = "com.izettle.wrench.configprovider"
@@ -95,18 +63,6 @@ android {
             excludes += setOf("META-INF/main.kotlin_module", "META-INF/atomicfu.kotlin_module")
         }
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-        freeCompilerArgs = listOfNotNull(
-            "-Xopt-in=kotlin.RequiresOptIn"
-        )
-    }
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
@@ -117,15 +73,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
             versionNameSuffix = " debug"
-//            applicationIdSuffix = ".debug"
         }
-    }
-    lint {
-//        baselineFile = file("lint-baseline.xml")
-//        isCheckReleaseBuilds = true
-//        isAbortOnError = true
-//        isWarningsAsErrors = true
-//        lintConfig = File("../lint.xml")
     }
     sourceSets {
         // debug.assets.srcDirs => https://github.com/robolectric/robolectric/issues/3928
@@ -137,6 +85,7 @@ android {
 }
 
 dependencies {
+    val composeVersion = "1.2.0-alpha03"
     val roomVersion ="2.4.1"
     val pagingVersion ="3.1.0"
     val lifecycleVersion = "2.4.1"
@@ -150,15 +99,15 @@ dependencies {
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.foundation:foundation-layout:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha01")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha05")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.animation:animation:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
     //implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-beta01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     testImplementation("junit:junit:4.13.2")
 
     testImplementation("androidx.test:core-ktx:1.4.0")
@@ -172,7 +121,7 @@ dependencies {
     testImplementation("androidx.work:work-testing:2.7.1")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation(platform("com.google.firebase:firebase-bom:29.0.4"))
+    implementation(platform("com.google.firebase:firebase-bom:29.1.0"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
 
@@ -209,7 +158,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.4.1")
     implementation("androidx.navigation:navigation-ui-ktx:2.4.1")
 
-    implementation(project(":wrench-core"))
+    implementation(project(":modules:wrench-core"))
 //    implementation(project(":toggles-core"))
 //    implementation(project(":toggles-prefs"))
 //    implementation(project(":toggles-flow"))
