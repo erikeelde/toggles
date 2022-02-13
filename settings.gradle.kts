@@ -23,7 +23,7 @@ include(
     ":toggles-sample",
     ":toggles-flow-noop",
     ":toggles-prefs-noop",
-    ":wrench-core",
     ":modules:compose-theme",
     ":modules:database",
+    ":modules:wrench-core",
 )
