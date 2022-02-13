@@ -21,7 +21,7 @@ interface WrenchApplicationDao {
     suspend fun getApplication(id: Long): WrenchApplication?
 
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE packageName IN (:packageName)")
-    fun loadByPackageName(packageName: String): WrenchApplication
+    fun loadByPackageName(packageName: String): WrenchApplication?
 
     @Insert
     fun insert(application: WrenchApplication): Long

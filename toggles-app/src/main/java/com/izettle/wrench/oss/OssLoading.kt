@@ -8,13 +8,17 @@ import java.io.UnsupportedEncodingException
 
 object OssLoading {
     fun getThirdPartyLicenceMetadata(context: Context): ArrayList<LicenceMetadata> {
-        val thirdPartyLicenseMetadata = resourcePartToString(context.applicationContext, "third_party_license_metadata", 0L, -1)
-        val thirdPartyLicences = thirdPartyLicenseMetadata.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val thirdPartyLicenseMetadata =
+            resourcePartToString(context.applicationContext, "third_party_license_metadata", 0L, -1)
+        val thirdPartyLicences =
+            thirdPartyLicenseMetadata.split("\n".toRegex()).dropLastWhile { it.isEmpty() }
+                .toTypedArray()
         val licenceMetadataArrayList = ArrayList<LicenceMetadata>(thirdPartyLicences.size)
 
         for (licenceString in thirdPartyLicences) {
             val indexOfSpace = licenceString.indexOf(' ')
-            val byteInformation = licenceString.substring(0, indexOfSpace).split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val byteInformation = licenceString.substring(0, indexOfSpace).split(":".toRegex())
+                .dropLastWhile { it.isEmpty() }.toTypedArray()
             val validByteInformation = byteInformation.size == 2 && indexOfSpace > 0
 
             if (!validByteInformation) {
@@ -27,7 +31,11 @@ object OssLoading {
 
             val byteStart = java.lang.Long.parseLong(byteInformation[0])
             val byteEnd = Integer.parseInt(byteInformation[1])
-            licenceMetadataArrayList.add(LicenceMetadata(licenceString.substring(indexOfSpace + 1), byteStart, byteEnd))
+            licenceMetadataArrayList.add(
+                LicenceMetadata(
+                    licenceString.substring(indexOfSpace + 1), byteStart, byteEnd
+                )
+            )
         }
 
         return licenceMetadataArrayList
@@ -39,14 +47,30 @@ object OssLoading {
         return resourcePartToString(context, "third_party_licenses", skipBytes, length)
     }
 
-    private fun resourcePartToString(context: Context, resourceName: String, skipBytes: Long, length: Int): String {
+    private fun resourcePartToString(
+        context: Context,
+        resourceName: String,
+        skipBytes: Long,
+        length: Int
+    ): String {
         val resources = context.resources
-        return inputStreamPartToString(resources.openRawResource(resources.getIdentifier(resourceName, "raw", context.packageName)), skipBytes, length)
+        return inputStreamPartToString(
+            resources.openRawResource(
+                resources.getIdentifier(
+                    resourceName, "raw", context.packageName
+                )
+            ),
+            skipBytes, length
+        )
     }
 
     private const val bufferSize = 1024
 
-    private fun inputStreamPartToString(inputStream: InputStream, skipBytes: Long, length: Int): String {
+    private fun inputStreamPartToString(
+        inputStream: InputStream,
+        skipBytes: Long,
+        length: Int
+    ): String {
         val buffer = ByteArray(bufferSize)
         val byteArrayOutputStream = ByteArrayOutputStream()
 
@@ -73,7 +97,9 @@ object OssLoading {
         try {
             return byteArrayOutputStream.toString("UTF-8")
         } catch (exception: UnsupportedEncodingException) {
-            throw IOException("Unsupported encoding UTF8. This should always be supported.", exception)
+            throw IOException(
+                "Unsupported encoding UTF8. This should always be supported.", exception
+            )
         }
     }
 }

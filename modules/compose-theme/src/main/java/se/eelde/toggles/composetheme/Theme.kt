@@ -1,9 +1,14 @@
-package se.eelde.toggles.compose_theme
+package se.eelde.toggles.composetheme
 
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
@@ -16,12 +21,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 
+@Suppress("MagicNumber")
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF7673C5),
     secondary = Color(0xFF07BD46),
     tertiary = Color(0xFF07BD46)
 )
 
+@Suppress("MagicNumber")
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF1E1A87),
     secondary = Color(0xff287F46),

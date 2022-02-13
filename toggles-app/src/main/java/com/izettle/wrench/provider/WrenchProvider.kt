@@ -12,16 +12,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.WrenchProviderContract
-import se.eelde.toggles.database.WrenchApplication
-import se.eelde.toggles.database.WrenchApplicationDao
-import se.eelde.toggles.database.WrenchConfiguration
-import se.eelde.toggles.database.WrenchConfigurationDao
-import se.eelde.toggles.database.WrenchConfigurationValue
-import se.eelde.toggles.database.WrenchConfigurationValueDao
-import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
-import se.eelde.toggles.database.WrenchPredefinedConfigurationValueDao
-import se.eelde.toggles.database.WrenchScope
-import se.eelde.toggles.database.WrenchScopeDao
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -32,6 +22,16 @@ import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATIONS
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_ID
 import se.eelde.toggles.TogglesUriMatcher.Companion.CURRENT_CONFIGURATION_KEY
 import se.eelde.toggles.TogglesUriMatcher.Companion.PREDEFINED_CONFIGURATION_VALUES
+import se.eelde.toggles.database.WrenchApplication
+import se.eelde.toggles.database.WrenchApplicationDao
+import se.eelde.toggles.database.WrenchConfiguration
+import se.eelde.toggles.database.WrenchConfigurationDao
+import se.eelde.toggles.database.WrenchConfigurationValue
+import se.eelde.toggles.database.WrenchConfigurationValueDao
+import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
+import se.eelde.toggles.database.WrenchPredefinedConfigurationValueDao
+import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.WrenchScopeDao
 import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.notifyInsert
@@ -100,7 +100,6 @@ class WrenchProvider : ContentProvider() {
 
                 wrenchApplication.id = applicationDao.insert(wrenchApplication)
             } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
                 throw e
             }
         }
@@ -400,10 +399,10 @@ class WrenchProvider : ContentProvider() {
             }
 
             when (getApiVersion(uri)) {
-                se.eelde.toggles.provider.API_1 -> {
+                API_1 -> {
                     return
                 }
-                se.eelde.toggles.provider.API_INVALID -> {
+                API_INVALID -> {
                     if (strictApiVersion) {
                         throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
                     }
@@ -413,7 +412,8 @@ class WrenchProvider : ContentProvider() {
 
         @WrenchApiVersion
         private fun getApiVersion(uri: Uri): Int {
-            val queryParameter = uri.getQueryParameter(WrenchProviderContract.WRENCH_API_VERSION_QUERY_PARAM)
+            val queryParameter =
+                uri.getQueryParameter(WrenchProviderContract.WRENCH_API_VERSION_QUERY_PARAM)
             return if (queryParameter != null) {
                 Integer.valueOf(queryParameter)
             } else {

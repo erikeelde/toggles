@@ -1,21 +1,20 @@
-package com.izettle.wrench.dialogs.booleanvalue
+package se.eelde.toggles.dialogs.booleanvalue
 
 import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import se.eelde.toggles.database.WrenchConfigurationDao
-import se.eelde.toggles.database.WrenchConfigurationValue
-import se.eelde.toggles.database.WrenchConfigurationValueDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.database.WrenchConfigurationDao
+import se.eelde.toggles.database.WrenchConfigurationValue
+import se.eelde.toggles.database.WrenchConfigurationValueDao
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
 import javax.inject.Inject

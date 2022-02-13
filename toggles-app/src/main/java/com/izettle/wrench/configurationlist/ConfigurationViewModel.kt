@@ -4,18 +4,18 @@ import android.text.TextUtils
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import se.eelde.toggles.database.WrenchApplication
-import se.eelde.toggles.database.WrenchApplicationDao
-import se.eelde.toggles.database.WrenchConfigurationDao
-import se.eelde.toggles.database.WrenchConfigurationWithValues
-import se.eelde.toggles.database.WrenchScope
-import se.eelde.toggles.database.WrenchScopeDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import se.eelde.toggles.database.WrenchApplication
+import se.eelde.toggles.database.WrenchApplicationDao
+import se.eelde.toggles.database.WrenchConfigurationDao
+import se.eelde.toggles.database.WrenchConfigurationWithValues
+import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.WrenchScopeDao
 import javax.inject.Inject
 
 internal data class ViewState(
