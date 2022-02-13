@@ -20,15 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.izettle.wrench.dialogs.enumvalue.FragmentEnumValueViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun EnumValueView(
     navController: NavController,
-    configurationId: Long,
-    scopeId: Long,
     viewModel: FragmentEnumValueViewModel = hiltViewModel()
 ) {
 
@@ -47,12 +44,14 @@ fun EnumValueView(
                 LazyColumn {
                     uiState.value.configurationValues.forEach {
                         item {
-                            ListItem(modifier = Modifier.clickable {
-                                scope.launch {
-                                    viewModel.saveClick(it.value.toString())
-                                    navController.popBackStack()
+                            ListItem(
+                                modifier = Modifier.clickable {
+                                    scope.launch {
+                                        viewModel.saveClick(it.value.toString())
+                                        navController.popBackStack()
+                                    }
                                 }
-                            }) {
+                            ) {
                                 Text(text = it.value.toString())
                             }
                         }

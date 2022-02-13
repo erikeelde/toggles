@@ -11,8 +11,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Configuration
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
-import se.eelde.toggles.database.WrenchDatabase
-import se.eelde.toggles.di.DatabaseModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,6 +33,8 @@ import se.eelde.toggles.R
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.database.WrenchDatabase
+import se.eelde.toggles.di.DatabaseModule
 import javax.inject.Singleton
 
 @HiltAndroidTest

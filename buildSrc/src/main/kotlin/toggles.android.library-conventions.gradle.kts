@@ -4,17 +4,8 @@ plugins {
     id("com.android.library")
     kotlin("android")
     id("io.gitlab.arturbosch.detekt")
-}
+    id("toggles.detekt-conventions")
 
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
-}
-
-detekt {
-    autoCorrect = true
-    buildUponDefaultConfig = true
-    config = files("$projectDir/config/detekt/detekt.yml")
-    baseline = file("$projectDir/config/detekt/baseline.xml")
 }
 
 android {

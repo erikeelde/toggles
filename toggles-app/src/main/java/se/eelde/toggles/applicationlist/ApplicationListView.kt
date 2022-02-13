@@ -52,21 +52,24 @@ internal fun ApplicationListView(
                             secondaryText = stringResource(id = R.string.not_installed)
                         }
 
-                        ListItem(icon = {
-                            if (lol != null) {
-                                Image(
-                                    painter = BitmapPainter(image = lol),
-                                    contentDescription = "Application icon"
-                                )
-                            } else {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_report_black_24dp),
-                                    contentDescription = "Application not installed"
-                                )
+                        ListItem(
+                            icon = {
+                                if (lol != null) {
+                                    Image(
+                                        painter = BitmapPainter(image = lol),
+                                        contentDescription = "Application icon"
+                                    )
+                                } else {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.ic_report_black_24dp),
+                                        contentDescription = "Application not installed"
+                                    )
+                                }
+                            },
+                            modifier = Modifier.clickable {
+                                navController.navigate("configurations/${application.id}")
                             }
-                        }, modifier = Modifier.clickable {
-                            navController.navigate("configurations/${application.id}")
-                        }) {
+                        ) {
                             Text(application.applicationLabel)
                         }
                     }

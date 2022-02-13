@@ -2,13 +2,13 @@ package se.eelde.toggles.di
 
 import android.content.Context
 import androidx.room.Room
-import se.eelde.toggles.database.WrenchDatabase
-import se.eelde.toggles.database.migrations.Migrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import se.eelde.toggles.database.WrenchDatabase
+import se.eelde.toggles.database.migrations.Migrations
 import javax.inject.Singleton
 
 @Module
@@ -30,17 +30,21 @@ object DatabaseModule {
 @InstallIn(SingletonComponent::class)
 object DaoModule {
     @Provides
-    fun provideWrenchApplicationDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.applicationDao()
+    fun provideWrenchApplicationDao(wrenchDatabase: WrenchDatabase) =
+        wrenchDatabase.applicationDao()
 
     @Provides
-    fun provideWrenchConfigurationDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.configurationDao()
+    fun provideWrenchConfigurationDao(wrenchDatabase: WrenchDatabase) =
+        wrenchDatabase.configurationDao()
 
     @Provides
-    fun provideWrenchConfigurationValueDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.configurationValueDao()
+    fun provideWrenchConfigurationValueDao(wrenchDatabase: WrenchDatabase) =
+        wrenchDatabase.configurationValueDao()
 
     @Provides
     fun provideWrenchScopeDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.scopeDao()
 
     @Provides
-    fun providePredefinedConfigurationValueDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.predefinedConfigurationValueDao()
+    fun providePredefinedConfigurationValueDao(wrenchDatabase: WrenchDatabase) =
+        wrenchDatabase.predefinedConfigurationValueDao()
 }

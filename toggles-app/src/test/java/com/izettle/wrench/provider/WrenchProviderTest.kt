@@ -14,8 +14,6 @@ import androidx.work.testing.WorkManagerTestInitHelper
 import com.izettle.wrench.core.Bolt
 import com.izettle.wrench.core.Nut
 import com.izettle.wrench.core.WrenchProviderContract
-import se.eelde.toggles.database.WrenchDatabase
-import se.eelde.toggles.di.DatabaseModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,6 +32,8 @@ import org.robolectric.Robolectric
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import se.eelde.toggles.R
+import se.eelde.toggles.database.WrenchDatabase
+import se.eelde.toggles.di.DatabaseModule
 import javax.inject.Singleton
 
 @HiltAndroidTest
@@ -53,7 +53,8 @@ class WrenchProviderTest {
         @Singleton
         @Provides
         fun provideWrenchDb(@ApplicationContext context: Context): WrenchDatabase {
-            return Room.inMemoryDatabaseBuilder(context, WrenchDatabase::class.java).allowMainThreadQueries().build()
+            return Room.inMemoryDatabaseBuilder(context, WrenchDatabase::class.java)
+                .allowMainThreadQueries().build()
         }
     }
 
@@ -61,7 +62,8 @@ class WrenchProviderTest {
     fun setUp() {
         hiltRule.inject()
 
-        val contentProviderController = Robolectric.buildContentProvider(WrenchProvider::class.java).create(WrenchProviderContract.WRENCH_AUTHORITY)
+        val contentProviderController = Robolectric.buildContentProvider(WrenchProvider::class.java)
+            .create(WrenchProviderContract.WRENCH_AUTHORITY)
         wrenchProvider = contentProviderController.get()
 
         val context = ApplicationProvider.getApplicationContext<Application>()
@@ -82,7 +84,13 @@ class WrenchProviderTest {
         fun checkTypeConversion(bolt: Bolt, expectedType: String) {
             wrenchProvider.insert(WrenchProviderContract.boltUri(), bolt.toContentValues())
 
-            val cursor = wrenchProvider.query(WrenchProviderContract.boltUri(bolt.key), null, null, null, null)
+            val cursor = wrenchProvider.query(
+                WrenchProviderContract.boltUri(bolt.key),
+                null,
+                null,
+                null,
+                null
+            )
 
             cursor.moveToFirst()
             val queryBolt = Bolt.fromCursor(cursor)
@@ -93,7 +101,10 @@ class WrenchProviderTest {
         checkTypeConversion(getBolt(key = "stringBoltKey", boltType = "java.lang.String"), "string")
         checkTypeConversion(getBolt(key = "intBoltKey", boltType = "java.lang.Integer"), "integer")
         checkTypeConversion(getBolt(key = "enumBoltKey", boltType = "java.lang.Enum"), "enum")
-        checkTypeConversion(getBolt(key = "booleanBoltKey", boltType = "java.lang.Boolean"), "boolean")
+        checkTypeConversion(
+            getBolt(key = "booleanBoltKey", boltType = "java.lang.Boolean"),
+            "boolean"
+        )
     }
 
     @Test
@@ -105,7 +116,13 @@ class WrenchProviderTest {
         val insertBoltUri = wrenchProvider.insert(uri, insertBolt.toContentValues())
         Assert.assertNotNull(insertBoltUri)
 
-        var cursor = wrenchProvider.query(WrenchProviderContract.boltUri(insertBoltKey), null, null, null, null)
+        var cursor = wrenchProvider.query(
+            WrenchProviderContract.boltUri(insertBoltKey),
+            null,
+            null,
+            null,
+            null
+        )
         Assert.assertNotNull(cursor)
         Assert.assertEquals(1, cursor.count)
 
@@ -116,7 +133,12 @@ class WrenchProviderTest {
         Assert.assertEquals(insertBolt.value, queryBolt.value)
         Assert.assertEquals(insertBolt.type, queryBolt.type)
 
-        cursor = wrenchProvider.query(WrenchProviderContract.boltUri(Integer.parseInt(insertBoltUri.lastPathSegment!!).toLong()), null, null, null, null)
+        cursor = wrenchProvider.query(
+            WrenchProviderContract.boltUri(
+                Integer.parseInt(insertBoltUri.lastPathSegment!!).toLong()
+            ),
+            null, null, null, null
+        )
         Assert.assertNotNull(cursor)
         Assert.assertEquals(1, cursor.count)
 
@@ -137,7 +159,13 @@ class WrenchProviderTest {
         val insertBoltUri = wrenchProvider.insert(uri, insertBolt.toContentValues())
         Assert.assertNotNull(insertBoltUri)
 
-        var cursor = wrenchProvider.query(WrenchProviderContract.boltUri(updateBoltKey), null, null, null, null)
+        var cursor = wrenchProvider.query(
+            WrenchProviderContract.boltUri(updateBoltKey),
+            null,
+            null,
+            null,
+            null
+        )
         Assert.assertNotNull(cursor)
         Assert.assertTrue(cursor.moveToFirst())
 
@@ -146,12 +174,28 @@ class WrenchProviderTest {
         Assert.assertEquals(insertBolt.value, providerBolt.value)
         Assert.assertEquals(insertBolt.type, providerBolt.type)
 
-        val updateBolt = Bolt(providerBolt.id, providerBolt.type, providerBolt.key, providerBolt.value!! + providerBolt.value!!)
+        val updateBolt = Bolt(
+            providerBolt.id,
+            providerBolt.type,
+            providerBolt.key,
+            providerBolt.value!! + providerBolt.value!!
+        )
 
-        val update = wrenchProvider.update(WrenchProviderContract.boltUri(updateBolt.id), updateBolt.toContentValues(), null, null)
+        val update = wrenchProvider.update(
+            WrenchProviderContract.boltUri(updateBolt.id),
+            updateBolt.toContentValues(),
+            null,
+            null
+        )
         Assert.assertEquals(1, update)
 
-        cursor = wrenchProvider.query(WrenchProviderContract.boltUri(updateBoltKey), null, null, null, null)
+        cursor = wrenchProvider.query(
+            WrenchProviderContract.boltUri(updateBoltKey),
+            null,
+            null,
+            null,
+            null
+        )
         Assert.assertNotNull(cursor)
 
         Assert.assertTrue(cursor.moveToFirst())
@@ -162,37 +206,68 @@ class WrenchProviderTest {
 
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingInsertForBoltWithId() {
-        wrenchProvider.insert(WrenchProviderContract.boltUri(0), getBolt("dummyBolt").toContentValues())
+        wrenchProvider.insert(
+            WrenchProviderContract.boltUri(0),
+            getBolt("dummyBolt").toContentValues()
+        )
     }
 
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingInsertForBoltWithKey() {
-        wrenchProvider.insert(WrenchProviderContract.boltUri("fake"), getBolt("dummyBolt").toContentValues())
+        wrenchProvider.insert(
+            WrenchProviderContract.boltUri("fake"),
+            getBolt("dummyBolt").toContentValues()
+        )
     }
 
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingUpdateForBoltWithKey() {
-        wrenchProvider.update(WrenchProviderContract.boltUri("fake"), getBolt("dummyBolt").toContentValues(), null, null)
+        wrenchProvider.update(
+            WrenchProviderContract.boltUri("fake"),
+            getBolt("dummyBolt").toContentValues(),
+            null,
+            null
+        )
     }
 
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingUpdateForBolts() {
-        wrenchProvider.update(WrenchProviderContract.boltUri(), getBolt("dummyBolt").toContentValues(), null, null)
+        wrenchProvider.update(
+            WrenchProviderContract.boltUri(),
+            getBolt("dummyBolt").toContentValues(),
+            null,
+            null
+        )
     }
 
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingUpdateForNuts() {
-        wrenchProvider.update(WrenchProviderContract.nutUri(), getNut("dummyNut").toContentValues(), null, null)
+        wrenchProvider.update(
+            WrenchProviderContract.nutUri(),
+            getNut("dummyNut").toContentValues(),
+            null,
+            null
+        )
     }
 
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingQueryForBolts() {
-        wrenchProvider.update(WrenchProviderContract.boltUri(), getBolt("dummyBolt").toContentValues(), null, null)
+        wrenchProvider.update(
+            WrenchProviderContract.boltUri(),
+            getBolt("dummyBolt").toContentValues(),
+            null,
+            null
+        )
     }
 
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingQueryForNuts() {
-        wrenchProvider.update(WrenchProviderContract.nutUri(), getNut("dummyNut").toContentValues(), null, null)
+        wrenchProvider.update(
+            WrenchProviderContract.nutUri(),
+            getNut("dummyNut").toContentValues(),
+            null,
+            null
+        )
     }
 
     @Test(expected = UnsupportedOperationException::class)

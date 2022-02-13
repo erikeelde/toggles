@@ -28,9 +28,11 @@ internal fun OssListView(
             LazyColumn {
                 it.forEach { licenseMetadata ->
                     item {
-                        ListItem(modifier = Modifier.clickable {
-                            navController.navigate("oss/${licenseMetadata.dependency}/${licenseMetadata.skipBytes}/${licenseMetadata.length}")
-                        }) {
+                        ListItem(
+                            modifier = Modifier.clickable {
+                                navController.navigate("oss/${licenseMetadata.dependency}/${licenseMetadata.skipBytes}/${licenseMetadata.length}")
+                            }
+                        ) {
                             Text(licenseMetadata.dependency)
                         }
                     }

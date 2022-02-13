@@ -14,7 +14,10 @@ class PackageManagerWrapper(private val packageManager: PackageManager) : IPacka
     override val applicationLabel: String
         @Throws(PackageManager.NameNotFoundException::class)
         get() {
-            val applicationInfo = packageManager.getApplicationInfo(callingApplicationPackageName!!, PackageManager.GET_META_DATA)
+            val applicationInfo = packageManager.getApplicationInfo(
+                callingApplicationPackageName!!,
+                PackageManager.GET_META_DATA
+            )
             return applicationInfo.loadLabel(packageManager).toString()
         }
 

@@ -22,17 +22,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.izettle.wrench.configurationlist.ConfigurationViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.database.WrenchConfigurationValue
 import se.eelde.toggles.database.WrenchConfigurationWithValues
 import se.eelde.toggles.database.WrenchScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import se.eelde.toggles.core.Toggle
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun ConfigurationListView(
     navController: NavController,
-    applicationId: Long,
     viewModel: ConfigurationViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.state.collectAsState()
@@ -68,12 +67,14 @@ internal fun ConfigurationListView(
                         )
 
                         if (selectedScope != null) {
-                            Text(style = MaterialTheme.typography.body2,
+                            Text(
+                                style = MaterialTheme.typography.body2,
                                 text = buildAnnotatedString {
                                     withStyle(style = SpanStyle(textDecoration = TextDecoration.LineThrough)) {
                                         append("${defaultScope?.value}")
                                     }
-                                })
+                                }
+                            )
                         } else {
                             Text(
                                 style = MaterialTheme.typography.h6,

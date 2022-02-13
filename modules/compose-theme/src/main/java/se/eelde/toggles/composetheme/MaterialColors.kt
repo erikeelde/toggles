@@ -1,4 +1,4 @@
-package se.eelde.toggles.compose_theme
+package se.eelde.toggles.composetheme
 
 import androidx.compose.ui.graphics.Color
 
