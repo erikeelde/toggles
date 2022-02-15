@@ -1,4 +1,4 @@
-package com.izettle.wrench.configurationlist
+package se.eelde.toggles.configurationlist
 
 import android.text.TextUtils
 import androidx.lifecycle.SavedStateHandle

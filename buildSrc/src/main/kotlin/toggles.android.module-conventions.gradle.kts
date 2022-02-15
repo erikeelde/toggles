@@ -1,3 +1,4 @@
+import gradle.kotlin.dsl.accessors._f6fccc4cd1db97dcfb2ceed9d5ddc56a.kotlinOptions
 import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.kotlin
 
@@ -8,7 +9,7 @@ plugins {
     id("toggles.detekt-conventions")
 }
 
-val composeVersion = "1.2.0-alpha03"
+val composeVersion: String by rootProject.extra
 
 dependencies {
     implementation("androidx.compose.runtime:runtime:$composeVersion")
@@ -26,6 +27,9 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
+        freeCompilerArgs = listOfNotNull(
+            "-Xopt-in=kotlin.RequiresOptIn"
+        )
     }
 
     compileOptions {

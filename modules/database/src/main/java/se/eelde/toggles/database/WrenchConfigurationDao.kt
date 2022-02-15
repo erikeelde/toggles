@@ -40,7 +40,7 @@ interface WrenchConfigurationDao {
             " FROM " + ConfigurationTable.TABLE_NAME +
             " WHERE configuration.applicationId = (:applicationId) AND configuration.configurationKey = (:configurationKey)"
     )
-    fun getWrenchConfiguration(applicationId: Long, configurationKey: String): WrenchConfiguration
+    fun getWrenchConfiguration(applicationId: Long, configurationKey: String): WrenchConfiguration?
 
     @Query(
         "SELECT * " +

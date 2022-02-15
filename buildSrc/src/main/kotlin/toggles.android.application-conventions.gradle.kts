@@ -17,7 +17,7 @@ kapt {
     }
 }
 
-val composeVersion = "1.2.0-alpha03"
+val composeVersion: String by rootProject.extra
 
 android {
     compileSdk = 32

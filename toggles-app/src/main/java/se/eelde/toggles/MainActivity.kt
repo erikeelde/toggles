@@ -1,4 +1,4 @@
-package com.izettle.wrench
+package se.eelde.toggles
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,31 +32,27 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import se.eelde.toggles.DrawerView
-import se.eelde.toggles.R
-import se.eelde.toggles.applicationlist.ApplicationListView
 import se.eelde.toggles.composetheme.TogglesTheme
-import se.eelde.toggles.configurationlist.ConfigurationListView
+import se.eelde.toggles.configurationlist.ConfigurationsEntry
 import se.eelde.toggles.dialogs.booleanvalue.BooleanValueView
 import se.eelde.toggles.dialogs.enumvalue.EnumValueView
 import se.eelde.toggles.dialogs.integervalue.IntegerValueView
 import se.eelde.toggles.dialogs.stringvalue.StringValueView
 import se.eelde.toggles.help.HelpView
+import se.eelde.toggles.navigation.featureDestinations
 import se.eelde.toggles.oss.detail.OssDetailView
 import se.eelde.toggles.oss.list.OssListView
 
 @Suppress("LongMethod")
 @Composable
 fun Navigation(navController: NavHostController) {
+    featureDestinations[ConfigurationsEntry::class.java] = ConfigurationsEntry()
+
     NavHost(navController = navController, startDestination = "applications") {
-        composable("applications") { ApplicationListView(navController) }
-        composable(
-            "configurations/{applicationId}",
-            arguments = listOf(navArgument("applicationId") { type = NavType.LongType })
-        ) { backStackEntry ->
-            ConfigurationListView(
-                navController
-            )
+        featureDestinations.values.forEach {
+            with(it) {
+                composable(navController)
+            }
         }
         composable(
             "configuration/{configurationId}/{scopeId}/boolean",

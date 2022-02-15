@@ -13,4 +13,5 @@ detekt {
     autoCorrect = true
     buildUponDefaultConfig = true
     baseline = project.file("config/detekt/baseline.xml")
+    config = rootProject.files("config/detekt/detekt.yml")
 }

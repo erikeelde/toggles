@@ -39,6 +39,7 @@ android {
         }
     }
 
+
     defaultConfig {
         applicationId = "se.eelde.toggles"
         versionName = androidGitVersion.name()
@@ -85,14 +86,16 @@ android {
 }
 
 dependencies {
-    val composeVersion = "1.2.0-alpha03"
-    val roomVersion ="2.4.1"
-    val pagingVersion ="3.1.0"
+    val composeVersion: String by rootProject.extra
+    val roomVersion = "2.4.1"
+    val pagingVersion = "3.1.0"
     val lifecycleVersion = "2.4.1"
     val daggerVersion = "2.40.5"
 
     implementation(project(":modules:compose-theme"))
     implementation(project(":modules:database"))
+    implementation(project(":modules:navigation"))
+    implementation(project(":modules:applications"))
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
@@ -106,8 +109,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
-    //implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.startup:startup-runtime:1.1.1")
     testImplementation("junit:junit:4.13.2")
 
     testImplementation("androidx.test:core-ktx:1.4.0")
@@ -154,9 +157,6 @@ dependencies {
     implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
 
     implementation("androidx.paging:paging-runtime-ktx:3.1.0")
-
-    implementation("androidx.navigation:navigation-fragment-ktx:2.4.1")
-    implementation("androidx.navigation:navigation-ui-ktx:2.4.1")
 
     implementation(project(":modules:wrench-core"))
 //    implementation(project(":toggles-core"))

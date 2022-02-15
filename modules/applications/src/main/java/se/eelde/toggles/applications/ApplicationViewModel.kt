@@ -1,4 +1,4 @@
-package com.izettle.wrench.applicationlist
+package se.eelde.toggles.applications
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
