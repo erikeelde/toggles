@@ -20,7 +20,7 @@ import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
 import se.eelde.toggles.database.WrenchPredefinedConfigurationValueDao
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 internal data class ViewState(

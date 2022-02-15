@@ -64,7 +64,8 @@ class FragmentStringValueViewModel
             configurationValueDao.getConfigurationValue(configurationId, scopeId).collect {
                 if (it != null) {
                     selectedConfigurationValue = it
-                    _state.value = reduce(state.value,
+                    _state.value = reduce(
+                        state.value,
                         PartialViewState.NewConfigurationValue(it.value!!)
                     )
                 }
@@ -121,7 +122,11 @@ class FragmentStringValueViewModel
             }
             configurationDao.touch(configurationId, Date())
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
+            application.contentResolver.notifyUpdate(
+                TogglesProviderContract.toggleUri(
+                    configurationId
+                )
+            )
         }
     }
 

@@ -25,5 +25,7 @@ include(
     ":toggles-prefs-noop",
     ":modules:compose-theme",
     ":modules:database",
+    ":modules:navigation",
+    ":modules:applications",
     ":modules:wrench-core",
 )

@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    val composeVersion = "1.2.0-alpha03"
+    val composeVersion: String by rootProject.extra
 
     val lifecycleVersion = "2.5.0"
     val daggerVersion = "2.42"

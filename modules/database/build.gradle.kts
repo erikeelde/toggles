@@ -3,6 +3,10 @@ plugins {
     id("toggles.ownership-conventions")
 }
 
+android {
+    namespace = "se.eelde.toggles.database"
+}
+
 kapt {
     arguments {
         arg("room.schemaLocation", "$projectDir/schemas")

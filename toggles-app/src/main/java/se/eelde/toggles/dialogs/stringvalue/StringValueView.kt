@@ -32,7 +32,6 @@ fun StringValueViewPreview() {
             save = {},
             revert = {}
         ) {
-
         }
     }
 }
@@ -57,6 +56,7 @@ fun StringValueView(
 }
 
 @Composable
+@Suppress("LongParameterList")
 fun StringValueView(
     title: String?,
     stringValue: String?,
