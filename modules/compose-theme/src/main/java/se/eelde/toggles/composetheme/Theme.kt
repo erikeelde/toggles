@@ -21,18 +21,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 
-@Suppress("MagicNumber")
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF7673C5),
-    secondary = Color(0xFF07BD46),
-    tertiary = Color(0xFF07BD46)
+    primary = Color(color = 0xFF7673C5),
+    secondary = Color(color = 0xFF07BD46),
+    tertiary = Color(color = 0xFF07BD46)
 )
 
-@Suppress("MagicNumber")
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF1E1A87),
-    secondary = Color(0xff287F46),
-    tertiary = Color(0xff287F46)
+    primary = Color(color = 0xFF1E1A87),
+    secondary = Color(color = 0xff287F46),
+    tertiary = Color(color = 0xff287F46)
 )
 
 val Typography = Typography(

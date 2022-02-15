@@ -4,7 +4,6 @@ import android.content.ContentProvider
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Binder
@@ -90,18 +89,14 @@ class WrenchProvider : ContentProvider() {
             applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)
 
         if (wrenchApplication == null) {
-            try {
-                wrenchApplication = WrenchApplication(
-                    id = 0,
-                    packageName = packageManagerWrapper.callingApplicationPackageName!!,
-                    applicationLabel = packageManagerWrapper.applicationLabel,
-                    shortcutId = packageManagerWrapper.callingApplicationPackageName!!,
-                )
+            wrenchApplication = WrenchApplication(
+                id = 0,
+                packageName = packageManagerWrapper.callingApplicationPackageName!!,
+                applicationLabel = packageManagerWrapper.applicationLabel,
+                shortcutId = packageManagerWrapper.callingApplicationPackageName!!,
+            )
 
-                wrenchApplication.id = applicationDao.insert(wrenchApplication)
-            } catch (e: PackageManager.NameNotFoundException) {
-                throw e
-            }
+            wrenchApplication.id = applicationDao.insert(wrenchApplication)
         }
 
         return wrenchApplication
@@ -404,7 +399,10 @@ class WrenchProvider : ContentProvider() {
                 }
                 API_INVALID -> {
                     if (strictApiVersion) {
-                        throw IllegalArgumentException("This content provider requires you to provide a valid api-version in a queryParameter")
+                        throw IllegalArgumentException(
+                            "This content provider requires you to provide a " +
+                                "valid api-version in a queryParameter"
+                        )
                     }
                 }
             }

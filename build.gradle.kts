@@ -22,6 +22,8 @@ buildscript {
     }
 }
 
+val composeVersion by extra("1.2.0-alpha03")
+
 plugins {
     id("com.github.ben-manes.versions") version "0.42.0"
     // id("se.eelde.build-optimizations") version "0.2.0"

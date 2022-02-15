@@ -1,4 +1,4 @@
-package se.eelde.toggles.applicationlist
+package se.eelde.toggles.applications
 
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -23,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.izettle.wrench.applicationlist.ApplicationViewModel
-import se.eelde.toggles.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -48,7 +46,7 @@ internal fun ApplicationListView(
                             val icon: Drawable =
                                 packageManager.getApplicationIcon(application.packageName)
                             lol = icon.toBitmap(width = 128, height = 128).asImageBitmap()
-                        } catch (e: PackageManager.NameNotFoundException) {
+                        } catch (ignored: PackageManager.NameNotFoundException) {
                             secondaryText = stringResource(id = R.string.not_installed)
                         }
 
