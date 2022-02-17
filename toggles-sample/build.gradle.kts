@@ -68,7 +68,7 @@ repositories {
 dependencies {
 
     val lifecycleVersion = "2.4.1"
-    val daggerVersion = "2.40.5"
+    val daggerVersion = "2.41"
 
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("androidx.test:core:1.4.0")
