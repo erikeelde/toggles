@@ -145,7 +145,7 @@ kapt {
 }
 
 dependencies {
-    val roomVersion ="2.4.1"
+    val roomVersion ="2.4.2"
     val pagingVersion ="3.1.0"
     val lifecycleVersion = "2.4.1"
     val daggerVersion = "2.41"
