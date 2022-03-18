@@ -177,7 +177,7 @@ dependencies {
     testImplementation("androidx.work:work-testing:2.7.1")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation(platform("com.google.firebase:firebase-bom:29.2.0"))
+    implementation(platform("com.google.firebase:firebase-bom:29.2.1"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
 
