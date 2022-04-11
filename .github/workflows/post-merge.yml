@@ -46,7 +46,7 @@ jobs:
         run: ./gradlew :toggles-app:packageDebug :toggles-sample:packageDebug
 
       - name: Upload apks
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Apks
           path: '**/build/outputs/apk/*'
