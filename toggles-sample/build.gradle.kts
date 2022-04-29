@@ -76,7 +76,7 @@ dependencies {
     testImplementation("androidx.test:rules:1.4.0")
     testImplementation("androidx.test:runner:1.4.0")
     testImplementation("androidx.test.ext:junit:1.1.3")
-    testImplementation("org.robolectric:robolectric:4.7.3")
+    testImplementation("org.robolectric:robolectric:4.8")
 
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("com.google.android.material:material:1.5.0")
