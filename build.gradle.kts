@@ -17,7 +17,7 @@ buildscript {
         classpath("com.vanniktech:gradle-maven-publish-plugin:0.19.0")
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.6.21")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.4")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.1")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.0")
     }
 }
 
