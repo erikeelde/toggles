@@ -48,5 +48,5 @@ dependencies {
     //implementation(project(":toggles-core"))
 
     implementation("androidx.annotation:annotation:1.3.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
 }
