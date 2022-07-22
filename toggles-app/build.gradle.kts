@@ -148,7 +148,7 @@ dependencies {
     val roomVersion ="2.4.2"
     val pagingVersion ="3.1.0"
     val lifecycleVersion = "2.5.0"
-    val daggerVersion = "2.42"
+    val daggerVersion = "2.43"
 
     implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
