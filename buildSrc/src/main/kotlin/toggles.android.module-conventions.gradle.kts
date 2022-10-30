@@ -1,4 +1,3 @@
-import gradle.kotlin.dsl.accessors._f6fccc4cd1db97dcfb2ceed9d5ddc56a.kotlinOptions
 import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.kotlin
 
@@ -9,18 +8,11 @@ plugins {
     id("toggles.detekt-conventions")
 }
 
-val composeVersion: String by rootProject.extra
-
-dependencies {
-    implementation("androidx.compose.runtime:runtime:$composeVersion")
-}
-
 android {
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 32
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,8 +25,6 @@ android {
     }
 
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }

@@ -34,7 +34,7 @@ One-shot fetch of a toggle. Similar API as androids SharedPreferences.
 
 Base library exposing common bit to help communicating with the toggles application via the provider. Generally shouldn't be needed unless implementing your own library.
 ```
-    implementation("se.eelde.toggles:toggles-core:0.0.2")
+    implementation(libs.se.eelde.toggles.toggles.core)
 ```
 
 #### Previously known as wrench

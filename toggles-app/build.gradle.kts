@@ -30,6 +30,8 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace = "se.eelde.toggles"
+
     signingConfigs {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String?
@@ -86,92 +88,85 @@ android {
 }
 
 dependencies {
-    val composeVersion: String by rootProject.extra
-    val roomVersion = "2.4.1"
-    val pagingVersion = "3.1.0"
-    val lifecycleVersion = "2.4.1"
-    val daggerVersion = "2.40.5"
-
     implementation(project(":modules:compose-theme"))
     implementation(project(":modules:database"))
     implementation(project(":modules:navigation"))
     implementation(project(":modules:applications"))
 
-    implementation("androidx.ui:ui-tooling:1.0.0-alpha07")
-    implementation("androidx.compose.runtime:runtime:$composeVersion")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.foundation:foundation-layout:$composeVersion")
-    implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha05")
-    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.foundation:foundation:$composeVersion")
-    implementation("androidx.compose.animation:animation:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation("androidx.startup:startup-runtime:1.1.1")
-    testImplementation("junit:junit:4.13.2")
+    implementation(libs.androidx.ui.ui.tooling)
+    implementation(platform(libs.androidx.compose.compose.bom))
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.foundation.foundation.layout)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.material.icons.extended)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.ui.ui.tooling)
+    implementation(libs.androidx.compose.runtime.runtime.livedata)
+    implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.hilt.hilt.navigation.compose)
+    implementation(libs.androidx.startup.startup.runtime)
+    testImplementation(libs.junit)
 
-    testImplementation("androidx.test:core-ktx:1.4.0")
-    testImplementation("androidx.test.ext:truth:1.4.0")
-    testImplementation("androidx.test:rules:1.4.0")
-    testImplementation("androidx.test:runner:1.4.0")
-    testImplementation("androidx.test.ext:junit:1.1.3")
-    testImplementation("org.robolectric:robolectric:4.7.3")
-    testImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    testImplementation("androidx.arch.core:core-testing:2.1.0")
-    testImplementation("androidx.work:work-testing:2.7.1")
+    testImplementation(libs.androidx.test.core.ktx)
+    testImplementation(libs.androidx.test.ext.truth)
+    testImplementation(libs.androidx.test.rules)
+    testImplementation(libs.androidx.test.runner)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.org.robolectric)
+    testImplementation(libs.androidx.test.espresso.espresso.core)
+    testImplementation(libs.androidx.arch.core.core.testing)
+    testImplementation(libs.androidx.work.work.testing)
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation(platform("com.google.firebase:firebase-bom:29.1.0"))
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
+    implementation(platform(libs.com.google.firebase.firebase.bom))
+    implementation(libs.com.google.firebase.firebase.crashlytics.ktx)
+    implementation(libs.com.google.firebase.firebase.analytics.ktx)
 
-    implementation("com.google.dagger:hilt-android:$daggerVersion")
-    kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
-    implementation("androidx.hilt:hilt-work:1.0.0")
+    implementation(libs.com.google.dagger.hilt.android)
+    kapt(libs.com.google.dagger.hilt.android.compiler)
+    implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel)
+    kapt(libs.androidx.hilt.hilt.compiler)
+    implementation(libs.androidx.hilt.hilt.work)
 
-    testImplementation("com.google.dagger:hilt-android-testing:$daggerVersion")
-    kaptTest("com.google.dagger:hilt-android-compiler:$daggerVersion")
+    testImplementation(libs.com.google.dagger.hilt.android.testing)
+    kaptTest(libs.com.google.dagger.hilt.android.compiler)
 
-    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
+    implementation(libs.androidx.lifecycle.lifecycle.common.java8)
 
 
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:2.40.5")
+    implementation(libs.com.google.dagger)
+    kapt(libs.com.google.dagger.dagger.compiler)
 
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
-    // implementation("com.google.android.material:material:1.5.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
-    implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.recyclerview)
+    // implementation("com.google.android.material:material:1.5.0)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.cardview)
+    implementation(libs.androidx.lifecycle.lifecycle.extensions)
+    implementation(libs.androidx.lifecycle.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.lifecycle.livedata.core.ktx)
+    implementation(libs.androidx.lifecycle.lifecycle.livedata.ktx)
+    implementation(libs.androidx.room.room.ktx)
+    implementation(libs.androidx.paging.paging.runtime.ktx)
 
-    implementation("androidx.paging:paging-runtime-ktx:3.1.0")
+    implementation(libs.androidx.paging.paging.runtime.ktx)
 
     implementation(project(":modules:wrench-core"))
 //    implementation(project(":toggles-core"))
 //    implementation(project(":toggles-prefs"))
 //    implementation(project(":toggles-flow"))
-    implementation("se.eelde.toggles:toggles-core:0.0.2")
+    implementation(libs.se.eelde.toggles.toggles.core)
     implementation("se.eelde.toggles:toggles-flow:0.0.1")
     implementation("se.eelde.toggles:toggles-prefs:0.0.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.work:work-runtime-ktx:2.7.1")
+    implementation(libs.androidx.core.core.ktx)
+    implementation(libs.androidx.work.work.runtime)
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.8.1")
-
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
 }

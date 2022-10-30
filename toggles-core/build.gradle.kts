@@ -6,6 +6,7 @@ plugins {
 apply(plugin = "com.vanniktech.maven.publish")
 
 android {
+    namespace = "se.eelde.toggles.core"
     defaultConfig {
         val togglesProviderAuthority = "se.eelde.toggles.configprovider"
         manifestPlaceholders["togglesProviderAuthority"] = togglesProviderAuthority
@@ -16,5 +17,5 @@ android {
 }
 
 dependencies {
-    implementation("androidx.annotation:annotation:1.3.0")
+    implementation(libs.androidx.annotation)
 }

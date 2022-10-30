@@ -3,7 +3,7 @@ plugins {
     id("toggles.ownership-conventions")
 }
 
-val composeVersion: String by rootProject.extra
+val composeCompilerVersion: String by rootProject.extra
 
 android {
     namespace = "se.eelde.toggles.composetheme"
@@ -11,12 +11,12 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 }
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha05")
+    implementation(libs.androidx.core.core.ktx)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.material3)
 }
