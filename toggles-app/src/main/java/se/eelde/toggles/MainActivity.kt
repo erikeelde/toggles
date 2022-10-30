@@ -3,8 +3,9 @@ package se.eelde.toggles
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -14,10 +15,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.NavigationDrawer
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -132,7 +134,7 @@ class MainActivity : ComponentActivity() {
                 val navController: NavHostController = rememberNavController()
 
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-                NavigationDrawer(
+                ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = { DrawerLaLa(navController, drawerState) },
                 ) {
@@ -147,8 +149,10 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             TogglesAppBar(navController, drawerState)
                         },
-                    ) {
-                        Navigation(navController)
+                    ) { paddingValues ->
+                        Box(modifier = Modifier.padding(paddingValues)) {
+                            Navigation(navController)
+                        }
                     }
                 }
             }
@@ -200,6 +204,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TogglesAppBar(root: Boolean, navigationIconClicked: () -> Unit) {
         TopAppBar(
@@ -212,7 +217,6 @@ class MainActivity : ComponentActivity() {
                 }
             } else {
                 {
-
                     IconButton(onClick = { navigationIconClicked() }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                     }

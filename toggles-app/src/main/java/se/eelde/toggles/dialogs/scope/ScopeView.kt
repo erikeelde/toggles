@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import se.eelde.toggles.R
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewModel) {
 
@@ -35,7 +35,7 @@ fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewMod
 
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.headlineMedium,
                     text = stringResource(id = R.string.select_scope)
                 )
                 LazyColumn {
@@ -48,10 +48,10 @@ fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewMod
                                         viewModel.selectScope(it)
                                         navController.popBackStack()
                                     }
+                                }, headlineText = {
+                                    Text(text = it.name)
                                 }
-                            ) {
-                                Text(text = it.name)
-                            }
+                            )
                         }
                     }
                 }

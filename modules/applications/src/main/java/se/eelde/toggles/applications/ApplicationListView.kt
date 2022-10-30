@@ -6,8 +6,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +24,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ApplicationListView(
     navController: NavController,
@@ -51,7 +51,7 @@ internal fun ApplicationListView(
                         }
 
                         ListItem(
-                            icon = {
+                            leadingContent = {
                                 if (lol != null) {
                                     Image(
                                         painter = BitmapPainter(image = lol),
@@ -66,10 +66,10 @@ internal fun ApplicationListView(
                             },
                             modifier = Modifier.clickable {
                                 navController.navigate("configurations/${application.id}")
+                            }, headlineText = {
+                                Text(application.applicationLabel)
                             }
-                        ) {
-                            Text(application.applicationLabel)
-                        }
+                        )
                     }
                 }
             }

@@ -40,6 +40,7 @@ repositories {
 }
 
 dependencies {
+    implementation(platform(libs.androidx.compose.compose.bom))
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.legacy.legacy.support.v4)
     testImplementation(libs.androidx.test.core)
