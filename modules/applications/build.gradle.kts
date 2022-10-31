@@ -1,5 +1,6 @@
 plugins {
     id("toggles.android.module-conventions")
+    id("com.google.dagger.hilt.android")
     id("toggles.ownership-conventions")
 }
 
@@ -11,7 +12,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":modules:navigation"))
     implementation(project(":modules:database"))
     implementation(platform(libs.androidx.compose.compose.bom))
     implementation(libs.androidx.core.core.ktx)
@@ -21,6 +21,10 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.startup.startup.runtime)
+    implementation(libs.androidx.hilt.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.navigation.compose)
     implementation(libs.com.google.dagger.hilt.android)
-    kapt(libs.com.google.dagger.hilt.compiler)
+    kapt(libs.com.google.dagger.hilt.android.compiler)
+    kapt(libs.androidx.hilt.hilt.compiler)
+
 }

@@ -31,6 +31,7 @@ plugins {
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
     id("com.github.triplet.play") version "3.7.0" apply false
     id("toggles.ownership-conventions")
+    id("com.google.dagger.hilt.android") version "2.44" apply false
 }
 
 apiValidation {

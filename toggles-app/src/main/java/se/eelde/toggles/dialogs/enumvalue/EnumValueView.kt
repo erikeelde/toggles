@@ -50,7 +50,8 @@ fun EnumValueView(
                                         viewModel.saveClick(it.value.toString())
                                         navController.popBackStack()
                                     }
-                                }, headlineText = { Text(text = it.value.toString()) }
+                                },
+                                headlineText = { Text(text = it.value.toString()) }
                             )
                         }
                     }

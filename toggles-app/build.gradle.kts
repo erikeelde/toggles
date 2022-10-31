@@ -6,7 +6,7 @@ plugins {
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
     id("com.google.android.gms.oss-licenses-plugin")
-    id("dagger.hilt.android.plugin")
+    id("com.google.dagger.hilt.android")
     id("com.github.triplet.play")
     id("com.gladed.androidgitversion") version "0.4.14"
     id("com.google.firebase.crashlytics")
@@ -90,7 +90,6 @@ android {
 dependencies {
     implementation(project(":modules:compose-theme"))
     implementation(project(":modules:database"))
-    implementation(project(":modules:navigation"))
     implementation(project(":modules:applications"))
 
     implementation(libs.androidx.ui.ui.tooling)
@@ -106,6 +105,7 @@ dependencies {
     implementation(libs.androidx.compose.runtime.runtime.livedata)
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.navigation.compose)
     implementation(libs.androidx.startup.startup.runtime)
     testImplementation(libs.junit)
 
@@ -126,7 +126,6 @@ dependencies {
 
     implementation(libs.com.google.dagger.hilt.android)
     kapt(libs.com.google.dagger.hilt.android.compiler)
-    implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel)
     kapt(libs.androidx.hilt.hilt.compiler)
     implementation(libs.androidx.hilt.hilt.work)
 
@@ -136,8 +135,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.lifecycle.common.java8)
 
 
-    implementation(libs.com.google.dagger)
-    kapt(libs.com.google.dagger.dagger.compiler)
+    // implementation(libs.com.google.dagger)
+    // kapt(libs.com.google.dagger.dagger.compiler)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.recyclerview)

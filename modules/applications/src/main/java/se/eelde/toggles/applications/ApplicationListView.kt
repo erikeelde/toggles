@@ -27,14 +27,12 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ApplicationListView(
-    navController: NavController,
-    viewModel: ApplicationViewModel = hiltViewModel()
+    navigateToConfigurations: (Long) -> Unit,
+    uiState: ViewState,
 ) {
-    val uiState = viewModel.state.collectAsState()
-
     val context = LocalContext.current
 
-    uiState.value.let {
+    uiState.let {
         Surface(modifier = Modifier.padding(16.dp)) {
             LazyColumn {
                 it.applications.forEach { application ->
@@ -65,7 +63,7 @@ internal fun ApplicationListView(
                                 }
                             },
                             modifier = Modifier.clickable {
-                                navController.navigate("configurations/${application.id}")
+                                navigateToConfigurations(application.id)
                             }, headlineText = {
                                 Text(application.applicationLabel)
                             }

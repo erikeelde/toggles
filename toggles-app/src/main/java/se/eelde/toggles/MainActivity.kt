@@ -34,28 +34,29 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import se.eelde.toggles.applications.application
 import se.eelde.toggles.composetheme.TogglesTheme
-import se.eelde.toggles.configurationlist.ConfigurationsEntry
+import se.eelde.toggles.configurationlist.configurations
 import se.eelde.toggles.dialogs.booleanvalue.BooleanValueView
 import se.eelde.toggles.dialogs.enumvalue.EnumValueView
 import se.eelde.toggles.dialogs.integervalue.IntegerValueView
 import se.eelde.toggles.dialogs.stringvalue.StringValueView
 import se.eelde.toggles.help.HelpView
-import se.eelde.toggles.navigation.featureDestinations
 import se.eelde.toggles.oss.detail.OssDetailView
 import se.eelde.toggles.oss.list.OssListView
 
 @Suppress("LongMethod")
 @Composable
 fun Navigation(navController: NavHostController) {
-    featureDestinations[ConfigurationsEntry::class.java] = ConfigurationsEntry()
 
     NavHost(navController = navController, startDestination = "applications") {
-        featureDestinations.values.forEach {
-            with(it) {
-                composable(navController)
-            }
-        }
+        application { applicationId -> navController.navigate("configurations/$applicationId") }
+        configurations(
+            navigateToStringConfiguration = { configurationId, scopeId -> navController.navigate("configuration/$configurationId/$scopeId/string") },
+            navigateToIntegerConfiguration = { configurationId, scopeId -> navController.navigate("configuration/$configurationId/$scopeId/integer") },
+            navigateToBooleanConfiguration = { configurationId, scopeId -> navController.navigate("configuration/$configurationId/$scopeId/boolean") },
+            navigateToEnumConfiguration = { configurationId, scopeId -> navController.navigate("configuration/$configurationId/$scopeId/enum") }
+        )
         composable(
             "configuration/{configurationId}/{scopeId}/boolean",
             arguments = listOf(

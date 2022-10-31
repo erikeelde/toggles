@@ -11,16 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.database.WrenchConfigurationValue
 import se.eelde.toggles.database.WrenchConfigurationWithValues
@@ -28,18 +24,19 @@ import se.eelde.toggles.database.WrenchScope
 
 @Composable
 internal fun ConfigurationListView(
-    navController: NavController,
-    viewModel: ConfigurationViewModel = hiltViewModel()
+    navigateToStringConfiguration: ConfigurationNavigation,
+    navigateToIntegerConfiguration: ConfigurationNavigation,
+    navigateToBooleanConfiguration: ConfigurationNavigation,
+    navigateToEnumConfiguration: ConfigurationNavigation,
+    uiState: ViewState
 ) {
-    val uiState = viewModel.state.collectAsState()
-
     Surface(modifier = Modifier.padding(16.dp)) {
         LazyColumn {
-            uiState.value.configurations.forEach { configuration ->
+            uiState.configurations.forEach { configuration ->
                 val defaultScope =
-                    getItemForScope(uiState.value.defaultScope, configuration.configurationValues!!)
+                    getItemForScope(uiState.defaultScope, configuration.configurationValues!!)
                 val selectedScope = getItemForScope(
-                    uiState.value.selectedScope,
+                    uiState.selectedScope,
                     configuration.configurationValues!!
                 )
 
@@ -49,9 +46,12 @@ internal fun ConfigurationListView(
                             .clickable {
                                 Log.w("Clicked configuration", "")
                                 configurationClicked(
-                                    navController = navController,
                                     configuration = configuration,
-                                    selectedScope = uiState.value.selectedScope
+                                    selectedScope = uiState.selectedScope!!,
+                                    navigateToStringConfiguration = navigateToStringConfiguration,
+                                    navigateToIntegerConfiguration = navigateToIntegerConfiguration,
+                                    navigateToBooleanConfiguration = navigateToBooleanConfiguration,
+                                    navigateToEnumConfiguration = navigateToEnumConfiguration,
                                 )
                             }
                             .fillMaxWidth(1.0f)
@@ -110,12 +110,16 @@ private fun getItemForScope(
     return null
 }
 
+typealias ConfigurationNavigation = (configurationId: Long, scopeId: Long) -> Unit
+
 @Suppress("LongMethod")
-@OptIn(ExperimentalCoroutinesApi::class)
 fun configurationClicked(
-    navController: NavController,
     configuration: WrenchConfigurationWithValues,
-    selectedScope: WrenchScope?
+    selectedScope: WrenchScope,
+    navigateToStringConfiguration: ConfigurationNavigation,
+    navigateToIntegerConfiguration: ConfigurationNavigation,
+    navigateToBooleanConfiguration: ConfigurationNavigation,
+    navigateToEnumConfiguration: ConfigurationNavigation,
 ) {
 //    if (viewModel.selectedScopeLiveData.value == null) {
 //        Snackbar.make(binding.animator, "No selected scope found", Snackbar.LENGTH_LONG).show()
@@ -127,25 +131,25 @@ fun configurationClicked(
             configuration.type
         ) || TextUtils.equals(Toggle.TYPE.STRING, configuration.type)
     ) {
-        navController.navigate("configuration/${configuration.id}/${selectedScope!!.id}/string")
+        navigateToStringConfiguration(configuration.id, selectedScope.id)
     } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(
             Toggle.TYPE.INTEGER,
             configuration.type
         )
     ) {
-        navController.navigate("configuration/${configuration.id}/${selectedScope!!.id}/integer")
+        navigateToIntegerConfiguration(configuration.id, selectedScope.id)
     } else if (TextUtils.equals(
             Boolean::class.java.name,
             configuration.type
         ) || TextUtils.equals(Toggle.TYPE.BOOLEAN, configuration.type)
     ) {
-        navController.navigate("configuration/${configuration.id}/${selectedScope!!.id}/boolean")
+        navigateToBooleanConfiguration(configuration.id, selectedScope.id)
     } else if (TextUtils.equals(Enum::class.java.name, configuration.type) || TextUtils.equals(
             Toggle.TYPE.ENUM,
             configuration.type
         )
     ) {
-        navController.navigate("configuration/${configuration.id}/${selectedScope!!.id}/enum")
+        navigateToEnumConfiguration(configuration.id, selectedScope.id)
     } else {
 //        Snackbar.make(
 //            binding.animator,

@@ -4,6 +4,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.gladed.androidgitversion") version "0.4.14"
     id("toggles.ownership-conventions")
+    id("com.google.dagger.hilt.android")
 }
 
 androidGitVersion {
@@ -59,7 +60,6 @@ dependencies {
 
     implementation(libs.com.google.dagger.hilt.android)
     kapt(libs.com.google.dagger.hilt.android.compiler)
-    implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel)
     kapt(libs.androidx.hilt.hilt.compiler)
     testImplementation(libs.com.google.dagger.hilt.android.testing)
     kaptTest(libs.com.google.dagger.hilt.android.compiler)
@@ -77,9 +77,6 @@ dependencies {
     implementation(libs.se.eelde.toggles.toggles.prefs)
 
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
-
-    implementation(libs.com.google.dagger)
-    kapt(libs.com.google.dagger.dagger.compiler)
 
     implementation(libs.com.google.android.gms.play.services.oss.licenses)
     implementation(libs.androidx.core.core.ktx)

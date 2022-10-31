@@ -31,7 +31,9 @@ internal fun OssListView(
                         ListItem(
                             modifier = Modifier.clickable {
                                 navController.navigate("oss/${licenseMetadata.dependency}/${licenseMetadata.skipBytes}/${licenseMetadata.length}")
-                            }, headlineText = { Text(licenseMetadata.dependency) })
+                            },
+                            headlineText = { Text(licenseMetadata.dependency) }
+                        )
                     }
                 }
             }

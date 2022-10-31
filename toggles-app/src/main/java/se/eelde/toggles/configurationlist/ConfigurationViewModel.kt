@@ -41,7 +41,7 @@ class ConfigurationViewModel @Inject internal constructor(
     scopeDao: WrenchScopeDao,
     val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    internal val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!
+    private val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!
 
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
