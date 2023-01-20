@@ -16,19 +16,17 @@ kapt {
 }
 
 dependencies {
-    val roomVersion = "2.4.1"
-    implementation("androidx.room:room-paging:$roomVersion")
-    testImplementation("androidx.test.ext:junit:1.1.3")
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("se.eelde.toggles:toggles-core:0.0.2")
-    testImplementation("androidx.room:room-testing:$roomVersion")
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    testImplementation("org.robolectric:robolectric:4.7.3")
-    implementation("com.google.android.material:material:1.5.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    implementation(libs.androidx.room.room.paging)
+    testImplementation(libs.androidx.test.ext.junit)
+    implementation(libs.androidx.room.room.runtime)
+    implementation(libs.androidx.room.room.ktx)
+    kapt(libs.androidx.room.room.compiler)
+    implementation(libs.se.eelde.toggles.toggles.core)
+    testImplementation(libs.androidx.room.room.testing)
+    implementation(libs.androidx.core.core.ktx)
+    implementation(libs.androidx.appcompat)
+    testImplementation(libs.org.robolectric)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.espresso.core)
 }

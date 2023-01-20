@@ -19,8 +19,8 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ContentProviderController
 import org.robolectric.annotation.Config
-import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.ColumnNames
+import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.prefs.TogglesPreferencesImpl
@@ -41,10 +41,13 @@ class TogglesPreferencesReturnsProviderValues {
     @Before
     fun setUp() {
 
-        val info = ProviderInfo().apply { authority = TogglesProviderContract.toggleUri().authority!! }
-        contentProviderController = Robolectric.buildContentProvider(MockContentProvider::class.java).create(info)
+        val info =
+            ProviderInfo().apply { authority = TogglesProviderContract.toggleUri().authority!! }
+        contentProviderController =
+            Robolectric.buildContentProvider(MockContentProvider::class.java).create(info)
 
-        togglesPreferences = TogglesPreferencesImpl(ApplicationProvider.getApplicationContext<Application>())
+        togglesPreferences =
+            TogglesPreferencesImpl(ApplicationProvider.getApplicationContext<Application>())
     }
 
     @Test
@@ -52,13 +55,19 @@ class TogglesPreferencesReturnsProviderValues {
         assertEquals(0, contentProviderController.get().toggles.size)
 
         assertEquals(
-            TestEnum.FIRST, togglesPreferences.getEnum(key, TestEnum::class.java,
+            TestEnum.FIRST,
+            togglesPreferences.getEnum(
+                key, TestEnum::class.java,
                 TestEnum.FIRST
-            ))
+            )
+        )
         assertEquals(
-            TestEnum.FIRST, togglesPreferences.getEnum(key, TestEnum::class.java,
+            TestEnum.FIRST,
+            togglesPreferences.getEnum(
+                key, TestEnum::class.java,
                 TestEnum.SECOND
-            ))
+            )
+        )
     }
 
     @Test
@@ -96,10 +105,26 @@ class MockContentProvider : ContentProvider() {
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
         init {
-            uriMatcher.addURI(TogglesProviderContract.toggleUri().authority!!, "currentConfiguration/#", CURRENT_CONFIGURATION_ID)
-            uriMatcher.addURI(TogglesProviderContract.toggleUri().authority!!, "currentConfiguration/*", CURRENT_CONFIGURATION_KEY)
-            uriMatcher.addURI(TogglesProviderContract.toggleUri().authority!!, "currentConfiguration", CURRENT_CONFIGURATIONS)
-            uriMatcher.addURI(TogglesProviderContract.toggleUri().authority!!, "predefinedConfigurationValue", PREDEFINED_CONFIGURATION_VALUES)
+            uriMatcher.addURI(
+                TogglesProviderContract.toggleUri().authority!!,
+                "currentConfiguration/#",
+                CURRENT_CONFIGURATION_ID
+            )
+            uriMatcher.addURI(
+                TogglesProviderContract.toggleUri().authority!!,
+                "currentConfiguration/*",
+                CURRENT_CONFIGURATION_KEY
+            )
+            uriMatcher.addURI(
+                TogglesProviderContract.toggleUri().authority!!,
+                "currentConfiguration",
+                CURRENT_CONFIGURATIONS
+            )
+            uriMatcher.addURI(
+                TogglesProviderContract.toggleUri().authority!!,
+                "predefinedConfigurationValue",
+                PREDEFINED_CONFIGURATION_VALUES
+            )
         }
     }
 
@@ -122,7 +147,14 @@ class MockContentProvider : ContentProvider() {
                 throw IllegalArgumentException("toggle exists")
             }
             CURRENT_CONFIGURATION_KEY -> {
-                val cursor = MatrixCursor(arrayOf(ColumnNames.Toggle.COL_ID, ColumnNames.Toggle.COL_KEY, ColumnNames.Toggle.COL_TYPE, ColumnNames.Toggle.COL_VALUE))
+                val cursor = MatrixCursor(
+                    arrayOf(
+                        ColumnNames.Toggle.COL_ID,
+                        ColumnNames.Toggle.COL_KEY,
+                        ColumnNames.Toggle.COL_TYPE,
+                        ColumnNames.Toggle.COL_VALUE
+                    )
+                )
 
                 uri.lastPathSegment?.let { key ->
                     toggles[key]?.let { toggle ->
@@ -161,7 +193,12 @@ class MockContentProvider : ContentProvider() {
         return ContentUris.withAppendedId(uri, insertId)
     }
 
-    override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
+    override fun update(
+        uri: Uri,
+        values: ContentValues?,
+        selection: String?,
+        selectionArgs: Array<String>?
+    ): Int {
         throw IllegalStateException()
     }
 

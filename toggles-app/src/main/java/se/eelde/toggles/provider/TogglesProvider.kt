@@ -329,7 +329,7 @@ class TogglesProvider : ContentProvider() {
             var scope: WrenchScope? = scopeDao!!.getDefaultScope(applicationId)
 
             if (scope == null) {
-                scope = WrenchScope()
+                scope = WrenchScope.newWrenchScope()
                 scope.applicationId = applicationId
                 val id = scopeDao.insert(scope)
                 scope.id = id
@@ -350,11 +350,11 @@ class TogglesProvider : ContentProvider() {
             var scope: WrenchScope? = scopeDao!!.getSelectedScope(applicationId)
 
             if (scope == null) {
-                val defaultScope = WrenchScope()
+                val defaultScope = WrenchScope.newWrenchScope()
                 defaultScope.applicationId = applicationId
                 defaultScope.id = scopeDao.insert(defaultScope)
 
-                val customScope = WrenchScope()
+                val customScope = WrenchScope.newWrenchScope()
                 customScope.applicationId = applicationId
                 customScope.timeStamp = Date(defaultScope.timeStamp.time + oneSecond)
                 customScope.name = WrenchScope.SCOPE_USER

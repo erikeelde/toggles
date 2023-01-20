@@ -1,13 +1,13 @@
 package com.example.wrench.di
 
 import android.app.Application
-import se.eelde.toggles.prefs.TogglesPreferences
-import se.eelde.toggles.prefs.TogglesPreferencesImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
+import se.eelde.toggles.prefs.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferencesImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

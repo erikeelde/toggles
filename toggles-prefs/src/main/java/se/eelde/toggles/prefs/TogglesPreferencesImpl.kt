@@ -77,7 +77,8 @@ class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
 
             for (enumConstant in type.enumConstants!!) {
                 contentResolver.insert(
-                    toggleValueUri(), ToggleValue(
+                    toggleValueUri(),
+                    ToggleValue(
                         configurationId = toggle.id,
                         value = enumConstant.toString()
                     )

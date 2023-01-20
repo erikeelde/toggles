@@ -10,6 +10,7 @@ object Migrations {
     const val databaseVersion4 = 4
     const val databaseVersion5 = 5
 
+    @Suppress("MaxLineLength")
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             run {
@@ -94,6 +95,7 @@ object Migrations {
         }
     }
 
+    @Suppress("MaxLineLength")
     val MIGRATION_2_3: Migration = object : Migration(databaseVersion2, databaseVersion3) {
         override fun migrate(database: SupportSQLiteDatabase) {
             run {
@@ -158,6 +160,7 @@ object Migrations {
             }
         }
     }
+    @Suppress("MaxLineLength")
     val MIGRATION_3_4: Migration = object : Migration(databaseVersion3, databaseVersion4) {
         override fun migrate(database: SupportSQLiteDatabase) {
             run {

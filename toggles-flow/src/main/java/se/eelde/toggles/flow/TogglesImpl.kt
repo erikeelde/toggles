@@ -98,11 +98,11 @@ class TogglesImpl(context: Context) : Toggles {
 
                         for (enumConstant in type.enumConstants!!) {
                             contentResolver.insert(
-                                toggleValueUri(), ToggleValue(
+                                toggleValueUri(),
+                                ToggleValue(
                                     configurationId = configurationId,
                                     value = enumConstant.toString()
-                                )
-                                    .toContentValues()
+                                ).toContentValues()
                             )
                         }
                         defaultValue

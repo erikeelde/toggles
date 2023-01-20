@@ -6,12 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.wrench.MyEnum
 import com.example.wrench.R
-import se.eelde.toggles.prefs.TogglesPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import se.eelde.toggles.prefs.TogglesPreferences
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,7 +29,12 @@ class WrenchPreferencesFragmentViewModel @Inject internal constructor(
 
     fun getStringConfiguration(): LiveData<String> {
         scope.launch {
-            stringConfig.postValue(togglesPreferences.getString(application.getString(R.string.string_configuration), "string1"))
+            stringConfig.postValue(
+                togglesPreferences.getString(
+                    application.getString(R.string.string_configuration),
+                    "string1"
+                )
+            )
         }
         return stringConfig
     }
@@ -40,7 +45,12 @@ class WrenchPreferencesFragmentViewModel @Inject internal constructor(
 
     fun getUrlConfiguration(): LiveData<String> {
         scope.launch {
-            urlConfig.postValue(togglesPreferences.getString(application.getString(R.string.url_configuration), "http://www.example.com/path?param=value"))
+            urlConfig.postValue(
+                togglesPreferences.getString(
+                    application.getString(R.string.url_configuration),
+                    "http://www.example.com/path?param=value"
+                )
+            )
         }
         return urlConfig
     }
@@ -51,7 +61,12 @@ class WrenchPreferencesFragmentViewModel @Inject internal constructor(
 
     fun getBooleanConfiguration(): LiveData<Boolean> {
         scope.launch {
-            booleanConfig.postValue(togglesPreferences.getBoolean(application.getString(R.string.boolean_configuration), true))
+            booleanConfig.postValue(
+                togglesPreferences.getBoolean(
+                    application.getString(R.string.boolean_configuration),
+                    true
+                )
+            )
         }
         return booleanConfig
     }
@@ -62,7 +77,12 @@ class WrenchPreferencesFragmentViewModel @Inject internal constructor(
 
     fun getIntConfiguration(): LiveData<Int> {
         scope.launch {
-            intConfig.postValue(togglesPreferences.getInt(application.getString(R.string.int_configuration), 1))
+            intConfig.postValue(
+                togglesPreferences.getInt(
+                    application.getString(R.string.int_configuration),
+                    1
+                )
+            )
         }
         return intConfig
     }
@@ -73,7 +93,13 @@ class WrenchPreferencesFragmentViewModel @Inject internal constructor(
 
     fun getEnumConfiguration(): LiveData<MyEnum> {
         scope.launch {
-            enumConfig.postValue(togglesPreferences.getEnum(application.getString(R.string.enum_configuration), MyEnum::class.java, MyEnum.SECOND))
+            enumConfig.postValue(
+                togglesPreferences.getEnum(
+                    application.getString(R.string.enum_configuration),
+                    MyEnum::class.java,
+                    MyEnum.SECOND
+                )
+            )
         }
         return enumConfig
     }
