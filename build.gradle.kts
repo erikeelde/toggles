@@ -8,28 +8,25 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.3.0-alpha02")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-        // classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-rc01")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.40.5")
-        classpath("com.google.gms:google-services:4.3.13")
-        classpath("com.vanniktech:gradle-maven-publish-plugin:0.20.0")
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.7.0")
-        classpath("com.google.android.gms:oss-licenses-plugin:0.10.4")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.1")
-        classpath("com.squareup:javapoet:1.13.0")
-
+        classpath(libs.com.android.tools.build.gradle)
+        classpath(libs.org.jetbrains.kotlin.kotlin.gradle.plugin)
+        classpath(libs.com.google.dagger.hilt.android.gradle.plugin)
+        classpath(libs.com.google.gms.google.services)
+        classpath(libs.com.vanniktech.gradle.maven.publish.plugin)
+        classpath(libs.org.jetbrains.dokka.dokka.gradle.plugin)
+        classpath(libs.com.google.android.gms.oss.licenses.plugin)
+        classpath(libs.com.google.firebase.firebase.crashlytics.gradle)
+        classpath(libs.com.squareup.javapoet)
     }
 }
 
-val composeVersion by extra("1.2.0-alpha03")
-
 plugins {
-    id("com.github.ben-manes.versions") version "0.42.0"
+    alias(libs.plugins.com.github.ben.manes.versions)
+    alias(libs.plugins.nl.littlerobots.version.catalog.update)
     // id("se.eelde.build-optimizations") version "0.2.0"
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.10.1"
-    id("com.github.triplet.play") version "3.7.0" apply false
+    alias(libs.plugins.org.jetbrains.kotlinx.binary.compatibility.validator)
+    alias(libs.plugins.com.github.triplet.play) apply(false)
     id("toggles.ownership-conventions")
 }
 

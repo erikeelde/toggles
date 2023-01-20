@@ -69,7 +69,7 @@ class ScopeFragmentViewModel @Inject internal constructor(
 
     internal fun createScope(scopeName: String) {
         viewModelScope.launch {
-            val wrenchScope = WrenchScope()
+            val wrenchScope = WrenchScope.newWrenchScope()
             wrenchScope.name = scopeName
             wrenchScope.applicationId = applicationId
             wrenchScope.id = scopeDao.insert(wrenchScope)

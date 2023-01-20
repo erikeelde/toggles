@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +26,6 @@ import se.eelde.toggles.database.WrenchConfigurationValue
 import se.eelde.toggles.database.WrenchConfigurationWithValues
 import se.eelde.toggles.database.WrenchScope
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun ConfigurationListView(
     navController: NavController,
@@ -61,13 +59,13 @@ internal fun ConfigurationListView(
                     ) {
                         Text(
                             modifier = Modifier,
-                            style = MaterialTheme.typography.h5,
+                            style = MaterialTheme.typography.headlineSmall,
                             text = configuration.key!!
                         )
 
                         if (selectedScope != null) {
                             Text(
-                                style = MaterialTheme.typography.body2,
+                                style = MaterialTheme.typography.bodyMedium,
                                 text = buildAnnotatedString {
                                     withStyle(style = SpanStyle(textDecoration = TextDecoration.LineThrough)) {
                                         append("${defaultScope?.value}")
@@ -76,14 +74,14 @@ internal fun ConfigurationListView(
                             )
                         } else {
                             Text(
-                                style = MaterialTheme.typography.h6,
+                                style = MaterialTheme.typography.titleLarge,
                                 text = "${defaultScope?.value}"
                             )
                         }
 
                         if (selectedScope != null) {
                             Text(
-                                style = MaterialTheme.typography.h6,
+                                style = MaterialTheme.typography.titleLarge,
                                 text = selectedScope.value ?: ""
                             )
                         }

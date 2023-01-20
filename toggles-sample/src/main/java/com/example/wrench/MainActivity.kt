@@ -19,7 +19,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // val navController = findNavController(R.id.nav_host_fragment) // https://issuetracker.google.com/issues/142847973
-        val navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+        val navController =
+            (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
         NavigationUI.setupWithNavController(binding.bottomNav, navController)
     }

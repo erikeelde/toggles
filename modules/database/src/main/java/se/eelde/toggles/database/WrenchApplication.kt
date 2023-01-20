@@ -6,7 +6,10 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import se.eelde.toggles.database.tables.ApplicationTable
 
-@Entity(tableName = ApplicationTable.TABLE_NAME, indices = [Index(value = arrayOf(ApplicationTable.COL_PACK_NAME), unique = true)])
+@Entity(
+    tableName = ApplicationTable.TABLE_NAME,
+    indices = [Index(value = arrayOf(ApplicationTable.COL_PACK_NAME), unique = true)]
+)
 data class WrenchApplication constructor(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = ApplicationTable.COL_ID)

@@ -30,7 +30,13 @@ class TogglesPreferencesReturnsDefaultWhenMissingProviderTest {
         val applicationContext = ApplicationProvider.getApplicationContext<Application>()
         togglesPreferences = TogglesPreferencesImpl(applicationContext)
 
-        val query = applicationContext.contentResolver.query(TogglesProviderContract.toggleUri(""), null, null, null, null)
+        val query = applicationContext.contentResolver.query(
+            TogglesProviderContract.toggleUri(""),
+            null,
+            null,
+            null,
+            null
+        )
         Assert.assertNull(query)
     }
 

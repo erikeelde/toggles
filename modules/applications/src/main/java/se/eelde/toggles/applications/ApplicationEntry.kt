@@ -1,20 +1,14 @@
 package se.eelde.toggles.applications
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavBackStackEntry
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import se.eelde.toggles.navigation.FeatureEntry
+import androidx.navigation.compose.composable
 
-
-class ApplicationEntry : FeatureEntry {
-    override val featureRoute: String = "applications"
-
-    @Composable
-    override fun NavGraphBuilder.Composable(
-        navController: NavHostController,
-        backStackEntry: NavBackStackEntry
-    ) {
-        ApplicationListView(navController = navController)
+fun NavGraphBuilder.applicationNavigations(navigateToConfigurations: (Long) -> Unit) {
+    composable("applications") {
+        ApplicationListView(
+            viewModel = hiltViewModel(),
+            navigateToConfigurations = navigateToConfigurations
+        )
     }
 }

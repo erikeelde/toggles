@@ -50,13 +50,37 @@ class MigrationTests {
         // Create the database with version 2
         val originalDb = testHelper.createDatabase(TEST_DB_NAME, 2)
 
-        val testApplicationId = DatabaseHelper.insertWrenchApplication(originalDb, "TestApplication", "com.izettle.wrench.testapplication")
+        val testApplicationId = DatabaseHelper.insertWrenchApplication(
+            originalDb,
+            "TestApplication",
+            "com.izettle.wrench.testapplication"
+        )
 
         // insert data
-        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Integerkey", Toggle.TYPE.INTEGER)
-        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Stringkey", Toggle.TYPE.STRING)
-        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Booleankey", Toggle.TYPE.BOOLEAN)
-        DatabaseHelper.insertWrenchConfiguration(originalDb, testApplicationId, "Enumkey", Toggle.TYPE.ENUM)
+        DatabaseHelper.insertWrenchConfiguration(
+            originalDb,
+            testApplicationId,
+            "Integerkey",
+            Toggle.TYPE.INTEGER
+        )
+        DatabaseHelper.insertWrenchConfiguration(
+            originalDb,
+            testApplicationId,
+            "Stringkey",
+            Toggle.TYPE.STRING
+        )
+        DatabaseHelper.insertWrenchConfiguration(
+            originalDb,
+            testApplicationId,
+            "Booleankey",
+            Toggle.TYPE.BOOLEAN
+        )
+        DatabaseHelper.insertWrenchConfiguration(
+            originalDb,
+            testApplicationId,
+            "Enumkey",
+            Toggle.TYPE.ENUM
+        )
 
         originalDb.close()
 
@@ -64,22 +88,34 @@ class MigrationTests {
 
         var cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Integerkey")
         assertTrue(cursor.moveToFirst())
-        assertEquals(Toggle.TYPE.INTEGER, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
+        assertEquals(
+            Toggle.TYPE.INTEGER,
+            cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE))
+        )
         cursor.close()
 
         cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Stringkey")
         assertTrue(cursor.moveToFirst())
-        assertEquals(Toggle.TYPE.STRING, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
+        assertEquals(
+            Toggle.TYPE.STRING,
+            cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE))
+        )
         cursor.close()
 
         cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Booleankey")
         assertTrue(cursor.moveToFirst())
-        assertEquals(Toggle.TYPE.BOOLEAN, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
+        assertEquals(
+            Toggle.TYPE.BOOLEAN,
+            cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE))
+        )
         cursor.close()
 
         cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Enumkey")
         assertTrue(cursor.moveToFirst())
-        assertEquals(Toggle.TYPE.ENUM, cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE)))
+        assertEquals(
+            Toggle.TYPE.ENUM,
+            cursor.getString(cursor.getColumnIndex(ConfigurationTable.COL_TYPE))
+        )
         cursor.close()
     }
 
@@ -88,7 +124,11 @@ class MigrationTests {
     fun test3to4() {
         val originalDb = testHelper.createDatabase(TEST_DB_NAME, 3)
 
-        val testApplicationId = DatabaseHelper.insertWrenchApplication(originalDb, "TestApplication", "se.eelde.toggles.testapplication")
+        val testApplicationId = DatabaseHelper.insertWrenchApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.testapplication"
+        )
 
         val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 4, true, MIGRATION_3_4)
 
