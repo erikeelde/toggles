@@ -5,6 +5,10 @@ plugins {
 
 apply(plugin = "com.vanniktech.maven.publish")
 
+android {
+    namespace = "se.eelde.toggles.flow"
+}
+
 dependencies {
     testImplementation(libs.junit)
 

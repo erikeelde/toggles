@@ -3,6 +3,10 @@ plugins {
     id("toggles.ownership-conventions")
 }
 
+android {
+    namespace = "se.eelde.toggles.flow"
+}
+
 apply(plugin = "com.vanniktech.maven.publish")
 
 dependencies {

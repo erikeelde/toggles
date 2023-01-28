@@ -1,13 +1,11 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="se.eelde.toggles.core" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <uses-permission android:name="se.eelde.toggles.provider_permission" />
 
     <queries>
         <package android:name="se.eelde.toggles" />
         <provider
-            android:authorities="se.eelde.toggles.configprovider"
-            tools:ignore="ExportedContentProvider" />
+            android:name="se.eelde.toggles.provider.TogglesProvider"
+            android:authorities="se.eelde.toggles.configprovider" />
     </queries>
 </manifest>
