@@ -1,6 +1,6 @@
 package se.eelde.toggles.database
 
-import android.os.Build
+import androidx.room.migration.AutoMigrationSpec
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -10,7 +10,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.annotation.Config
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_1_2
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_2_3
@@ -20,14 +19,14 @@ import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
-@Config(sdk = [Build.VERSION_CODES.P])
 class MigrationTests {
     // Unable to migrate to unitTest due to https://github.com/robolectric/robolectric/issues/2065
 
     @get:Rule
     var testHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
-        WrenchDatabase::class.java.canonicalName!!,
+        WrenchDatabase::class.java,
+        listOf<AutoMigrationSpec>(),
         FrameworkSQLiteOpenHelperFactory()
     )
 
@@ -46,6 +45,7 @@ class MigrationTests {
 
     @Test
     @Throws(IOException::class)
+    @Suppress("LongMethod")
     fun test2to3() {
         // Create the database with version 2
         val originalDb = testHelper.createDatabase(TEST_DB_NAME, 2)

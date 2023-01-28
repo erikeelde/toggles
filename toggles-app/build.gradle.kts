@@ -39,6 +39,7 @@ android {
         }
     }
 
+    namespace = "se.eelde.toggles"
 
     defaultConfig {
         applicationId = "se.eelde.toggles"
@@ -74,13 +75,6 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
             versionNameSuffix = " debug"
-        }
-    }
-    sourceSets {
-        // debug.assets.srcDirs => https://github.com/robolectric/robolectric/issues/3928
-        // debug.assets.srcDirs += files("$projectDir/schemas".toString())
-        getByName("debug") {
-            assets.srcDirs(files("$projectDir/schemas"))
         }
     }
 }

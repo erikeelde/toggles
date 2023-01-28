@@ -1,3 +1,4 @@
+@file:Suppress("MaxLineLength")
 package se.eelde.toggles.database
 
 import androidx.lifecycle.LiveData
@@ -18,14 +19,12 @@ interface WrenchConfigurationValueDao {
     )
     fun getConfigurationValue(configurationId: Long): LiveData<List<WrenchConfigurationValue>>
 
-    @Suppress("MaxLineLength")
     @Query(
         "SELECT * FROM " + ConfigurationValueTable.TABLE_NAME +
             " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId) AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId)"
     )
     fun getConfigurationValue(configurationId: Long, scopeId: Long): Flow<WrenchConfigurationValue?>
 
-    @Suppress("MaxLineLength")
     @Query(
         "UPDATE " + ConfigurationValueTable.TABLE_NAME +
             " SET " + ConfigurationValueTable.COL_VALUE + " = (:value)" +
@@ -33,7 +32,6 @@ interface WrenchConfigurationValueDao {
     )
     fun updateConfigurationValueSync(configurationId: Long, scopeId: Long, value: String): Int
 
-    @Suppress("MaxLineLength")
     @Query(
         "UPDATE " + ConfigurationValueTable.TABLE_NAME +
             " SET " + ConfigurationValueTable.COL_VALUE + " = (:value)" +
