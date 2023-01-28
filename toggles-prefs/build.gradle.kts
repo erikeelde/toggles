@@ -5,6 +5,10 @@ plugins {
 
 apply(plugin = "com.vanniktech.maven.publish")
 
+android {
+    namespace = "se.eelde.toggles.prefs"
+}
+
 dependencies {
     testImplementation(libs.junit)
 

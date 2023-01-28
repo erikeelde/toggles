@@ -5,6 +5,10 @@ plugins {
 
 apply(plugin = "com.vanniktech.maven.publish")
 
+android {
+    namespace = "se.eelde.toggles.prefs"
+}
+
 dependencies {
     implementation(libs.se.eelde.toggles.toggles.core)
     //implementation("se.eelde.toggles:toggles-core:0.0.2-SNAPSHOT")
