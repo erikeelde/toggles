@@ -13,7 +13,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Configuration
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
-import com.izettle.wrench.MainActivity
 import com.izettle.wrench.provider.WrenchProvider
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -60,7 +59,10 @@ class CheckForProviders {
 
     @Test
     fun checkWrenchProviderInstalled() {
-        val providerInfo = context.packageManager.resolveContentProvider("com.izettle.wrench.configprovider", 0)
+        val providerInfo = context.packageManager.resolveContentProvider(
+            "com.izettle.wrench.configprovider",
+            0 // PackageManager.ComponentInfoFlags.of(0)
+        )
         assertNotNull(providerInfo)
         assertEquals(providerInfo!!.authority, "com.izettle.wrench.configprovider")
         assertEquals(providerInfo.name, WrenchProvider::class.java.canonicalName)
@@ -68,7 +70,11 @@ class CheckForProviders {
 
     @Test
     fun checkTogglesProviderInstalled() {
-        val providerInfo = context.packageManager.resolveContentProvider("se.eelde.toggles.configprovider", 0)
+        val providerInfo =
+            context.packageManager.resolveContentProvider(
+                "se.eelde.toggles.configprovider",
+                0 // PackageManager.ComponentInfoFlags.of(0)
+            )
         assertNotNull(providerInfo)
         assertEquals(providerInfo!!.authority, "se.eelde.toggles.configprovider")
         assertEquals(providerInfo.name, TogglesProvider::class.java.canonicalName)

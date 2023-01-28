@@ -1,5 +1,6 @@
 package com.izettle.wrench.oss
 
+import android.annotation.SuppressLint
 import android.content.Context
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -47,6 +48,7 @@ object OssLoading {
         return resourcePartToString(context, "third_party_licenses", skipBytes, length)
     }
 
+    @SuppressLint("DiscouragedApi")
     private fun resourcePartToString(
         context: Context,
         resourceName: String,

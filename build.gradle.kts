@@ -26,13 +26,22 @@ plugins {
     // id("se.eelde.build-optimizations") version "0.2.0"
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
     alias(libs.plugins.org.jetbrains.kotlinx.binary.compatibility.validator)
-    alias(libs.plugins.com.github.triplet.play) apply(false)
+    alias(libs.plugins.com.github.triplet.play) apply (false)
     id("toggles.ownership-conventions")
 }
 
 apiValidation {
-    ignoredProjects.add("toggles-app")
-    ignoredProjects.add("toggles-sample")
+    ignoredProjects.addAll(
+        listOf(
+            "toggles-app",
+            "toggles-sample",
+            "applications",
+            "compose-theme",
+            "database",
+            "navigation",
+            "wrench-core",
+        )
+    )
 }
 
 fun isNonStable(version: String): Boolean {

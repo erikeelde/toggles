@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="se.eelde.toggles.provider_permission" />
 
@@ -6,6 +7,7 @@
         <package android:name="se.eelde.toggles" />
         <provider
             android:name="se.eelde.toggles.provider.TogglesProvider"
-            android:authorities="se.eelde.toggles.configprovider" />
+            android:authorities="se.eelde.toggles.configprovider"
+            tools:ignore="MissingClass"/>
     </queries>
 </manifest>

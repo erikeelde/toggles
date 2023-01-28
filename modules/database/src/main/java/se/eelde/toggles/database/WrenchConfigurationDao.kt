@@ -1,3 +1,4 @@
+@file:Suppress("MaxLineLength")
 package se.eelde.toggles.database
 
 import android.database.Cursor
@@ -13,7 +14,6 @@ import java.util.Date
 @Dao
 interface WrenchConfigurationDao {
 
-    @Suppress("MaxLineLength")
     @Query(
         "SELECT configuration.id, " +
             " configuration.configurationKey, " +
@@ -25,7 +25,6 @@ interface WrenchConfigurationDao {
     )
     fun getToggle(configurationId: Long, scopeId: Long): Cursor
 
-    @Suppress("MaxLineLength")
     @Query(
         "SELECT configuration.id, " +
             " configuration.configurationKey, " +
@@ -37,7 +36,6 @@ interface WrenchConfigurationDao {
     )
     fun getToggle(configurationKey: String, scopeId: Long): Cursor
 
-    @Suppress("MaxLineLength")
     @Query(
         "SELECT * " +
             " FROM " + ConfigurationTable.TABLE_NAME +
@@ -45,7 +43,6 @@ interface WrenchConfigurationDao {
     )
     fun getWrenchConfiguration(applicationId: Long, configurationKey: String): WrenchConfiguration?
 
-    @Suppress("MaxLineLength")
     @Query(
         "SELECT * " +
             " FROM " + ConfigurationTable.TABLE_NAME +
@@ -64,12 +61,10 @@ interface WrenchConfigurationDao {
     fun getConfiguration(configurationId: Long): Flow<WrenchConfiguration>
 
     @Transaction
-    @Suppress("MaxLineLength")
     @Query("SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId ORDER BY lastUse DESC")
     fun getApplicationConfigurations(applicationId: Long): Flow<List<WrenchConfigurationWithValues>>
 
     @Transaction
-    @Suppress("MaxLineLength")
     @Query("SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId AND configurationKey LIKE :query ORDER BY lastUse DESC")
     fun getApplicationConfigurations(applicationId: Long, query: String): Flow<List<WrenchConfigurationWithValues>>
 
