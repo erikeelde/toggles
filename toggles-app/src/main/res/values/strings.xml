@@ -2,7 +2,6 @@
     <string name="app_name">Toggles</string>
     <string name="applications">Applications</string>
     <string name="no_configurations_found">No configurations found.</string>
-    <string name="no_applications_found">No applications found</string>
     <string name="restart_application">Restart application</string>
     <string name="application_not_installed">Application not installed</string>
     <string name="delete_application">Delete application</string>

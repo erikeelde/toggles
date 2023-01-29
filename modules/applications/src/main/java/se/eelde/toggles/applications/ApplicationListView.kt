@@ -4,14 +4,15 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -19,21 +20,62 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+
+@Composable
+internal fun ApplicationsView(
+    viewState: ViewState,
+    modifier: Modifier = Modifier,
+    navigateToConfigurations: (Long) -> Unit,
+) {
+    if (viewState.applications.isEmpty()) {
+        ApplicationEmptyView(modifier = modifier)
+    } else {
+        ApplicationListView(
+            viewState = viewState,
+            modifier = modifier,
+            navigateToConfigurations = navigateToConfigurations
+        )
+    }
+}
+
+@Preview
+@Composable
+internal fun ApplicationEmptyViewPreview() {
+    ApplicationEmptyView()
+}
+
+@Composable
+internal fun ApplicationEmptyView(
+    modifier: Modifier = Modifier,
+) {
+    Surface(modifier = modifier.padding(16.dp)) {
+        Column {
+            Text(
+                style = MaterialTheme.typography.headlineMedium,
+                text = stringResource(id = R.string.no_applications_found)
+            )
+            Text(
+                style = MaterialTheme.typography.bodyLarge,
+                text = stringResource(id = R.string.no_applications_found_description)
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ApplicationListView(
-    viewModel: ApplicationViewModel,
+    viewState: ViewState,
+    modifier: Modifier = Modifier,
     navigateToConfigurations: (Long) -> Unit
 ) {
-    val uiState = viewModel.state.collectAsState()
-
     val context = LocalContext.current
 
-    uiState.value.let {
-        Surface(modifier = Modifier.padding(16.dp)) {
+    viewState.let {
+        Surface(modifier = modifier.padding(16.dp)) {
             LazyColumn {
                 it.applications.forEach { application ->
                     item {
@@ -63,6 +105,7 @@ internal fun ApplicationListView(
                                 }
                             },
                             headlineText = { Text(application.applicationLabel) },
+                            supportingText = { Text(secondaryText) },
                             modifier = Modifier.clickable {
                                 navigateToConfigurations(application.id)
                             }
