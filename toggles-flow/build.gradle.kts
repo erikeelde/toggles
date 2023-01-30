@@ -49,7 +49,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     testImplementation("androidx.test:core:1.4.0")
-    testImplementation("androidx.test.ext:truth:1.4.0")
+    testImplementation("androidx.test.ext:truth:1.5.0")
     testImplementation("androidx.test:rules:1.4.0")
     testImplementation("androidx.test:runner:1.4.0")
     testImplementation("androidx.test.ext:junit:1.1.3")
