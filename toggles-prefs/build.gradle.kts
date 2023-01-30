@@ -49,7 +49,7 @@ dependencies {
     testImplementation("androidx.test.ext:truth:1.4.0")
     testImplementation("androidx.test:rules:1.4.0")
     testImplementation("androidx.test:runner:1.4.0")
-    testImplementation("androidx.test.ext:junit:1.1.3")
+    testImplementation("androidx.test.ext:junit:1.1.5")
     testImplementation("org.robolectric:robolectric:4.8.1")
 
     implementation("se.eelde.toggles:toggles-core:0.0.2")

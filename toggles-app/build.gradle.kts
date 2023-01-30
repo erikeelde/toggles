@@ -169,7 +169,7 @@ dependencies {
     testImplementation("androidx.test.ext:truth:1.4.0")
     testImplementation("androidx.test:rules:1.4.0")
     testImplementation("androidx.test:runner:1.4.0")
-    testImplementation("androidx.test.ext:junit:1.1.3")
+    testImplementation("androidx.test.ext:junit:1.1.5")
     testImplementation("androidx.room:room-testing:$roomVersion")
     testImplementation("org.robolectric:robolectric:4.8.1")
     testImplementation("androidx.test.espresso:espresso-core:3.4.0")
