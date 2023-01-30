@@ -93,7 +93,7 @@ dependencies {
     kaptTest("com.google.dagger:hilt-android-compiler:$daggerVersion")
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
 
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.0")
 
 //    implementation(project(":toggles-prefs"))
