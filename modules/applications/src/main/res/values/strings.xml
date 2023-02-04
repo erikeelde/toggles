@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="applications">Applications</string>
     <string name="not_installed">Not installed</string>
     <string name="no_applications_found">No applications found.</string>
     <string name="no_applications_found_description">Install and run an application that makes use of the toggles application.</string>
