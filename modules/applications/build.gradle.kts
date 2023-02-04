@@ -16,6 +16,7 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(projects.modules.navigation)
+    implementation(projects.modules.composeTheme)
     implementation(projects.modules.database)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
