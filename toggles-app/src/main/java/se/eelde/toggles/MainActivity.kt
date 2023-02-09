@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.LocalHospital
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,7 +38,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,6 +56,7 @@ import se.eelde.toggles.composetheme.AppState
 import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.composetheme.rememberAppState
 import se.eelde.toggles.configurationlist.configurationsNavigations
+import se.eelde.toggles.database.WrenchApplication
 import se.eelde.toggles.dialogs.booleanvalue.BooleanValueView
 import se.eelde.toggles.dialogs.enumvalue.EnumValueView
 import se.eelde.toggles.dialogs.integervalue.IntegerValueView
@@ -86,7 +84,7 @@ fun Navigation(
             navigateToConfigurations = { applicationId ->
                 navController.navigate("configurations/$applicationId")
             })
-        configurationsNavigations(navController)
+        configurationsNavigations(navController, onComposing)
         composable(
             "configuration/{configurationId}/{scopeId}/boolean",
             arguments = listOf(
@@ -179,6 +177,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             TogglesTheme {
                 val navController: NavHostController = rememberNavController()
@@ -205,7 +204,7 @@ class MainActivity : ComponentActivity() {
                             appState = appState,
                             appBarState = appBarState,
                             paddingValues = paddingValues,
-                            onComposing = { appBarState = it }
+                            onComposing = { appBarState = it },
                         )
                     }
                 }

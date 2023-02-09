@@ -11,17 +11,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.database.WrenchApplication
 import se.eelde.toggles.database.WrenchConfigurationValue
 import se.eelde.toggles.database.WrenchConfigurationWithValues
 import se.eelde.toggles.database.WrenchScope
@@ -29,10 +29,8 @@ import se.eelde.toggles.database.WrenchScope
 @Composable
 internal fun ConfigurationListView(
     navController: NavController,
-    viewModel: ConfigurationViewModel = hiltViewModel()
+    uiState: State<ViewState>,
 ) {
-    val uiState = viewModel.state.collectAsState()
-
     Surface(modifier = Modifier.padding(16.dp)) {
         LazyColumn {
             uiState.value.configurations.forEach { configuration ->

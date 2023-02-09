@@ -23,22 +23,7 @@ fun NavGraphBuilder.applicationNavigations(
 
         LaunchedEffect(key1 = true) {
             onComposing(
-                AppBarState(
-                    title = "Applications",
-                    actions = {
-                        IconButton(onClick = { }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Add,
-                                contentDescription = null
-                            )
-                        }
-                        IconButton(onClick = { }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Search,
-                                contentDescription = null
-                            )
-                        }
-                    })
+                AppBarState(title = "Applications")
             )
         }
 
