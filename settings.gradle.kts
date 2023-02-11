@@ -31,3 +31,10 @@ include(
     ":modules:applications",
     ":modules:wrench-core",
 )
+
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}

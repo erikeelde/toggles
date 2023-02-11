@@ -8,15 +8,11 @@ plugins {
     id("toggles.detekt-conventions")
 }
 
-dependencies {
-}
-
 android {
     compileSdk = 33
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -24,7 +20,7 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
         freeCompilerArgs = listOfNotNull(
-            "-Xopt-in=kotlin.RequiresOptIn"
+            "-opt-in=kotlin.RequiresOptIn"
         )
     }
 
@@ -40,9 +36,4 @@ android {
         warningsAsErrors = true
         lintConfig = File("../lint.xml")
     }
-}
-
-repositories {
-    google()
-    mavenCentral()
 }
