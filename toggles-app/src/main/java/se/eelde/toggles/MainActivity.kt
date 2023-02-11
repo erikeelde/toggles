@@ -61,8 +61,10 @@ import se.eelde.toggles.configurationlist.configurationsNavigations
 import se.eelde.toggles.dialogs.booleanvalue.BooleanValueView
 import se.eelde.toggles.dialogs.booleanvalue.FragmentBooleanValueViewModel
 import se.eelde.toggles.dialogs.enumvalue.EnumValueView
+import se.eelde.toggles.dialogs.enumvalue.FragmentEnumValueViewModel
 import se.eelde.toggles.dialogs.integervalue.FragmentIntegerValueViewModel
 import se.eelde.toggles.dialogs.integervalue.IntegerValueView
+import se.eelde.toggles.dialogs.stringvalue.FragmentStringValueViewModel
 import se.eelde.toggles.dialogs.stringvalue.StringValueView
 import se.eelde.toggles.help.HelpView
 import se.eelde.toggles.oss.detail.OssDetailView
@@ -149,7 +151,21 @@ fun Navigation(
                 navArgument("scopeId") { type = NavType.LongType }
             )
         ) {
-            StringValueView(navController)
+            val viewModel: FragmentStringValueViewModel = hiltViewModel()
+            val state = viewModel.state.collectAsStateWithLifecycle().value
+
+            LaunchedEffect(key1 = true) {
+                onComposing(
+                    AppBarState(title = "")
+                )
+            }
+            StringValueView(
+                state = state,
+                popBackStack = { navController.popBackStack() },
+                revert = { viewModel.revertClick() },
+                save = { viewModel.saveClick() },
+                setStringValue = { viewModel.setStringValue(it) }
+            )
         }
         composable(
             "configuration/{configurationId}/{scopeId}/enum",
@@ -158,7 +174,21 @@ fun Navigation(
                 navArgument("scopeId") { type = NavType.LongType }
             )
         ) {
-            EnumValueView(navController)
+            val viewModel: FragmentEnumValueViewModel = hiltViewModel()
+            val state = viewModel.state.collectAsStateWithLifecycle().value
+
+            LaunchedEffect(key1 = true) {
+                onComposing(
+                    AppBarState(title = "")
+                )
+            }
+
+            EnumValueView(
+                state = state,
+                popBackStack = { navController.popBackStack() },
+                revert = { viewModel.revertClick() },
+                setEnumValue = { viewModel.saveClick(it) }
+            )
         }
         composable(
             "oss",

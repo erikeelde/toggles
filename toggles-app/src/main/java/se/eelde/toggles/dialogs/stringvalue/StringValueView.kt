@@ -12,13 +12,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import se.eelde.toggles.composetheme.TogglesTheme
 
@@ -27,8 +24,7 @@ import se.eelde.toggles.composetheme.TogglesTheme
 fun StringValueViewPreview() {
     TogglesTheme {
         StringValueView(
-            title = "The title",
-            stringValue = "This is value",
+            state = ViewState(title = "The title", stringValue = "This is value"),
             setStringValue = {},
             save = {},
             revert = {}
@@ -37,35 +33,15 @@ fun StringValueViewPreview() {
     }
 }
 
-@Composable
-fun StringValueView(
-    navController: NavController,
-    viewModel: FragmentStringValueViewModel = hiltViewModel()
-) {
-    val uiState = viewModel.state.collectAsState()
-
-    uiState.value.let { viewState ->
-        StringValueView(
-            title = viewState.title,
-            stringValue = viewState.stringValue,
-            setStringValue = { viewModel.setStringValue(it) },
-            save = { viewModel.saveClick() },
-            revert = { viewModel.revertClick() },
-            navigateBack = { navController.popBackStack() }
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Suppress("LongParameterList")
-fun StringValueView(
-    title: String?,
-    stringValue: String?,
+internal fun StringValueView(
+    state: ViewState,
     setStringValue: (String) -> Unit,
     save: suspend () -> Unit,
     revert: suspend () -> Unit,
-    navigateBack: () -> Unit,
+    popBackStack: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -74,12 +50,12 @@ fun StringValueView(
             Text(
                 modifier = Modifier.padding(8.dp),
                 style = MaterialTheme.typography.headlineMedium,
-                text = title ?: "TODO()"
+                text = state.title ?: ""
             )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = stringValue ?: "",
+                value = state.stringValue ?: "",
                 onValueChange = { setStringValue(it) },
             )
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
@@ -87,7 +63,7 @@ fun StringValueView(
                 Button(modifier = Modifier.padding(8.dp), onClick = {
                     scope.launch {
                         revert()
-                        navigateBack()
+                        popBackStack()
                     }
                 }) {
                     Text("Revert")
@@ -96,7 +72,7 @@ fun StringValueView(
                 Button(modifier = Modifier.padding(8.dp), onClick = {
                     scope.launch {
                         save()
-                        navigateBack()
+                        popBackStack()
                     }
                 }) {
                     Text("Save")
