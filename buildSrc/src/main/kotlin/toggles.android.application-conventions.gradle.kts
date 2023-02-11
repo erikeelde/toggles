@@ -1,5 +1,8 @@
 import org.gradle.api.JavaVersion
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.kotlin.dsl.kotlin
+
+val libs = the<LibrariesForLibs>()
 
 plugins {
     id("com.android.application")
@@ -32,7 +35,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
 
     compileOptions {
@@ -43,7 +46,7 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
         freeCompilerArgs = listOfNotNull(
-            "-Xopt-in=kotlin.RequiresOptIn"
+            "-opt-in=kotlin.RequiresOptIn"
         )
     }
 
@@ -58,9 +61,4 @@ android {
         warningsAsErrors = true
         lintConfig = File("../lint.xml")
     }
-}
-
-repositories {
-    google()
-    mavenCentral()
 }
