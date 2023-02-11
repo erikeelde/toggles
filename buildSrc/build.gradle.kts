@@ -15,7 +15,7 @@ dependencies {
     implementation(libs.com.android.tools.build.gradle)
     implementation(libs.org.jetbrains.kotlin.kotlin.gradle.plugin)
     // javapoet is needed because it is transitively needed by hilt.
-    implementation("com.squareup:javapoet:1.13.0")
+    implementation(libs.com.squareup.javapoet)
 
     // https://github.com/gradle/gradle/issues/15383
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))

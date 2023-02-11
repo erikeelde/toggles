@@ -97,6 +97,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.ui.tooling)
     implementation(libs.androidx.compose.runtime.runtime.livedata)
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.navigation.navigation.compose)
     implementation(libs.androidx.startup.startup.runtime)

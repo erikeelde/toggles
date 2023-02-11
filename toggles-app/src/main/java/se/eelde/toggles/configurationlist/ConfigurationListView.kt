@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.core.Toggle
-import se.eelde.toggles.database.WrenchApplication
 import se.eelde.toggles.database.WrenchConfigurationValue
 import se.eelde.toggles.database.WrenchConfigurationWithValues
 import se.eelde.toggles.database.WrenchScope

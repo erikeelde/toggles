@@ -11,62 +11,55 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 
 @Composable
-fun BooleanValueView(
-    navController: NavController,
-    viewModel: FragmentBooleanValueViewModel = hiltViewModel()
+internal fun BooleanValueView(
+    uiState: ViewState,
+    popBackStack: () -> Unit,
+    setBooleanValue: (Boolean) -> Unit,
+    revert: suspend () -> Unit,
+    save: suspend () -> Unit,
 ) {
-
-    val uiState = viewModel.state.collectAsState()
-
     val scope = rememberCoroutineScope()
 
-    uiState.value.let {
-        Surface(modifier = Modifier.padding(16.dp)) {
-            Column {
+    Surface(modifier = Modifier.padding(16.dp)) {
+        Column {
 
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.headlineMedium,
-                    text = it.title ?: "TODO()"
-                )
+            Text(
+                modifier = Modifier.padding(8.dp),
+                style = MaterialTheme.typography.headlineMedium,
+                text = uiState.title ?: ""
+            )
 
-                Switch(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(End),
-                    checked = uiState.value.checked ?: false,
-                    onCheckedChange = { viewModel.checkedChanged(it) }
-                )
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    Button(modifier = Modifier.padding(8.dp), onClick = {
-                        scope.launch {
-                            viewModel.revertClick()
-                            navController.popBackStack()
-                        }
-                    }) {
-                        Text("Revert")
+            Switch(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(End),
+                checked = uiState.checked ?: false,
+                onCheckedChange = { setBooleanValue(it) }
+            )
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                Button(modifier = Modifier.padding(8.dp), onClick = {
+                    scope.launch {
+                        revert()
+                        popBackStack()
                     }
+                }) {
+                    Text("Revert")
+                }
 
-                    Button(modifier = Modifier.padding(8.dp), onClick = {
-                        scope.launch {
-                            it.checked?.let {
-                                viewModel.saveClick(it)
-                            }
-                            navController.popBackStack()
-                        }
-                    }) {
-                        Text("Save")
+                Button(modifier = Modifier.padding(8.dp), onClick = {
+                    scope.launch {
+                        save()
+                        popBackStack()
                     }
+                }) {
+                    Text("Save")
                 }
             }
         }

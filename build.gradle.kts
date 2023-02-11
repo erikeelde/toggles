@@ -16,7 +16,6 @@ buildscript {
         classpath(libs.org.jetbrains.dokka.dokka.gradle.plugin)
         classpath(libs.com.google.android.gms.oss.licenses.plugin)
         classpath(libs.com.google.firebase.firebase.crashlytics.gradle)
-        classpath(libs.com.squareup.javapoet)
     }
 }
 

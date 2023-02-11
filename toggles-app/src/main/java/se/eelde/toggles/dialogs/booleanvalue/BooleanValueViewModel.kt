@@ -92,9 +92,9 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
         }
     }
 
-    internal suspend fun saveClick(value: Boolean) {
+    internal suspend fun saveClick() {
         _state.value = reduce(state.value, PartialViewState.Saving)
-        updateConfigurationValue(value.toString()).join()
+        updateConfigurationValue(state.value.checked.toString()).join()
     }
 
     internal suspend fun revertClick() {

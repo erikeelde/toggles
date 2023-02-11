@@ -1,24 +1,19 @@
 package se.eelde.toggles.configurationlist
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Cyclone
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.FlutterDash
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import se.eelde.toggles.composetheme.AppBarState
-import se.eelde.toggles.database.WrenchApplication
 
 fun NavGraphBuilder.configurationsNavigations(
     navController: NavController,
@@ -29,7 +24,7 @@ fun NavGraphBuilder.configurationsNavigations(
         arguments = listOf(navArgument("applicationId") { type = NavType.LongType })
     ) {
         val viewModel: ConfigurationViewModel = hiltViewModel()
-        val uiState = viewModel.state.collectAsState()
+        val uiState = viewModel.state.collectAsStateWithLifecycle()
 
         LaunchedEffect(key1 = uiState.value.application?.applicationLabel) {
             onComposing(
@@ -52,7 +47,8 @@ fun NavGraphBuilder.configurationsNavigations(
                                 contentDescription = null
                             )
                         }
-                    })
+                    }
+                )
             )
         }
 
