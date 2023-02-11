@@ -34,6 +34,6 @@ android {
         checkReleaseBuilds = true
         abortOnError = true
         warningsAsErrors = true
-        lintConfig = File("../lint.xml")
+        lintConfig = File("../../lint.xml")
     }
 }

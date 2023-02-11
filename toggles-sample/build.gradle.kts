@@ -32,10 +32,7 @@ android {
             applicationIdSuffix = ".debug"
         }
     }
-}
-
-repositories {
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
+    namespace = "com.example.wrench"
 }
 
 dependencies {

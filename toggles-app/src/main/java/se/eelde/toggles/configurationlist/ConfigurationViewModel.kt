@@ -1,6 +1,5 @@
 package se.eelde.toggles.configurationlist
 
-import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent

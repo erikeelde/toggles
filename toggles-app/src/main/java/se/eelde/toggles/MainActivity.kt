@@ -42,6 +42,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -56,9 +58,10 @@ import se.eelde.toggles.composetheme.AppState
 import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.composetheme.rememberAppState
 import se.eelde.toggles.configurationlist.configurationsNavigations
-import se.eelde.toggles.database.WrenchApplication
 import se.eelde.toggles.dialogs.booleanvalue.BooleanValueView
+import se.eelde.toggles.dialogs.booleanvalue.FragmentBooleanValueViewModel
 import se.eelde.toggles.dialogs.enumvalue.EnumValueView
+import se.eelde.toggles.dialogs.integervalue.FragmentIntegerValueViewModel
 import se.eelde.toggles.dialogs.integervalue.IntegerValueView
 import se.eelde.toggles.dialogs.stringvalue.StringValueView
 import se.eelde.toggles.help.HelpView
@@ -69,9 +72,9 @@ import se.eelde.toggles.oss.list.OssListView
 @Composable
 fun Navigation(
     navController: NavHostController,
-    appState: AppState,
+    @Suppress("UNUSED_PARAMETER") appState: AppState,
     paddingValues: PaddingValues,
-    appBarState: AppBarState,
+    @Suppress("UNUSED_PARAMETER") appBarState: AppBarState,
     onComposing: (AppBarState) -> Unit,
 ) {
     NavHost(
@@ -83,7 +86,8 @@ fun Navigation(
             onComposing = onComposing,
             navigateToConfigurations = { applicationId ->
                 navController.navigate("configurations/$applicationId")
-            })
+            }
+        )
         configurationsNavigations(navController, onComposing)
         composable(
             "configuration/{configurationId}/{scopeId}/boolean",
@@ -92,7 +96,28 @@ fun Navigation(
                 navArgument("scopeId") { type = NavType.LongType }
             )
         ) {
-            BooleanValueView(navController)
+            val viewModel: FragmentBooleanValueViewModel = hiltViewModel()
+            val state = viewModel.state.collectAsStateWithLifecycle().value
+
+            LaunchedEffect(key1 = true) {
+                onComposing(
+                    AppBarState(title = "")
+                )
+            }
+
+            BooleanValueView(
+                uiState = state,
+                popBackStack = { navController.popBackStack() },
+                revert = {
+                    viewModel.revertClick()
+                    navController.popBackStack()
+                },
+                save = {
+                    viewModel.saveClick()
+                    navController.popBackStack()
+                },
+                setBooleanValue = { viewModel.checkedChanged(it) },
+            )
         }
         composable(
             "configuration/{configurationId}/{scopeId}/integer",
@@ -101,7 +126,21 @@ fun Navigation(
                 navArgument("scopeId") { type = NavType.LongType }
             )
         ) {
-            IntegerValueView(navController)
+            val viewModel: FragmentIntegerValueViewModel = hiltViewModel()
+            val state = viewModel.state.collectAsStateWithLifecycle().value
+
+            LaunchedEffect(key1 = true) {
+                onComposing(
+                    AppBarState(title = "")
+                )
+            }
+            IntegerValueView(
+                uiState = state,
+                popBackStack = { navController.popBackStack() },
+                revert = { viewModel.revertClick() },
+                save = { viewModel.saveClick() },
+                setIntegerValue = { viewModel.setIntegerValue(it) }
+            )
         }
         composable(
             "configuration/{configurationId}/{scopeId}/string",
@@ -127,7 +166,8 @@ fun Navigation(
 
             LaunchedEffect(key1 = true) {
                 onComposing(
-                    AppBarState(title = "Oss",
+                    AppBarState(
+                        title = "Oss",
                         actions = {
                             IconButton(onClick = { }) {
                                 Icon(
@@ -135,7 +175,8 @@ fun Navigation(
                                     contentDescription = null
                                 )
                             }
-                        })
+                        }
+                    )
                 )
             }
             OssListView(navController = navController)
@@ -155,7 +196,8 @@ fun Navigation(
         ) {
             LaunchedEffect(key1 = true) {
                 onComposing(
-                    AppBarState(title = "Help",
+                    AppBarState(
+                        title = "Help",
                         actions = {
                             IconButton(onClick = { }) {
                                 Icon(
@@ -163,7 +205,8 @@ fun Navigation(
                                     contentDescription = null
                                 )
                             }
-                        })
+                        }
+                    )
                 )
             }
             HelpView()
@@ -212,7 +255,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
