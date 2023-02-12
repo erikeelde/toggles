@@ -14,6 +14,7 @@ androidx-vectordrawable = "1.1.0"
 androidx-work = "2.8.0"
 com-google-dagger = "2.45"
 com-squareup-leakcanary = "2.8.1"
+com-squareup-moshi = "1.14.0"
 dokka = "1.7.20"
 kotlin = "1.8.10"
 org-jetbrains-kotlinx = "1.6.4"
@@ -123,6 +124,7 @@ androidx-viewpager = "androidx.viewpager:viewpager:1.0.0"
 androidx-work-work-runtime = "androidx.work:work-runtime:2.7.1"
 androidx-work-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 androidx-work-work-testing = { module = "androidx.work:work-testing", version.ref = "androidx-work" }
+app-cash-licensee-licensee-gradle-plugin = "app.cash.licensee:licensee-gradle-plugin:1.6.0"
 com-android-tools-build-gradle = "com.android.tools.build:gradle:7.4.1"
 com-google-android-datatransport-transport-api = "com.google.android.datatransport:transport-api:3.0.0"
 com-google-android-gms-oss-licenses-plugin = "com.google.android.gms:oss-licenses-plugin:0.10.6"
@@ -169,7 +171,9 @@ com-squareup-leakcanary-shark-android = { module = "com.squareup.leakcanary:shar
 com-squareup-leakcanary-shark-graph = { module = "com.squareup.leakcanary:shark-graph", version.ref = "com-squareup-leakcanary" }
 com-squareup-leakcanary-shark-hprof = { module = "com.squareup.leakcanary:shark-hprof", version.ref = "com-squareup-leakcanary" }
 com-squareup-leakcanary-shark-log = { module = "com.squareup.leakcanary:shark-log", version.ref = "com-squareup-leakcanary" }
-com-squareup-okio = "com.squareup.okio:okio:2.2.2"
+com-squareup-moshi = { module = "com.squareup.moshi:moshi", version.ref = "com-squareup-moshi" }
+com-squareup-moshi-moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "com-squareup-moshi" }
+com-squareup-okio = "com.squareup.okio:okio:3.3.0"
 com-vanniktech-gradle-maven-publish-plugin = "com.vanniktech:gradle-maven-publish-plugin:0.24.0"
 io-gitlab-arturbosch-detekt-detekt-gradle-plugin = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.22.0"
 io-gitlab-arturbosch-detekt-detekt-formatting = "io.gitlab.arturbosch.detekt:detekt-formatting:1.22.0"
@@ -225,7 +229,6 @@ com-android-test = "com.android.test:7.4.1"
 com-github-ben-manes-versions = "com.github.ben-manes.versions:0.45.0"
 com-github-triplet-play = "com.github.triplet.play:3.8.1"
 com-gladed-androidgitversion = "com.gladed.androidgitversion:0.4.14"
-com-google-android-gms-oss-licenses-plugin = "com.google.android.gms.oss-licenses-plugin:0.10.6"
 com-google-dagger-hilt-android = "com.google.dagger.hilt.android:2.45"
 com-google-firebase-crashlytics = "com.google.firebase.crashlytics:2.9.4"
 com-google-gms-google-services = "com.google.gms.google-services:4.3.15"

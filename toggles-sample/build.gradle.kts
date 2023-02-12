@@ -1,6 +1,5 @@
 plugins {
     id("toggles.android.application-conventions")
-    id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
     id("com.gladed.androidgitversion") version "0.4.14"
     id("toggles.ownership-conventions")

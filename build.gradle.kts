@@ -14,8 +14,8 @@ buildscript {
         classpath(libs.com.google.gms.google.services)
         classpath(libs.com.vanniktech.gradle.maven.publish.plugin)
         classpath(libs.org.jetbrains.dokka.dokka.gradle.plugin)
-        classpath(libs.com.google.android.gms.oss.licenses.plugin)
         classpath(libs.com.google.firebase.firebase.crashlytics.gradle)
+        classpath(libs.app.cash.licensee.licensee.gradle.plugin)
     }
 }
 
@@ -39,6 +39,7 @@ apiValidation {
             "database",
             "navigation",
             "wrench-core",
+            "oss",
         )
     )
 }
