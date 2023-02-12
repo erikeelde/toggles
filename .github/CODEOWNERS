@@ -5,8 +5,18 @@
 
 # OWNERSHIP.toml
 *	@erikeelde
+# modules/applications/OWNERSHIP.toml
+modules/applications/	@erikeelde
+# modules/compose-theme/OWNERSHIP.toml
+modules/compose-theme/	@erikeelde
 # modules/database/OWNERSHIP.toml
 modules/database/	@erikeelde
+# modules/navigation/OWNERSHIP.toml
+modules/navigation/	@erikeelde
+# modules/oss/OWNERSHIP.toml
+modules/oss/	@erikeelde
+# modules/wrench-core/OWNERSHIP.toml
+modules/wrench-core/	@erikeelde
 # toggles-app/OWNERSHIP.toml
 toggles-app/	@erikeelde
 # toggles-core/OWNERSHIP.toml
@@ -21,5 +31,3 @@ toggles-prefs-noop/	@erikeelde
 toggles-prefs/	@erikeelde
 # toggles-sample/OWNERSHIP.toml
 toggles-sample/	@erikeelde
-# wrench-core/OWNERSHIP.toml
-wrench-core/	@erikeelde

@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.tasks.factory.dependsOn
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -5,11 +6,30 @@ plugins {
     id("toggles.android.application-conventions")
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
-    id("com.google.android.gms.oss-licenses-plugin")
     id("dagger.hilt.android.plugin")
     id("com.github.triplet.play")
     id("com.gladed.androidgitversion") version "0.4.14"
     id("com.google.firebase.crashlytics")
+    id("app.cash.licensee")
+}
+
+
+licensee {
+    allow("Apache-2.0")
+    allow("MIT")
+    allow("BSD-2-Clause")
+    allow("BSD-3-Clause")
+    allow("CC0-1.0")
+
+    allowUrl("https://developer.android.com/studio/terms.html")
+    allowUrl("https://developers.google.com/ml-kit/terms")
+    allowUrl("https://cloud.google.com/maps-platform/terms/")
+    allowUrl("https://developer.android.com/guide/playcore/license")
+
+    // try remove or ping developer later
+    // allowUrl("http://www.opensource.org/licenses/mit-license.php")
+    // try remove or ping developer later
+    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")
 }
 
 androidGitVersion {
@@ -77,6 +97,39 @@ android {
             versionNameSuffix = " debug"
         }
     }
+
+
+    // https://www.jbamberger.de/development/2021/07/03/android-generating-asset-files.html
+    // Register our custom output directory as an asset folder that will be
+    // used for asset merging.
+    sourceSets["main"].assets.srcDir(
+        layout.buildDirectory.dir("generated/dependencyAssets/")
+    )
+
+    // Individual tasks for release and debug builds
+    applicationVariants.configureEach {
+        val variant = this
+
+        // Define a new task to generate the asset files. Here the file is only
+        // copied, but you could do anything else instead.
+        val copyArtifactsTask =
+            tasks.register<Copy>("copy${variant.name.capitalize()}ArtifactList") {
+                from(
+                    project.extensions.getByType(ReportingExtension::class.java)
+                        .file("licensee/${variant.name}/artifacts.json")
+                )
+                into(layout.buildDirectory.dir("generated/dependencyAssets/"))
+            }
+
+        // This dependency is only necessary if the asset generation depends on
+        // something else, the output of the licensee plugin in my case.
+        copyArtifactsTask.dependsOn("licensee${variant.name.capitalize()}")
+
+        // Add a dependency between the asset merging and our generation task.
+        // This is necessary to ensure that the assets are generated prior to
+        // the merging step.
+        tasks["merge${variant.name.capitalize()}Assets"].dependsOn(copyArtifactsTask)
+    }
 }
 
 dependencies {
@@ -84,6 +137,7 @@ dependencies {
     implementation(projects.modules.database)
     implementation(projects.modules.navigation)
     implementation(projects.modules.applications)
+    implementation(projects.modules.oss)
 
     implementation(libs.androidx.ui.ui.tooling)
     implementation(platform(libs.androidx.compose.bom))
@@ -158,6 +212,8 @@ dependencies {
 
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.work.work.runtime.ktx)
+    // https://mvnrepository.com/artifact/com.squareup.okio/okio
+    implementation(libs.com.squareup.okio)
 
     debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
 }

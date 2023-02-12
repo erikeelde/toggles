@@ -30,6 +30,7 @@ include(
     ":modules:navigation",
     ":modules:applications",
     ":modules:wrench-core",
+    ":modules:oss",
 )
 
 dependencyResolutionManagement {

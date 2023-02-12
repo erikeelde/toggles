@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.LocalHospital
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,8 +66,7 @@ import se.eelde.toggles.dialogs.integervalue.IntegerValueView
 import se.eelde.toggles.dialogs.stringvalue.FragmentStringValueViewModel
 import se.eelde.toggles.dialogs.stringvalue.StringValueView
 import se.eelde.toggles.help.HelpView
-import se.eelde.toggles.oss.detail.OssDetailView
-import se.eelde.toggles.oss.list.OssListView
+import se.eelde.toggles.oss.OssView
 
 @Suppress("LongMethod")
 @Composable
@@ -193,50 +191,19 @@ fun Navigation(
         composable(
             "oss",
         ) {
-
             LaunchedEffect(key1 = true) {
                 onComposing(
-                    AppBarState(
-                        title = "Oss",
-                        actions = {
-                            IconButton(onClick = { }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_oss),
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
+                    AppBarState(title = "Oss")
                 )
             }
-            OssListView(navController = navController)
-        }
-        composable(
-            "oss/{dependency}/{skip}/{length}",
-            arguments = listOf(
-                navArgument("dependency") { type = NavType.StringType },
-                navArgument("skip") { type = NavType.IntType },
-                navArgument("length") { type = NavType.IntType },
-            )
-        ) {
-            OssDetailView()
+            OssView()
         }
         composable(
             "help",
         ) {
             LaunchedEffect(key1 = true) {
                 onComposing(
-                    AppBarState(
-                        title = "Help",
-                        actions = {
-                            IconButton(onClick = { }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.LocalHospital,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
+                    AppBarState(title = "Help")
                 )
             }
             HelpView()
