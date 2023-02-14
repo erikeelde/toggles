@@ -1,5 +1,9 @@
+import gradle.kotlin.dsl.accessors._dfb77a4bc97bf67c314166dbbff82491.lintChecks
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.kotlin
+
+val libs = the<LibrariesForLibs>()
 
 plugins {
     id("com.android.library")
@@ -36,4 +40,8 @@ android {
         warningsAsErrors = true
         lintConfig = File("../../lint.xml")
     }
+}
+
+dependencies {
+    lintChecks(libs.com.slack.lint.compose.compose.lint.checks)
 }
