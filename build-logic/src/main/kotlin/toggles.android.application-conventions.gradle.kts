@@ -62,3 +62,7 @@ android {
         lintConfig = File("../lint.xml")
     }
 }
+
+dependencies {
+    lintChecks(libs.com.slack.lint.compose.compose.lint.checks)
+}

@@ -1,3 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 7.0.0-alpha10" type="baseline" client="cli" name="cli" variant="all" version="7.0.0-alpha10">
+<issues format="6" by="lint 7.4.1" type="baseline" client="gradle" dependencies="false" name="AGP (7.4.1)" variant="all" version="7.4.1">
+
+    <issue
+        id="ComposeViewModelInjection"
+        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
+        errorLine1="            val viewModel: FragmentBooleanValueViewModel = hiltViewModel()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/MainActivity.kt"
+            line="99"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ComposeViewModelInjection"
+        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
+        errorLine1="            val viewModel: FragmentIntegerValueViewModel = hiltViewModel()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/MainActivity.kt"
+            line="129"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ComposeViewModelInjection"
+        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
+        errorLine1="            val viewModel: FragmentStringValueViewModel = hiltViewModel()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/MainActivity.kt"
+            line="152"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ComposeViewModelInjection"
+        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
+        errorLine1="            val viewModel: FragmentEnumValueViewModel = hiltViewModel()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/MainActivity.kt"
+            line="175"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun HelpView() {"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/help/HelpView.kt"
+            line="13"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun Navigation("
+        errorLine2="    ~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/MainActivity.kt"
+            line="73"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun TogglesAppBar(drawerState: DrawerState, appState: AppState, appBarState: AppBarState) {"
+        errorLine2="    ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/MainActivity.kt"
+            line="258"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun TogglesDrawer(navController: NavHostController, drawerState: DrawerState) {"
+        errorLine2="    ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/MainActivity.kt"
+            line="283"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewModel) {"
+        errorLine2="    ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/dialogs/scope/ScopeView.kt"
+            line="26"
+            column="5"/>
+    </issue>
+
 </issues>
