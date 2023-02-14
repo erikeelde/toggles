@@ -40,7 +40,7 @@ jobs:
           key: gradle-${{ hashFiles('checksum.txt') }}
 
       - name: Run checks
-        run: ./gradlew check --exclude-task testReleaseUnitTest
+        run: ./gradlew check
 
       - name: Build apks
         run: ./gradlew :toggles-app:packageDebug :toggles-sample:packageDebug

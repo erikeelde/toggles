@@ -128,7 +128,6 @@ fun LicenseSelectorPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LicenseSelector(title: String, licenses: List<License>, close: () -> Unit) {
-
     val uriHandler = LocalUriHandler.current
 
     if (licenses.isNotEmpty()) {

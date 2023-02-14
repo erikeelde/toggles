@@ -1,4 +1,5 @@
 @file:Suppress("MaxLineLength")
+
 package se.eelde.toggles.database
 
 import android.database.Cursor
@@ -61,11 +62,15 @@ interface WrenchConfigurationDao {
     fun getConfiguration(configurationId: Long): Flow<WrenchConfiguration>
 
     @Transaction
-    @Query("SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId ORDER BY lastUse DESC")
+    @Query(
+        "SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId ORDER BY lastUse DESC"
+    )
     fun getApplicationConfigurations(applicationId: Long): Flow<List<WrenchConfigurationWithValues>>
 
     @Transaction
-    @Query("SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId AND configurationKey LIKE :query ORDER BY lastUse DESC")
+    @Query(
+        "SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId AND configurationKey LIKE :query ORDER BY lastUse DESC"
+    )
     fun getApplicationConfigurations(applicationId: Long, query: String): Flow<List<WrenchConfigurationWithValues>>
 
     @Insert

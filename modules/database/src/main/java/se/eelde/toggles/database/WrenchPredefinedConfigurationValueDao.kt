@@ -1,4 +1,5 @@
 @file:Suppress("MaxLineLength")
+
 package se.eelde.toggles.database
 
 import androidx.lifecycle.LiveData
@@ -11,10 +12,14 @@ import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
 @Dao
 interface WrenchPredefinedConfigurationValueDao {
 
-    @Query("SELECT * FROM " + PredefinedConfigurationValueTable.TABLE_NAME + " WHERE " + PredefinedConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId)")
+    @Query(
+        "SELECT * FROM " + PredefinedConfigurationValueTable.TABLE_NAME + " WHERE " + PredefinedConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId)"
+    )
     fun getLiveDataByConfigurationId(configurationId: Long): LiveData<List<WrenchPredefinedConfigurationValue>>
 
-    @Query("SELECT * FROM " + PredefinedConfigurationValueTable.TABLE_NAME + " WHERE " + PredefinedConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId)")
+    @Query(
+        "SELECT * FROM " + PredefinedConfigurationValueTable.TABLE_NAME + " WHERE " + PredefinedConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId)"
+    )
     fun getByConfigurationId(configurationId: Long): Flow<List<WrenchPredefinedConfigurationValue>>
 
     @Insert

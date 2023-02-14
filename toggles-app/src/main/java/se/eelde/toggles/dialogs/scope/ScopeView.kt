@@ -24,7 +24,6 @@ import se.eelde.toggles.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewModel) {
-
     val uiState = viewModel.state.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
@@ -32,7 +31,6 @@ fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewMod
     uiState.value.let {
         Surface(modifier = Modifier.padding(16.dp)) {
             Column {
-
                 Text(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.titleLarge,

@@ -29,7 +29,6 @@ internal fun BooleanValueView(
 
     Surface(modifier = Modifier.padding(16.dp)) {
         Column {
-
             Text(
                 modifier = Modifier.padding(8.dp),
                 style = MaterialTheme.typography.headlineMedium,

@@ -59,7 +59,6 @@ internal fun StringValueView(
                 onValueChange = { setStringValue(it) },
             )
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-
                 Button(modifier = Modifier.padding(8.dp), onClick = {
                     scope.launch {
                         revert()

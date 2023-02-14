@@ -50,7 +50,7 @@ jobs:
           key: gradle-${{ hashFiles('checksum.txt') }}
 
       - name: Run Checks
-        run: ./gradlew check --exclude-task testReleaseUnitTest
+        run: ./gradlew check
 
       - name: Publish application
         if: github.repository == 'erikeelde/toggles'

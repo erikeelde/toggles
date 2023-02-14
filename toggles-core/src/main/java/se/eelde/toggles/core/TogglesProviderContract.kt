@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.net.Uri
 import androidx.annotation.StringDef
 
+@Suppress("LibraryEntitiesShouldNotBePublic")
 class ColumnNames {
     object Toggle {
         const val COL_KEY = "configurationKey"
@@ -20,6 +21,7 @@ class ColumnNames {
     }
 }
 
+@Suppress("ForbiddenPublicDataClass", "LibraryEntitiesShouldNotBePublic")
 data class ToggleValue(
     val id: Long = 0,
     val configurationId: Long = 0,
@@ -40,6 +42,7 @@ data class ToggleValue(
     }
 }
 
+@Suppress("ForbiddenPublicDataClass", "LibraryEntitiesShouldNotBePublic")
 data class Toggle(
     var id: Long = 0,
     @ToggleType val type: String,

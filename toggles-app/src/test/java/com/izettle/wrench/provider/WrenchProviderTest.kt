@@ -137,7 +137,10 @@ class WrenchProviderTest {
             WrenchProviderContract.boltUri(
                 Integer.parseInt(insertBoltUri.lastPathSegment!!).toLong()
             ),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         )
         Assert.assertNotNull(cursor)
         Assert.assertEquals(1, cursor.count)

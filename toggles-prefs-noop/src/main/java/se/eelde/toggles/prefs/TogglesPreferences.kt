@@ -1,5 +1,6 @@
 package se.eelde.toggles.prefs
 
+@Suppress("LibraryEntitiesShouldNotBePublic")
 interface TogglesPreferences {
     fun getBoolean(key: String, defValue: Boolean): Boolean
     fun getInt(key: String, defValue: Int): Int

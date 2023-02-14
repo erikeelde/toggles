@@ -21,6 +21,7 @@ import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 
+@Suppress("LibraryEntitiesShouldNotBePublic")
 class TogglesImpl(context: Context) : Toggles {
     private val context = context.applicationContext
     private val contentResolver = this.context.contentResolver
@@ -118,7 +119,6 @@ class TogglesImpl(context: Context) : Toggles {
         @ToggleType type: String,
         key: String
     ): Flow<Toggle?> = callbackFlow {
-
         val toggleContentObserver = ToggleContentObserver(null) {
             launch {
                 trySend(getToggle(contentResolver, type, key))

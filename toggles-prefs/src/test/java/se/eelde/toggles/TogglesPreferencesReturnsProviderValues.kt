@@ -27,7 +27,7 @@ import se.eelde.toggles.prefs.TogglesPreferencesImpl
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [O])
-class TogglesPreferencesReturnsProviderValues {
+internal class TogglesPreferencesReturnsProviderValues {
 
     private lateinit var togglesPreferences: TogglesPreferences
     private val key = "myKey"
@@ -40,7 +40,6 @@ class TogglesPreferencesReturnsProviderValues {
 
     @Before
     fun setUp() {
-
         val info =
             ProviderInfo().apply { authority = TogglesProviderContract.toggleUri().authority!! }
         contentProviderController =
@@ -57,14 +56,16 @@ class TogglesPreferencesReturnsProviderValues {
         assertEquals(
             TestEnum.FIRST,
             togglesPreferences.getEnum(
-                key, TestEnum::class.java,
+                key,
+                TestEnum::class.java,
                 TestEnum.FIRST
             )
         )
         assertEquals(
             TestEnum.FIRST,
             togglesPreferences.getEnum(
-                key, TestEnum::class.java,
+                key,
+                TestEnum::class.java,
                 TestEnum.SECOND
             )
         )
@@ -95,7 +96,7 @@ class TogglesPreferencesReturnsProviderValues {
     }
 }
 
-class MockContentProvider : ContentProvider() {
+internal class MockContentProvider : ContentProvider() {
     companion object {
         private const val CURRENT_CONFIGURATION_ID = 1
         private const val CURRENT_CONFIGURATION_KEY = 2
@@ -175,9 +176,7 @@ class MockContentProvider : ContentProvider() {
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATIONS -> {
                 val toggle = Toggle.fromContentValues(values!!)
-                if (toggles.containsKey(toggle.key)) {
-                    throw IllegalArgumentException("toggle exists")
-                }
+                require(!toggles.containsKey(toggle.key)) { "toggle exists" }
                 toggles[toggle.key] = toggle
                 insertId = toggles.size.toLong()
                 toggle.id = insertId
@@ -198,15 +197,10 @@ class MockContentProvider : ContentProvider() {
         values: ContentValues?,
         selection: String?,
         selectionArgs: Array<String>?
-    ): Int {
-        throw IllegalStateException()
-    }
+    ): Int = error("Error")
 
-    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        throw IllegalStateException()
-    }
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int =
+        error("Error")
 
-    override fun getType(uri: Uri): String? {
-        throw IllegalStateException()
-    }
+    override fun getType(uri: Uri): String = error("Error")
 }

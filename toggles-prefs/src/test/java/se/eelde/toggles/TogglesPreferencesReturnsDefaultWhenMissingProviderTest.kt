@@ -15,7 +15,7 @@ import se.eelde.toggles.prefs.TogglesPreferencesImpl
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.O])
-class TogglesPreferencesReturnsDefaultWhenMissingProviderTest {
+internal class TogglesPreferencesReturnsDefaultWhenMissingProviderTest {
 
     private lateinit var togglesPreferences: TogglesPreferences
     private val key = "myKey"
@@ -26,7 +26,6 @@ class TogglesPreferencesReturnsDefaultWhenMissingProviderTest {
 
     @Before
     fun setUp() {
-
         val applicationContext = ApplicationProvider.getApplicationContext<Application>()
         togglesPreferences = TogglesPreferencesImpl(applicationContext)
 

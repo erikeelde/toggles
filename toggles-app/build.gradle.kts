@@ -16,15 +16,9 @@ plugins {
 
 licensee {
     allow("Apache-2.0")
-    allow("MIT")
-    allow("BSD-2-Clause")
-    allow("BSD-3-Clause")
-    allow("CC0-1.0")
 
     allowUrl("https://developer.android.com/studio/terms.html")
-    allowUrl("https://developers.google.com/ml-kit/terms")
-    allowUrl("https://cloud.google.com/maps-platform/terms/")
-    allowUrl("https://developer.android.com/guide/playcore/license")
+    //allowUrl("https://cloud.google.com/maps-platform/terms/")
 
     // try remove or ping developer later
     // allowUrl("http://www.opensource.org/licenses/mit-license.php")

@@ -4,7 +4,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     id("io.gitlab.arturbosch.detekt")
-    id("toggles.detekt-conventions")
+    id("toggles.detekt-library-conventions")
 
 }
 
