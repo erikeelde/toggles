@@ -11,6 +11,17 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+        freeCompilerArgs = listOfNotNull(
+            "-opt-in=kotlin.RequiresOptIn"
+        )
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 }
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
