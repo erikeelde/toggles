@@ -3,6 +3,7 @@ package se.eelde.toggles.flow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
+@Suppress("LibraryEntitiesShouldNotBePublic")
 interface Toggles {
     @ExperimentalCoroutinesApi
     fun toggle(key: String, defaultValue: Boolean): Flow<Boolean>

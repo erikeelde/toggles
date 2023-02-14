@@ -2,6 +2,7 @@ package se.eelde.toggles.prefs
 
 import android.content.Context
 
+@Suppress("LibraryEntitiesShouldNotBePublic")
 class TogglesPreferencesImpl(@Suppress("UNUSED_PARAMETER") context: Context) : TogglesPreferences {
 
     override fun getBoolean(key: String, defValue: Boolean): Boolean = defValue

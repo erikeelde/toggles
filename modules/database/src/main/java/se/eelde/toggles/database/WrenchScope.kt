@@ -19,7 +19,8 @@ import java.util.Date
             parentColumns = arrayOf(
                 ApplicationTable.COL_ID
             ),
-            childColumns = arrayOf(ScopeTable.COL_APP_ID), onDelete = ForeignKey.CASCADE
+            childColumns = arrayOf(ScopeTable.COL_APP_ID),
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

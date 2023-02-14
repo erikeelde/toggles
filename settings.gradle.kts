@@ -16,15 +16,15 @@ buildCache {
 }
 
 rootProject.name = "Toggles"
-
+includeBuild("build-logic")
+includeBuild("toggles-core")
+includeBuild("toggles-flow")
+includeBuild("toggles-flow-noop")
+includeBuild("toggles-prefs")
+includeBuild("toggles-prefs-noop")
 include(
     ":toggles-app",
-    ":toggles-core",
-    ":toggles-flow",
-    ":toggles-prefs",
     ":toggles-sample",
-    ":toggles-flow-noop",
-    ":toggles-prefs-noop",
     ":modules:compose-theme",
     ":modules:database",
     ":modules:navigation",

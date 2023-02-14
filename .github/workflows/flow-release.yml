@@ -39,7 +39,7 @@ jobs:
           key: gradle-${{ hashFiles('checksum.txt') }}
 
       - name: Run Checks
-        run: ./gradlew :toggles-flow:check --exclude-task testReleaseUnitTest
+        run: ./gradlew :toggles-flow:check
 
       - name: Setup environment
         if: github.repository == 'erikeelde/toggles'

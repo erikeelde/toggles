@@ -12,7 +12,6 @@ buildscript {
         classpath(libs.org.jetbrains.kotlin.kotlin.gradle.plugin)
         classpath(libs.com.google.dagger.hilt.android.gradle.plugin)
         classpath(libs.com.google.gms.google.services)
-        classpath(libs.com.vanniktech.gradle.maven.publish.plugin)
         classpath(libs.org.jetbrains.dokka.dokka.gradle.plugin)
         classpath(libs.com.google.firebase.firebase.crashlytics.gradle)
         classpath(libs.app.cash.licensee.licensee.gradle.plugin)
@@ -24,24 +23,8 @@ plugins {
     alias(libs.plugins.nl.littlerobots.version.catalog.update)
     // id("se.eelde.build-optimizations") version "0.2.0"
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
-    alias(libs.plugins.org.jetbrains.kotlinx.binary.compatibility.validator)
     alias(libs.plugins.com.github.triplet.play) apply (false)
     id("toggles.ownership-conventions")
-}
-
-apiValidation {
-    ignoredProjects.addAll(
-        listOf(
-            "toggles-app",
-            "toggles-sample",
-            "applications",
-            "compose-theme",
-            "database",
-            "navigation",
-            "wrench-core",
-            "oss",
-        )
-    )
 }
 
 fun isNonStable(version: String): Boolean {

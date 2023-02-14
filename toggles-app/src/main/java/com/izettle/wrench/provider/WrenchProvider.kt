@@ -112,7 +112,6 @@ class WrenchProvider : ContentProvider() {
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor {
-
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isWrenchApplication(callingApplication)) {
@@ -167,7 +166,6 @@ class WrenchProvider : ContentProvider() {
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri {
-
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isWrenchApplication(callingApplication)) {
@@ -251,7 +249,6 @@ class WrenchProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<String>?
     ): Int {
-
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isWrenchApplication(callingApplication)) {

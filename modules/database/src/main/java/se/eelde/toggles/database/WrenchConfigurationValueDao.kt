@@ -1,4 +1,5 @@
 @file:Suppress("MaxLineLength")
+
 package se.eelde.toggles.database
 
 import androidx.lifecycle.LiveData

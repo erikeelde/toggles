@@ -40,7 +40,7 @@ jobs:
           key: gradle-${{ hashFiles('checksum.txt') }}
 
       - name: Run Checks
-        run: ./gradlew check --exclude-task testReleaseUnitTest
+        run: ./gradlew check :toggles-core:check :toggles-flow:check :toggles-flow-noop:check :toggles-prefs:check :toggles-prefs-noop:check
 
       - name: Upload reports
         uses: actions/upload-artifact@v3

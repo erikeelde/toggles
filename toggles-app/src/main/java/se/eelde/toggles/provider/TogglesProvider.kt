@@ -106,7 +106,6 @@ class TogglesProvider : ContentProvider() {
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor {
-
         val callingApplication = getCallingApplication(applicationDao)
         if (!isTogglesApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
@@ -160,7 +159,6 @@ class TogglesProvider : ContentProvider() {
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri {
-
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {
@@ -235,7 +233,6 @@ class TogglesProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<String>?
     ): Int {
-
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {

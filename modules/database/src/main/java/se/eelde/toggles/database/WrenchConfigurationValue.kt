@@ -32,7 +32,8 @@ import se.eelde.toggles.database.tables.ConfigurationValueTable
     ]
 )
 data class WrenchConfigurationValue(
-    @field:PrimaryKey(autoGenerate = true) @field:ColumnInfo(name = ConfigurationValueTable.COL_ID)
+    @field:PrimaryKey(autoGenerate = true)
+    @field:ColumnInfo(name = ConfigurationValueTable.COL_ID)
     var id: Long,
 
     @field:ColumnInfo(name = ConfigurationValueTable.COL_CONFIG_ID)

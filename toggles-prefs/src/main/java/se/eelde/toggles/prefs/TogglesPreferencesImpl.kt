@@ -7,6 +7,7 @@ import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 
+@Suppress("LibraryEntitiesShouldNotBePublic")
 class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
     private val context = context.applicationContext
     private val contentResolver: ContentResolver = this.context.contentResolver
@@ -44,7 +45,6 @@ class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
     }
 
     override fun getString(key: String, defValue: String): String {
-
         var toggle =
             getToggle(
                 contentResolver = contentResolver,
