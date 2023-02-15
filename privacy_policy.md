@@ -12,7 +12,7 @@ It sends crashes to crashlytics to help fix crashes - I do not know how to delet
 
 The list of permissions required by the app can be found in the `AndroidManifest.xml` file:
 
-https://github.com/erikeelde/toggles/blob/main/toggles-app/src/main/AndroidManifest.xml#L16-L17
+https://github.com/erikeelde/toggles/blob/8b7c3c3de1283e311757eeb3c331ab888f24f042/toggles-app/src/main/AndroidManifest.xml#L16-L18
 
 | Permission | Why it is required                                                                                                                                                        |
 | :---: |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
