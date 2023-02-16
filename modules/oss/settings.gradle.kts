@@ -28,7 +28,7 @@ plugins {
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files("../../gradle/libs.versions.toml"))
         }
     }
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -39,14 +39,4 @@ dependencyResolutionManagement {
 }
 
 
-includeBuild("../build-logic")
-includeBuild("../toggles-core")
-includeBuild("../toggles-flow")
-includeBuild("../toggles-flow-noop")
-includeBuild("../toggles-prefs")
-includeBuild("../toggles-prefs-noop")
-includeBuild("../modules/oss")
-
-include(
-    ":modules:compose-theme",
-)
+includeBuild("../../build-logic")

@@ -1,14 +1,3 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    dependencies {
-        classpath(libs.com.android.tools.build.gradle)
-        classpath(libs.org.jetbrains.kotlin.kotlin.gradle.plugin)
-        classpath(libs.com.google.dagger.hilt.android.gradle.plugin)
-        classpath(libs.org.jetbrains.dokka.dokka.gradle.plugin)
-        classpath(libs.app.cash.licensee.licensee.gradle.plugin)
-    }
-}
-
 plugins {
     id("toggles.android.application-conventions")
     id("toggles.ownership-conventions")
@@ -71,6 +60,9 @@ dependencies {
 
     implementation(libs.androidx.navigation.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.navigation.ui.ktx)
+
+    //implementation(projects.modules.oss)
+    //implementation(project("se.eelde.toggles:oss"))
 
 //    implementation(project(":toggles-prefs"))
 //    implementation(project(":toggles-flow"))
