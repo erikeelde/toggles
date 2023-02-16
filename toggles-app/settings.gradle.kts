@@ -11,7 +11,7 @@ buildCache {
     }
 }
 
-rootProject.name = "toggles-sample"
+rootProject.name = "toggles-app"
 
 pluginManagement {
     repositories {

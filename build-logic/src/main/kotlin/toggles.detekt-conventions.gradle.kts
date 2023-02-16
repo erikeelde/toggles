@@ -1,6 +1,3 @@
-import org.gradle.api.JavaVersion
-import org.gradle.kotlin.dsl.kotlin
-
 plugins {
     id("io.gitlab.arturbosch.detekt")
 }

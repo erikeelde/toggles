@@ -12,13 +12,20 @@ class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
     private val context = context.applicationContext
     private val contentResolver: ContentResolver = this.context.contentResolver
 
+    override fun hasToggle(key: String): Boolean {
+        return getToggle(
+            contentResolver = contentResolver,
+            toggleType = Toggle.TYPE.BOOLEAN,
+            key = key
+        ) != null
+    }
+
     override fun getBoolean(key: String, defValue: Boolean): Boolean {
         var toggle = getToggle(
             contentResolver = contentResolver,
             toggleType = Toggle.TYPE.BOOLEAN,
             key = key
-        )
-            ?: return defValue
+        ) ?: return defValue
 
         if (toggle.id == 0L) {
             toggle = toggle.copy(value = defValue.toString())
@@ -33,8 +40,7 @@ class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
             contentResolver = contentResolver,
             toggleType = Toggle.TYPE.INTEGER,
             key = key
-        )
-            ?: return defValue
+        ) ?: return defValue
 
         if (toggle.id == 0L) {
             toggle = toggle.copy(value = defValue.toString())
@@ -50,8 +56,7 @@ class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
                 contentResolver = contentResolver,
                 toggleType = Toggle.TYPE.STRING,
                 key = key
-            )
-                ?: return defValue
+            ) ?: return defValue
 
         if (toggle.id == 0L) {
             toggle = toggle.copy(value = defValue)
@@ -67,8 +72,7 @@ class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
                 contentResolver = contentResolver,
                 toggleType = Toggle.TYPE.ENUM,
                 key = key
-            )
-                ?: return defValue
+            ) ?: return defValue
 
         if (toggle.id == 0L) {
             toggle = toggle.copy(value = defValue.toString())

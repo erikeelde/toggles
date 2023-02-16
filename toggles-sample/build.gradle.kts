@@ -1,10 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
     dependencies {
         classpath(libs.com.android.tools.build.gradle)
         classpath(libs.org.jetbrains.kotlin.kotlin.gradle.plugin)
@@ -16,9 +11,9 @@ buildscript {
 
 plugins {
     id("toggles.android.application-conventions")
-    alias(libs.plugins.com.google.dagger.hilt.android)
-    id("com.gladed.androidgitversion") version "0.4.14"
     id("toggles.ownership-conventions")
+    alias(libs.plugins.com.google.dagger.hilt.android)
+    alias(libs.plugins.com.gladed.androidgitversion)
 }
 
 androidGitVersion {
