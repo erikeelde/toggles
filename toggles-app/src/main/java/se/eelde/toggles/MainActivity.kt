@@ -1,5 +1,6 @@
 package se.eelde.toggles
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -68,6 +69,7 @@ import se.eelde.toggles.dialogs.stringvalue.StringValueView
 import se.eelde.toggles.help.HelpView
 import se.eelde.toggles.oss.OssView
 
+@SuppressLint("ComposeViewModelInjection")
 @Suppress("LongMethod")
 @Composable
 fun Navigation(

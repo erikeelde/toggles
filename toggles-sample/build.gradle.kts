@@ -1,6 +1,22 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath(libs.com.android.tools.build.gradle)
+        classpath(libs.org.jetbrains.kotlin.kotlin.gradle.plugin)
+        classpath(libs.com.google.dagger.hilt.android.gradle.plugin)
+        classpath(libs.org.jetbrains.dokka.dokka.gradle.plugin)
+        classpath(libs.app.cash.licensee.licensee.gradle.plugin)
+    }
+}
+
 plugins {
     id("toggles.android.application-conventions")
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.com.google.dagger.hilt.android)
     id("com.gladed.androidgitversion") version "0.4.14"
     id("toggles.ownership-conventions")
 }
@@ -64,8 +80,6 @@ dependencies {
 //    implementation(project(":toggles-prefs"))
 //    implementation(project(":toggles-flow"))
 
-//    implementation("se.eelde.toggles:toggles-flow-noop:0.0.1")
-//    implementation("se.eelde.toggles:toggles-prefs-noop:0.0.1")
     implementation(libs.se.eelde.toggles.toggles.flow)
     implementation(libs.se.eelde.toggles.toggles.prefs)
 

@@ -11,7 +11,7 @@ buildCache {
     }
 }
 
-rootProject.name = "toggles-core"
+rootProject.name = "toggles-sample"
 
 pluginManagement {
     repositories {
@@ -38,4 +38,15 @@ dependencyResolutionManagement {
     }
 }
 
+
 includeBuild("../build-logic")
+includeBuild("../toggles-core")
+includeBuild("../toggles-flow")
+includeBuild("../toggles-flow-noop")
+includeBuild("../toggles-prefs")
+includeBuild("../toggles-prefs-noop")
+
+include(
+    ":modules:compose-theme",
+    ":modules:oss",
+)
