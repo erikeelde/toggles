@@ -17,21 +17,14 @@ buildCache {
 
 rootProject.name = "Toggles"
 includeBuild("build-logic")
+includeBuild("toggles-app")
 includeBuild("toggles-sample")
 includeBuild("toggles-core")
 includeBuild("toggles-flow")
 includeBuild("toggles-flow-noop")
 includeBuild("toggles-prefs")
 includeBuild("toggles-prefs-noop")
-include(
-    ":toggles-app",
-    ":modules:compose-theme",
-    ":modules:database",
-    ":modules:navigation",
-    ":modules:applications",
-    ":modules:wrench-core",
-    ":modules:oss",
-)
+
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)

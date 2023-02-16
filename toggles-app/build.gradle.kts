@@ -2,13 +2,33 @@ import com.android.build.gradle.internal.tasks.factory.dependsOn
 import java.io.FileInputStream
 import java.util.Properties
 
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath(libs.com.android.tools.build.gradle)
+        classpath(libs.org.jetbrains.kotlin.kotlin.gradle.plugin)
+        classpath(libs.com.google.dagger.hilt.android.gradle.plugin)
+        classpath(libs.com.google.gms.google.services)
+        classpath(libs.org.jetbrains.dokka.dokka.gradle.plugin)
+        classpath(libs.com.google.firebase.firebase.crashlytics.gradle)
+        classpath(libs.app.cash.licensee.licensee.gradle.plugin)
+    }
+}
+
 plugins {
     id("toggles.android.application-conventions")
-    id("com.google.gms.google-services")
+    alias(libs.plugins.com.google.gms.google.services)
+//ß    id("com.google.gms.google-services")
+    // alias(libs.plugins.kotlin.parcelize)
     id("kotlin-parcelize")
-    id("dagger.hilt.android.plugin")
-    id("com.github.triplet.play")
-    id("com.gladed.androidgitversion") version "0.4.14"
+    alias(libs.plugins.com.google.dagger.hilt.android)
+    alias(libs.plugins.com.github.triplet.play)
+    alias(libs.plugins.com.gladed.androidgitversion)
+    //alias(libs.com.google.firebase.crashlytics)
     id("com.google.firebase.crashlytics")
     id("app.cash.licensee")
 }
