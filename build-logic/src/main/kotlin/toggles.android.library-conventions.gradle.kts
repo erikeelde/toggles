@@ -39,6 +39,14 @@ android {
         warningsAsErrors = true
         lintConfig = File("../lint.xml")
     }
+
+    publishing {
+        multipleVariants {
+            allVariants()
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 kotlin {

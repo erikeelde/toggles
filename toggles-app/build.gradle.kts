@@ -53,6 +53,10 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     namespace = "se.eelde.toggles"
 
     defaultConfig {

@@ -8,6 +8,9 @@ plugins {
 
 android {
     namespace = "se.eelde.toggles.core"
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         val togglesProviderAuthority = "se.eelde.toggles.configprovider"
         manifestPlaceholders["togglesProviderAuthority"] = togglesProviderAuthority
