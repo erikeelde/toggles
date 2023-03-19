@@ -1,4 +1,3 @@
-import org.gradle.api.JavaVersion
 
 plugins {
     id("com.android.library")
@@ -23,15 +22,6 @@ android {
         }
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
     lint {
         baseline = file("lint-baseline.xml")
         checkReleaseBuilds = true
@@ -46,6 +36,12 @@ android {
             withSourcesJar()
             withJavadocJar()
         }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 

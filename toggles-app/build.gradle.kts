@@ -1,5 +1,6 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import java.io.FileInputStream
+import java.util.Locale
 import java.util.Properties
 
 plugins {
@@ -78,7 +79,7 @@ android {
 
         buildConfigField("String", "CONFIG_AUTHORITY", "\"$togglesAuthority\"")
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += setOf("META-INF/main.kotlin_module", "META-INF/atomicfu.kotlin_module")
         }
@@ -111,7 +112,17 @@ android {
         // Define a new task to generate the asset files. Here the file is only
         // copied, but you could do anything else instead.
         val copyArtifactsTask =
-            tasks.register<Copy>("copy${variant.name.capitalize()}ArtifactList") {
+            tasks.register<Copy>(
+                "copy${
+                    variant.name.replaceFirstChar {
+                        if (it.isLowerCase()) {
+                            it.titlecase(Locale.getDefault())
+                        } else {
+                            it.toString()
+                        }
+                    }
+                }ArtifactList"
+            ) {
                 from(
                     project.extensions.getByType(ReportingExtension::class.java)
                         .file("licensee/${variant.name}/artifacts.json")
@@ -121,7 +132,17 @@ android {
 
         // This dependency is only necessary if the asset generation depends on
         // something else, the output of the licensee plugin in my case.
-        copyArtifactsTask.dependsOn("licensee${variant.name.capitalize()}")
+        copyArtifactsTask.dependsOn(
+            "licensee${
+                variant.name.replaceFirstChar {
+                    if (it.isLowerCase()) {
+                        it.titlecase(Locale.getDefault())
+                    } else {
+                        it.toString()
+                    }
+                }
+            }"
+        )
 
         // Add a dependency between the asset merging and our generation task.
         // This is necessary to ensure that the assets are generated prior to
@@ -133,7 +154,6 @@ android {
 dependencies {
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.database)
-    implementation(projects.modules.navigation)
     implementation(projects.modules.applications)
     implementation(projects.modules.oss)
 
