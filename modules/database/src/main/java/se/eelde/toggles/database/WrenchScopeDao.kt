@@ -27,7 +27,7 @@ interface WrenchScopeDao {
     @Query(
         "SELECT * FROM " + ScopeTable.TABLE_NAME + " WHERE " + ScopeTable.COL_APP_ID + " = (:applicationId) ORDER BY " + ScopeTable.COL_SELECTED_TIMESTAMP + " DESC LIMIT 1"
     )
-    fun getSelectedScope(applicationId: Long): WrenchScope
+    fun getSelectedScope(applicationId: Long): WrenchScope?
 
     @Query(
         "SELECT * FROM " + ScopeTable.TABLE_NAME + " WHERE " + ScopeTable.COL_APP_ID + " = (:applicationId) ORDER BY " + ScopeTable.COL_SELECTED_TIMESTAMP + " DESC LIMIT 1"
@@ -42,7 +42,7 @@ interface WrenchScopeDao {
     @Query(
         "SELECT * FROM " + ScopeTable.TABLE_NAME + " WHERE " + ScopeTable.COL_APP_ID + " = (:applicationId) AND " + ScopeTable.COL_NAME + " = '" + WrenchScope.SCOPE_DEFAULT + "'"
     )
-    fun getDefaultScope(applicationId: Long): WrenchScope
+    fun getDefaultScope(applicationId: Long): WrenchScope?
 
     @Update
     suspend fun update(scope: WrenchScope)
