@@ -29,17 +29,14 @@ android {
             }
         }
     }
-    sourceSets {
-        // Adds exported schema location as test app assets.
-        getByName("androidTest").assets.srcDir("$projectDir/schemas")
+    testOptions {
+        unitTests{
+            isIncludeAndroidResources = true
+        }
     }
-//    sourceSets {
-//        // debug.assets.srcDirs => https://github.com/robolectric/robolectric/issues/3928
-//        // debug.assets.srcDirs += files("$projectDir/schemas".toString())
-//        getByName("test") {
-//            assets.srcDirs(files("$projectDir/schemas"))
-//        }
-//    }
+    sourceSets {
+        getByName("test").assets.srcDir("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -54,8 +51,7 @@ dependencies {
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.org.robolectric)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.room.room.testing)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.espresso.core)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.androidx.room.room.testing)
+    testImplementation(libs.androidx.test.espresso.espresso.core)
 }
