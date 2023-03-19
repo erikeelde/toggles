@@ -78,23 +78,24 @@ class TogglesProvider : ContentProvider() {
         fun providesWrenchPreferences(): TogglesPreferences
     }
 
-    private fun getCallingApplication(applicationDao: WrenchApplicationDao): WrenchApplication {
-        var wrenchApplication: WrenchApplication? =
-            applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)
+    private fun getCallingApplication(applicationDao: WrenchApplicationDao): WrenchApplication =
+        synchronized(this) {
+            var wrenchApplication: WrenchApplication? =
+                applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)
 
-        if (wrenchApplication == null) {
-            wrenchApplication = WrenchApplication(
-                id = 0,
-                packageName = packageManagerWrapper.callingApplicationPackageName!!,
-                applicationLabel = packageManagerWrapper.applicationLabel,
-                shortcutId = packageManagerWrapper.callingApplicationPackageName!!,
-            )
+            if (wrenchApplication == null) {
+                wrenchApplication = WrenchApplication(
+                    id = 0,
+                    packageName = packageManagerWrapper.callingApplicationPackageName!!,
+                    applicationLabel = packageManagerWrapper.applicationLabel,
+                    shortcutId = packageManagerWrapper.callingApplicationPackageName!!,
+                )
 
-            wrenchApplication.id = applicationDao.insert(wrenchApplication)
+                wrenchApplication.id = applicationDao.insert(wrenchApplication)
+            }
+
+            return wrenchApplication
         }
-
-        return wrenchApplication
-    }
 
     override fun onCreate() = true
 
@@ -131,6 +132,7 @@ class TogglesProvider : ContentProvider() {
                     )
                 }
             }
+
             CURRENT_CONFIGURATION_KEY -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
                 cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
@@ -142,6 +144,7 @@ class TogglesProvider : ContentProvider() {
                     cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
                 }
             }
+
             else -> {
                 throw UnsupportedOperationException("Not yet implemented $uri")
             }
@@ -203,10 +206,12 @@ class TogglesProvider : ContentProvider() {
 
                 insertId = wrenchConfiguration.id
             }
+
             PREDEFINED_CONFIGURATION_VALUES -> {
                 val fullConfig = WrenchPredefinedConfigurationValue.fromContentValues(values!!)
                 insertId = predefinedConfigurationDao.insert(fullConfig)
             }
+
             else -> {
                 throw UnsupportedOperationException("Not yet implemented $uri")
             }
@@ -259,6 +264,7 @@ class TogglesProvider : ContentProvider() {
                     configurationValueDao.insertSync(wrenchConfigurationValue)
                 }
             }
+
             else -> {
                 throw UnsupportedOperationException("Not yet implemented $uri")
             }
@@ -292,15 +298,19 @@ class TogglesProvider : ContentProvider() {
             CURRENT_CONFIGURATIONS -> {
                 "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
+
             CURRENT_CONFIGURATION_ID -> {
                 "vnd.android.cursor.item/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
+
             CURRENT_CONFIGURATION_KEY -> {
                 "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.currentConfiguration"
             }
+
             PREDEFINED_CONFIGURATION_VALUES -> {
                 "vnd.android.cursor.dir/vnd.${BuildConfig.APPLICATION_ID}.predefinedConfigurationValue"
             }
+
             else -> {
                 throw UnsupportedOperationException("Not yet implemented")
             }
@@ -379,6 +389,7 @@ class TogglesProvider : ContentProvider() {
                 API_1 -> {
                     return
                 }
+
                 API_INVALID -> {
                     if (strictApiVersion) {
                         throw IllegalArgumentException(
