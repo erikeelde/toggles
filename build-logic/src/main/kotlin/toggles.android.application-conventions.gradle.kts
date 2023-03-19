@@ -1,4 +1,3 @@
-import org.gradle.api.JavaVersion
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.kotlin.dsl.kotlin
 
@@ -38,18 +37,6 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-        freeCompilerArgs = listOfNotNull(
-            "-opt-in=kotlin.RequiresOptIn"
-        )
-    }
-
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
@@ -60,6 +47,12 @@ android {
         abortOnError = true
         warningsAsErrors = true
         lintConfig = File("../lint.xml")
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 

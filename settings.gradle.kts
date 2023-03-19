@@ -27,7 +27,6 @@ include(
     ":toggles-sample",
     ":modules:compose-theme",
     ":modules:database",
-    ":modules:navigation",
     ":modules:applications",
     ":modules:wrench-core",
     ":modules:oss",
