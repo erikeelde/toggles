@@ -3,6 +3,21 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.gladed.androidgitversion") version "0.4.14"
     id("toggles.ownership-conventions")
+    id("app.cash.licensee")
+}
+
+apply<CopyLicenseeReportPlugin>()
+
+licensee {
+    allow("Apache-2.0")
+
+    allowUrl("https://developer.android.com/studio/terms.html")
+    //allowUrl("https://cloud.google.com/maps-platform/terms/")
+
+    // try remove or ping developer later
+    // allowUrl("http://www.opensource.org/licenses/mit-license.php")
+    // try remove or ping developer later
+    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")
 }
 
 androidGitVersion {

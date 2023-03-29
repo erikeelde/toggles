@@ -1,6 +1,4 @@
-import com.android.build.gradle.internal.tasks.factory.dependsOn
 import java.io.FileInputStream
-import java.util.Locale
 import java.util.Properties
 
 plugins {
@@ -14,6 +12,7 @@ plugins {
     id("app.cash.licensee")
 }
 
+apply<CopyLicenseeReportPlugin>()
 
 licensee {
     allow("Apache-2.0")
@@ -95,59 +94,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
             versionNameSuffix = " debug"
         }
-    }
-
-
-    // https://www.jbamberger.de/development/2021/07/03/android-generating-asset-files.html
-    // Register our custom output directory as an asset folder that will be
-    // used for asset merging.
-    sourceSets["main"].assets.srcDir(
-        layout.buildDirectory.dir("generated/dependencyAssets/")
-    )
-
-    // Individual tasks for release and debug builds
-    applicationVariants.configureEach {
-        val variant = this
-
-        // Define a new task to generate the asset files. Here the file is only
-        // copied, but you could do anything else instead.
-        val copyArtifactsTask =
-            tasks.register<Copy>(
-                "copy${
-                    variant.name.replaceFirstChar {
-                        if (it.isLowerCase()) {
-                            it.titlecase(Locale.getDefault())
-                        } else {
-                            it.toString()
-                        }
-                    }
-                }ArtifactList"
-            ) {
-                from(
-                    project.extensions.getByType(ReportingExtension::class.java)
-                        .file("licensee/${variant.name}/artifacts.json")
-                )
-                into(layout.buildDirectory.dir("generated/dependencyAssets/"))
-            }
-
-        // This dependency is only necessary if the asset generation depends on
-        // something else, the output of the licensee plugin in my case.
-        copyArtifactsTask.dependsOn(
-            "licensee${
-                variant.name.replaceFirstChar {
-                    if (it.isLowerCase()) {
-                        it.titlecase(Locale.getDefault())
-                    } else {
-                        it.toString()
-                    }
-                }
-            }"
-        )
-
-        // Add a dependency between the asset merging and our generation task.
-        // This is necessary to ensure that the assets are generated prior to
-        // the merging step.
-        tasks["merge${variant.name.capitalize()}Assets"].dependsOn(copyArtifactsTask)
     }
 }
 
