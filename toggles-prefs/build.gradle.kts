@@ -8,6 +8,10 @@ plugins {
 
 android {
     namespace = "se.eelde.toggles.prefs"
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
