@@ -8,6 +8,10 @@ plugins {
 
 android {
     namespace = "se.eelde.toggles.flow"
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
