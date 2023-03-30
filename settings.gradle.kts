@@ -1,5 +1,13 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+}
+
 plugins {
     id("com.gradle.enterprise") version "3.10.2"
     id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
@@ -17,7 +25,8 @@ buildCache {
 }
 
 rootProject.name = "Toggles"
-includeBuild("build-logic")
+includeBuild("build-logic/conventions")
+includeBuild("build-logic/licensee-asset-plugin")
 includeBuild("toggles-core")
 includeBuild("toggles-flow")
 includeBuild("toggles-flow-noop")

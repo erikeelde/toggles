@@ -151,7 +151,7 @@ com-google-firebase-firebase-encoders-json = "com.google.firebase:firebase-encod
 com-google-firebase-firebase-encoders-proto = "com.google.firebase:firebase-encoders-proto:16.0.0"
 com-google-firebase-firebase-measurement-connector = "com.google.firebase:firebase-measurement-connector:19.0.0"
 com-google-gms-google-services = "com.google.gms:google-services:4.3.15"
-com-slack-lint-compose-compose-lint-checks = "com.slack.lint.compose:compose-lint-checks:1.0.0"
+com-slack-lint-compose-compose-lint-checks = "com.slack.lint.compose:compose-lint-checks:1.1.1"
 com-squareup-curtains = "com.squareup.curtains:curtains:1.2.3"
 com-squareup-leakcanary-leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "com-squareup-leakcanary" }
 com-squareup-leakcanary-leakcanary-android-core = { module = "com.squareup.leakcanary:leakcanary-android-core", version.ref = "com-squareup-leakcanary" }

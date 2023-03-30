@@ -1,3 +1,5 @@
+package se.eelde.toggles.licenseeassetplugin
+
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import org.gradle.api.Plugin

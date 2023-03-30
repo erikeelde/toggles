@@ -4,9 +4,8 @@ plugins {
     id("com.gladed.androidgitversion") version "0.4.14"
     id("toggles.ownership-conventions")
     id("app.cash.licensee")
+    id("se.eelde.toggles.licenseeassetplugin")
 }
-
-apply<CopyLicenseeReportPlugin>()
 
 licensee {
     allow("Apache-2.0")

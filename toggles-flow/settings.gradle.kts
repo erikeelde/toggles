@@ -39,5 +39,5 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild("../build-logic")
+includeBuild("../build-logic/conventions")
 
