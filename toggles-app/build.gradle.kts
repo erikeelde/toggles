@@ -1,5 +1,6 @@
 import java.io.FileInputStream
 import java.util.Properties
+//import se.eelde.toggles.licenseeassetplugin.CopyLicenseeReportPlugin
 
 plugins {
     id("toggles.android.application-conventions")
@@ -10,9 +11,8 @@ plugins {
     id("com.gladed.androidgitversion") version "0.4.14"
     id("com.google.firebase.crashlytics")
     id("app.cash.licensee")
+    id("se.eelde.toggles.licenseeassetplugin")
 }
-
-apply<CopyLicenseeReportPlugin>()
 
 licensee {
     allow("Apache-2.0")

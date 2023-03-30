@@ -2,12 +2,6 @@ plugins {
     `kotlin-dsl`
 }
 
-repositories {
-    google()
-    mavenCentral()
-    gradlePluginPortal()
-}
-
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
