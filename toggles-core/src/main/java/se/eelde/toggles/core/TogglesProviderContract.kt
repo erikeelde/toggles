@@ -106,9 +106,9 @@ private fun Cursor.getLongOrNull(columnName: String): Long? {
 }
 
 object TogglesProviderContract {
-    private const val TOGGLES_AUTHORITY = BuildConfig.TOGGLES_AUTHORITY
+    private const val TOGGLES_AUTHORITY = "se.eelde.toggles.configprovider"
     private const val TOGGLES_API_VERSION_QUERY_PARAM = "API_VERSION"
-    private const val TOGGLES_API_VERSION = BuildConfig.TOGGLES_API_VERSION.toString()
+    private const val TOGGLES_API_VERSION = 1
 
     private val applicationUri = Uri.parse("content://$TOGGLES_AUTHORITY/application")
     private val configurationUri = Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
@@ -119,7 +119,7 @@ object TogglesProviderContract {
         return applicationUri
             .buildUpon()
             .appendPath(id.toString())
-            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
     }
 
@@ -128,7 +128,7 @@ object TogglesProviderContract {
         return configurationUri
             .buildUpon()
             .appendPath(id.toString())
-            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
     }
 
@@ -137,7 +137,7 @@ object TogglesProviderContract {
         return configurationUri
             .buildUpon()
             .appendPath(key)
-            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
     }
 
@@ -145,7 +145,7 @@ object TogglesProviderContract {
     fun toggleUri(): Uri {
         return configurationUri
             .buildUpon()
-            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
     }
 
@@ -153,7 +153,7 @@ object TogglesProviderContract {
     fun toggleValueUri(): Uri {
         return configurationValueUri
             .buildUpon()
-            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION)
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
     }
 }

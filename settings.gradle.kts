@@ -27,11 +27,31 @@ buildCache {
 rootProject.name = "Toggles"
 includeBuild("build-logic/conventions")
 includeBuild("build-logic/licensee-asset-plugin")
-includeBuild("toggles-core")
-includeBuild("toggles-flow")
-includeBuild("toggles-flow-noop")
-includeBuild("toggles-prefs")
-includeBuild("toggles-prefs-noop")
+includeBuild("toggles-core") {
+    dependencySubstitution {
+        substitute(module("se.eelde.toggles:toggles-core")).using(project(":"))
+    }
+}
+includeBuild("toggles-flow") {
+    dependencySubstitution {
+        substitute(module("se.eelde.toggles:toggles-flow")).using(project(":"))
+    }
+}
+includeBuild("toggles-flow-noop") {
+    dependencySubstitution {
+        substitute(module("se.eelde.toggles:toggles-flow-noop")).using(project(":"))
+    }
+}
+includeBuild("toggles-prefs") {
+    dependencySubstitution {
+        substitute(module("se.eelde.toggles:toggles-prefs")).using(project(":"))
+    }
+}
+includeBuild("toggles-prefs-noop") {
+    dependencySubstitution {
+        substitute(module("se.eelde.toggles:toggles-prefs-noop")).using(project(":"))
+    }
+}
 include(
     ":toggles-app",
     ":toggles-sample",
