@@ -40,4 +40,8 @@ dependencyResolutionManagement {
 }
 
 includeBuild("../build-logic/conventions")
-
+includeBuild("../toggles-core") {
+    dependencySubstitution {
+        substitute(module("se.eelde.toggles:toggles-core")).using(project(":"))
+    }
+}
