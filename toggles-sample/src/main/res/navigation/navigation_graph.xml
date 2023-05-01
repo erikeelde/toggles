@@ -5,11 +5,11 @@
 
     <fragment
         android:id="@+id/action_live_data"
-        android:name="com.example.wrench.livedataprefs.LiveDataPreferencesFragment"
+        android:name="com.example.toggles.livedataprefs.LiveDataPreferencesFragment"
         android:label="LiveDataPreferencesFragment" />
     <fragment
         android:id="@+id/action_wrench_prefs"
-        android:name="com.example.wrench.wrenchprefs.WrenchPreferencesFragment"
+        android:name="com.example.toggles.wrenchprefs.WrenchPreferencesFragment"
         android:label="WrenchPreferencesFragment" />
     <activity
         android:id="@+id/action_oss"

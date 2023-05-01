@@ -58,7 +58,6 @@ include(
     ":modules:compose-theme",
     ":modules:database",
     ":modules:applications",
-    ":modules:wrench-core",
     ":modules:oss",
 )
 

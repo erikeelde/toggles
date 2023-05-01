@@ -1,4 +1,4 @@
-package com.example.wrench.wrenchprefs
+package com.example.toggles.wrenchprefs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.wrench.databinding.FragmentWrenchPreferencesBinding
+import com.example.toggles.databinding.FragmentWrenchPreferencesBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
