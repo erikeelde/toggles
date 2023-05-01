@@ -18,16 +18,18 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @Composable
+@Suppress("LongParameterList")
 internal fun BooleanValueView(
     uiState: ViewState,
     popBackStack: () -> Unit,
     setBooleanValue: (Boolean) -> Unit,
     revert: suspend () -> Unit,
     save: suspend () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
 
-    Surface(modifier = Modifier.padding(16.dp)) {
+    Surface(modifier = modifier) {
         Column {
             Text(
                 modifier = Modifier.padding(8.dp),

@@ -27,9 +27,9 @@ fun StringValueViewPreview() {
             state = ViewState(title = "The title", stringValue = "This is value"),
             setStringValue = {},
             save = {},
-            revert = {}
-        ) {
-        }
+            revert = {},
+            popBackStack = {},
+        )
     }
 }
 
@@ -42,10 +42,11 @@ internal fun StringValueView(
     save: suspend () -> Unit,
     revert: suspend () -> Unit,
     popBackStack: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
 
-    Surface(modifier = Modifier.padding(16.dp)) {
+    Surface(modifier = modifier) {
         Column {
             Text(
                 modifier = Modifier.padding(8.dp),

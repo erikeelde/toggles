@@ -4,43 +4,17 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -50,10 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import se.eelde.toggles.applications.applicationNavigations
-import se.eelde.toggles.composetheme.AppBarState
-import se.eelde.toggles.composetheme.AppState
 import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.composetheme.rememberAppState
 import se.eelde.toggles.configurationlist.configurationsNavigations
@@ -68,27 +39,27 @@ import se.eelde.toggles.dialogs.stringvalue.StringValueView
 import se.eelde.toggles.help.HelpView
 import se.eelde.toggles.oss.OssView
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongMethod")
 @Composable
 fun Navigation(
     navController: NavHostController,
-    @Suppress("UNUSED_PARAMETER") appState: AppState,
-    paddingValues: PaddingValues,
-    @Suppress("UNUSED_PARAMETER") appBarState: AppBarState,
-    onComposing: (AppBarState) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     NavHost(
-        modifier = Modifier.padding(paddingValues),
         navController = navController,
-        startDestination = "applications"
+        startDestination = "applications",
+        modifier = modifier
     ) {
         applicationNavigations(
-            onComposing = onComposing,
             navigateToConfigurations = { applicationId ->
                 navController.navigate("configurations/$applicationId")
-            }
+            },
+            navigateToApplications = { navController.navigate("applications") },
+            navigateToOss = { navController.navigate("oss") },
+            navigateToHelp = { navController.navigate("help") },
         )
-        configurationsNavigations(navController, onComposing)
+        configurationsNavigations(navController, back = { navController.popBackStack() })
         composable(
             "configuration/{configurationId}/{scopeId}/boolean",
             arguments = listOf(
@@ -99,25 +70,37 @@ fun Navigation(
             val viewModel: FragmentBooleanValueViewModel = hiltViewModel()
             val state = viewModel.state.collectAsStateWithLifecycle().value
 
-            LaunchedEffect(key1 = true) {
-                onComposing(
-                    AppBarState(title = "")
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text("") },
+                        navigationIcon =
+                        {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                },
+            ) { paddingValues ->
+                BooleanValueView(
+                    uiState = state,
+                    popBackStack = { navController.popBackStack() },
+                    revert = {
+                        viewModel.revertClick()
+                        navController.popBackStack()
+                    },
+                    save = {
+                        viewModel.saveClick()
+                        navController.popBackStack()
+                    },
+                    setBooleanValue = { viewModel.checkedChanged(it) },
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
-
-            BooleanValueView(
-                uiState = state,
-                popBackStack = { navController.popBackStack() },
-                revert = {
-                    viewModel.revertClick()
-                    navController.popBackStack()
-                },
-                save = {
-                    viewModel.saveClick()
-                    navController.popBackStack()
-                },
-                setBooleanValue = { viewModel.checkedChanged(it) },
-            )
         }
         composable(
             "configuration/{configurationId}/{scopeId}/integer",
@@ -129,18 +112,31 @@ fun Navigation(
             val viewModel: FragmentIntegerValueViewModel = hiltViewModel()
             val state = viewModel.state.collectAsStateWithLifecycle().value
 
-            LaunchedEffect(key1 = true) {
-                onComposing(
-                    AppBarState(title = "")
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text("") },
+                        navigationIcon =
+                        {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                },
+            ) { paddingValues ->
+                IntegerValueView(
+                    uiState = state,
+                    popBackStack = { navController.popBackStack() },
+                    revert = { viewModel.revertClick() },
+                    save = { viewModel.saveClick() },
+                    setIntegerValue = { viewModel.setIntegerValue(it) },
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
-            IntegerValueView(
-                uiState = state,
-                popBackStack = { navController.popBackStack() },
-                revert = { viewModel.revertClick() },
-                save = { viewModel.saveClick() },
-                setIntegerValue = { viewModel.setIntegerValue(it) }
-            )
         }
         composable(
             "configuration/{configurationId}/{scopeId}/string",
@@ -152,18 +148,31 @@ fun Navigation(
             val viewModel: FragmentStringValueViewModel = hiltViewModel()
             val state = viewModel.state.collectAsStateWithLifecycle().value
 
-            LaunchedEffect(key1 = true) {
-                onComposing(
-                    AppBarState(title = "")
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text("") },
+                        navigationIcon =
+                        {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                },
+            ) { paddingValues ->
+                StringValueView(
+                    state = state,
+                    popBackStack = { navController.popBackStack() },
+                    revert = { viewModel.revertClick() },
+                    save = { viewModel.saveClick() },
+                    setStringValue = { viewModel.setStringValue(it) },
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
-            StringValueView(
-                state = state,
-                popBackStack = { navController.popBackStack() },
-                revert = { viewModel.revertClick() },
-                save = { viewModel.saveClick() },
-                setStringValue = { viewModel.setStringValue(it) }
-            )
         }
         composable(
             "configuration/{configurationId}/{scopeId}/enum",
@@ -174,39 +183,74 @@ fun Navigation(
         ) {
             val viewModel: FragmentEnumValueViewModel = hiltViewModel()
             val state = viewModel.state.collectAsStateWithLifecycle().value
-
-            LaunchedEffect(key1 = true) {
-                onComposing(
-                    AppBarState(title = "")
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text("") },
+                        navigationIcon =
+                        {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                },
+            ) { paddingValues ->
+                EnumValueView(
+                    state = state,
+                    popBackStack = { navController.popBackStack() },
+                    revert = { viewModel.revertClick() },
+                    setEnumValue = { viewModel.saveClick(it) },
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
-
-            EnumValueView(
-                state = state,
-                popBackStack = { navController.popBackStack() },
-                revert = { viewModel.revertClick() },
-                setEnumValue = { viewModel.saveClick(it) }
-            )
         }
         composable(
             "oss",
         ) {
-            LaunchedEffect(key1 = true) {
-                onComposing(
-                    AppBarState(title = "Oss")
-                )
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text("") },
+                        navigationIcon =
+                        {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                },
+            ) { paddingValues ->
+                OssView(modifier = Modifier.padding(paddingValues))
             }
-            OssView()
         }
         composable(
             "help",
         ) {
-            LaunchedEffect(key1 = true) {
-                onComposing(
-                    AppBarState(title = "Help")
-                )
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text("") },
+                        navigationIcon =
+                        {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                },
+            ) { paddingValues ->
+                HelpView(modifier = Modifier.padding(paddingValues))
             }
-            HelpView()
         }
     }
 }
@@ -214,7 +258,6 @@ fun Navigation(
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -223,123 +266,9 @@ class MainActivity : ComponentActivity() {
                 val navController: NavHostController = rememberNavController()
                 val appState = rememberAppState(navController)
                 Log.e("appState", "current destination: ${appState.currentDestination}")
-                var appBarState by remember {
-                    mutableStateOf(AppBarState())
-                }
 
-                val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
-                ModalNavigationDrawer(
-                    drawerState = drawerState,
-                    gesturesEnabled = appState.isRootDestination,
-                    drawerContent = { TogglesDrawer(navController, drawerState) }
-                ) {
-                    Scaffold(
-                        topBar = {
-                            TogglesAppBar(drawerState, appState, appBarState)
-                        },
-                    ) { paddingValues ->
-                        Navigation(
-                            navController = navController,
-                            appState = appState,
-                            appBarState = appBarState,
-                            paddingValues = paddingValues,
-                            onComposing = { appBarState = it },
-                        )
-                    }
-                }
+                Navigation(navController = navController)
             }
         }
-    }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun TogglesAppBar(drawerState: DrawerState, appState: AppState, appBarState: AppBarState) {
-    val scope = rememberCoroutineScope()
-
-    TopAppBar(
-        title = { Text(appBarState.title) },
-        actions = { appBarState.actions?.invoke(this) },
-        navigationIcon = if (appState.isRootDestination) {
-            {
-                IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                    Icon(imageVector = Icons.Filled.Menu, contentDescription = null)
-                }
-            }
-        } else {
-            {
-                IconButton(onClick = { appState.navigateUp() }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
-                }
-            }
-        }
-    )
-}
-
-@ExperimentalMaterial3Api
-@Composable
-@Suppress("LongMethod")
-fun TogglesDrawer(navController: NavHostController, drawerState: DrawerState) {
-    // https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#ModalNavigationDrawer(kotlin.Function0,androidx.compose.ui.Modifier,androidx.compose.material3.DrawerState,kotlin.Boolean,androidx.compose.ui.graphics.Color,kotlin.Function0)
-    val scope = rememberCoroutineScope()
-    val selectedItem = remember { mutableStateOf(0) }
-    ModalDrawerSheet {
-        Spacer(Modifier.height(12.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Image(
-                modifier = Modifier.background(colorResource(id = R.color.toggles_blue)),
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "Application icon"
-            )
-        }
-        Spacer(Modifier.height(12.dp))
-        NavigationDrawerItem(
-            icon = {
-                Icon(
-                    painterResource(id = R.drawable.ic_settings_white_24dp),
-                    contentDescription = null
-                )
-            },
-            label = { Text(stringResource(id = R.string.applications)) },
-            selected = 0 == selectedItem.value,
-            onClick = {
-                scope.launch { drawerState.close() }
-                navController.navigate("applications")
-                selectedItem.value = 0
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-        NavigationDrawerItem(
-            icon = { Icon(painterResource(id = R.drawable.ic_oss), contentDescription = null) },
-            label = { Text(stringResource(id = R.string.oss)) },
-            selected = 1 == selectedItem.value,
-            onClick = {
-                scope.launch { drawerState.close() }
-                navController.navigate("oss")
-                selectedItem.value = 1
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-        NavigationDrawerItem(
-            icon = {
-                Icon(
-                    painterResource(id = R.drawable.ic_report_black_24dp),
-                    contentDescription = null
-                )
-            },
-            label = { Text(stringResource(id = R.string.help)) },
-            selected = 2 == selectedItem.value,
-            onClick = {
-                scope.launch { drawerState.close() }
-                navController.navigate("help")
-                selectedItem.value = 2
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
     }
 }

@@ -1,11 +1,16 @@
 package se.eelde.toggles.configurationlist
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Cyclone
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -13,11 +18,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import se.eelde.toggles.composetheme.AppBarState
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.configurationsNavigations(
     navController: NavController,
-    onComposing: (AppBarState) -> Unit,
+    back: () -> Unit,
 ) {
     composable(
         "configurations/{applicationId}",
@@ -26,10 +31,16 @@ fun NavGraphBuilder.configurationsNavigations(
         val viewModel: ConfigurationViewModel = hiltViewModel()
         val uiState = viewModel.state.collectAsStateWithLifecycle()
 
-        LaunchedEffect(key1 = uiState.value.application?.applicationLabel) {
-            onComposing(
-                AppBarState(
-                    title = "${uiState.value.application?.applicationLabel}",
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { uiState.value.application?.applicationLabel },
+                    navigationIcon =
+                    {
+                        IconButton(onClick = { back() }) {
+                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                        }
+                    },
                     actions = {
                         IconButton(onClick = {
                             viewModel.restartApplication(uiState.value.application!!)
@@ -49,12 +60,13 @@ fun NavGraphBuilder.configurationsNavigations(
                         }
                     }
                 )
+            },
+        ) { paddingValues ->
+            ConfigurationListView(
+                navController = navController,
+                uiState = uiState,
+                modifier = Modifier.padding(paddingValues),
             )
         }
-
-        ConfigurationListView(
-            navController = navController,
-            uiState = uiState,
-        )
     }
 }
