@@ -12,8 +12,6 @@
     <string name="application_icon">Application icon</string>
     <string name="toggles_permission_label">Access Toggles</string>
     <string name="toggles_permission_description">Access to request configuration from Toggles</string>
-    <string name="help">Help</string>
-    <string name="oss">Open source</string>
 
     <string name="help_implementation_title">Implementation</string>
     <string name="save">save</string>

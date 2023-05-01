@@ -16,6 +16,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -36,18 +37,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun OssView() {
-    OssView(viewModel = hiltViewModel())
+fun OssView(modifier: Modifier = Modifier) {
+    OssView(viewModel = hiltViewModel(), modifier = modifier)
 }
 
 @Composable
-fun OssView(viewModel: OssProjectViewModel) {
+fun OssView(viewModel: OssProjectViewModel, modifier: Modifier = Modifier) {
     val uiState = viewModel.uiState.collectAsState()
-
-    when (val state = uiState.value.loadingState) {
-        is State.Failed -> ErrorView(stringResource(id = R.string.error))
-        is State.Loading -> LoadingView(stringResource(id = R.string.loading))
-        is State.Success -> OssView(state.data)
+    Surface(modifier = modifier) {
+        when (val state = uiState.value.loadingState) {
+            is State.Failed -> ErrorView(stringResource(id = R.string.error))
+            is State.Loading -> LoadingView(stringResource(id = R.string.loading))
+            is State.Success -> OssView(state.data)
+        }
     }
 }
 

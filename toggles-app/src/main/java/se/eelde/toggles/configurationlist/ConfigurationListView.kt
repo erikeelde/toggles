@@ -29,8 +29,9 @@ import se.eelde.toggles.database.WrenchScope
 internal fun ConfigurationListView(
     navController: NavController,
     uiState: State<ViewState>,
+    modifier: Modifier = Modifier,
 ) {
-    Surface(modifier = Modifier.padding(16.dp)) {
+    Surface(modifier = modifier) {
         LazyColumn {
             uiState.value.configurations.forEach { configuration ->
                 val defaultScope =

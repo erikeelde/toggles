@@ -26,24 +26,26 @@ fun IntegerValueViewPreview() {
     IntegerValueView(
         uiState = ViewState(title = "Integer value", integerValue = 5, saving = false, reverting = false),
         popBackStack = {},
-        save = {},
         revert = {},
-        setIntegerValue = {}
+        save = {},
+        setIntegerValue = {},
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("LongParameterList")
 internal fun IntegerValueView(
     uiState: ViewState,
     popBackStack: () -> Unit,
     revert: suspend () -> Unit,
     save: suspend () -> Unit,
-    setIntegerValue: (value: Int) -> Unit
+    setIntegerValue: (value: Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
 
-    Surface(modifier = Modifier.padding(16.dp)) {
+    Surface(modifier = modifier) {
         Column {
             Text(
                 modifier = Modifier.padding(8.dp),
