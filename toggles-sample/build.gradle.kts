@@ -15,8 +15,6 @@ licensee {
 
     // try remove or ping developer later
     // allowUrl("http://www.opensource.org/licenses/mit-license.php")
-    // try remove or ping developer later
-    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")
 }
 
 androidGitVersion {
@@ -45,7 +43,7 @@ android {
             applicationIdSuffix = ".debug"
         }
     }
-    namespace = "com.example.wrench"
+    namespace = "com.example.toggles"
 }
 
 dependencies {

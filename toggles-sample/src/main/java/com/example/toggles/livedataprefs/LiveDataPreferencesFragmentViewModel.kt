@@ -1,12 +1,12 @@
-package com.example.wrench.livedataprefs
+package com.example.toggles.livedataprefs
 
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.wrench.MyEnum
-import com.example.wrench.R
+import com.example.toggles.MyEnum
+import com.example.toggles.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import se.eelde.toggles.flow.TogglesImpl

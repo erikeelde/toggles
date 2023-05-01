@@ -3,14 +3,10 @@ package se.eelde.toggles.provider
 import android.app.Application
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.work.Configuration
-import androidx.work.testing.SynchronousExecutor
-import androidx.work.testing.WorkManagerTestInitHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -73,13 +69,6 @@ class TogglesProviderTest {
             context.applicationInfo.packageName,
             appIcon
         )
-
-        val config = Configuration.Builder()
-            .setMinimumLoggingLevel(Log.DEBUG)
-            .setExecutor(SynchronousExecutor())
-            .build()
-
-        WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
     }
 
     @Test

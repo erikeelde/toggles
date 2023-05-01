@@ -1,11 +1,11 @@
-package com.example.wrench.wrenchprefs
+package com.example.toggles.wrenchprefs
 
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.wrench.MyEnum
-import com.example.wrench.R
+import com.example.toggles.MyEnum
+import com.example.toggles.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -3,11 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <permission
-        android:name="${wrenchPermission}"
-        android:description="@string/wrench_permission_description"
-        android:label="@string/wrench_permission_label"
-        android:protectionLevel="normal" />
-    <permission
         android:name="${togglesPermission}"
         android:description="@string/toggles_permission_description"
         android:label="@string/toggles_permission_label"
@@ -39,33 +34,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity-alias
-            android:name="com.izettle.wrench.MainActivity"
-            android:targetActivity="se.eelde.toggles.MainActivity" />
 
-        <provider
-            android:name="com.izettle.wrench.provider.WrenchProvider"
-            android:authorities="${wrenchAuthority}"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedContentProvider" />
         <provider
             android:name=".provider.TogglesProvider"
             android:authorities="${togglesAuthority}"
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            android:exported="false"
-            tools:node="merge">
-            <!-- If you are using androidx.startup to initialize other components -->
-            <meta-data
-                android:name="androidx.work.WorkManagerInitializer"
-                android:value="androidx.startup"
-                tools:node="remove" />
-        </provider>
     </application>
 
 </manifest>

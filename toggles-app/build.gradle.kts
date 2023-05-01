@@ -22,8 +22,6 @@ licensee {
 
     // try remove or ping developer later
     // allowUrl("http://www.opensource.org/licenses/mit-license.php")
-    // try remove or ping developer later
-    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")
 }
 
 androidGitVersion {
@@ -66,13 +64,9 @@ android {
 
         vectorDrawables.useSupportLibrary = true
 
-        val wrenchAuthority = "com.izettle.wrench.configprovider"
-        val wrenchPermission = "com.izettle.wrench.permission"
         val togglesAuthority = "se.eelde.toggles.configprovider"
         val togglesPermission = "se.eelde.toggles.provider_permission"
 
-        manifestPlaceholders["wrenchAuthority"] = wrenchAuthority
-        manifestPlaceholders["wrenchPermission"] = wrenchPermission
         manifestPlaceholders["togglesAuthority"] = togglesAuthority
         manifestPlaceholders["togglesPermission"] = togglesPermission
 
@@ -129,7 +123,6 @@ dependencies {
     testImplementation(libs.org.robolectric)
     testImplementation(libs.androidx.test.espresso.espresso.core)
     testImplementation(libs.androidx.arch.core.core.testing)
-    testImplementation(libs.androidx.work.work.testing)
 
     implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
     implementation(platform(libs.com.google.firebase.firebase.bom))
@@ -139,7 +132,6 @@ dependencies {
     implementation(libs.com.google.dagger.hilt.android)
     kapt(libs.com.google.dagger.hilt.android.compiler)
     kapt(libs.androidx.hilt.hilt.compiler)
-    implementation(libs.androidx.hilt.hilt.work)
 
     testImplementation(libs.com.google.dagger.hilt.android.testing)
     kaptTest(libs.com.google.dagger.hilt.android.compiler)
@@ -164,10 +156,6 @@ dependencies {
 
     implementation(libs.androidx.paging.paging.runtime.ktx)
 
-    implementation(projects.modules.wrenchCore)
-//    implementation(project(":toggles-core"))
-//    implementation(project(":toggles-prefs"))
-//    implementation(project(":toggles-flow"))
     implementation(libs.se.eelde.toggles.toggles.core)
     implementation(libs.se.eelde.toggles.toggles.flow)
     implementation(libs.se.eelde.toggles.toggles.prefs)
@@ -175,7 +163,6 @@ dependencies {
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 
     implementation(libs.androidx.core.core.ktx)
-    implementation(libs.androidx.work.work.runtime.ktx)
     // https://mvnrepository.com/artifact/com.squareup.okio/okio
     implementation(libs.com.squareup.okio)
 

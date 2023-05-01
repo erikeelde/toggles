@@ -1,4 +1,4 @@
-package com.example.wrench.di
+package com.example.toggles.di
 
 import android.app.Application
 import dagger.Module
