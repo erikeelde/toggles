@@ -123,7 +123,7 @@ androidx-viewpager = "androidx.viewpager:viewpager:1.0.0"
 androidx-work-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 androidx-work-work-testing = { module = "androidx.work:work-testing", version.ref = "androidx-work" }
 app-cash-licensee-licensee-gradle-plugin = "app.cash.licensee:licensee-gradle-plugin:1.6.0"
-com-android-tools-build-gradle = "com.android.tools.build:gradle:8.1.0-beta01"
+com-android-tools-build-gradle = "com.android.tools.build:gradle:8.1.0-beta02"
 com-google-android-datatransport-transport-api = "com.google.android.datatransport:transport-api:3.0.0"
 com-google-android-gms-play-services-ads-identifier = "com.google.android.gms:play-services-ads-identifier:18.0.0"
 com-google-android-gms-play-services-basement = "com.google.android.gms:play-services-basement:18.1.0"
