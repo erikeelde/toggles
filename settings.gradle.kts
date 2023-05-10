@@ -26,7 +26,6 @@ buildCache {
 
 rootProject.name = "Toggles"
 includeBuild("build-logic/conventions")
-includeBuild("build-logic/licensee-asset-plugin")
 includeBuild("toggles-core") {
     dependencySubstitution {
         substitute(module("se.eelde.toggles:toggles-core")).using(project(":"))

@@ -32,7 +32,7 @@ sealed class OssViewEffect {
 
 @HiltViewModel
 class OssProjectViewModel @Inject constructor(
-    licenseParser: LicenceParser,
+    licenseParser: LicenceProvider,
 ) : ViewModel() {
 
     private val _state =
@@ -45,7 +45,7 @@ class OssProjectViewModel @Inject constructor(
         _state.value = reduce(
             _state.value,
             OssViewEffect.Loaded(
-                licenseParser.parse().map {
+                licenseParser.licences().map {
                     val licenses = it.spdxLicenses.orEmpty()
                         .map { spdx -> License(spdx.name, spdx.url) } +
                         it.unknownLicenses.orEmpty()
