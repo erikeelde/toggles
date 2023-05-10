@@ -4,7 +4,7 @@ plugins {
     id("com.gladed.androidgitversion") version "0.4.14"
     id("toggles.ownership-conventions")
     id("app.cash.licensee")
-    id("se.eelde.toggles.licenseeassetplugin")
+    id("se.premex.gross") version "0.1.0"
 }
 
 licensee {

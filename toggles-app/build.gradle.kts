@@ -11,7 +11,7 @@ plugins {
     id("com.gladed.androidgitversion") version "0.4.14"
     id("com.google.firebase.crashlytics")
     id("app.cash.licensee")
-    id("se.eelde.toggles.licenseeassetplugin")
+    id("se.premex.gross") version "0.1.0"
 }
 
 licensee {
