@@ -47,7 +47,7 @@ fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewMod
                                         navController.popBackStack()
                                     }
                                 },
-                                headlineText = { Text(text = it.name) }
+                                headlineContent = { Text(text = it.name) }
                             )
                         }
                     }

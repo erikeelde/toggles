@@ -2,6 +2,8 @@ package se.eelde.toggles.oss
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -13,7 +15,7 @@ sealed class State<T> {
 }
 
 data class OssViewState(
-    val loadingState: State<List<ViewData>> = State.Loading(),
+    val loadingState: State<ImmutableList<ViewData>> = State.Loading(),
 )
 
 data class ViewData(
@@ -27,7 +29,7 @@ data class License(
 )
 
 sealed class OssViewEffect {
-    data class Loaded(val viewdData: List<ViewData>) : OssViewEffect()
+    data class Loaded(val viewdData: ImmutableList<ViewData>) : OssViewEffect()
 }
 
 @HiltViewModel
@@ -56,7 +58,7 @@ class OssProjectViewModel @Inject constructor(
                         nameOrPackage,
                         licenses
                     )
-                }.sortedBy { it.title }
+                }.sortedBy { it.title }.toPersistentList()
             )
         )
     }

@@ -35,6 +35,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun OssView(modifier: Modifier = Modifier) {
@@ -55,10 +58,10 @@ fun OssView(viewModel: OssProjectViewModel, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OssView(artifacts: List<ViewData>) {
+fun OssView(artifacts: ImmutableList<ViewData>) {
     val licenses: SnapshotStateList<License> = remember { mutableStateListOf() }
     var alertTitle by remember { mutableStateOf("") }
-    LicenseSelector(alertTitle, licenses) {
+    LicenseSelector(alertTitle, licenses.toPersistentList()) {
         licenses.clear()
     }
 
@@ -92,7 +95,7 @@ fun OssView(artifacts: List<ViewData>) {
             }
             items(list) { artifact ->
                 ListItem(
-                    headlineText = {
+                    headlineContent = {
                         Text(text = artifact.title)
                     },
                     modifier = Modifier.clickable {
@@ -122,14 +125,14 @@ fun CharacterHeader(initial: String) {
 @Composable
 fun LicenseSelectorPreview() {
     Column(Modifier.fillMaxSize()) {
-        LicenseSelector("Licenses", listOf(License("aaa", "http://google.se"))) {
+        LicenseSelector("Licenses", persistentListOf(License("aaa", "http://google.se"))) {
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LicenseSelector(title: String, licenses: List<License>, close: () -> Unit) {
+fun LicenseSelector(title: String, licenses: ImmutableList<License>, close: () -> Unit) {
     val uriHandler = LocalUriHandler.current
 
     if (licenses.isNotEmpty()) {
@@ -144,7 +147,7 @@ fun LicenseSelector(title: String, licenses: List<License>, close: () -> Unit) {
                 Column {
                     licenses.forEach { license ->
                         ListItem(
-                            headlineText = {
+                            headlineContent = {
                                 Text(text = license.title)
                             },
                             leadingContent = {
