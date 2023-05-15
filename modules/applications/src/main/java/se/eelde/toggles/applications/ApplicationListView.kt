@@ -104,8 +104,8 @@ internal fun ApplicationListView(
                                     )
                                 }
                             },
-                            headlineText = { Text(application.applicationLabel) },
-                            supportingText = { Text(secondaryText) },
+                            headlineContent = { Text(application.applicationLabel) },
+                            supportingContent = { Text(secondaryText) },
                             modifier = Modifier.clickable {
                                 navigateToConfigurations(application.id)
                             }

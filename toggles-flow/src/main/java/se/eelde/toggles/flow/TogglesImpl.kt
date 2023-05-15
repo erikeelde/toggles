@@ -6,6 +6,7 @@ import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
 import android.os.Handler
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -161,6 +162,14 @@ class TogglesImpl(context: Context) : Toggles {
                     return@withContext null
                 }
                 if (cursor.moveToFirst()) {
+
+                    val mutableList = mutableListOf<Toggle>()
+                    while(cursor.moveToNext()) {
+                        mutableList.add(fromCursor(cursor))
+                    }
+                    Log.w("TogglesImpl", mutableList.toString())
+
+                    cursor.moveToFirst()
                     return@withContext fromCursor(cursor)
                 }
             } finally {

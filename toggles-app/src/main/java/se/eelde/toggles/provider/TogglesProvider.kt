@@ -34,11 +34,11 @@ import java.util.Date
 
 class TogglesProvider : ContentProvider() {
 
-    val applicationDao: WrenchApplicationDao by lazy {
+    private val applicationDao: WrenchApplicationDao by lazy {
         applicationEntryPoint.provideWrenchApplicationDao()
     }
 
-    val scopeDao: WrenchScopeDao by lazy {
+    private val scopeDao: WrenchScopeDao by lazy {
         applicationEntryPoint.provideWrenchScopeDao()
     }
 
@@ -135,14 +135,21 @@ class TogglesProvider : ContentProvider() {
 
             CURRENT_CONFIGURATION_KEY -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
+                val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
+                cursor = configurationDao.getToggle(
+                    uri.lastPathSegment!!,
+                    listOf(scope!!.id, defaultScope!!.id)
+                )
 
-                if (cursor.count == 0) {
-                    cursor.close()
-
-                    val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
-                }
+//                val scope = getSelectedScope(context, scopeDao, callingApplication.id)
+//                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
+//
+//                if (cursor.count == 0) {
+//                    cursor.close()
+//
+//                    val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
+//                    cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
+//                }
             }
 
             else -> {
@@ -394,7 +401,7 @@ class TogglesProvider : ContentProvider() {
                     if (strictApiVersion) {
                         throw IllegalArgumentException(
                             "This content provider requires you to provide a " +
-                                "valid api-version in a queryParameter"
+                                    "valid api-version in a queryParameter"
                         )
                     }
                 }

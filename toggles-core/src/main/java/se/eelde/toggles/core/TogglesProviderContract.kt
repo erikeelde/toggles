@@ -47,7 +47,8 @@ data class Toggle(
     var id: Long = 0,
     @ToggleType val type: String,
     val key: String = "",
-    val value: String? = null
+    val value: String? = null,
+    val scope: String? = null,
 ) {
 
     fun toContentValues() = ContentValues().apply {
@@ -85,7 +86,8 @@ data class Toggle(
                 id = cursor.getLongOrThrow(ColumnNames.Toggle.COL_ID),
                 type = cursor.getStringOrThrow(ColumnNames.Toggle.COL_TYPE),
                 key = cursor.getStringOrThrow(ColumnNames.Toggle.COL_KEY),
-                value = cursor.getStringOrNull(ColumnNames.Toggle.COL_VALUE)
+                value = cursor.getStringOrNull(ColumnNames.Toggle.COL_VALUE),
+                scope = cursor.getStringOrNull("scope"),
             )
         }
     }

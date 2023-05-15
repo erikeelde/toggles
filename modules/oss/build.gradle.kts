@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.ui.tooling)
     implementation(libs.androidx.compose.runtime.runtime.livedata)
     implementation(libs.androidx.compose.ui.ui.text)
+    implementation(libs.org.jetbrains.kotlinx.kotlinx.collections.immutable)
 
     implementation(libs.androidx.navigation.navigation.compose)
 

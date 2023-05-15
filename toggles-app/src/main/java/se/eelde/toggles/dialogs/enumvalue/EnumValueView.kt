@@ -47,7 +47,7 @@ internal fun EnumValueView(
                                     popBackStack()
                                 }
                             },
-                            headlineText = { Text(text = wrenchPredefinedConfigurationValue.value.toString()) }
+                            headlineContent = { Text(text = wrenchPredefinedConfigurationValue.value.toString()) }
                         )
                     }
                 }
