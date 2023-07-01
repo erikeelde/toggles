@@ -1,4 +1,5 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 pluginManagement {
     repositories {
@@ -9,7 +10,7 @@ pluginManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.10.2"
+    id("com.gradle.enterprise") version "3.13.4"
     id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
 }
 
