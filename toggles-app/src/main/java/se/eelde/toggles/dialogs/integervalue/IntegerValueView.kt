@@ -32,7 +32,6 @@ fun IntegerValueViewPreview() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Suppress("LongParameterList")
 internal fun IntegerValueView(

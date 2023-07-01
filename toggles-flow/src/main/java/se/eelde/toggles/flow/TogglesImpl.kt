@@ -27,7 +27,6 @@ class TogglesImpl(context: Context) : Toggles {
     private val context = context.applicationContext
     private val contentResolver = this.context.contentResolver
 
-    @ExperimentalCoroutinesApi
     override fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> =
         providerToggleFlow(context, Toggle.TYPE.BOOLEAN, key)
             .map { toggle ->
@@ -45,7 +44,6 @@ class TogglesImpl(context: Context) : Toggles {
                 }
             }
 
-    @ExperimentalCoroutinesApi
     override fun toggle(key: String, defaultValue: Int): Flow<Int> =
         providerToggleFlow(context, Toggle.TYPE.INTEGER, key)
             .map { toggle ->
@@ -63,7 +61,6 @@ class TogglesImpl(context: Context) : Toggles {
                 }
             }
 
-    @ExperimentalCoroutinesApi
     override fun toggle(key: String, defaultValue: String): Flow<String> =
         providerToggleFlow(context, Toggle.TYPE.STRING, key)
             .map { toggle ->
@@ -114,7 +111,6 @@ class TogglesImpl(context: Context) : Toggles {
                 }
             }
 
-    @ExperimentalCoroutinesApi
     private fun providerToggleFlow(
         context: Context,
         @ToggleType type: String,

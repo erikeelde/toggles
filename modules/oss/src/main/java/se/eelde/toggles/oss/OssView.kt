@@ -56,7 +56,6 @@ fun OssView(viewModel: OssProjectViewModel, modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OssView(artifacts: ImmutableList<ViewData>) {
     val licenses: SnapshotStateList<License> = remember { mutableStateListOf() }
@@ -130,7 +129,6 @@ fun LicenseSelectorPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LicenseSelector(title: String, licenses: ImmutableList<License>, close: () -> Unit) {
     val uriHandler = LocalUriHandler.current

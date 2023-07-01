@@ -65,7 +65,6 @@ internal fun ApplicationEmptyView(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ApplicationListView(
     viewState: ViewState,
