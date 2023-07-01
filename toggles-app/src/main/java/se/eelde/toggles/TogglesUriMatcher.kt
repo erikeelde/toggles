@@ -8,7 +8,7 @@ class TogglesUriMatcher private constructor() {
         internal const val CURRENT_CONFIGURATION_KEY = 2
         internal const val CURRENT_CONFIGURATIONS = 3
         internal const val PREDEFINED_CONFIGURATION_VALUES = 5
-        internal const val APPLICATION_ID = 6
+        private const val APPLICATION_ID = 6
 
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
