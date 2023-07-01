@@ -1,6 +1,5 @@
 package se.eelde.toggles.database
 
-import android.text.TextUtils
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -47,7 +46,7 @@ data class WrenchScope constructor(
         fun newWrenchScope() = WrenchScope(0, 0, SCOPE_DEFAULT, Date())
 
         fun isDefaultScope(scope: WrenchScope): Boolean {
-            return TextUtils.equals(WrenchScope.SCOPE_DEFAULT, scope.name)
+            return SCOPE_DEFAULT == scope.name
         }
     }
 }

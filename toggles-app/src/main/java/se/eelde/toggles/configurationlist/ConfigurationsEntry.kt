@@ -1,10 +1,16 @@
 package se.eelde.toggles.configurationlist
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Cyclone
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +37,9 @@ fun NavGraphBuilder.configurationsNavigations(
         val viewModel: ConfigurationViewModel = hiltViewModel()
         val uiState = viewModel.state.collectAsStateWithLifecycle()
 
+        val launcher =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
+
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -47,6 +56,23 @@ fun NavGraphBuilder.configurationsNavigations(
                         }) {
                             Icon(
                                 imageVector = Icons.Outlined.Cyclone,
+                                contentDescription = null
+                            )
+                        }
+                        IconButton(onClick = {
+                            launcher.launch(
+                                Intent(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.fromParts(
+                                        "package",
+                                        uiState.value.application!!.packageName,
+                                        null
+                                    )
+                                )
+                            )
+                        }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Info,
                                 contentDescription = null
                             )
                         }
