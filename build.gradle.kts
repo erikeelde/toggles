@@ -1,4 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import java.util.Locale
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
@@ -21,14 +22,15 @@ buildscript {
 plugins {
     alias(libs.plugins.com.github.ben.manes.versions)
     alias(libs.plugins.nl.littlerobots.version.catalog.update)
-    // id("se.eelde.build-optimizations") version "0.2.0"
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
     alias(libs.plugins.com.github.triplet.play) apply (false)
     id("toggles.ownership-conventions")
 }
 
 fun isNonStable(version: String): Boolean {
-    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any {
+        version.uppercase(Locale.getDefault()).contains(it)
+    }
     val regex = "^[0-9,.v-]+(-r)?$".toRegex()
     val isStable = stableKeyword || regex.matches(version)
     return isStable.not()
