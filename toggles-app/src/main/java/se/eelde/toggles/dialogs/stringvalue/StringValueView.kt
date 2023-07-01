@@ -33,7 +33,6 @@ fun StringValueViewPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Suppress("LongParameterList")
 internal fun StringValueView(

@@ -21,7 +21,6 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import se.eelde.toggles.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewModel) {
     val uiState = viewModel.state.collectAsStateWithLifecycle()
