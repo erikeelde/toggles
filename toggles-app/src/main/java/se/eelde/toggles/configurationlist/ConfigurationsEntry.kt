@@ -25,6 +25,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 
+@Suppress("LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.configurationsNavigations(
     navController: NavController,

@@ -144,7 +144,6 @@ class TogglesProvider : ContentProvider() {
                         uri.lastPathSegment!!,
                         listOf(scope!!.id, defaultScope!!.id)
                     )
-
                 } else {
                     val scope = getSelectedScope(context, scopeDao, callingApplication.id)
                     cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
@@ -155,7 +154,6 @@ class TogglesProvider : ContentProvider() {
                         val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
                         cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
                     }
-
                 }
             }
 
@@ -408,7 +406,7 @@ class TogglesProvider : ContentProvider() {
                     if (strictApiVersion) {
                         throw IllegalArgumentException(
                             "This content provider requires you to provide a " +
-                                    "valid api-version in a queryParameter"
+                                "valid api-version in a queryParameter"
                         )
                     }
                 }
