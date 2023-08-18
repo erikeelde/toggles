@@ -134,22 +134,29 @@ class TogglesProvider : ContentProvider() {
             }
 
             CURRENT_CONFIGURATION_KEY -> {
-                val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                cursor = configurationDao.getToggle(
-                    uri.lastPathSegment!!,
-                    listOf(scope!!.id, defaultScope!!.id)
-                )
+                // this change is experimental and might be a way
+                // for consumers to
+                @Suppress("ConstantConditionIf")
+                if (false) {
+                    val scope = getSelectedScope(context, scopeDao, callingApplication.id)
+                    val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
+                    cursor = configurationDao.getToggles(
+                        uri.lastPathSegment!!,
+                        listOf(scope!!.id, defaultScope!!.id)
+                    )
 
-//                val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-//                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
-//
-//                if (cursor.count == 0) {
-//                    cursor.close()
-//
-//                    val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-//                    cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
-//                }
+                } else {
+                    val scope = getSelectedScope(context, scopeDao, callingApplication.id)
+                    cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
+
+                    if (cursor.count == 0) {
+                        cursor.close()
+
+                        val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
+                        cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
+                    }
+
+                }
             }
 
             else -> {
