@@ -31,6 +31,17 @@ interface WrenchConfigurationDao {
         "SELECT configuration.id, " +
                 " configuration.configurationKey, " +
                 " configuration.configurationType," +
+                " configurationValue.value" +
+                " FROM " + ConfigurationTable.TABLE_NAME +
+                " INNER JOIN " + ConfigurationValueTable.TABLE_NAME + " ON configuration.id = configurationValue.configurationId " +
+                " WHERE configuration.configurationKey = (:configurationKey) AND configurationValue.scope = (:scopeId)"
+    )
+    fun getToggle(configurationKey: String, scopeId: Long): Cursor
+
+    @Query(
+        "SELECT configuration.id, " +
+                " configuration.configurationKey, " +
+                " configuration.configurationType," +
                 " configurationValue.value," +
                 " scope.name as scope" +
                 " FROM " + ConfigurationTable.TABLE_NAME +
@@ -38,7 +49,7 @@ interface WrenchConfigurationDao {
                 " INNER JOIN " + ScopeTable.TABLE_NAME + " ON configurationValue.scope = scope.id " +
                 " WHERE configuration.configurationKey = (:configurationKey) AND configurationValue.scope IN (:scopeId)"
     )
-    fun getToggle(configurationKey: String, scopeId: List<Long>): Cursor
+    fun getToggles(configurationKey: String, scopeId: List<Long>): Cursor
 
     @Query(
         "SELECT * " +

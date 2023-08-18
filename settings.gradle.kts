@@ -11,7 +11,7 @@ pluginManagement {
 
 plugins {
     id("com.gradle.enterprise") version "3.13.4"
-    id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
+    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.4.0")
 }
 
 buildCache {
@@ -25,31 +25,43 @@ buildCache {
     }
 }
 
+private val localLibraries = false
+
 rootProject.name = "Toggles"
 includeBuild("build-logic/conventions")
 includeBuild("toggles-core") {
     dependencySubstitution {
-        substitute(module("se.eelde.toggles:toggles-core")).using(project(":"))
+        if (localLibraries) {
+            substitute(module("se.eelde.toggles:toggles-core")).using(project(":"))
+        }
     }
 }
 includeBuild("toggles-flow") {
     dependencySubstitution {
-        substitute(module("se.eelde.toggles:toggles-flow")).using(project(":"))
+        if (localLibraries) {
+            substitute(module("se.eelde.toggles:toggles-flow")).using(project(":"))
+        }
     }
 }
 includeBuild("toggles-flow-noop") {
     dependencySubstitution {
-        substitute(module("se.eelde.toggles:toggles-flow-noop")).using(project(":"))
+        if (localLibraries) {
+            substitute(module("se.eelde.toggles:toggles-flow-noop")).using(project(":"))
+        }
     }
 }
 includeBuild("toggles-prefs") {
     dependencySubstitution {
-        substitute(module("se.eelde.toggles:toggles-prefs")).using(project(":"))
+        if (localLibraries) {
+            substitute(module("se.eelde.toggles:toggles-prefs")).using(project(":"))
+        }
     }
 }
 includeBuild("toggles-prefs-noop") {
     dependencySubstitution {
-        substitute(module("se.eelde.toggles:toggles-prefs-noop")).using(project(":"))
+        if (localLibraries) {
+            substitute(module("se.eelde.toggles:toggles-prefs-noop")).using(project(":"))
+        }
     }
 }
 include(

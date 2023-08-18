@@ -15,6 +15,8 @@ licensee {
 
     // try remove or ping developer later
     // allowUrl("http://www.opensource.org/licenses/mit-license.php")
+
+    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")
 }
 
 androidGitVersion {
