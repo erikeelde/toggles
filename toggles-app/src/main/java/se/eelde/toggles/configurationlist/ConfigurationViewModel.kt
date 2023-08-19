@@ -107,16 +107,17 @@ class ConfigurationViewModel @Inject internal constructor(
             is PartialViewState.Configurations -> viewState.copy(
                 configurations = partialViewState.configurations
             )
+
             PartialViewState.Empty -> viewState
             is PartialViewState.DefaultScope -> viewState.copy(defaultScope = partialViewState.scope)
             is PartialViewState.SelectedScope -> viewState.copy(selectedScope = partialViewState.scope)
         }
     }
 
+    fun getQuery(): StateFlow<String> = queryString
+
     fun setQuery(query: String) {
-        viewModelScope.launch {
-            queryString.value = query
-        }
+        queryString.value = query
         savedStateHandle["query"] = query
     }
 

@@ -40,7 +40,6 @@ internal fun ConfigurationListView(
                     uiState.value.selectedScope,
                     configuration.configurationValues!!
                 )
-
                 item {
                     Column(
                         modifier = Modifier
