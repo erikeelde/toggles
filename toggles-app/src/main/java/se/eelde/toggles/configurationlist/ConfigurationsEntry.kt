@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Cyclone
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
@@ -15,7 +16,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,10 +45,38 @@ fun NavGraphBuilder.configurationsNavigations(
         val launcher =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
 
+        val query = viewModel.getQuery().collectAsState().value
+        var searching = query.isNotEmpty()
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { uiState.value.application?.applicationLabel },
+                    title = {
+                        SearchBar(
+                            query = query,
+                            onQueryChange = {
+                                viewModel.setQuery(it)
+                            },
+                            onSearch = {},
+                            placeholder = { Text("Search") },
+                            active = false, // active,
+                            trailingIcon = {
+                                if (searching) {
+                                    IconButton(onClick = {
+                                        viewModel.setQuery("")
+                                        searching = false
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            },
+                            onActiveChange = {}
+                        ) {
+                        }
+                    },
                     navigationIcon =
                     {
                         IconButton(onClick = { back() }) {
@@ -60,30 +92,32 @@ fun NavGraphBuilder.configurationsNavigations(
                                 contentDescription = null
                             )
                         }
-                        IconButton(onClick = {
-                            launcher.launch(
-                                Intent(
-                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                    Uri.fromParts(
-                                        "package",
-                                        uiState.value.application!!.packageName,
-                                        null
+                        if (!searching) {
+                            IconButton(onClick = {
+                                launcher.launch(
+                                    Intent(
+                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                        Uri.fromParts(
+                                            "package",
+                                            uiState.value.application!!.packageName,
+                                            null
+                                        )
                                     )
                                 )
-                            )
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Info,
-                                contentDescription = null
-                            )
-                        }
-                        IconButton(onClick = {
-                            viewModel.deleteApplication(uiState.value.application!!)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Delete,
-                                contentDescription = null
-                            )
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Info,
+                                    contentDescription = null
+                                )
+                            }
+                            IconButton(onClick = {
+                                viewModel.deleteApplication(uiState.value.application!!)
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Delete,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
                 )
