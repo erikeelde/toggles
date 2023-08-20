@@ -8,7 +8,7 @@ import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 
 @Suppress("LibraryEntitiesShouldNotBePublic")
-class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
+public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
     private val context = context.applicationContext
     private val contentResolver: ContentResolver = this.context.contentResolver
 

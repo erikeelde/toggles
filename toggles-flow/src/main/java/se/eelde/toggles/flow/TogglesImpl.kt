@@ -23,7 +23,7 @@ import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 
 @Suppress("LibraryEntitiesShouldNotBePublic")
-class TogglesImpl(context: Context) : Toggles {
+public class TogglesImpl(context: Context) : Toggles {
     private val context = context.applicationContext
     private val contentResolver = this.context.contentResolver
 
@@ -158,9 +158,8 @@ class TogglesImpl(context: Context) : Toggles {
                     return@withContext null
                 }
                 if (cursor.moveToFirst()) {
-
                     val mutableList = mutableListOf<Toggle>()
-                    while(cursor.moveToNext()) {
+                    while (cursor.moveToNext()) {
                         mutableList.add(fromCursor(cursor))
                     }
                     Log.w("TogglesImpl", mutableList.toString())
