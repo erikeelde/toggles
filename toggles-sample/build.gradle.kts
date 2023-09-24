@@ -1,10 +1,21 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("toggles.android.application-conventions")
     id("dagger.hilt.android.plugin")
-    id("com.gladed.androidgitversion") version "0.4.14"
     id("toggles.ownership-conventions")
     id("app.cash.licensee")
     id("se.premex.gross") version "0.1.0"
+}
+
+val versionFile = File("versions.properties")
+val versions = Properties().apply {
+    if (versionFile.exists()) {
+        FileInputStream(versionFile).use {
+            load(it)
+        }
+    }
 }
 
 licensee {
@@ -19,18 +30,11 @@ licensee {
     allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")
 }
 
-androidGitVersion {
-    tagPattern = "^v[0-9]+.*"
-}
-
 android {
-    buildFeatures {
-        viewBinding = true
-    }
     defaultConfig {
         applicationId = "se.eelde.toggles.example"
-        versionName = androidGitVersion.name()
-        versionCode = androidGitVersion.code()
+        versionName = versions.getProperty("V_VERSION", "0.0.1")
+        versionCode = versions.getProperty("V_VERSION_CODE", "1").toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -46,6 +50,13 @@ android {
         }
     }
     namespace = "com.example.toggles"
+}
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.toString()))
+        vendor.set(JvmVendorSpec.AZUL)
+    }
 }
 
 dependencies {

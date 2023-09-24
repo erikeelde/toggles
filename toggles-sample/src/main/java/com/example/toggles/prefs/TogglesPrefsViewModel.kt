@@ -79,10 +79,6 @@ class TogglesPrefsViewModel @Inject internal constructor(
     private fun getEnumConfiguration(): Config<MyEnum> =
         Config.Success(
             title = resources.getString(R.string.enum_configuration),
-            value = togglesPreferences.getEnum(
-                resources.getString(R.string.enum_configuration),
-                MyEnum::class.java,
-                MyEnum.SECOND
-            )
+            value = MyEnum.FIRST
         )
 }
