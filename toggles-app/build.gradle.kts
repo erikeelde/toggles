@@ -1,6 +1,5 @@
 import java.io.FileInputStream
 import java.util.Properties
-//import se.eelde.toggles.licenseeassetplugin.CopyLicenseeReportPlugin
 
 plugins {
     id("toggles.android.application-conventions")
@@ -8,10 +7,18 @@ plugins {
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
     id("com.github.triplet.play")
-    id("com.gladed.androidgitversion") version "0.4.14"
     id("com.google.firebase.crashlytics")
     id("app.cash.licensee")
     id("se.premex.gross") version "0.1.0"
+}
+
+val versionFile = File("versions.properties")
+val versions = Properties().apply {
+    if (versionFile.exists()) {
+        FileInputStream(versionFile).use {
+            load(it)
+        }
+    }
 }
 
 licensee {
@@ -23,10 +30,7 @@ licensee {
     // try remove or ping developer later
     // allowUrl("http://www.opensource.org/licenses/mit-license.php")
 
-    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")}
-
-androidGitVersion {
-    tagPattern = "^v[0-9]+.*"
+    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")
 }
 
 play {
@@ -60,8 +64,8 @@ android {
 
     defaultConfig {
         applicationId = "se.eelde.toggles"
-        versionName = androidGitVersion.name()
-        versionCode = androidGitVersion.code()
+        versionName = versions.getProperty("V_VERSION", "0.0.1")
+        versionCode = versions.getProperty("V_VERSION_CODE", "1").toInt()
 
         vectorDrawables.useSupportLibrary = true
 

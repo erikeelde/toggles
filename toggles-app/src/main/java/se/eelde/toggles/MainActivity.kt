@@ -89,14 +89,8 @@ fun Navigation(
                 BooleanValueView(
                     uiState = state,
                     popBackStack = { navController.popBackStack() },
-                    revert = {
-                        viewModel.revertClick()
-                        navController.popBackStack()
-                    },
-                    save = {
-                        viewModel.saveClick()
-                        navController.popBackStack()
-                    },
+                    revert = { viewModel.revertClick() },
+                    save = { viewModel.saveClick() },
                     setBooleanValue = { viewModel.checkedChanged(it) },
                     modifier = Modifier.padding(paddingValues),
                 )
