@@ -11,6 +11,7 @@ object Migrations {
     const val databaseVersion3 = 3
     const val databaseVersion4 = 4
     const val databaseVersion5 = 5
+    const val databaseVersion6 = 6
 
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(database: SupportSQLiteDatabase) {
@@ -262,6 +263,31 @@ object Migrations {
             run {
                 val tableName = "TogglesNotification"
                 database.execSQL("DROP TABLE IF  EXISTS `$tableName`")
+            }
+        }
+    }
+    val MIGRATION_5_6: Migration = object : Migration(databaseVersion5, databaseVersion6) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            run {
+                val tableName = "predefinedConfigurationValue"
+                val tableNameTemp = tableName + "_temp"
+
+                val newIndexName = "index_predefinedConfigurationValue_configurationId_value"
+
+                // create new table with temp name and temp index
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `$tableNameTemp` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configurationId` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY(`configurationId`) REFERENCES `configuration`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+                )
+                database.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS `$newIndexName` ON `$tableNameTemp` (`configurationId`, `value`);"
+                )
+
+                // copy data from old table + drop it
+                database.execSQL("INSERT INTO $tableNameTemp SELECT * FROM $tableName GROUP BY configurationId, value")
+                database.execSQL("DROP TABLE $tableName")
+
+                // rename database
+                database.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
             }
         }
     }

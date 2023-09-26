@@ -49,10 +49,6 @@ class FragmentEnumValueViewModel @Inject internal constructor(
     private val predefinedConfigurationValueDao: WrenchPredefinedConfigurationValueDao
 ) : ViewModel() {
 
-    internal val predefinedValues: LiveData<List<WrenchPredefinedConfigurationValue>> by lazy {
-        predefinedConfigurationValueDao.getLiveDataByConfigurationId(configurationId)
-    }
-
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
     internal val state: StateFlow<ViewState>
