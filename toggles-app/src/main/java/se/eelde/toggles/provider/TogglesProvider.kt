@@ -152,7 +152,8 @@ class TogglesProvider : ContentProvider() {
                         cursor.close()
 
                         val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                        cursor = configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
+                        cursor =
+                            configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
                     }
                 }
             }
@@ -221,7 +222,14 @@ class TogglesProvider : ContentProvider() {
 
             PREDEFINED_CONFIGURATION_VALUES -> {
                 val fullConfig = WrenchPredefinedConfigurationValue.fromContentValues(values!!)
-                insertId = predefinedConfigurationDao.insert(fullConfig)
+                insertId = try {
+                    predefinedConfigurationDao.insert(fullConfig)
+                } catch (exception: SQLiteConstraintException) {
+                    predefinedConfigurationDao.getByConfigurationAndValueId(
+                        fullConfig.configurationId,
+                        fullConfig.value!!
+                    ).id
+                }
             }
 
             else -> {
@@ -406,7 +414,7 @@ class TogglesProvider : ContentProvider() {
                     if (strictApiVersion) {
                         throw IllegalArgumentException(
                             "This content provider requires you to provide a " +
-                                "valid api-version in a queryParameter"
+                                    "valid api-version in a queryParameter"
                         )
                     }
                 }

@@ -22,6 +22,7 @@ object DatabaseModule {
             .addMigrations(Migrations.MIGRATION_2_3)
             .addMigrations(Migrations.MIGRATION_3_4)
             .addMigrations(Migrations.MIGRATION_4_5)
+            .addMigrations(Migrations.MIGRATION_5_6)
             .build()
     }
 }
