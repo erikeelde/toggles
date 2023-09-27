@@ -36,7 +36,6 @@ fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewMod
                 )
                 LazyColumn {
                     uiState.value.scopes.forEach {
-                        0
                         item {
                             ListItem(
                                 modifier = Modifier.clickable {

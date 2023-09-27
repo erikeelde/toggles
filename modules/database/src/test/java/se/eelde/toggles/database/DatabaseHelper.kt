@@ -1,3 +1,5 @@
+@file:Suppress("MaximumLineLength")
+
 package se.eelde.toggles.database
 
 import android.content.ContentValues
@@ -30,6 +32,7 @@ object DatabaseHelper {
         db: SupportSQLiteDatabase,
         configId: Long
     ): List<WrenchPredefinedConfigurationValue> {
+        @Suppress("MaxLineLength")
         val query = db.query(
             "SELECT * FROM ${PredefinedConfigurationValueTable.TABLE_NAME} WHERE ${PredefinedConfigurationValueTable.COL_CONFIG_ID} = ?",
             arrayOf<Any>(configId)

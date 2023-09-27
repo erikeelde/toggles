@@ -224,7 +224,7 @@ class TogglesProvider : ContentProvider() {
                 val fullConfig = WrenchPredefinedConfigurationValue.fromContentValues(values!!)
                 insertId = try {
                     predefinedConfigurationDao.insert(fullConfig)
-                } catch (exception: SQLiteConstraintException) {
+                } catch (_: SQLiteConstraintException) {
                     predefinedConfigurationDao.getByConfigurationAndValueId(
                         fullConfig.configurationId,
                         fullConfig.value!!
@@ -414,7 +414,7 @@ class TogglesProvider : ContentProvider() {
                     if (strictApiVersion) {
                         throw IllegalArgumentException(
                             "This content provider requires you to provide a " +
-                                    "valid api-version in a queryParameter"
+                                "valid api-version in a queryParameter"
                         )
                     }
                 }
