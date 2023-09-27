@@ -4,8 +4,8 @@ import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-@Suppress("LibraryEntitiesShouldNotBePublic")
-public class TogglesImpl(@Suppress("UNUSED_PARAMETER") context: Context) : Toggles {
+@PublishedApi
+internal class TogglesImpl(@Suppress("UNUSED_PARAMETER") context: Context) : Toggles {
 
     override fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> = flowOf(defaultValue)
 

@@ -1,7 +1,6 @@
 package se.eelde.toggles.dialogs.enumvalue
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

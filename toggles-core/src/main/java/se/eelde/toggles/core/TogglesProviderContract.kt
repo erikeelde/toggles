@@ -30,13 +30,13 @@ public class ToggleValue private constructor(
 
     public class Builder {
         @set:JvmSynthetic
-        private var id: Long = 0
+        public var id: Long = 0
 
         @set:JvmSynthetic
-        private var configurationId: Long = 0
+        public var configurationId: Long = 0
 
         @set:JvmSynthetic
-        private var value: String? = null
+        public var value: String? = null
 
         public fun setId(id: Long): Builder = apply { this.id = id }
         public fun setConfigurationId(configurationId: Long): Builder =
@@ -96,17 +96,17 @@ public class Toggle private constructor(
 ) {
     public class Builder {
         @set:JvmSynthetic
-        private var id: Long = 0
+        public var id: Long = 0
 
         @set:JvmSynthetic
         @ToggleType
-        private var type: String = ""
+        public var type: String = ""
 
         @set:JvmSynthetic
-        private var key: String = ""
+        public var key: String = ""
 
         @set:JvmSynthetic
-        private var value: String? = null
+        public var value: String? = null
 
         public fun setId(id: Long): Builder = apply { this.id = id }
         public fun setType(@ToggleType type: String): Builder =

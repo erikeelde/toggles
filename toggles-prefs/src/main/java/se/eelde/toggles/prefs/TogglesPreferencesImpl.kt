@@ -7,10 +7,11 @@ import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 
-@Suppress("LibraryEntitiesShouldNotBePublic")
-public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
+@PublishedApi
+internal class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
     private val context = context.applicationContext
     private val contentResolver: ContentResolver = this.context.contentResolver
+
 
     override fun getBoolean(key: String, defValue: Boolean): Boolean {
         var toggle = getToggle(
@@ -78,11 +79,10 @@ public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
             for (enumConstant in type.enumConstants!!) {
                 contentResolver.insert(
                     toggleValueUri(),
-                    ToggleValue(
-                        configurationId = toggle.id,
+                    ToggleValue {
+                        configurationId = toggle.id
                         value = enumConstant.toString()
-                    )
-                        .toContentValues()
+                    }.toContentValues()
                 )
             }
         }
@@ -106,7 +106,11 @@ public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
                 return Toggle.fromCursor(cursor)
             }
         }
-
-        return Toggle(0, toggleType, key, null)
+        return Toggle {
+            id = 0
+            type = toggleType
+            this.key = key
+            value = null
+        }
     }
 }

@@ -158,21 +158,27 @@ class MigrationTests {
     @Throws(IOException::class)
     fun test5to6WithDuplicates() {
         val originalDb = testHelper.createDatabase(TEST_DB_NAME, 5)
-        assertEquals(1, DatabaseHelper.insertApplication(
-            originalDb,
-            "TestApplication",
-            "se.eelde.toggles.application",
-            "se.eelde.toggles.application",
-        ))
+        assertEquals(
+            1,
+            DatabaseHelper.insertApplication(
+                originalDb,
+                "TestApplication",
+                "se.eelde.toggles.application",
+                "se.eelde.toggles.application",
+            )
+        )
 
         // insert data
-        assertEquals(1, DatabaseHelper.insertConfiguration(
-            originalDb,
+        assertEquals(
             1,
-            "MyEnum",
-            Toggle.TYPE.ENUM,
-            0,
-        ))
+            DatabaseHelper.insertConfiguration(
+                originalDb,
+                1,
+                "MyEnum",
+                Toggle.TYPE.ENUM,
+                0,
+            )
+        )
 
         assertEquals(1, DatabaseHelper.insertPredefinedConfigurationValue(originalDb, 1, "a"))
         assertEquals(2, DatabaseHelper.insertPredefinedConfigurationValue(originalDb, 1, "a"))
@@ -197,7 +203,6 @@ class MigrationTests {
             )
 
         assertEquals(3, values.size)
-
     }
 
     companion object {
