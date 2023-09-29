@@ -2,8 +2,8 @@ package se.eelde.toggles.prefs
 
 import android.content.Context
 
-@PublishedApi
-internal class TogglesPreferencesImpl(@Suppress("UNUSED_PARAMETER") context: Context) : TogglesPreferences {
+@Suppress("LibraryEntitiesShouldNotBePublic")
+public class TogglesPreferencesImpl(@Suppress("UNUSED_PARAMETER") context: Context) : TogglesPreferences {
 
     override fun getBoolean(key: String, defValue: Boolean): Boolean = defValue
 
