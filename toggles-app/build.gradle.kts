@@ -99,8 +99,15 @@ android {
 dependencies {
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.database)
+    implementation(projects.modules.provider)
     implementation(projects.modules.applications)
+    implementation(projects.modules.configurations)
     implementation(projects.modules.oss)
+    implementation(projects.modules.help)
+    implementation(projects.modules.booleanconfiguration)
+    implementation(projects.modules.integerconfiguration)
+    implementation(projects.modules.stringconfiguration)
+    implementation(projects.modules.enumconfiguration)
 
     implementation(libs.androidx.ui.ui.tooling)
     implementation(platform(libs.androidx.compose.bom))

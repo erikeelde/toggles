@@ -136,12 +136,12 @@ class TogglesProviderTest {
         Assert.assertEquals(insertToggle.value, providerToggle.value)
         Assert.assertEquals(insertToggle.type, providerToggle.type)
 
-        val updateToggle = Toggle(
-            providerToggle.id,
-            providerToggle.type,
-            providerToggle.key,
-            providerToggle.value!! + providerToggle.value!!
-        )
+        val updateToggle = Toggle {
+            id = providerToggle.id
+            type = providerToggle.type
+            key = providerToggle.key
+            value = providerToggle.value!! + providerToggle.value!!
+        }
 
         val update = togglesProvider.update(
             TogglesProviderContract.toggleUri(updateToggle.id),
@@ -253,10 +253,18 @@ class TogglesProviderTest {
     }
 
     private fun getToggleValue(value: String): ToggleValue {
-        return ToggleValue(0, value)
+        return ToggleValue {
+            id = 0
+            this.value = value
+        }
     }
 
     private fun getToggle(key: String): Toggle {
-        return Toggle(0L, "toggletype", key, "togglevalue")
+        return Toggle {
+            id = 0L
+            type = "toggletype"
+            this.key = key
+            value = "togglevalue"
+        }
     }
 }

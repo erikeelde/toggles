@@ -7,14 +7,19 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
+import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.prefs.TogglesPreferencesImpl
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.PackageManagerWrapper
+import se.eelde.toggles.provider.TogglesUriMatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
 object ApplicationModule {
+    @Provides
+    fun provideTogglesUriMatcher() = TogglesUriMatcher(BuildConfig.CONFIG_AUTHORITY)
+
     @Provides
     fun provideIoDispatcher() = Dispatchers.IO
 
