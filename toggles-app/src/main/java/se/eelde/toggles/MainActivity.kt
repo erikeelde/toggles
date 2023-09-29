@@ -25,19 +25,18 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.applications.applicationNavigations
+import se.eelde.toggles.booleanconfiguration.BooleanValueView
+import se.eelde.toggles.booleanconfiguration.FragmentBooleanValueViewModel
 import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.composetheme.rememberAppState
-import se.eelde.toggles.configurationlist.configurationsNavigations
-import se.eelde.toggles.dialogs.booleanvalue.BooleanValueView
-import se.eelde.toggles.dialogs.booleanvalue.FragmentBooleanValueViewModel
-import se.eelde.toggles.dialogs.enumvalue.EnumValueView
-import se.eelde.toggles.dialogs.enumvalue.FragmentEnumValueViewModel
-import se.eelde.toggles.dialogs.integervalue.FragmentIntegerValueViewModel
-import se.eelde.toggles.dialogs.integervalue.IntegerValueView
-import se.eelde.toggles.dialogs.stringvalue.FragmentStringValueViewModel
-import se.eelde.toggles.dialogs.stringvalue.StringValueView
-import se.eelde.toggles.help.HelpView
+import se.eelde.toggles.configurations.configurationsNavigations
+import se.eelde.toggles.enumconfiguration.EnumValueView
+import se.eelde.toggles.enumconfiguration.FragmentEnumValueViewModel
+import se.eelde.toggles.integerconfiguration.FragmentIntegerValueViewModel
+import se.eelde.toggles.integerconfiguration.IntegerValueView
 import se.eelde.toggles.oss.OssView
+import se.eelde.toggles.stringconfiguration.FragmentStringValueViewModel
+import se.eelde.toggles.stringconfiguration.StringValueView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongMethod")
@@ -59,7 +58,20 @@ fun Navigation(
             navigateToOss = { navController.navigate("oss") },
             navigateToHelp = { navController.navigate("help") },
         )
-        configurationsNavigations(navController, back = { navController.popBackStack() })
+        configurationsNavigations(
+            navigateToBooleanConfiguration = { scopeId: Long, configurationId: Long ->
+                navController.navigate("configuration/$configurationId/$scopeId/boolean")
+            },
+            navigateToIntegerConfiguration = { scopeId: Long, configurationId: Long ->
+                navController.navigate("configuration/$configurationId/$scopeId/integer")
+            },
+            navigateToStringConfiguration = { scopeId: Long, configurationId: Long ->
+                navController.navigate("configuration/$configurationId/$scopeId/string")
+            },
+            navigateToEnumConfiguration = { scopeId: Long, configurationId: Long ->
+                navController.navigate("configuration/$configurationId/$scopeId/enum")
+            }
+        ) { navController.popBackStack() }
         composable(
             "configuration/{configurationId}/{scopeId}/boolean",
             arguments = listOf(
@@ -243,7 +255,7 @@ fun Navigation(
                     )
                 },
             ) { paddingValues ->
-                HelpView(modifier = Modifier.padding(paddingValues))
+                se.eelde.toggles.help.HelpView(modifier = Modifier.padding(paddingValues))
             }
         }
     }
