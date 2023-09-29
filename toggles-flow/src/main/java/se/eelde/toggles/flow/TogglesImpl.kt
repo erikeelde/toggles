@@ -39,6 +39,7 @@ public class TogglesImpl(context: Context) : Toggles {
                         )
                         defaultValue
                     }
+
                     toggle.value == null -> defaultValue
                     else -> toggle.value!!.toBoolean()
                 }
@@ -56,6 +57,7 @@ public class TogglesImpl(context: Context) : Toggles {
                         )
                         defaultValue
                     }
+
                     toggle.value == null -> defaultValue
                     else -> toggle.value!!.toInt()
                 }
@@ -73,6 +75,7 @@ public class TogglesImpl(context: Context) : Toggles {
                         )
                         defaultValue
                     }
+
                     toggle.value == null -> defaultValue
                     else -> toggle.value!!
                 }
@@ -98,14 +101,15 @@ public class TogglesImpl(context: Context) : Toggles {
                         for (enumConstant in type.enumConstants!!) {
                             contentResolver.insert(
                                 toggleValueUri(),
-                                ToggleValue(
-                                    configurationId = configurationId,
+                                ToggleValue {
+                                    this.configurationId = configurationId
                                     value = enumConstant.toString()
-                                ).toContentValues()
+                                }.toContentValues()
                             )
                         }
                         defaultValue
                     }
+
                     toggle.value == null -> defaultValue
                     else -> java.lang.Enum.valueOf(type, toggle.value!!)
                 }
@@ -172,7 +176,13 @@ public class TogglesImpl(context: Context) : Toggles {
                     cursor.close()
                 }
             }
-            return@withContext Toggle(0L, type, key, "")
+
+            return@withContext Toggle {
+                id = 0L
+                this.type = type
+                this.key = key
+                value = ""
+            }
         }
 
     private class ToggleContentObserver(

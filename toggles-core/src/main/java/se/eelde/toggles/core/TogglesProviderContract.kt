@@ -119,6 +119,14 @@ public class Toggle private constructor(
             Toggle(id = id, type = type, key = key, value = value)
     }
 
+    public fun copy(
+        id: Long = this.id,
+        type: String = this.type,
+        key: String = this.key,
+        value: String? = this.value
+    ): Toggle =
+        Toggle(id = id, type = type, key = key, value = value)
+
     public fun toContentValues(): ContentValues = ContentValues().apply {
         put(ColumnNames.Toggle.COL_ID, id)
         put(ColumnNames.Toggle.COL_KEY, key)
