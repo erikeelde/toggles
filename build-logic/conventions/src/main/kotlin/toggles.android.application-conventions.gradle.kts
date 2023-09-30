@@ -6,17 +6,8 @@ val libs = the<LibrariesForLibs>()
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
     id("kotlin-android")
     id("toggles.detekt-conventions")
-}
-
-kapt {
-    javacOptions {
-        // Increase the max count of errors from annotation processors.
-        // Default is 100.
-        option("-Xmaxerrs", 500)
-    }
 }
 
 android {
