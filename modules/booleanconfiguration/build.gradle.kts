@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.navigation.navigation.compose)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
+    implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.material3)
     debugImplementation(libs.androidx.compose.ui.ui.tooling)

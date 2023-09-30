@@ -1,7 +1,6 @@
 package com.example.toggles
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +26,6 @@ import com.example.toggles.flow.FlowView
 import com.example.toggles.prefs.PrefsView
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.composetheme.TogglesTheme
-import se.eelde.toggles.composetheme.rememberAppState
 import se.eelde.toggles.oss.OssView
 
 @AndroidEntryPoint
@@ -38,8 +36,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             TogglesTheme {
                 val navController: NavHostController = rememberNavController()
-                val appState = rememberAppState(navController)
-                Log.e("appState", "current destination: ${appState.currentDestination}")
 
                 Navigation(navController = navController)
             }

@@ -7,6 +7,7 @@ plugins {
     id("toggles.ownership-conventions")
     id("app.cash.licensee")
     id("se.premex.gross") version "0.1.0"
+    id("com.google.devtools.ksp")
 }
 
 val versionFile = File("versions.properties")
@@ -87,9 +88,9 @@ dependencies {
     testImplementation(libs.org.robolectric)
 
     implementation(libs.com.google.dagger.hilt.android)
-    kapt(libs.com.google.dagger.hilt.android.compiler)
+    ksp(libs.com.google.dagger.hilt.android.compiler)
     testImplementation(libs.com.google.dagger.hilt.android.testing)
-    kaptTest(libs.com.google.dagger.hilt.android.compiler)
+    kspTest(libs.com.google.dagger.hilt.android.compiler)
 
     implementation(libs.se.eelde.toggles.toggles.flow)
     implementation(libs.se.eelde.toggles.toggles.prefs)
