@@ -30,8 +30,23 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Run Checks
-        run: ./gradlew check :toggles-core:check :toggles-flow:check :toggles-flow-noop:check :toggles-prefs:check :toggles-prefs-noop:check
+      - name: Run app Checks
+        run: ./gradlew check
+
+      - name: Run core Checks
+        run: ./gradlew :toggles-core:check
+
+      - name: Run flow Checks
+        run: ./gradlew :toggles-flow:check --no-configuration-cache
+
+      - name: Run flow noop Checks
+        run: ./gradlew :toggles-flow-noop:check
+
+      - name: Run prefs Checks
+        run: ./gradlew :toggles-prefs:check --no-configuration-cache
+
+      - name: Run prefs noop Checks
+        run: ./gradlew :toggles-prefs-noop:check
 
       - name: Upload reports
         uses: actions/upload-artifact@v3
