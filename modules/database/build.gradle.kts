@@ -1,6 +1,7 @@
 plugins {
     id("toggles.android.module-conventions")
     id("toggles.ownership-conventions")
+    id("com.google.devtools.ksp")
 }
 
 class RoomSchemaArgProvider(
@@ -43,7 +44,7 @@ dependencies {
     implementation(libs.androidx.room.room.paging)
     implementation(libs.androidx.room.room.runtime)
     implementation(libs.androidx.room.room.ktx)
-    kapt(libs.androidx.room.room.compiler)
+    ksp(libs.androidx.room.room.compiler)
     implementation(libs.se.eelde.toggles.toggles.core)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)

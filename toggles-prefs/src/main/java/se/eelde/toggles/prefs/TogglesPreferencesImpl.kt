@@ -12,7 +12,6 @@ public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
     private val context = context.applicationContext
     private val contentResolver: ContentResolver = this.context.contentResolver
 
-
     override fun getBoolean(key: String, defValue: Boolean): Boolean {
         var toggle = getToggle(
             contentResolver = contentResolver,
