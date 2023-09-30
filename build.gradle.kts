@@ -25,8 +25,7 @@ plugins {
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
     alias(libs.plugins.com.github.triplet.play) apply (false)
     id("toggles.ownership-conventions")
-    alias(libs.plugins.com.android.library) apply false
-    alias(libs.plugins.org.jetbrains.kotlin.android) apply false
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13" apply false
 }
 
 fun isNonStable(version: String): Boolean {

@@ -1,6 +1,7 @@
 plugins {
     id("toggles.android.module-conventions")
     id("toggles.ownership-conventions")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -29,5 +30,5 @@ dependencies {
     implementation(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.se.eelde.toggles.toggles.core)
-    kapt(libs.com.google.dagger.hilt.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
 }

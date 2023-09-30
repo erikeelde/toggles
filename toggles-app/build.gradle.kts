@@ -10,6 +10,7 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("app.cash.licensee")
     id("se.premex.gross") version "0.1.0"
+    id("com.google.devtools.ksp")
 }
 
 val versionFile = File("versions.properties")
@@ -143,16 +144,16 @@ dependencies {
     implementation(libs.com.google.firebase.firebase.analytics.ktx)
 
     implementation(libs.com.google.dagger.hilt.android)
-    kapt(libs.com.google.dagger.hilt.android.compiler)
-    kapt(libs.androidx.hilt.hilt.compiler)
+    ksp(libs.com.google.dagger.hilt.android.compiler)
+    ksp(libs.androidx.hilt.hilt.compiler)
 
     testImplementation(libs.com.google.dagger.hilt.android.testing)
-    kaptTest(libs.com.google.dagger.hilt.android.compiler)
+    kspTest(libs.com.google.dagger.hilt.android.compiler)
 
     implementation(libs.androidx.lifecycle.lifecycle.common.java8)
 
     implementation(libs.com.google.dagger)
-    kapt(libs.com.google.dagger.dagger.compiler)
+    ksp(libs.com.google.dagger.dagger.compiler)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.recyclerview)
