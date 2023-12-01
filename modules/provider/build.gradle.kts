@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "se.eelde.toggles.help"
+    namespace = "se.eelde.toggles.provider"
     buildFeatures {
 
         compose = true

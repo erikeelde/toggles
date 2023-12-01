@@ -81,15 +81,19 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
             is PartialViewState.NewConfiguration -> {
                 previousState.copy(title = partialViewState.title)
             }
+
             is PartialViewState.Empty -> {
                 previousState
             }
+
             is PartialViewState.Saving -> {
                 previousState.copy(saving = true)
             }
+
             is PartialViewState.Reverting -> {
                 previousState.copy(reverting = true)
             }
+
             is PartialViewState.NewConfigurationValue ->
                 previousState.copy(checked = partialViewState.checked)
         }
@@ -97,7 +101,11 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
 
     suspend fun saveClick() {
         _state.value = reduce(state.value, PartialViewState.Saving)
-        updateConfigurationValue(state.value.checked.toString()).join()
+        state.value.checked?.let { checkedState ->
+            updateConfigurationValue(checkedState.toString()).join()
+        } ?: run {
+            deleteConfigurationValue()
+        }
     }
 
     suspend fun revertClick() {
@@ -116,7 +124,11 @@ class FragmentBooleanValueViewModel @Inject internal constructor(
             }
             configurationDao.touch(configurationId, Date())
 
-            application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
+            application.contentResolver.notifyUpdate(
+                TogglesProviderContract.toggleUri(
+                    configurationId
+                )
+            )
         }
     }
 

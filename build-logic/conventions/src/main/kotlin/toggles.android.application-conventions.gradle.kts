@@ -1,3 +1,4 @@
+
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.kotlin.dsl.kotlin
 
@@ -28,6 +29,7 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
 
+    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }

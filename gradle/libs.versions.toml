@@ -3,8 +3,8 @@ androidx-activity = "1.7.2"
 androidx-appcompat = "1.6.1"
 androidx-arch-core = "2.2.0"
 androidx-collection = "1.1.0"
-androidx-compose-bom = "2023.09.02"
-androidx-compose-compiler = "1.5.3"
+androidx-compose-bom = "2023.10.01"
+androidx-compose-compiler = "1.5.5"
 androidx-core = "1.9.0"
 androidx-hilt = "1.0.0"
 androidx-legacy = "1.0.0"
@@ -17,14 +17,14 @@ com-google-dagger = "2.48"
 com-squareup-leakcanary = "2.8.1"
 com-squareup-moshi = "1.15.0"
 dokka = "1.9.0"
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 org-jetbrains-kotlinx = "1.7.3"
 agp = "8.1.2"
-org-jetbrains-kotlin-android = "1.9.0"
+org-jetbrains-kotlin-android = "1.9.20"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-material = "1.9.0"
+material = "1.9.20"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
@@ -117,7 +117,7 @@ androidx-vectordrawable-vectordrawable-animated = { module = "androidx.vectordra
 androidx-versionedparcelable = "androidx.versionedparcelable:versionedparcelable:1.1.1"
 androidx-viewpager = "androidx.viewpager:viewpager:1.0.0"
 app-cash-licensee-licensee-gradle-plugin = "app.cash.licensee:licensee-gradle-plugin:1.7.0"
-com-android-tools-build-gradle = "com.android.tools.build:gradle:8.1.4"
+com-android-tools-build-gradle = "com.android.tools.build:gradle:8.2.0"
 com-google-android-datatransport-transport-api = "com.google.android.datatransport:transport-api:3.0.0"
 com-google-android-gms-play-services-ads-identifier = "com.google.android.gms:play-services-ads-identifier:18.0.0"
 com-google-android-gms-play-services-basement = "com.google.android.gms:play-services-basement:18.1.0"
@@ -137,54 +137,29 @@ com-google-firebase-firebase-bom = "com.google.firebase:firebase-bom:32.2.2"
 com-google-firebase-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 com-google-firebase-firebase-crashlytics-gradle = "com.google.firebase:firebase-crashlytics-gradle:2.9.8"
 com-google-firebase-firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx" }
-com-google-firebase-firebase-encoders = "com.google.firebase:firebase-encoders:17.0.0"
-com-google-firebase-firebase-encoders-json = "com.google.firebase:firebase-encoders-json:18.0.0"
-com-google-firebase-firebase-encoders-proto = "com.google.firebase:firebase-encoders-proto:16.0.0"
-com-google-firebase-firebase-measurement-connector = "com.google.firebase:firebase-measurement-connector:19.0.0"
 com-google-gms-google-services = "com.google.gms:google-services:4.3.15"
 com-slack-lint-compose-compose-lint-checks = "com.slack.lint.compose:compose-lint-checks:1.2.0"
-com-squareup-curtains = "com.squareup.curtains:curtains:1.2.3"
 com-squareup-leakcanary-leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-leakcanary-android-core = { module = "com.squareup.leakcanary:leakcanary-android-core", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-leakcanary-android-utils = { module = "com.squareup.leakcanary:leakcanary-android-utils", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-leakcanary-object-watcher = { module = "com.squareup.leakcanary:leakcanary-object-watcher", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-leakcanary-object-watcher-android = { module = "com.squareup.leakcanary:leakcanary-object-watcher-android", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-leakcanary-object-watcher-android-androidx = { module = "com.squareup.leakcanary:leakcanary-object-watcher-android-androidx", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-leakcanary-object-watcher-android-core = { module = "com.squareup.leakcanary:leakcanary-object-watcher-android-core", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-leakcanary-object-watcher-android-support-fragments = { module = "com.squareup.leakcanary:leakcanary-object-watcher-android-support-fragments", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-plumber-android = { module = "com.squareup.leakcanary:plumber-android", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-plumber-android-core = { module = "com.squareup.leakcanary:plumber-android-core", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-shark = { module = "com.squareup.leakcanary:shark", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-shark-android = { module = "com.squareup.leakcanary:shark-android", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-shark-graph = { module = "com.squareup.leakcanary:shark-graph", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-shark-hprof = { module = "com.squareup.leakcanary:shark-hprof", version.ref = "com-squareup-leakcanary" }
-com-squareup-leakcanary-shark-log = { module = "com.squareup.leakcanary:shark-log", version.ref = "com-squareup-leakcanary" }
 com-squareup-moshi = { module = "com.squareup.moshi:moshi", version.ref = "com-squareup-moshi" }
 com-squareup-moshi-moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "com-squareup-moshi" }
 com-squareup-okio = "com.squareup.okio:okio:3.5.0"
 io-gitlab-arturbosch-detekt-detekt-gradle-plugin = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.1"
 io-gitlab-arturbosch-detekt-detekt-formatting = "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.1"
 io-gitlab-arturbosch-detekt-detekt-rules-libraries = "io.gitlab.arturbosch.detekt:detekt-rules-libraries:1.23.1"
-javax-inject-javax-inject = "javax.inject:javax.inject:1"
-junit = "junit:junit:4.13.2"
-org-apache-logging-log4j-log4j-core = "org.apache.logging.log4j:log4j-core:2.17.1"
-org-jetbrains-annotations = "org.jetbrains:annotations:23.0.0"
+junit = { module = "junit:junit", version.ref = "junit" }
 org-jetbrains-dokka-dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 org-jetbrains-kotlin-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 org-jetbrains-kotlin-kotlin-parcelize-runtime = { module = "org.jetbrains.kotlin:kotlin-parcelize-runtime", version.ref = "kotlin" }
 org-jetbrains-kotlin-kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 org-jetbrains-kotlin-kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 org-jetbrains-kotlinx-kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
-org-jetbrains-kotlinx-kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+org-jetbrains-kotlinx-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android" }
 org-jetbrains-kotlinx-kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "org-jetbrains-kotlinx" }
-org-jetbrains-kotlinx-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "org-jetbrains-kotlinx" }
-org-jetbrains-kotlinx-kotlinx-coroutines-core-jvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "org-jetbrains-kotlinx" }
+org-jetbrains-kotlinx-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 org-robolectric = "org.robolectric:robolectric:4.10.3"
 se-eelde-toggles-toggles-core = { module = "se.eelde.toggles:toggles-core" }
 se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow" }
 se-eelde-toggles-toggles-prefs = { module = "se.eelde.toggles:toggles-prefs" }
-junit-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-test-ext-junit115 = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 #se-eelde-toggles-toggles-core = "se.eelde.toggles:toggles-core:0.0.2"
@@ -192,9 +167,10 @@ material = { group = "com.google.android.material", name = "material", version.r
 #se-eelde-toggles-toggles-prefs = "se.eelde.toggles:toggles-prefs:0.0.1"
 
 [plugins]
+com-autonomousapps-dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "1.26.0" }
 com-github-ben-manes-versions = "com.github.ben-manes.versions:0.47.0"
 com-github-triplet-play = "com.github.triplet.play:3.8.4"
-com-gladed-androidgitversion = "com.gladed.androidgitversion:0.4.14"
+com-google-devtools-ksp = { id = "com.google.devtools.ksp", version = "1.9.20-1.0.14" }
 com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "com-google-dagger" }
 com-google-firebase-crashlytics = "com.google.firebase.crashlytics:2.9.8"
 com-google-gms-google-services = "com.google.gms.google-services:4.3.15"

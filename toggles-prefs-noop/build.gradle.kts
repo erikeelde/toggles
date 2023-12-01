@@ -14,5 +14,4 @@ dependencies {
     implementation(libs.se.eelde.toggles.toggles.core)
 
     implementation(libs.androidx.annotation)
-    implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 }

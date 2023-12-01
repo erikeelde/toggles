@@ -11,25 +11,12 @@ class RoomSchemaArgProvider(
 ) : CommandLineArgumentProvider {
 
     override fun asArguments(): Iterable<String> {
-        // Note: If you're using KSP, you should change the line below to return
-        // listOf("room.schemaLocation=${schemaDir.path}")
-        return listOf("-Aroom.schemaLocation=${schemaDir.path}")
+        return listOf("room.schemaLocation=${schemaDir.path}")
     }
 }
 
 android {
     namespace = "se.eelde.toggles.database"
-    defaultConfig {
-        javaCompileOptions {
-            annotationProcessorOptions {
-                compilerArgumentProviders(
-                    RoomSchemaArgProvider(File(projectDir, "schemas"))
-                )
-                arguments["room.incremental"] = "true"
-                arguments["room.expandProjection"] = "true"
-            }
-        }
-    }
     testOptions {
         unitTests{
             isIncludeAndroidResources = true
@@ -38,6 +25,10 @@ android {
     sourceSets {
         getByName("test").assets.srcDir("$projectDir/schemas")
     }
+}
+
+ksp {
+    arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
 }
 
 dependencies {
