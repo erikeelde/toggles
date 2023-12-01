@@ -174,6 +174,7 @@ dependencies {
     implementation(libs.se.eelde.toggles.toggles.flow)
     implementation(libs.se.eelde.toggles.toggles.prefs)
 
+    implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 
     implementation(libs.androidx.core.core.ktx)
