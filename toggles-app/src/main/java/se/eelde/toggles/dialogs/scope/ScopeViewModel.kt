@@ -4,9 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import se.eelde.toggles.database.WrenchScope
 import se.eelde.toggles.database.WrenchScopeDao
 import java.util.Date
@@ -15,6 +17,7 @@ import javax.inject.Inject
 internal data class ViewState(
     val title: String? = null,
     val scopes: List<WrenchScope> = listOf(),
+    val selectedScope: WrenchScope? = null,
     val saving: Boolean = false,
     val reverting: Boolean = false
 )
@@ -28,7 +31,7 @@ private sealed class PartialViewState {
 }
 
 @HiltViewModel
-class ScopeFragmentViewModel @Inject internal constructor(
+class ScopeViewModel @Inject internal constructor(
     private val savedStateHandle: SavedStateHandle,
     private val scopeDao: WrenchScopeDao
 ) : ViewModel() {
@@ -56,7 +59,12 @@ class ScopeFragmentViewModel @Inject internal constructor(
             is PartialViewState.NewConfiguration -> previousState
             PartialViewState.Reverting -> previousState
             PartialViewState.Saving -> previousState
-            is PartialViewState.Scopes -> previousState.copy(scopes = partialViewState.scopes)
+            is PartialViewState.Scopes -> {
+                previousState.copy(
+                    selectedScope = partialViewState.scopes.sortedByDescending { it.timeStamp }.first(),
+                    scopes = partialViewState.scopes
+                )
+            }
         }
     }
 
@@ -72,13 +80,17 @@ class ScopeFragmentViewModel @Inject internal constructor(
             val wrenchScope = WrenchScope.newWrenchScope()
             wrenchScope.name = scopeName
             wrenchScope.applicationId = applicationId
-            wrenchScope.id = scopeDao.insert(wrenchScope)
+            withContext(Dispatchers.IO) {
+                wrenchScope.id = scopeDao.insert(wrenchScope)
+            }
         }
     }
 
     internal fun removeScope(scope: WrenchScope) {
         viewModelScope.launch {
-            scopeDao.delete(scope)
+            withContext(Dispatchers.IO) {
+                scopeDao.delete(scope)
+            }
         }
     }
 }
