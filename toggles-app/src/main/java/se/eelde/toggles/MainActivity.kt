@@ -25,6 +25,7 @@ import se.eelde.toggles.applications.applicationNavigations
 import se.eelde.toggles.booleanconfiguration.BooleanValueView
 import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.configurations.configurationsNavigations
+import se.eelde.toggles.dialogs.scope.ScopeValueView
 import se.eelde.toggles.enumconfiguration.EnumValueView
 import se.eelde.toggles.help.HelpView
 import se.eelde.toggles.integerconfiguration.IntegerValueView
@@ -63,6 +64,9 @@ fun Navigation(
             },
             navigateToEnumConfiguration = { scopeId: Long, configurationId: Long ->
                 navController.navigate("configuration/$configurationId/$scopeId/enum")
+            },
+            navigateToScopeView = { applicationId: Long ->
+                navController.navigate("scopes/$applicationId")
             }
         ) { navController.popBackStack() }
         composable(
@@ -73,6 +77,12 @@ fun Navigation(
             )
         ) {
             BooleanValueView { navController.popBackStack() }
+        }
+        composable(
+            "scopes/{applicationId}",
+            arguments = listOf(navArgument("applicationId") { type = NavType.LongType })
+        ) {
+            ScopeValueView { navController.popBackStack() }
         }
         composable(
             "configuration/{configurationId}/{scopeId}/integer",

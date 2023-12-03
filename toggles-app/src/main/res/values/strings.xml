@@ -8,7 +8,6 @@
     <string name="go_to_application_settings">Go to application settings</string>
     <string name="filter_configurations">Filter configurations</string>
     <string name="revert">revert</string>
-    <string name="select_scope">Select scope</string>
     <string name="application_icon">Application icon</string>
     <string name="toggles_permission_label">Access Toggles</string>
     <string name="toggles_permission_description">Access to request configuration from Toggles</string>
@@ -21,4 +20,6 @@
     <string name="loading_bubble">Loading bubble</string>
     <string name="add">Add</string>
     <string name="delete">Delete</string>
+    <string name="scope_information">Scopes allow us to define a set of configurations that we can switch between quickly. Your selected scope is indicated by a link.</string>
+    <string name="scope_add_information">Add a new scope</string>
 </resources>
