@@ -59,6 +59,7 @@ androidx-compose-ui-ui-tooling-data = { module = "androidx.compose.ui:ui-tooling
 androidx-compose-ui-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-ui-ui-unit = { module = "androidx.compose.ui:ui-unit" }
 androidx-compose-ui-ui-util = { module = "androidx.compose.ui:ui-util" }
+androidx-compose-ui-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 androidx-concurrent-concurrent-futures = "androidx.concurrent:concurrent-futures:1.1.0"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 androidx-core = { module = "androidx.core:core", version.ref = "androidx-core" }

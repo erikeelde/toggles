@@ -77,6 +77,8 @@ android {
         manifestPlaceholders["togglesPermission"] = togglesPermission
 
         buildConfigField("String", "CONFIG_AUTHORITY", "\"$togglesAuthority\"")
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -168,8 +170,6 @@ dependencies {
     implementation(libs.androidx.room.room.ktx)
     implementation(libs.androidx.paging.paging.runtime.ktx)
 
-    implementation(libs.androidx.paging.paging.runtime.ktx)
-
     implementation(libs.se.eelde.toggles.toggles.core)
     implementation(libs.se.eelde.toggles.toggles.flow)
     implementation(libs.se.eelde.toggles.toggles.prefs)
@@ -182,4 +182,10 @@ dependencies {
     implementation(libs.com.squareup.okio)
 
     debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
+
+
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
 }
