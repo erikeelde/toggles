@@ -36,7 +36,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "LongParameterList")
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.configurationsNavigations(
     navigateToBooleanConfiguration: (scopeId: Long, configurationId: Long) -> Unit,

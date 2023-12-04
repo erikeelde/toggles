@@ -66,6 +66,7 @@ fun ScopeValueView(
     }
 }
 
+@Suppress("LongMethod")
 @Composable
 internal fun ScopeValueView(
     viewState: ViewState,
@@ -108,16 +109,17 @@ internal fun ScopeValueView(
             val showDeleteScopeView = rememberSaveable { mutableStateOf(false) }
 
             Row {
-                Button(modifier = Modifier.padding(16.dp),
+                Button(
+                    modifier = Modifier.padding(16.dp),
                     onClick = { showAddScopeView.value = true }
                 ) {
                     Text("Add")
                 }
-                OutlinedButton(modifier = Modifier.padding(16.dp),
+                OutlinedButton(
+                    modifier = Modifier.padding(16.dp),
                     enabled = viewState.scopes.size > 1,
                     onClick = { showDeleteScopeView.value = true }
-                )
-                {
+                ) {
                     Text("Delete")
                 }
             }
@@ -128,7 +130,8 @@ internal fun ScopeValueView(
                         createScope(it)
                         showAddScopeView.value = false
                     },
-                    dismiss = { showAddScopeView.value = false })
+                    dismiss = { showAddScopeView.value = false }
+                )
             }
             if (showDeleteScopeView.value) {
                 DeleteScopeView(
@@ -159,8 +162,10 @@ fun AddScopeView(
                     style = MaterialTheme.typography.titleMedium,
                     text = stringResource(id = R.string.scope_add_information)
                 )
-                TextField(value = scopeName.value,
-                    onValueChange = { scopeName.value = it })
+                TextField(
+                    value = scopeName.value,
+                    onValueChange = { scopeName.value = it }
+                )
                 Button(onClick = { addScope(scopeName.value) }) {
                     Text("Add")
                 }
