@@ -22,5 +22,8 @@ data class WrenchApplication constructor(
     var packageName: String,
 
     @ColumnInfo(name = ApplicationTable.COL_APP_LABEL)
-    var applicationLabel: String
+    var applicationLabel: String,
+
+    @ColumnInfo(name = ApplicationTable.COL_ENABLED)
+    var enabled: Boolean,
 )

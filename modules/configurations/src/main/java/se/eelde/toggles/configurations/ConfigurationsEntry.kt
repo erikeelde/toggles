@@ -111,6 +111,25 @@ fun NavGraphBuilder.configurationsNavigations(
                                     )
                                 }
                             )
+                            uiState.value.application?.let {
+                                DropdownMenuItem(
+                                    text = {
+                                        if (it.enabled) {
+                                            Text("Disable application")
+                                        } else {
+                                            Text("Enable application")
+                                        }
+
+                                    },
+                                    onClick = { viewModel.toggleApplicationEnabled(it) },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Cyclone,
+                                            contentDescription = null
+                                        )
+                                    }
+                                )
+                            }
 
                             DropdownMenuItem(
                                 text = { Text("Appinfo") },

@@ -7,5 +7,6 @@ interface ApplicationTable {
         const val COL_SHORTCUT_ID = "shortcutId"
         const val COL_PACK_NAME = "packageName"
         const val COL_APP_LABEL = "applicationLabel"
+        const val COL_ENABLED = "enabled"
     }
 }

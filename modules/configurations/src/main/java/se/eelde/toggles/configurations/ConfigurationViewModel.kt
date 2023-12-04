@@ -69,7 +69,7 @@ class ConfigurationViewModel @Inject internal constructor(
 
         viewModelScope.launch {
             combine(
-                flowOf(applicationDao.getApplication(applicationId)!!),
+                applicationDao.getApplicationFlow(applicationId),
                 scopeDao.getSelectedScopeFlow(applicationId = applicationId),
                 scopeDao.getDefaultScopeFlow(applicationId = applicationId),
             ) { application, selectedScope, defaultScope ->
@@ -107,6 +107,7 @@ class ConfigurationViewModel @Inject internal constructor(
             is PartialViewState.Configurations -> viewState.copy(
                 configurations = partialViewState.configurations
             )
+
             PartialViewState.Empty -> viewState
             is PartialViewState.DefaultScope -> viewState.copy(defaultScope = partialViewState.scope)
             is PartialViewState.SelectedScope -> viewState.copy(selectedScope = partialViewState.scope)
@@ -135,6 +136,12 @@ class ConfigurationViewModel @Inject internal constructor(
             context.packageManager.getLaunchIntentForPackage(wrenchApplication.packageName)
         if (intent != null) {
             context.startActivity(Intent.makeRestartActivityTask(intent.component))
+        }
+    }
+
+    fun toggleApplicationEnabled(application: WrenchApplication) {
+        viewModelScope.launch {
+            applicationDao.update(application.copy(enabled = !application.enabled))
         }
     }
 }

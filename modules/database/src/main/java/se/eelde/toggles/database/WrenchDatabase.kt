@@ -12,7 +12,7 @@ import androidx.room.TypeConverters
         WrenchPredefinedConfigurationValue::class,
         WrenchScope::class,
     ],
-    version = 6
+    version = 7
 )
 @TypeConverters(RoomDateConverter::class)
 abstract class WrenchDatabase : RoomDatabase() {

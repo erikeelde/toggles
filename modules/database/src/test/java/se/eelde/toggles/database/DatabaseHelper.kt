@@ -126,6 +126,6 @@ object DatabaseHelper {
         val packageName = cursor.getString(cursor.getColumnIndex(ApplicationTable.COL_PACK_NAME))
         val shortcutId = cursor.getString(cursor.getColumnIndex(ApplicationTable.COL_SHORTCUT_ID))
 
-        return WrenchApplication(id, shortcutId, packageName, label)
+        return WrenchApplication(id, shortcutId, packageName, label, true)
     }
 }

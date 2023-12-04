@@ -88,6 +88,7 @@ class TogglesProvider : ContentProvider() {
                     packageName = packageManagerWrapper.callingApplicationPackageName!!,
                     applicationLabel = packageManagerWrapper.applicationLabel,
                     shortcutId = packageManagerWrapper.callingApplicationPackageName!!,
+                    enabled = true
                 )
 
                 wrenchApplication.id = applicationDao.insert(wrenchApplication)
@@ -109,6 +110,10 @@ class TogglesProvider : ContentProvider() {
         val callingApplication = getCallingApplication(applicationDao)
         if (!isTogglesApplication(callingApplication)) {
             assertValidApiVersion(togglesPreferences, uri)
+        }
+
+        if (!callingApplication.enabled) {
+            return configurationDao.getToggle(configurationId = -1, scopeId = -1)
         }
 
         var cursor: Cursor?
@@ -411,7 +416,7 @@ class TogglesProvider : ContentProvider() {
                     if (strictApiVersion) {
                         throw IllegalArgumentException(
                             "This content provider requires you to provide a " +
-                                "valid api-version in a queryParameter"
+                                    "valid api-version in a queryParameter"
                         )
                     }
                 }

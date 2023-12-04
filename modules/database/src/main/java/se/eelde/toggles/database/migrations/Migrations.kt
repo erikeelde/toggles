@@ -4,6 +4,7 @@ package se.eelde.toggles.database.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import se.eelde.toggles.database.tables.ApplicationTable
 
 object Migrations {
     const val databaseVersion1 = 1
@@ -12,6 +13,7 @@ object Migrations {
     const val databaseVersion4 = 4
     const val databaseVersion5 = 5
     const val databaseVersion6 = 6
+    const val databaseVersion7 = 7
 
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -288,6 +290,15 @@ object Migrations {
 
                 // rename database
                 db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
+            }
+        }
+    }
+    val MIGRATION_6_7: Migration = object : Migration(databaseVersion6, databaseVersion7) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            run {
+                val tableName = "application"
+                db.execSQL("ALTER TABLE `$tableName` ADD ${ApplicationTable.COL_ENABLED} INTEGER NOT NULL default 1;")
+                db.execSQL("UPDATE `$tableName` SET ${ApplicationTable.COL_ENABLED}='1';")
             }
         }
     }
