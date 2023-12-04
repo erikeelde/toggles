@@ -33,7 +33,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun IntegerValueViewPreview() {
     IntegerValueView(
-        uiState = ViewState(title = "Integer value", integerValue = 5, saving = false, reverting = false),
+        uiState = ViewState(
+            title = "Integer value",
+            integerValue = 5,
+            saving = false,
+            reverting = false
+        ),
         popBackStack = {},
         revert = {},
         save = {},
@@ -52,7 +57,7 @@ fun IntegerValueView(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("") },
+                title = { Text("Integer configuration") },
                 navigationIcon =
                 {
                     IconButton(onClick = { back() }) {
@@ -88,7 +93,7 @@ internal fun IntegerValueView(
 ) {
     val scope = rememberCoroutineScope()
 
-    Surface(modifier = modifier) {
+    Surface(modifier = modifier.padding(16.dp)) {
         Column {
             Text(
                 modifier = Modifier.padding(8.dp),
@@ -100,7 +105,11 @@ internal fun IntegerValueView(
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = if (uiState.integerValue != null) uiState.integerValue.toString() else "",
-                onValueChange = { setIntegerValue(it.toInt()) },
+                onValueChange = {
+                    try {
+                        setIntegerValue(it.toInt())
+                    } catch (_: NumberFormatException) { }
+                },
             )
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 Button(modifier = Modifier.padding(8.dp), onClick = {

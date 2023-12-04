@@ -26,6 +26,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.material.icons.extended)
     debugImplementation(libs.androidx.compose.ui.ui.tooling)
     implementation(libs.androidx.compose.ui.ui.tooling.preview)
     implementation(libs.androidx.startup.startup.runtime)

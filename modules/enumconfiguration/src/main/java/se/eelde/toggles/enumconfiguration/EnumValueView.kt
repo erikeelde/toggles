@@ -1,14 +1,15 @@
 package se.eelde.toggles.enumconfiguration
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Link
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,7 +40,7 @@ fun EnumValueView(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("") },
+                title = { Text("Enum configuration") },
                 navigationIcon =
                 {
                     IconButton(onClick = { back() }) {
@@ -72,7 +73,7 @@ internal fun EnumValueView(
 ) {
     val scope = rememberCoroutineScope()
 
-    Surface(modifier = modifier) {
+    Surface(modifier = modifier.padding(16.dp)) {
         Column {
             Text(
                 modifier = Modifier.padding(8.dp),
@@ -82,14 +83,25 @@ internal fun EnumValueView(
             LazyColumn {
                 state.configurationValues.forEach { wrenchPredefinedConfigurationValue ->
                     item {
+                        val selected =
+                            wrenchPredefinedConfigurationValue.value == state.selectedConfigurationValue?.value
                         ListItem(
-                            modifier = Modifier.clickable {
+                            modifier = Modifier.selectable(
+                                selected = selected
+                            ) {
                                 scope.launch {
                                     setEnumValue(wrenchPredefinedConfigurationValue.value.toString())
-                                    popBackStack()
                                 }
                             },
-                            headlineContent = { Text(text = wrenchPredefinedConfigurationValue.value.toString()) }
+                            headlineContent = { Text(text = wrenchPredefinedConfigurationValue.value.toString()) },
+                            leadingContent = {
+                                if (selected) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Link,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
                         )
                     }
                 }

@@ -53,7 +53,7 @@ fun StringValueView(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("") },
+                title = { Text("String configuration") },
                 navigationIcon =
                 {
                     IconButton(onClick = { back() }) {
@@ -89,7 +89,7 @@ internal fun StringValueView(
 ) {
     val scope = rememberCoroutineScope()
 
-    Surface(modifier = modifier) {
+    Surface(modifier = modifier.padding(16.dp)) {
         Column {
             Text(
                 modifier = Modifier.padding(8.dp),

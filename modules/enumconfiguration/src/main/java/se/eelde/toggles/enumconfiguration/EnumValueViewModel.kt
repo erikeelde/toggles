@@ -24,19 +24,23 @@ import javax.inject.Inject
 
 data class ViewState(
     val title: String? = null,
+    val selectedConfigurationValue: WrenchConfigurationValue? = null,
     val configurationValues: List<WrenchPredefinedConfigurationValue> = listOf(),
     val saving: Boolean = false,
     val reverting: Boolean = false
 )
 
 internal sealed class PartialViewState {
-    object Empty : PartialViewState()
+    data object Empty : PartialViewState()
     data class NewConfiguration(val title: String?) : PartialViewState()
-    class ConfigurationValues(val configurationValues: List<WrenchPredefinedConfigurationValue>) :
+    data class ConfigurationValues(val configurationValues: List<WrenchPredefinedConfigurationValue>) :
         PartialViewState()
 
-    object Saving : PartialViewState()
-    object Reverting : PartialViewState()
+    data class SelectedConfigurationValue(val selectedConfigurationValue: WrenchConfigurationValue) :
+        PartialViewState()
+
+    data object Saving : PartialViewState()
+    data object Reverting : PartialViewState()
 }
 
 @HiltViewModel
@@ -74,6 +78,8 @@ class FragmentEnumValueViewModel @Inject internal constructor(
             configurationValueDao.getConfigurationValue(configurationId, scopeId).collect {
                 if (it != null) {
                     selectedConfigurationValue = it
+                    _state.value =
+                        reduce(_state.value, PartialViewState.SelectedConfigurationValue(it))
                 }
             }
         }
@@ -84,17 +90,25 @@ class FragmentEnumValueViewModel @Inject internal constructor(
             is PartialViewState.NewConfiguration -> {
                 previousState.copy(title = partialViewState.title)
             }
+
             is PartialViewState.Empty -> {
                 previousState
             }
+
             is PartialViewState.Saving -> {
                 previousState.copy(saving = true)
             }
+
             is PartialViewState.Reverting -> {
                 previousState.copy(reverting = true)
             }
+
             is PartialViewState.ConfigurationValues -> {
                 previousState.copy(configurationValues = partialViewState.configurationValues)
+            }
+
+            is PartialViewState.SelectedConfigurationValue -> {
+                previousState.copy(selectedConfigurationValue = partialViewState.selectedConfigurationValue)
             }
         }
     }

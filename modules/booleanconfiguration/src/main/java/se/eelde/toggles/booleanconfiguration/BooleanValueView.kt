@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BooleanValueView(
@@ -37,7 +38,7 @@ fun BooleanValueView(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("") },
+                title = { Text("Boolean configuration") },
                 navigationIcon =
                 {
                     IconButton(onClick = { back() }) {
@@ -73,7 +74,7 @@ internal fun BooleanValueView(
 ) {
     val scope = rememberCoroutineScope()
 
-    Surface(modifier = modifier) {
+    Surface(modifier = modifier.padding(16.dp)) {
         Column {
             Text(
                 modifier = Modifier.padding(8.dp),
