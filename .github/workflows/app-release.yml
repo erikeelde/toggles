@@ -33,7 +33,7 @@ jobs:
         uses: ./.github/actions/version_information
 
       - name: Check out java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
           java-version: 17
