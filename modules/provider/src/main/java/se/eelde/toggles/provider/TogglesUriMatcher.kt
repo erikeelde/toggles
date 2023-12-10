@@ -3,51 +3,64 @@ package se.eelde.toggles.provider
 import android.content.UriMatcher
 import android.net.Uri
 
-class TogglesUriMatcher constructor(providerAuthority: String) {
-    @Suppress("MagicNumber")
-    internal val currentConfigurationId = 1
+enum class UriMatch {
+    CURRENT_CONFIGURATION_ID,
+    CURRENT_CONFIGURATION_KEY,
+    CURRENT_CONFIGURATIONS,
+    CONFIGURATIONS,
+    CONFIGURATION_ID,
+    CONFIGURATION_KEY,
+    PREDEFINED_CONFIGURATION_VALUES,
+    UNKNOWN,
+}
 
-    @Suppress("MagicNumber")
-    internal val currentConfigurationKey = 2
-
-    @Suppress("MagicNumber")
-    internal val currentConfigurations = 3
-
-    @Suppress("MagicNumber")
-    internal val predefinedConfigurationValues = 5
-
-    @Suppress("MagicNumber")
-    private val applicationId = 6
-
+class TogglesUriMatcher(providerAuthority: String) {
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
-    fun match(uri: Uri) = uriMatcher.match(uri)
+    fun match(uri: Uri): UriMatch {
+        val match = uriMatcher.match(uri)
+        return if (match == -1) {
+            UriMatch.UNKNOWN
+        } else {
+            UriMatch.entries[match]
+        }
+    }
 
     init {
         uriMatcher.addURI(
             providerAuthority,
-            "application/#",
-            applicationId
-        )
-        uriMatcher.addURI(
-            providerAuthority,
             "currentConfiguration/#",
-            currentConfigurationId
+            UriMatch.CURRENT_CONFIGURATION_ID.ordinal
         )
         uriMatcher.addURI(
             providerAuthority,
             "currentConfiguration/*",
-            currentConfigurationKey
+            UriMatch.CURRENT_CONFIGURATION_KEY.ordinal
         )
         uriMatcher.addURI(
             providerAuthority,
             "currentConfiguration",
-            currentConfigurations
+            UriMatch.CURRENT_CONFIGURATIONS.ordinal
+        )
+        uriMatcher.addURI(
+            providerAuthority,
+            "configuration",
+            UriMatch.CONFIGURATIONS.ordinal
+        )
+        uriMatcher.addURI(
+            providerAuthority,
+            "configuration/#",
+            UriMatch.CONFIGURATION_ID.ordinal
+        )
+        uriMatcher.addURI(
+            providerAuthority,
+            "configuration/*",
+            UriMatch.CONFIGURATION_KEY.ordinal
         )
         uriMatcher.addURI(
             providerAuthority,
             "predefinedConfigurationValue",
-            predefinedConfigurationValues
+            UriMatch.PREDEFINED_CONFIGURATION_VALUES.ordinal
         )
     }
 }
