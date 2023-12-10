@@ -12,7 +12,6 @@ import se.eelde.toggles.database.tables.ConfigurationValueTable
 
 @Dao
 interface WrenchConfigurationValueDao {
-
     @Query(
         "SELECT * FROM " + ConfigurationValueTable.TABLE_NAME +
             " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId) AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId)"

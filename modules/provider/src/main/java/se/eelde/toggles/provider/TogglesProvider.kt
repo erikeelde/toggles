@@ -114,7 +114,7 @@ class TogglesProvider : ContentProvider() {
         var cursor: Cursor?
 
         when (togglesUriMatcher.match(uri)) {
-            togglesUriMatcher.currentConfigurationId -> {
+            UriMatch.CURRENT_CONFIGURATION_ID -> {
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
                 cursor = configurationDao.getToggle(
                     java.lang.Long.valueOf(uri.lastPathSegment!!),
@@ -132,7 +132,7 @@ class TogglesProvider : ContentProvider() {
                 }
             }
 
-            togglesUriMatcher.currentConfigurationKey -> {
+            UriMatch.CURRENT_CONFIGURATION_KEY -> {
                 // this change is experimental and might be a way
                 // for consumers to
                 @Suppress("ConstantConditionIf")
@@ -155,6 +155,10 @@ class TogglesProvider : ContentProvider() {
                             configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
                     }
                 }
+            }
+
+            UriMatch.CONFIGURATION_KEY -> {
+                cursor = configurationDao.getToggles(uri.lastPathSegment!!)
             }
 
             else -> {
@@ -182,7 +186,7 @@ class TogglesProvider : ContentProvider() {
 
         val insertId: Long
         when (togglesUriMatcher.match(uri)) {
-            togglesUriMatcher.currentConfigurations -> {
+            UriMatch.CURRENT_CONFIGURATIONS -> {
                 val toggle = Toggle.fromContentValues(values!!)
 
                 var wrenchConfiguration: WrenchConfiguration? =
@@ -219,7 +223,7 @@ class TogglesProvider : ContentProvider() {
                 insertId = wrenchConfiguration.id
             }
 
-            togglesUriMatcher.predefinedConfigurationValues -> {
+            UriMatch.PREDEFINED_CONFIGURATION_VALUES -> {
                 val fullConfig = WrenchPredefinedConfigurationValue.fromContentValues(values!!)
                 insertId = try {
                     predefinedConfigurationDao.insert(fullConfig)
@@ -229,6 +233,10 @@ class TogglesProvider : ContentProvider() {
                         fullConfig.value!!
                     ).id
                 }
+            }
+
+            UriMatch.CONFIGURATIONS -> {
+
             }
 
             else -> {
@@ -265,7 +273,7 @@ class TogglesProvider : ContentProvider() {
 
         val updatedRows: Int
         when (togglesUriMatcher.match(uri)) {
-            togglesUriMatcher.currentConfigurationId -> {
+            UriMatch.CURRENT_CONFIGURATION_ID -> {
                 val toggle = Toggle.fromContentValues(values!!)
                 val scope = getSelectedScope(context, scopeDao, callingApplication.id)
                 updatedRows = configurationValueDao.updateConfigurationValueSync(
@@ -314,25 +322,28 @@ class TogglesProvider : ContentProvider() {
         }
 
         return when (togglesUriMatcher.match(uri)) {
-            togglesUriMatcher.currentConfigurations -> {
+            UriMatch.CURRENT_CONFIGURATIONS ->
                 "vnd.android.cursor.dir/vnd.${context!!.packageName}.currentConfiguration"
-            }
 
-            togglesUriMatcher.currentConfigurationId -> {
+            UriMatch.CURRENT_CONFIGURATION_ID ->
                 "vnd.android.cursor.item/vnd.${context!!.packageName}.currentConfiguration"
-            }
 
-            togglesUriMatcher.currentConfigurationKey -> {
-                "vnd.android.cursor.dir/vnd.${context!!.packageName}.currentConfiguration"
-            }
+            UriMatch.CURRENT_CONFIGURATION_KEY ->
+                "vnd.android.cursor.item/vnd.${context!!.packageName}.currentConfiguration"
 
-            togglesUriMatcher.predefinedConfigurationValues -> {
+            UriMatch.CONFIGURATIONS ->
+                "vnd.android.cursor.dir/vnd.${context!!.packageName}.configuration"
+
+            UriMatch.CONFIGURATION_ID ->
+                "vnd.android.cursor.dir/vnd.${context!!.packageName}.configuration"
+
+            UriMatch.CONFIGURATION_KEY ->
+                "vnd.android.cursor.dir/vnd.${context!!.packageName}.configuration"
+
+            UriMatch.PREDEFINED_CONFIGURATION_VALUES ->
                 "vnd.android.cursor.dir/vnd.${context!!.packageName}.predefinedConfigurationValue"
-            }
 
-            else -> {
-                throw UnsupportedOperationException("Not yet implemented")
-            }
+            UriMatch.UNKNOWN -> TODO()
         }
     }
 

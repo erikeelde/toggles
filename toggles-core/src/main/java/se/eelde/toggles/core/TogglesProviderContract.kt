@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import androidx.annotation.StringDef
+import java.util.Date
 
 @Suppress("LibraryEntitiesShouldNotBePublic")
 public object ColumnNames {
@@ -18,6 +19,15 @@ public object ColumnNames {
         public const val COL_ID: String = "id"
         public const val COL_VALUE: String = "value"
         public const val COL_CONFIG_ID: String = "configurationId"
+    }
+
+    public object ToggleScope {
+        public const val COL_ID: String = "id"
+        public const val COL_APP_ID: String = "applicationId"
+        public const val COL_NAME: String = "name"
+        public const val COL_SELECTED_TIMESTAMP: String = "selectedTimestamp"
+
+        public const val DEFAULT_SCOPE: String = "wrench_default"
     }
 }
 
@@ -87,12 +97,19 @@ public fun ToggleValue(initializer: ToggleValue.Builder.() -> Unit): ToggleValue
     return ToggleValue.Builder().apply(initializer).build()
 }
 
+public class ToggleScope private constructor(
+    public val id: Long = 0,
+    public val name: String,
+    public val timeStamp: Date,
+)
+
 @Suppress("LibraryEntitiesShouldNotBePublic")
 public class Toggle private constructor(
     public var id: Long = 0,
     @ToggleType public val type: String,
     public val key: String = "",
     public val value: String? = null,
+    public val scope: String? = null,
 ) {
     public class Builder {
         @set:JvmSynthetic
@@ -219,23 +236,14 @@ public object TogglesProviderContract {
     private const val TOGGLES_API_VERSION_QUERY_PARAM = "API_VERSION"
     private const val TOGGLES_API_VERSION = 1
 
-    private val applicationUri = Uri.parse("content://$TOGGLES_AUTHORITY/application")
-    private val configurationUri = Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
+    private val configurationUri = Uri.parse("content://$TOGGLES_AUTHORITY/configuration")
+    private val currentConfigurationUri = Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
     private val configurationValueUri =
         Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
 
     @JvmStatic
-    public fun applicationUri(id: Long): Uri {
-        return applicationUri
-            .buildUpon()
-            .appendPath(id.toString())
-            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
-            .build()
-    }
-
-    @JvmStatic
     public fun toggleUri(id: Long): Uri {
-        return configurationUri
+        return currentConfigurationUri
             .buildUpon()
             .appendPath(id.toString())
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
@@ -244,7 +252,7 @@ public object TogglesProviderContract {
 
     @JvmStatic
     public fun toggleUri(key: String): Uri {
-        return configurationUri
+        return currentConfigurationUri
             .buildUpon()
             .appendPath(key)
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
@@ -253,7 +261,7 @@ public object TogglesProviderContract {
 
     @JvmStatic
     public fun toggleUri(): Uri {
-        return configurationUri
+        return currentConfigurationUri
             .buildUpon()
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
@@ -263,6 +271,30 @@ public object TogglesProviderContract {
     public fun toggleValueUri(): Uri {
         return configurationValueUri
             .buildUpon()
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+            .build()
+    }
+
+    @JvmStatic
+    public fun configurationUri(): Uri {
+        return configurationUri
+            .buildUpon()
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+            .build()
+    }
+    @JvmStatic
+    public fun configurationUri(key: String): Uri {
+        return configurationUri
+            .buildUpon()
+            .appendPath(key)
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+            .build()
+    }
+    @JvmStatic
+    public fun configurationUri(id: Long): Uri {
+        return configurationUri
+            .buildUpon()
+            .appendPath(id.toString())
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
     }

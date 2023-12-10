@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import se.eelde.toggles.core.ColumnNames
 import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ScopeTable
 import java.util.Date
@@ -40,7 +41,7 @@ data class WrenchScope constructor(
 
     companion object {
 
-        const val SCOPE_DEFAULT = "wrench_default"
+        const val SCOPE_DEFAULT = ColumnNames.ToggleScope.DEFAULT_SCOPE
         const val SCOPE_USER = "Development scope"
 
         fun newWrenchScope() = WrenchScope(0, 0, SCOPE_DEFAULT, Date())
