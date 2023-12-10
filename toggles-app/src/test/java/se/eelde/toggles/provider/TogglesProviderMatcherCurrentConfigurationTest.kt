@@ -17,6 +17,7 @@ import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,17 +28,17 @@ import org.robolectric.annotation.Config
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.R
 import se.eelde.toggles.core.Toggle
-import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.WrenchDatabase
 import se.eelde.toggles.di.DatabaseModule
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @UninstallModules(DatabaseModule::class)
 @Config(application = HiltTestApplication::class, sdk = [Build.VERSION_CODES.P])
-class TogglesProviderTest {
+class TogglesProviderMatcherCurrentConfigurationTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
@@ -54,6 +55,9 @@ class TogglesProviderTest {
         }
     }
 
+    @Inject
+    lateinit var wrenchDatabase: WrenchDatabase
+
     @Before
     fun setUp() {
         hiltRule.inject()
@@ -69,6 +73,12 @@ class TogglesProviderTest {
             context.applicationInfo.packageName,
             appIcon
         )
+    }
+
+    @Test
+    fun testGetTypePredefinedConfigurationValue() {
+        val type = togglesProvider.getType(TogglesProviderContract.toggleUri())
+        assertEquals("vnd.android.cursor.dir/vnd.se.eelde.toggles.currentConfiguration", type)
     }
 
     @Test
@@ -167,46 +177,10 @@ class TogglesProviderTest {
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingInsertForToggleWithId() {
-        togglesProvider.insert(
-            TogglesProviderContract.toggleUri(0),
-            getToggle("dummyToggle").toContentValues()
-        )
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
-    fun testMissingInsertForToggleWithKey() {
-        togglesProvider.insert(
-            TogglesProviderContract.toggleUri("fake"),
-            getToggle("dummyToggle").toContentValues()
-        )
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
-    fun testMissingUpdateForToggleWithKey() {
-        togglesProvider.update(
-            TogglesProviderContract.toggleUri("fake"),
-            getToggle("dummyToggle").toContentValues(),
-            null,
-            null
-        )
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
     fun testMissingUpdateForToggles() {
         togglesProvider.update(
             TogglesProviderContract.toggleUri(),
             getToggle("dummyToggle").toContentValues(),
-            null,
-            null
-        )
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
-    fun testMissingUpdateForToggleValues() {
-        togglesProvider.update(
-            TogglesProviderContract.toggleValueUri(),
-            getToggleValue("dummyToggleValue").toContentValues(),
             null,
             null
         )
@@ -223,40 +197,8 @@ class TogglesProviderTest {
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingQueryForToggleValues() {
-        togglesProvider.update(
-            TogglesProviderContract.toggleValueUri(),
-            getToggleValue("dummyToggleValue").toContentValues(),
-            null,
-            null
-        )
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
-    fun testMissingDeleteForToggleWithId() {
-        togglesProvider.delete(TogglesProviderContract.toggleUri(0), null, null)
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
-    fun testMissingDeleteForToggleWithKey() {
-        togglesProvider.delete(TogglesProviderContract.toggleUri("fake"), null, null)
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
     fun testMissingDeleteForToggles() {
         togglesProvider.delete(TogglesProviderContract.toggleUri(), null, null)
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
-    fun testMissingDeleteForToggleValues() {
-        togglesProvider.delete(TogglesProviderContract.toggleValueUri(), null, null)
-    }
-
-    private fun getToggleValue(value: String): ToggleValue {
-        return ToggleValue {
-            id = 0
-            this.value = value
-        }
     }
 
     private fun getToggle(key: String): Toggle {
