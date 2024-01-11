@@ -29,7 +29,7 @@ for prefix in "${prefixes[@]}"; do
     patch="${version_parts[2]}"
 
     # Calculate the version code using arithmetic expansion
-    version_code=$((major * 100000 + minor * 1000 + patch * 10))
+    version_code=$((major * 1000000 + minor * 1000 + patch * 10))
 
     # Get the number of commits since the tag
     commit_count=$(git rev-list --count "${tag}"..HEAD)
