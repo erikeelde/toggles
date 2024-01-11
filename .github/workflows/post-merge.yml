@@ -19,7 +19,7 @@ jobs:
           fetch-depth: '0'
 
       - name: Check out java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
           java-version: 17
@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew :toggles-app:packageDebug :toggles-sample:packageDebug
 
       - name: Upload apks
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Apks
           path: '**/build/outputs/apk/*'

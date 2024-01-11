@@ -28,15 +28,16 @@ jobs:
           echo "${{ secrets.SERVICE_ACCOUNT }}" > service_account.json.asc
           gpg -d --passphrase "${{ secrets.GPG_ENCRYPTION_KEY }}" --batch service_account.json.asc > service_account.json
 
-      - name: "Calculate build number"
-        id: version_information
-        uses: ./.github/actions/version_information
 
       - name: Check out java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
           java-version: 17
+
+      - name: "Calculate build number"
+        id: version_information
+        uses: ./.github/actions/version_information
 
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
