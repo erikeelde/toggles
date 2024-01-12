@@ -67,7 +67,7 @@ fun NavGraphBuilder.applicationNavigations(
                     val scope = rememberCoroutineScope()
 
                     TopAppBar(
-                        title = { "Applications" },
+                        title = { Text("Applications") },
                         navigationIcon =
                         {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {

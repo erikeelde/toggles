@@ -8,18 +8,18 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: '0'
 
       - name: Check out java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
           java-version: 17
@@ -30,11 +30,26 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Run Checks
-        run: ./gradlew check :toggles-core:check :toggles-flow:check :toggles-flow-noop:check :toggles-prefs:check :toggles-prefs-noop:check
+      - name: Run app Checks
+        run: ./gradlew check
+
+      - name: Run core Checks
+        run: ./gradlew :toggles-core:check
+
+      - name: Run flow Checks
+        run: ./gradlew :toggles-flow:check --no-configuration-cache
+
+      - name: Run flow noop Checks
+        run: ./gradlew :toggles-flow-noop:check
+
+      - name: Run prefs Checks
+        run: ./gradlew :toggles-prefs:check --no-configuration-cache
+
+      - name: Run prefs noop Checks
+        run: ./gradlew :toggles-prefs-noop:check
 
       - name: Upload reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: Reports

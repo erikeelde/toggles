@@ -1,0 +1,29 @@
+name: "Generate version information"
+description: "Generate version information and expose using outputs"
+
+outputs:
+  mobile-version-code:
+    description: "Version code of application"
+    value: ${{ steps.mobile_version_code.outputs.mobile_version_code }}
+
+  mobile-version-name:
+    description: "Version name of application"
+    value: ${{ steps.mobile_version_name.outputs.mobile_version_name }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Generate versions"
+      id: version_code
+      run: ./scripts/generate_versions.sh
+      shell: bash
+
+    - name: "Get mobile version code"
+      id: mobile_version_code
+      run: echo "mobile_version_code=$(grep 'V_VERSION_CODE=' versions.properties | cut -d'=' -f2)" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: "Get mobile version name"
+      id: mobile_version_name
+      run: echo "mobile_version_name=$(grep 'V_VERSION=' versions.properties | cut -d'=' -f2)" >> $GITHUB_OUTPUT
+      shell: bash

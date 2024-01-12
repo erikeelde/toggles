@@ -1,7 +1,6 @@
 package se.eelde.toggles
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -15,8 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -25,19 +22,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.applications.applicationNavigations
+import se.eelde.toggles.booleanconfiguration.BooleanValueView
 import se.eelde.toggles.composetheme.TogglesTheme
-import se.eelde.toggles.composetheme.rememberAppState
-import se.eelde.toggles.configurationlist.configurationsNavigations
-import se.eelde.toggles.dialogs.booleanvalue.BooleanValueView
-import se.eelde.toggles.dialogs.booleanvalue.FragmentBooleanValueViewModel
-import se.eelde.toggles.dialogs.enumvalue.EnumValueView
-import se.eelde.toggles.dialogs.enumvalue.FragmentEnumValueViewModel
-import se.eelde.toggles.dialogs.integervalue.FragmentIntegerValueViewModel
-import se.eelde.toggles.dialogs.integervalue.IntegerValueView
-import se.eelde.toggles.dialogs.stringvalue.FragmentStringValueViewModel
-import se.eelde.toggles.dialogs.stringvalue.StringValueView
+import se.eelde.toggles.configurations.configurationsNavigations
+import se.eelde.toggles.dialogs.scope.ScopeValueView
+import se.eelde.toggles.enumconfiguration.EnumValueView
 import se.eelde.toggles.help.HelpView
+import se.eelde.toggles.integerconfiguration.IntegerValueView
 import se.eelde.toggles.oss.OssView
+import se.eelde.toggles.stringconfiguration.StringValueView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongMethod")
@@ -59,7 +52,23 @@ fun Navigation(
             navigateToOss = { navController.navigate("oss") },
             navigateToHelp = { navController.navigate("help") },
         )
-        configurationsNavigations(navController, back = { navController.popBackStack() })
+        configurationsNavigations(
+            navigateToBooleanConfiguration = { scopeId: Long, configurationId: Long ->
+                navController.navigate("configuration/$configurationId/$scopeId/boolean")
+            },
+            navigateToIntegerConfiguration = { scopeId: Long, configurationId: Long ->
+                navController.navigate("configuration/$configurationId/$scopeId/integer")
+            },
+            navigateToStringConfiguration = { scopeId: Long, configurationId: Long ->
+                navController.navigate("configuration/$configurationId/$scopeId/string")
+            },
+            navigateToEnumConfiguration = { scopeId: Long, configurationId: Long ->
+                navController.navigate("configuration/$configurationId/$scopeId/enum")
+            },
+            navigateToScopeView = { applicationId: Long ->
+                navController.navigate("scopes/$applicationId")
+            }
+        ) { navController.popBackStack() }
         composable(
             "configuration/{configurationId}/{scopeId}/boolean",
             arguments = listOf(
@@ -67,40 +76,13 @@ fun Navigation(
                 navArgument("scopeId") { type = NavType.LongType }
             )
         ) {
-            val viewModel: FragmentBooleanValueViewModel = hiltViewModel()
-            val state = viewModel.state.collectAsStateWithLifecycle().value
-
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text("") },
-                        navigationIcon =
-                        {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
-                },
-            ) { paddingValues ->
-                BooleanValueView(
-                    uiState = state,
-                    popBackStack = { navController.popBackStack() },
-                    revert = {
-                        viewModel.revertClick()
-                        navController.popBackStack()
-                    },
-                    save = {
-                        viewModel.saveClick()
-                        navController.popBackStack()
-                    },
-                    setBooleanValue = { viewModel.checkedChanged(it) },
-                    modifier = Modifier.padding(paddingValues),
-                )
-            }
+            BooleanValueView { navController.popBackStack() }
+        }
+        composable(
+            "scopes/{applicationId}",
+            arguments = listOf(navArgument("applicationId") { type = NavType.LongType })
+        ) {
+            ScopeValueView { navController.popBackStack() }
         }
         composable(
             "configuration/{configurationId}/{scopeId}/integer",
@@ -109,34 +91,7 @@ fun Navigation(
                 navArgument("scopeId") { type = NavType.LongType }
             )
         ) {
-            val viewModel: FragmentIntegerValueViewModel = hiltViewModel()
-            val state = viewModel.state.collectAsStateWithLifecycle().value
-
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text("") },
-                        navigationIcon =
-                        {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
-                },
-            ) { paddingValues ->
-                IntegerValueView(
-                    uiState = state,
-                    popBackStack = { navController.popBackStack() },
-                    revert = { viewModel.revertClick() },
-                    save = { viewModel.saveClick() },
-                    setIntegerValue = { viewModel.setIntegerValue(it) },
-                    modifier = Modifier.padding(paddingValues),
-                )
-            }
+            IntegerValueView { navController.popBackStack() }
         }
         composable(
             "configuration/{configurationId}/{scopeId}/string",
@@ -145,34 +100,7 @@ fun Navigation(
                 navArgument("scopeId") { type = NavType.LongType }
             )
         ) {
-            val viewModel: FragmentStringValueViewModel = hiltViewModel()
-            val state = viewModel.state.collectAsStateWithLifecycle().value
-
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text("") },
-                        navigationIcon =
-                        {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
-                },
-            ) { paddingValues ->
-                StringValueView(
-                    state = state,
-                    popBackStack = { navController.popBackStack() },
-                    revert = { viewModel.revertClick() },
-                    save = { viewModel.saveClick() },
-                    setStringValue = { viewModel.setStringValue(it) },
-                    modifier = Modifier.padding(paddingValues),
-                )
-            }
+            StringValueView { navController.popBackStack() }
         }
         composable(
             "configuration/{configurationId}/{scopeId}/enum",
@@ -181,32 +109,7 @@ fun Navigation(
                 navArgument("scopeId") { type = NavType.LongType }
             )
         ) {
-            val viewModel: FragmentEnumValueViewModel = hiltViewModel()
-            val state = viewModel.state.collectAsStateWithLifecycle().value
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text("") },
-                        navigationIcon =
-                        {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
-                },
-            ) { paddingValues ->
-                EnumValueView(
-                    state = state,
-                    popBackStack = { navController.popBackStack() },
-                    revert = { viewModel.revertClick() },
-                    setEnumValue = { viewModel.saveClick(it) },
-                    modifier = Modifier.padding(paddingValues),
-                )
-            }
+            EnumValueView { navController.popBackStack() }
         }
         composable(
             "oss",
@@ -233,24 +136,7 @@ fun Navigation(
         composable(
             "help",
         ) {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text("") },
-                        navigationIcon =
-                        {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
-                },
-            ) { paddingValues ->
-                HelpView(modifier = Modifier.padding(paddingValues))
-            }
+            HelpView { navController.popBackStack() }
         }
     }
 }
@@ -264,8 +150,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             TogglesTheme {
                 val navController: NavHostController = rememberNavController()
-                val appState = rememberAppState(navController)
-                Log.e("appState", "current destination: ${appState.currentDestination}")
 
                 Navigation(navController = navController)
             }

@@ -1,6 +1,5 @@
 import java.io.FileInputStream
 import java.util.Properties
-//import se.eelde.toggles.licenseeassetplugin.CopyLicenseeReportPlugin
 
 plugins {
     id("toggles.android.application-conventions")
@@ -8,10 +7,19 @@ plugins {
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
     id("com.github.triplet.play")
-    id("com.gladed.androidgitversion") version "0.4.14"
     id("com.google.firebase.crashlytics")
     id("app.cash.licensee")
     id("se.premex.gross") version "0.1.0"
+    id("com.google.devtools.ksp")
+}
+
+val versionFile = File("versions.properties")
+val versions = Properties().apply {
+    if (versionFile.exists()) {
+        FileInputStream(versionFile).use {
+            load(it)
+        }
+    }
 }
 
 licensee {
@@ -23,10 +31,7 @@ licensee {
     // try remove or ping developer later
     // allowUrl("http://www.opensource.org/licenses/mit-license.php")
 
-    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")}
-
-androidGitVersion {
-    tagPattern = "^v[0-9]+.*"
+    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")
 }
 
 play {
@@ -60,8 +65,8 @@ android {
 
     defaultConfig {
         applicationId = "se.eelde.toggles"
-        versionName = androidGitVersion.name()
-        versionCode = androidGitVersion.code()
+        versionName = versions.getProperty("V_VERSION", "0.0.1")
+        versionCode = versions.getProperty("V_VERSION_CODE", "1").toInt()
 
         vectorDrawables.useSupportLibrary = true
 
@@ -72,6 +77,8 @@ android {
         manifestPlaceholders["togglesPermission"] = togglesPermission
 
         buildConfigField("String", "CONFIG_AUTHORITY", "\"$togglesAuthority\"")
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -95,8 +102,15 @@ android {
 dependencies {
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.database)
+    implementation(projects.modules.provider)
     implementation(projects.modules.applications)
+    implementation(projects.modules.configurations)
     implementation(projects.modules.oss)
+    implementation(projects.modules.help)
+    implementation(projects.modules.booleanconfiguration)
+    implementation(projects.modules.integerconfiguration)
+    implementation(projects.modules.stringconfiguration)
+    implementation(projects.modules.enumconfiguration)
 
     implementation(libs.androidx.ui.ui.tooling)
     implementation(platform(libs.androidx.compose.bom))
@@ -132,16 +146,16 @@ dependencies {
     implementation(libs.com.google.firebase.firebase.analytics.ktx)
 
     implementation(libs.com.google.dagger.hilt.android)
-    kapt(libs.com.google.dagger.hilt.android.compiler)
-    kapt(libs.androidx.hilt.hilt.compiler)
+    ksp(libs.com.google.dagger.hilt.android.compiler)
+    ksp(libs.androidx.hilt.hilt.compiler)
 
     testImplementation(libs.com.google.dagger.hilt.android.testing)
-    kaptTest(libs.com.google.dagger.hilt.android.compiler)
+    kspTest(libs.com.google.dagger.hilt.android.compiler)
 
     implementation(libs.androidx.lifecycle.lifecycle.common.java8)
 
     implementation(libs.com.google.dagger)
-    kapt(libs.com.google.dagger.dagger.compiler)
+    ksp(libs.com.google.dagger.dagger.compiler)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.recyclerview)
@@ -156,12 +170,11 @@ dependencies {
     implementation(libs.androidx.room.room.ktx)
     implementation(libs.androidx.paging.paging.runtime.ktx)
 
-    implementation(libs.androidx.paging.paging.runtime.ktx)
-
     implementation(libs.se.eelde.toggles.toggles.core)
     implementation(libs.se.eelde.toggles.toggles.flow)
     implementation(libs.se.eelde.toggles.toggles.prefs)
 
+    implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 
     implementation(libs.androidx.core.core.ktx)
@@ -169,4 +182,10 @@ dependencies {
     implementation(libs.com.squareup.okio)
 
     debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
+
+
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
 }

@@ -25,7 +25,7 @@ buildCache {
     }
 }
 
-private val localLibraries = false
+private val localLibraries = true
 
 rootProject.name = "Toggles"
 includeBuild("build-logic/conventions")
@@ -69,8 +69,15 @@ include(
     ":toggles-sample",
     ":modules:compose-theme",
     ":modules:database",
+    ":modules:provider",
     ":modules:applications",
+    ":modules:configurations",
     ":modules:oss",
+    ":modules:help",
+    ":modules:stringconfiguration",
+    ":modules:booleanconfiguration",
+    ":modules:integerconfiguration",
+    ":modules:enumconfiguration",
 )
 
 dependencyResolutionManagement {

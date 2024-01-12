@@ -11,7 +11,15 @@ import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
 
 @Entity(
     tableName = PredefinedConfigurationValueTable.TABLE_NAME,
-    indices = [Index(value = arrayOf(PredefinedConfigurationValueTable.COL_CONFIG_ID))],
+    indices = [
+        Index(
+            value = arrayOf(
+                PredefinedConfigurationValueTable.COL_CONFIG_ID,
+                PredefinedConfigurationValueTable.COL_VALUE
+            ),
+            unique = true
+        )
+    ],
     foreignKeys = [
         ForeignKey(
             entity = WrenchConfiguration::class,

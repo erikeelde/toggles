@@ -15,6 +15,7 @@ import se.eelde.toggles.database.migrations.Migrations.MIGRATION_1_2
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_2_3
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_3_4
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_4_5
+import se.eelde.toggles.database.migrations.Migrations.MIGRATION_5_6
 import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 
@@ -50,32 +51,32 @@ class MigrationTests {
         // Create the database with version 2
         val originalDb = testHelper.createDatabase(TEST_DB_NAME, 2)
 
-        val testApplicationId = DatabaseHelper.insertWrenchApplication(
+        val testApplicationId = DatabaseHelper.insertApplicationPre4(
             originalDb,
             "TestApplication",
-            "com.izettle.wrench.testapplication"
+            "se.eelde.toggles.application"
         )
 
         // insert data
-        DatabaseHelper.insertWrenchConfiguration(
+        DatabaseHelper.insertConfigurationPre3(
             originalDb,
             testApplicationId,
             "Integerkey",
             Toggle.TYPE.INTEGER
         )
-        DatabaseHelper.insertWrenchConfiguration(
+        DatabaseHelper.insertConfigurationPre3(
             originalDb,
             testApplicationId,
             "Stringkey",
             Toggle.TYPE.STRING
         )
-        DatabaseHelper.insertWrenchConfiguration(
+        DatabaseHelper.insertConfigurationPre3(
             originalDb,
             testApplicationId,
             "Booleankey",
             Toggle.TYPE.BOOLEAN
         )
-        DatabaseHelper.insertWrenchConfiguration(
+        DatabaseHelper.insertConfigurationPre3(
             originalDb,
             testApplicationId,
             "Enumkey",
@@ -86,7 +87,7 @@ class MigrationTests {
 
         val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 3, true, MIGRATION_2_3)
 
-        var cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Integerkey")
+        var cursor = DatabaseHelper.getConfigurationByKey(migratedDb, "Integerkey")
         assertTrue(cursor.moveToFirst())
         assertEquals(
             Toggle.TYPE.INTEGER,
@@ -94,7 +95,7 @@ class MigrationTests {
         )
         cursor.close()
 
-        cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Stringkey")
+        cursor = DatabaseHelper.getConfigurationByKey(migratedDb, "Stringkey")
         assertTrue(cursor.moveToFirst())
         assertEquals(
             Toggle.TYPE.STRING,
@@ -102,7 +103,7 @@ class MigrationTests {
         )
         cursor.close()
 
-        cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Booleankey")
+        cursor = DatabaseHelper.getConfigurationByKey(migratedDb, "Booleankey")
         assertTrue(cursor.moveToFirst())
         assertEquals(
             Toggle.TYPE.BOOLEAN,
@@ -110,7 +111,7 @@ class MigrationTests {
         )
         cursor.close()
 
-        cursor = DatabaseHelper.getWrenchConfigurationByKey(migratedDb, "Enumkey")
+        cursor = DatabaseHelper.getConfigurationByKey(migratedDb, "Enumkey")
         assertTrue(cursor.moveToFirst())
         assertEquals(
             Toggle.TYPE.ENUM,
@@ -124,7 +125,7 @@ class MigrationTests {
     fun test3to4() {
         val originalDb = testHelper.createDatabase(TEST_DB_NAME, 3)
 
-        val testApplicationId = DatabaseHelper.insertWrenchApplication(
+        DatabaseHelper.insertApplicationPre4(
             originalDb,
             "TestApplication",
             "se.eelde.toggles.testapplication"
@@ -132,7 +133,7 @@ class MigrationTests {
 
         val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 4, true, MIGRATION_3_4)
 
-        val application = DatabaseHelper.getWrenchApplication(migratedDb, testApplicationId)
+        val application = DatabaseHelper.getApplication(migratedDb, 1)
 
         assertEquals("TestApplication", application.applicationLabel)
         assertEquals("se.eelde.toggles.testapplication", application.shortcutId)
@@ -144,6 +145,64 @@ class MigrationTests {
     fun test4to5() {
         testHelper.createDatabase(TEST_DB_NAME, 4)
         testHelper.runMigrationsAndValidate(TEST_DB_NAME, 5, true, MIGRATION_4_5)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test5to6() {
+        testHelper.createDatabase(TEST_DB_NAME, 5)
+        testHelper.runMigrationsAndValidate(TEST_DB_NAME, 6, true, MIGRATION_5_6)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test5to6WithDuplicates() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 5)
+        assertEquals(
+            1,
+            DatabaseHelper.insertApplication(
+                originalDb,
+                "TestApplication",
+                "se.eelde.toggles.application",
+                "se.eelde.toggles.application",
+            )
+        )
+
+        // insert data
+        assertEquals(
+            1,
+            DatabaseHelper.insertConfiguration(
+                originalDb,
+                1,
+                "MyEnum",
+                Toggle.TYPE.ENUM,
+                0,
+            )
+        )
+
+        assertEquals(1, DatabaseHelper.insertPredefinedConfigurationValue(originalDb, 1, "a"))
+        assertEquals(2, DatabaseHelper.insertPredefinedConfigurationValue(originalDb, 1, "a"))
+        assertEquals(3, DatabaseHelper.insertPredefinedConfigurationValue(originalDb, 1, "b"))
+        assertEquals(4, DatabaseHelper.insertPredefinedConfigurationValue(originalDb, 1, "b"))
+        assertEquals(5, DatabaseHelper.insertPredefinedConfigurationValue(originalDb, 1, "b"))
+        assertEquals(6, DatabaseHelper.insertPredefinedConfigurationValue(originalDb, 1, "c"))
+
+        val valuesBefore =
+            DatabaseHelper.getPredefinedConfigurationValueByConfigurationId(
+                db = originalDb,
+                configId = 1
+            )
+        assertEquals(6, valuesBefore.size)
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 6, true, MIGRATION_5_6)
+
+        val values =
+            DatabaseHelper.getPredefinedConfigurationValueByConfigurationId(
+                db = migratedDb,
+                configId = 1
+            )
+
+        assertEquals(3, values.size)
     }
 
     companion object {

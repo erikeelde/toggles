@@ -78,11 +78,10 @@ public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
             for (enumConstant in type.enumConstants!!) {
                 contentResolver.insert(
                     toggleValueUri(),
-                    ToggleValue(
-                        configurationId = toggle.id,
+                    ToggleValue {
+                        configurationId = toggle.id
                         value = enumConstant.toString()
-                    )
-                        .toContentValues()
+                    }.toContentValues()
                 )
             }
         }
@@ -106,7 +105,11 @@ public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
                 return Toggle.fromCursor(cursor)
             }
         }
-
-        return Toggle(0, toggleType, key, null)
+        return Toggle {
+            id = 0
+            type = toggleType
+            this.key = key
+            value = null
+        }
     }
 }

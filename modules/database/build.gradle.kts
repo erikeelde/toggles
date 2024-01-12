@@ -1,6 +1,7 @@
 plugins {
     id("toggles.android.module-conventions")
     id("toggles.ownership-conventions")
+    id("com.google.devtools.ksp")
 }
 
 class RoomSchemaArgProvider(
@@ -10,25 +11,12 @@ class RoomSchemaArgProvider(
 ) : CommandLineArgumentProvider {
 
     override fun asArguments(): Iterable<String> {
-        // Note: If you're using KSP, you should change the line below to return
-        // listOf("room.schemaLocation=${schemaDir.path}")
-        return listOf("-Aroom.schemaLocation=${schemaDir.path}")
+        return listOf("room.schemaLocation=${schemaDir.path}")
     }
 }
 
 android {
     namespace = "se.eelde.toggles.database"
-    defaultConfig {
-        javaCompileOptions {
-            annotationProcessorOptions {
-                compilerArgumentProviders(
-                    RoomSchemaArgProvider(File(projectDir, "schemas"))
-                )
-                arguments["room.incremental"] = "true"
-                arguments["room.expandProjection"] = "true"
-            }
-        }
-    }
     testOptions {
         unitTests{
             isIncludeAndroidResources = true
@@ -39,11 +27,15 @@ android {
     }
 }
 
+ksp {
+    arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
+}
+
 dependencies {
     implementation(libs.androidx.room.room.paging)
     implementation(libs.androidx.room.room.runtime)
     implementation(libs.androidx.room.room.ktx)
-    kapt(libs.androidx.room.room.compiler)
+    ksp(libs.androidx.room.room.compiler)
     implementation(libs.se.eelde.toggles.toggles.core)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)

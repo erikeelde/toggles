@@ -6,7 +6,7 @@ import android.net.Uri
 import androidx.annotation.StringDef
 
 @Suppress("LibraryEntitiesShouldNotBePublic")
-public class ColumnNames {
+public object ColumnNames {
     public object Toggle {
         public const val COL_KEY: String = "configurationKey"
         public const val COL_ID: String = "id"
@@ -21,41 +21,143 @@ public class ColumnNames {
     }
 }
 
-@Suppress("ForbiddenPublicDataClass", "LibraryEntitiesShouldNotBePublic")
-public data class ToggleValue(
-    val id: Long = 0,
-    val configurationId: Long = 0,
-    val value: String? = null
+@Suppress("LibraryEntitiesShouldNotBePublic")
+public class ToggleValue private constructor(
+    public val id: Long = 0,
+    public val configurationId: Long = 0,
+    public val value: String? = null
 ) {
 
-    public constructor(configurationId: Long, value: String?) : this(0, configurationId, value)
+    public class Builder {
+        @set:JvmSynthetic
+        public var id: Long = 0
 
-    public fun toContentValues(): ContentValues {
-        val contentValues = ContentValues()
+        @set:JvmSynthetic
+        public var configurationId: Long = 0
+
+        @set:JvmSynthetic
+        public var value: String? = null
+
+        public fun setId(id: Long): Builder = apply { this.id = id }
+        public fun setConfigurationId(configurationId: Long): Builder =
+            apply { this.configurationId = configurationId }
+
+        public fun setValue(value: String?): Builder = apply { this.value = value }
+
+        public fun build(): ToggleValue =
+            ToggleValue(id = id, configurationId = configurationId, value = value)
+    }
+
+    public fun toContentValues(): ContentValues = ContentValues().apply {
         if (id > 0) {
-            contentValues.put(ColumnNames.ToggleValue.COL_ID, id)
+            put(ColumnNames.ToggleValue.COL_ID, id)
         }
-        contentValues.put(ColumnNames.ToggleValue.COL_CONFIG_ID, configurationId)
-        contentValues.put(ColumnNames.ToggleValue.COL_VALUE, value)
+        put(ColumnNames.ToggleValue.COL_CONFIG_ID, configurationId)
+        put(ColumnNames.ToggleValue.COL_VALUE, value)
+    }
 
-        return contentValues
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ToggleValue
+
+        if (id != other.id) return false
+        if (configurationId != other.configurationId) return false
+        if (value != other.value) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + configurationId.hashCode()
+        result = 31 * result + (value?.hashCode() ?: 0)
+        return result
+    }
+
+    override fun toString(): String {
+        return "ToggleValue(id=$id, configurationId=$configurationId, value=$value)"
     }
 }
 
-@Suppress("ForbiddenPublicDataClass", "LibraryEntitiesShouldNotBePublic")
-public data class Toggle(
-    var id: Long = 0,
-    @ToggleType val type: String,
-    val key: String = "",
-    val value: String? = null,
-//     val scope: String? = null,
+@JvmSynthetic
+@Suppress("LibraryEntitiesShouldNotBePublic")
+public fun ToggleValue(initializer: ToggleValue.Builder.() -> Unit): ToggleValue {
+    return ToggleValue.Builder().apply(initializer).build()
+}
+
+@Suppress("LibraryEntitiesShouldNotBePublic")
+public class Toggle private constructor(
+    public var id: Long = 0,
+    @ToggleType public val type: String,
+    public val key: String = "",
+    public val value: String? = null,
 ) {
+    public class Builder {
+        @set:JvmSynthetic
+        public var id: Long = 0
+
+        @set:JvmSynthetic
+        @ToggleType
+        public var type: String = ""
+
+        @set:JvmSynthetic
+        public var key: String = ""
+
+        @set:JvmSynthetic
+        public var value: String? = null
+
+        public fun setId(id: Long): Builder = apply { this.id = id }
+        public fun setType(@ToggleType type: String): Builder =
+            apply { this.type = type }
+
+        public fun setKey(key: String): Builder = apply { this.key = key }
+        public fun setValue(value: String?): Builder = apply { this.value = value }
+
+        public fun build(): Toggle =
+            Toggle(id = id, type = type, key = key, value = value)
+    }
+
+    public fun copy(
+        id: Long = this.id,
+        type: String = this.type,
+        key: String = this.key,
+        value: String? = this.value
+    ): Toggle =
+        Toggle(id = id, type = type, key = key, value = value)
 
     public fun toContentValues(): ContentValues = ContentValues().apply {
         put(ColumnNames.Toggle.COL_ID, id)
         put(ColumnNames.Toggle.COL_KEY, key)
         put(ColumnNames.Toggle.COL_VALUE, value)
         put(ColumnNames.Toggle.COL_TYPE, type)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Toggle
+
+        if (id != other.id) return false
+        if (type != other.type) return false
+        if (key != other.key) return false
+        if (value != other.value) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + type.hashCode()
+        result = 31 * result + key.hashCode()
+        result = 31 * result + (value?.hashCode() ?: 0)
+        return result
+    }
+
+    override fun toString(): String {
+        return "Toggle(id=$id, type='$type', key='$key', value=$value)"
     }
 
     @StringDef(TYPE.BOOLEAN, TYPE.STRING, TYPE.INTEGER, TYPE.ENUM)
@@ -87,10 +189,15 @@ public data class Toggle(
                 type = cursor.getStringOrThrow(ColumnNames.Toggle.COL_TYPE),
                 key = cursor.getStringOrThrow(ColumnNames.Toggle.COL_KEY),
                 value = cursor.getStringOrNull(ColumnNames.Toggle.COL_VALUE),
-                // scope = cursor.getStringOrNull("scope"),
             )
         }
     }
+}
+
+@JvmSynthetic
+@Suppress("LibraryEntitiesShouldNotBePublic")
+public fun Toggle(initializer: Toggle.Builder.() -> Unit): Toggle {
+    return Toggle.Builder().apply(initializer).build()
 }
 
 private fun Cursor.getStringOrThrow(columnName: String): String = getStringOrNull(columnName)!!
@@ -114,7 +221,8 @@ public object TogglesProviderContract {
 
     private val applicationUri = Uri.parse("content://$TOGGLES_AUTHORITY/application")
     private val configurationUri = Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
-    private val configurationValueUri = Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
+    private val configurationValueUri =
+        Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
 
     @JvmStatic
     public fun applicationUri(id: Long): Uri {

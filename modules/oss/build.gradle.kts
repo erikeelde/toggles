@@ -3,6 +3,7 @@ plugins {
     id("toggles.ownership-conventions")
     //id("app.cash.licensee")
     //id("se.premex.gross") version "0.1.0"
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -16,7 +17,7 @@ android {
 }
 
 dependencies {
-    kapt(libs.com.squareup.moshi.moshi.kotlin.codegen)
+    ksp(libs.com.squareup.moshi.moshi.kotlin.codegen)
 
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.ktx)
     implementation(platform(libs.androidx.compose.bom))
@@ -38,7 +39,7 @@ dependencies {
     implementation(libs.androidx.navigation.navigation.compose)
 
     implementation(libs.com.google.dagger.hilt.android)
-    kapt(libs.com.google.dagger.hilt.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
 
     implementation(libs.com.squareup.moshi)

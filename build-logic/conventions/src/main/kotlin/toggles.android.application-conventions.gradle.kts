@@ -1,3 +1,4 @@
+
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.kotlin.dsl.kotlin
 
@@ -6,17 +7,8 @@ val libs = the<LibrariesForLibs>()
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
     id("kotlin-android")
     id("toggles.detekt-conventions")
-}
-
-kapt {
-    javacOptions {
-        // Increase the max count of errors from annotation processors.
-        // Default is 100.
-        option("-Xmaxerrs", 500)
-    }
 }
 
 android {
@@ -37,6 +29,7 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
     }
 
+    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
