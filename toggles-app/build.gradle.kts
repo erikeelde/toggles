@@ -9,7 +9,7 @@ plugins {
     id("com.github.triplet.play")
     id("com.google.firebase.crashlytics")
     id("app.cash.licensee")
-    id("se.premex.gross") version "0.1.0"
+    id("se.premex.gross") version "0.2.0"
     id("com.google.devtools.ksp")
 }
 

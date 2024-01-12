@@ -1,8 +1,6 @@
 plugins {
     id("toggles.android.module-conventions")
     id("toggles.ownership-conventions")
-    //id("app.cash.licensee")
-    //id("se.premex.gross") version "0.1.0"
     id("com.google.devtools.ksp")
 }
 

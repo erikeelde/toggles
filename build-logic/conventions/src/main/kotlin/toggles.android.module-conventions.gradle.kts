@@ -31,7 +31,6 @@ android {
 kotlin {
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.toString()))
-        vendor.set(JvmVendorSpec.AZUL)
     }
 }
 
