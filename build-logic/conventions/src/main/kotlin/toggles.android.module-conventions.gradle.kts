@@ -6,7 +6,6 @@ val libs = the<LibrariesForLibs>()
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("kapt")
     id("toggles.detekt-conventions")
 }
 

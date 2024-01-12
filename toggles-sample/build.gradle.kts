@@ -6,8 +6,8 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("toggles.ownership-conventions")
     id("app.cash.licensee")
-    id("se.premex.gross") version "0.2.0"
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.se.premex.gross)
+    alias(libs.plugins.com.google.devtools.ksp)
 }
 
 val versionFile = File("versions.properties")

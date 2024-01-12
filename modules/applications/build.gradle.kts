@@ -1,7 +1,7 @@
 plugins {
     id("toggles.android.module-conventions")
     id("toggles.ownership-conventions")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.com.google.devtools.ksp)
 }
 
 android {
