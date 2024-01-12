@@ -6,7 +6,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("toggles.ownership-conventions")
     id("app.cash.licensee")
-    id("se.premex.gross") version "0.1.0"
+    id("se.premex.gross") version "0.2.0"
     id("com.google.devtools.ksp")
 }
 
@@ -56,7 +56,6 @@ android {
 kotlin {
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.toString()))
-        vendor.set(JvmVendorSpec.AZUL)
     }
 }
 

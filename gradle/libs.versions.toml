@@ -117,7 +117,7 @@ androidx-vectordrawable = { module = "androidx.vectordrawable:vectordrawable", v
 androidx-vectordrawable-vectordrawable-animated = { module = "androidx.vectordrawable:vectordrawable-animated", version.ref = "androidx-vectordrawable" }
 androidx-versionedparcelable = "androidx.versionedparcelable:versionedparcelable:1.1.1"
 androidx-viewpager = "androidx.viewpager:viewpager:1.0.0"
-app-cash-licensee-licensee-gradle-plugin = "app.cash.licensee:licensee-gradle-plugin:1.7.0"
+app-cash-licensee-licensee-gradle-plugin = "app.cash.licensee:licensee-gradle-plugin:1.8.0"
 com-android-tools-build-gradle = "com.android.tools.build:gradle:8.2.0"
 com-google-android-datatransport-transport-api = "com.google.android.datatransport:transport-api:3.0.0"
 com-google-android-gms-play-services-ads-identifier = "com.google.android.gms:play-services-ads-identifier:18.0.0"
