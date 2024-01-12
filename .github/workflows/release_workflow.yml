@@ -1,3 +1,5 @@
+name: "Release published workflow"
+
 on:
   release:
     types: [published]
