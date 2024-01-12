@@ -14,7 +14,6 @@ buildscript {
         classpath(libs.com.google.dagger.hilt.android.gradle.plugin)
         classpath(libs.com.google.gms.google.services)
         classpath(libs.org.jetbrains.dokka.dokka.gradle.plugin)
-        classpath(libs.com.google.firebase.firebase.crashlytics.gradle)
         classpath(libs.app.cash.licensee.licensee.gradle.plugin)
     }
 }

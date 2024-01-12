@@ -1,6 +1,5 @@
 package se.eelde.toggles.database
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -10,9 +9,6 @@ import se.eelde.toggles.database.tables.ApplicationTable
 
 @Dao
 interface WrenchApplicationDao {
-
-    @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME)
-    fun getApplicationsPagingSource(): PagingSource<Int, WrenchApplication>
 
     @Query("SELECT * FROM " + ApplicationTable.TABLE_NAME)
     fun getApplications(): Flow<List<WrenchApplication>>

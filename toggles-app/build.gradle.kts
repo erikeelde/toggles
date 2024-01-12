@@ -7,7 +7,6 @@ plugins {
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
     id("com.github.triplet.play")
-    id("com.google.firebase.crashlytics")
     id("app.cash.licensee")
     alias(libs.plugins.se.premex.gross)
     alias(libs.plugins.com.google.devtools.ksp)
@@ -112,7 +111,7 @@ dependencies {
     implementation(projects.modules.stringconfiguration)
     implementation(projects.modules.enumconfiguration)
 
-    implementation(libs.androidx.ui.ui.tooling)
+    implementation(libs.androidx.compose.ui.ui.tooling)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui)
@@ -141,9 +140,6 @@ dependencies {
     testImplementation(libs.androidx.arch.core.core.testing)
 
     implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
-    implementation(platform(libs.com.google.firebase.firebase.bom))
-    implementation(libs.com.google.firebase.firebase.crashlytics.ktx)
-    implementation(libs.com.google.firebase.firebase.analytics.ktx)
 
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.android.compiler)
@@ -157,18 +153,9 @@ dependencies {
     implementation(libs.com.google.dagger)
     ksp(libs.com.google.dagger.dagger.compiler)
 
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.recyclerview)
-
-    implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.cardview)
-    implementation(libs.androidx.lifecycle.lifecycle.extensions)
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.lifecycle.livedata.core.ktx)
-    implementation(libs.androidx.lifecycle.lifecycle.livedata.ktx)
     implementation(libs.androidx.room.room.ktx)
-    implementation(libs.androidx.paging.paging.runtime.ktx)
 
     implementation(libs.se.eelde.toggles.toggles.core)
     implementation(libs.se.eelde.toggles.toggles.flow)
