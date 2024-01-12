@@ -122,7 +122,6 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.animation)
     implementation(libs.androidx.compose.ui.ui.tooling)
-    implementation(libs.androidx.compose.runtime.runtime.livedata)
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
@@ -138,8 +137,6 @@ dependencies {
     testImplementation(libs.org.robolectric)
     testImplementation(libs.androidx.test.espresso.espresso.core)
     testImplementation(libs.androidx.arch.core.core.testing)
-
-    implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
 
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.android.compiler)
@@ -164,12 +161,7 @@ dependencies {
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 
-    implementation(libs.androidx.core.core.ktx)
-    // https://mvnrepository.com/artifact/com.squareup.okio/okio
-    implementation(libs.com.squareup.okio)
-
     debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
-
 
     androidTestImplementation(libs.androidx.test.core.ktx)
     androidTestImplementation(libs.androidx.test.ext.junit)
