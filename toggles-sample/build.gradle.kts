@@ -69,26 +69,15 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.animation)
     implementation(libs.androidx.compose.ui.ui.tooling)
-    implementation(libs.androidx.compose.runtime.runtime.livedata)
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.navigation.navigation.compose)
 
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.oss)
-    implementation(libs.com.squareup.okio)
-
-    testImplementation(libs.androidx.test.core)
-    testImplementation(libs.androidx.test.ext.truth)
-    testImplementation(libs.androidx.test.rules)
-    testImplementation(libs.androidx.test.runner)
-    testImplementation(libs.androidx.test.ext.junit)
-    testImplementation(libs.org.robolectric)
 
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.android.compiler)
-    testImplementation(libs.com.google.dagger.hilt.android.testing)
     kspTest(libs.com.google.dagger.hilt.android.compiler)
 
     implementation(libs.se.eelde.toggles.toggles.flow)
@@ -96,8 +85,6 @@ dependencies {
 
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
-
-    implementation(libs.androidx.core.core.ktx)
 
     debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
 }
