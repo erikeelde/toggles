@@ -2,7 +2,6 @@
 
 package se.eelde.toggles.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -13,12 +12,6 @@ import se.eelde.toggles.database.tables.ConfigurationValueTable
 
 @Dao
 interface WrenchConfigurationValueDao {
-
-    @Query(
-        "SELECT * FROM " + ConfigurationValueTable.TABLE_NAME +
-            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId)"
-    )
-    fun getConfigurationValue(configurationId: Long): LiveData<List<WrenchConfigurationValue>>
 
     @Query(
         "SELECT * FROM " + ConfigurationValueTable.TABLE_NAME +
