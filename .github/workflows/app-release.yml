@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: '0'
 
-      - name:
+      - name: "setup secrets"
         run: |
           echo "${{ secrets.KEYSTORE_PROPERTIES }}" > keystore.properties.asc
           gpg -d --passphrase "${{ secrets.GPG_ENCRYPTION_KEY }}" --batch keystore.properties.asc > keystore.properties
@@ -51,9 +51,44 @@ jobs:
         if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-app:publishReleaseBundle
 
+      - name: Build sample application
+        if: github.repository == 'erikeelde/toggles'
+        run: ./gradlew :toggles-sample:assembleRelease
+
       - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
           name: Apks
           path: '**/build/outputs/*'
           retention-days: 14
+
+      - uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+          disable-autolabeler: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = 'toggles-sample/build/outputs/apk/release/toggles-sample-release-unsigned.apk';
+            const content_type = 'application/vnd.android.package-archive';
+            const release_id = '136748606';
+            
+            const response = await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release_id,
+              name: 'toggles-sample.apk',
+              data: fs.readFileSync(path),
+              headers: {
+                'content-type': content_type,
+                'content-length': fs.statSync(path).size
+              }
+            });
+      
+            console.log(response);
