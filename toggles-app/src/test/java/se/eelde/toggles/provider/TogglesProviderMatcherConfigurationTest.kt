@@ -26,6 +26,7 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.R
+import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.WrenchDatabase
 import se.eelde.toggles.di.DatabaseModule
@@ -80,22 +81,17 @@ class TogglesProviderMatcherConfigurationTest {
     }
 
     @Test
-    fun testInsert() {
-        assertEquals("", "")
-    }
-
-    @Test
     fun testUpdate() {
-        assertEquals("", "")
+        TODO("To be implemented")
     }
 
     @Test
     fun testQuery() {
-        assertEquals("", "")
+        TODO("To be implemented")
     }
 
     @Test
     fun testDelete() {
-        assertEquals("", "")
+        TODO("To be implemented")
     }
 }

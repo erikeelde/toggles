@@ -16,8 +16,9 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
-import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -88,7 +89,7 @@ class TogglesProviderMatcherCurrentConfigurationTest {
         val uri = TogglesProviderContract.toggleUri()
         val insertToggle = getToggle(insertToggleKey)
         val insertToggleUri = togglesProvider.insert(uri, insertToggle.toContentValues())
-        Assert.assertNotNull(insertToggleUri)
+        assertNotNull(insertToggleUri)
 
         var cursor = togglesProvider.query(
             TogglesProviderContract.toggleUri(insertToggleKey),
@@ -97,29 +98,29 @@ class TogglesProviderMatcherCurrentConfigurationTest {
             null,
             null
         )
-        Assert.assertNotNull(cursor)
-        Assert.assertEquals(1, cursor.count)
+        assertNotNull(cursor)
+        assertEquals(1, cursor.count)
 
         cursor.moveToFirst()
         var queryToggle = Toggle.fromCursor(cursor)
 
-        Assert.assertEquals(insertToggle.key, queryToggle.key)
-        Assert.assertEquals(insertToggle.value, queryToggle.value)
-        Assert.assertEquals(insertToggle.type, queryToggle.type)
+        assertEquals(insertToggle.key, queryToggle.key)
+        assertEquals(insertToggle.value, queryToggle.value)
+        assertEquals(insertToggle.type, queryToggle.type)
 
         val toggleUri = TogglesProviderContract.toggleUri(
             Integer.parseInt(insertToggleUri.lastPathSegment!!).toLong()
         )
         cursor = togglesProvider.query(toggleUri, null, null, null, null)
-        Assert.assertNotNull(cursor)
-        Assert.assertEquals(1, cursor.count)
+        assertNotNull(cursor)
+        assertEquals(1, cursor.count)
 
         cursor.moveToFirst()
         queryToggle = Toggle.fromCursor(cursor)
 
-        Assert.assertEquals(insertToggle.key, queryToggle.key)
-        Assert.assertEquals(insertToggle.value, queryToggle.value)
-        Assert.assertEquals(insertToggle.type, queryToggle.type)
+        assertEquals(insertToggle.key, queryToggle.key)
+        assertEquals(insertToggle.value, queryToggle.value)
+        assertEquals(insertToggle.type, queryToggle.type)
     }
 
     @Test
@@ -129,7 +130,7 @@ class TogglesProviderMatcherCurrentConfigurationTest {
         val uri = TogglesProviderContract.toggleUri()
         val insertToggle = getToggle(updateToggleKey)
         val insertToggleUri = togglesProvider.insert(uri, insertToggle.toContentValues())
-        Assert.assertNotNull(insertToggleUri)
+        assertNotNull(insertToggleUri)
 
         var cursor = togglesProvider.query(
             TogglesProviderContract.toggleUri(updateToggleKey),
@@ -138,13 +139,13 @@ class TogglesProviderMatcherCurrentConfigurationTest {
             null,
             null
         )
-        Assert.assertNotNull(cursor)
-        Assert.assertTrue(cursor.moveToFirst())
+        assertNotNull(cursor)
+        assertTrue(cursor.moveToFirst())
 
         val providerToggle = Toggle.fromCursor(cursor)
-        Assert.assertEquals(insertToggle.key, providerToggle.key)
-        Assert.assertEquals(insertToggle.value, providerToggle.value)
-        Assert.assertEquals(insertToggle.type, providerToggle.type)
+        assertEquals(insertToggle.key, providerToggle.key)
+        assertEquals(insertToggle.value, providerToggle.value)
+        assertEquals(insertToggle.type, providerToggle.type)
 
         val updateToggle = Toggle {
             id = providerToggle.id
@@ -159,7 +160,7 @@ class TogglesProviderMatcherCurrentConfigurationTest {
             null,
             null
         )
-        Assert.assertEquals(1, update)
+        assertEquals(1, update)
 
         cursor = togglesProvider.query(
             TogglesProviderContract.toggleUri(updateToggleKey),
@@ -168,12 +169,12 @@ class TogglesProviderMatcherCurrentConfigurationTest {
             null,
             null
         )
-        Assert.assertNotNull(cursor)
+        assertNotNull(cursor)
 
-        Assert.assertTrue(cursor.moveToFirst())
+        assertTrue(cursor.moveToFirst())
         val updatedToggle = Toggle.fromCursor(cursor)
 
-        Assert.assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)
+        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)
     }
 
     @Test(expected = UnsupportedOperationException::class)

@@ -33,8 +33,7 @@ public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
             contentResolver = contentResolver,
             toggleType = Toggle.TYPE.INTEGER,
             key = key
-        )
-            ?: return defValue
+        ) ?: return defValue
 
         if (toggle.id == 0L) {
             toggle = toggle.copy(value = defValue.toString())

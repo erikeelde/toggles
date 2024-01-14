@@ -157,6 +157,10 @@ class TogglesProvider : ContentProvider() {
                 }
             }
 
+            UriMatch.CONFIGURATION_KEY -> {
+                cursor = configurationDao.getToggles(uri.lastPathSegment!!)
+            }
+
             else -> {
                 throw UnsupportedOperationException("Not yet implemented $uri")
             }
@@ -229,6 +233,10 @@ class TogglesProvider : ContentProvider() {
                         fullConfig.value!!
                     ).id
                 }
+            }
+
+            UriMatch.CONFIGURATIONS -> {
+
             }
 
             else -> {

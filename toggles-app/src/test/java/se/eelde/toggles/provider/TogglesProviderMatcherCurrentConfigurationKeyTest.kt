@@ -16,8 +16,9 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
-import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -82,7 +83,7 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
         val uri = TogglesProviderContract.toggleUri()
         val insertToggle = getToggle(updateToggleKey)
         val insertToggleUri = togglesProvider.insert(uri, insertToggle.toContentValues())
-        Assert.assertNotNull(insertToggleUri)
+        assertNotNull(insertToggleUri)
 
         var cursor = togglesProvider.query(
             TogglesProviderContract.toggleUri(updateToggleKey),
@@ -91,8 +92,8 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
             null,
             null
         )
-        Assert.assertNotNull(cursor)
-        Assert.assertTrue(cursor.moveToFirst())
+        assertNotNull(cursor)
+        assertTrue(cursor.moveToFirst())
 
         val providerToggle = Toggle.fromCursor(cursor)
         assertEquals(insertToggle.key, providerToggle.key)
@@ -121,9 +122,9 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
             null,
             null
         )
-        Assert.assertNotNull(cursor)
+        assertNotNull(cursor)
 
-        Assert.assertTrue(cursor.moveToFirst())
+        assertTrue(cursor.moveToFirst())
         val updatedToggle = Toggle.fromCursor(cursor)
 
         assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)

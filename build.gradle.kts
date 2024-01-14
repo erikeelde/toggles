@@ -44,5 +44,5 @@ tasks.named("dependencyUpdates", DependencyUpdatesTask::class.java).configure {
 }
 
 task<Delete>("clean") {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }
