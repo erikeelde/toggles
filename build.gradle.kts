@@ -18,6 +18,14 @@ buildscript {
     }
 }
 
+versionCatalogUpdate {
+    keep {
+        keepUnusedVersions = true
+        keepUnusedLibraries = true
+        keepUnusedPlugins = true
+    }
+}
+
 plugins {
     alias(libs.plugins.com.github.ben.manes.versions)
     alias(libs.plugins.nl.littlerobots.version.catalog.update)
@@ -26,6 +34,13 @@ plugins {
     id("toggles.ownership-conventions")
     alias(libs.plugins.com.google.devtools.ksp) apply false
     alias(libs.plugins.com.autonomousapps.dependency.analysis)
+}
+
+develocity {
+    buildScan {
+        termsOfUseUrl.set("https://gradle.com/help/legal-terms-of-use")
+        termsOfUseAgree.set("yes")
+    }
 }
 
 fun isNonStable(version: String): Boolean {

@@ -13,7 +13,7 @@ android {
 dependencies {
     testImplementation(libs.junit)
 
-    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.core.ktx)
     testImplementation(libs.androidx.test.ext.truth)
     testImplementation(libs.androidx.test.rules)
     testImplementation(libs.androidx.test.runner)

@@ -2,16 +2,11 @@ plugins {
     id("toggles.android.module-conventions")
     id("toggles.ownership-conventions")
     alias(libs.plugins.com.google.devtools.ksp)
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
     namespace = "se.eelde.toggles.applications"
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
-    }
 }
 
 dependencies {
