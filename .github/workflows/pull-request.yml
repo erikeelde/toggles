@@ -30,7 +30,19 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Run app Checks
+      - name: Run test without shared tests
+        run: ./gradlew test -Pshared-tests-are-android-tests=false
+
+#      - name: Run test with shared tests
+#        run: ./gradlew test -Pshared-tests-are-android-tests=true
+
+      - name: Run test without shared tests
+        run: ./gradlew assembleAndroidTest -Pshared-tests-are-android-tests=false
+
+#      - name: Run test with shared tests
+#        run: ./gradlew assembleAndroidTest -Pshared-tests-are-android-tests=true
+
+      - name: Run check
         run: ./gradlew check
 
       - name: Run core Checks
@@ -53,5 +65,43 @@ jobs:
         if: failure()
         with:
           name: Reports
+          path: '**/build/reports/*'
+          retention-days: 2
+
+  emulator-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+
+      - name: Check out java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: run tests
+        run: ./gradlew :toggles-app:pixel2api30DebugAndroidTest
+
+      - name: "Upload reports"
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: "Android test results"
           path: '**/build/reports/*'
           retention-days: 2
