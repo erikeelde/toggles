@@ -84,6 +84,7 @@ dependencies {
     lintChecks(libs.com.slack.lint.compose.compose.lint.checks)
 
     testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.org.robolectric)
     testImplementation(libs.androidx.test.runner)
 
     androidTestImplementation(libs.androidx.test.ext.junit)

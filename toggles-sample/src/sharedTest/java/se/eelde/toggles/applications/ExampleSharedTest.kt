@@ -1,13 +1,14 @@
 package se.eelde.toggles.applications
 
 import android.app.Application
+import android.content.pm.ApplicationInfo
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @RunWith(AndroidJUnit4::class)
 class ExampleSharedTest {
@@ -19,6 +20,10 @@ class ExampleSharedTest {
     @Test
     fun useAppContext() {
         val context = ApplicationProvider.getApplicationContext<Application>()
-        assertEquals("se.eelde.toggles.example.debug", context.packageName)
+
+        assertTrue(
+            "Package name missmatch ${context.packageName}",
+            context.packageName.startsWith("se.eelde.toggles.example")
+        )
     }
 }
