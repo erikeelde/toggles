@@ -30,7 +30,19 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Run app Checks
+      - name: Run test without shared tests
+        run: ./gradlew test -Pshared-tests-are-android-tests=false
+
+      - name: Run test with shared tests
+        run: ./gradlew test -Pshared-tests-are-android-tests=true
+
+      - name: Run test without shared tests
+        run: ./gradlew assembleAndroidTest -Pshared-tests-are-android-tests=false
+
+      - name: Run test with shared tests
+        run: ./gradlew assembleAndroidTest -Pshared-tests-are-android-tests=true
+
+      - name: Run check
         run: ./gradlew check
 
       - name: Run core Checks
@@ -55,7 +67,6 @@ jobs:
           name: Reports
           path: '**/build/reports/*'
           retention-days: 2
-
 
   emulator-tests:
     runs-on: ubuntu-latest

@@ -187,5 +187,4 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
-    androidTestUtil(libs.androidx.test.orchestrator)
 }
