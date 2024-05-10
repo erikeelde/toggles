@@ -10,6 +10,7 @@ androidx-lifecycle = "2.7.0"
 androidx-navigation = "2.7.7"
 androidx-room = "2.6.1"
 androidx-test = "1.5.0"
+ksp = "1.9.23-1.0.20"
 com-google-dagger = "2.51.1"
 com-squareup-leakcanary = "2.14"
 com-squareup-moshi = "1.15.1"
@@ -69,8 +70,10 @@ com-google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-and
 com-google-dagger-hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "com-google-dagger" }
 com-google-dagger-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "com-google-dagger" }
 com-google-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "com-google-dagger" }
+com-google-devtools-ksp-com-google-devtools-ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref="ksp" }
 com-google-gms-google-services = "com.google.gms:google-services:4.4.1"
 com-slack-lint-compose-compose-lint-checks = "com.slack.lint.compose:compose-lint-checks:1.3.1"
+com-squareup-kotlinpoet = "com.squareup:kotlinpoet:1.16.0"
 com-squareup-leakcanary-leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "com-squareup-leakcanary" }
 com-squareup-moshi = { module = "com.squareup.moshi:moshi", version.ref = "com-squareup-moshi" }
 com-squareup-moshi-moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "com-squareup-moshi" }
@@ -91,12 +94,13 @@ org-robolectric = "org.robolectric:robolectric:4.12.1"
 se-eelde-toggles-toggles-core = "se.eelde.toggles:toggles-core:0.0.2"
 se-eelde-toggles-toggles-flow = "se.eelde.toggles:toggles-flow:0.0.1"
 se-eelde-toggles-toggles-prefs = "se.eelde.toggles:toggles-prefs:0.0.1"
+se-premex-ownership-gradle-plugin = "se.premex:ownership-gradle-plugin:0.0.11"
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }
 com-autonomousapps-dependency-analysis = "com.autonomousapps.dependency-analysis:1.31.0"
 com-github-ben-manes-versions = "com.github.ben-manes.versions:0.51.0"
 com-github-triplet-play = "com.github.triplet.play:3.9.1"
-com-google-devtools-ksp = "com.google.devtools.ksp:1.9.23-1.0.20"
+com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 com-vanniktech-maven-publish = "com.vanniktech.maven.publish:0.27.0"
 nl-littlerobots-version-catalog-update = "nl.littlerobots.version-catalog-update:0.8.4"
 org-jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
