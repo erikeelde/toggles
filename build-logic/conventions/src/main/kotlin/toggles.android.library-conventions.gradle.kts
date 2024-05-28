@@ -1,10 +1,8 @@
-
 plugins {
     id("com.android.library")
     kotlin("android")
     id("io.gitlab.arturbosch.detekt")
     id("toggles.detekt-library-conventions")
-
 }
 
 android {

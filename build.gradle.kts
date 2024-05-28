@@ -28,6 +28,13 @@ plugins {
     alias(libs.plugins.com.autonomousapps.dependency.analysis)
 }
 
+develocity {
+    buildScan {
+        termsOfUseUrl.set("https://gradle.com/help/legal-terms-of-use")
+        termsOfUseAgree.set("yes")
+    }
+}
+
 fun isNonStable(version: String): Boolean {
     val stableKeyword = listOf("RELEASE", "FINAL", "GA").any {
         version.uppercase(Locale.getDefault()).contains(it)
