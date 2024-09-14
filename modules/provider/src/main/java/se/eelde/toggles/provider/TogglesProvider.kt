@@ -236,7 +236,7 @@ class TogglesProvider : ContentProvider() {
             }
 
             UriMatch.CONFIGURATIONS -> {
-
+                TODO("Not yet implemented")
             }
 
             else -> {
