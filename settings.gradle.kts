@@ -32,7 +32,7 @@ buildCache {
     }
 }
 
-private val localLibraries = false
+private val localLibraries = true
 
 rootProject.name = "Toggles"
 includeBuild("build-logic/conventions")
