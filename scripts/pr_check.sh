@@ -5,6 +5,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "$SCRIPT_DIR"/.. || exit
 
 ./gradlew detekt
+./gradlew versionCatalogFormat
 ./gradlew test -Pshared-tests-are-android-tests=false
 ./gradlew test -Pshared-tests-are-android-tests=true
 ./gradlew assembleAndroidTest -Pshared-tests-are-android-tests=false

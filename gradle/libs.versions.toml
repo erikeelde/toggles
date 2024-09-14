@@ -3,7 +3,7 @@ agp = "8.6.0"
 androidx-activity = "1.9.2"
 androidx-appcompat = "1.7.0"
 androidx-arch-core = "2.2.0"
-androidx-compose-bom = "2024.09.00"
+androidx-compose-bom = "2024.09.01"
 androidx-hilt = "1.2.0"
 androidx-lifecycle = "2.8.5"
 androidx-navigation = "2.8.0"
@@ -62,6 +62,7 @@ androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.re
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
 androidx-test-runner = "androidx.test:runner:1.6.2"
 app-cash-licensee-licensee-gradle-plugin = "app.cash.licensee:licensee-gradle-plugin:1.11.0"
+app-cash-turbine = "app.cash.turbine:turbine:1.1.0"
 com-android-tools-build-gradle = "com.android.tools.build:gradle:8.6.0"
 com-google-dagger = { module = "com.google.dagger:dagger", version.ref = "com-google-dagger" }
 com-google-dagger-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "com-google-dagger" }
@@ -77,7 +78,7 @@ com-squareup-kotlinpoet = "com.squareup:kotlinpoet:1.16.0"
 com-squareup-leakcanary-leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "com-squareup-leakcanary" }
 com-squareup-moshi = { module = "com.squareup.moshi:moshi", version.ref = "com-squareup-moshi" }
 com-squareup-moshi-moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "com-squareup-moshi" }
-com-squareup-okio = "com.squareup.okio:okio:3.9.0"
+com-squareup-okio = "com.squareup.okio:okio:3.9.1"
 io-gitlab-arturbosch-detekt-detekt-formatting = "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7"
 io-gitlab-arturbosch-detekt-detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "io-gitlab-arturbosch-detekt" }
 io-gitlab-arturbosch-detekt-detekt-rules-libraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "io-gitlab-arturbosch-detekt" }
@@ -90,7 +91,6 @@ org-jetbrains-kotlinx-kotlinx-coroutines-android = { module = "org.jetbrains.kot
 org-jetbrains-kotlinx-kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "org-jetbrains-kotlinx" }
 org-jetbrains-kotlinx-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 org-robolectric = "org.robolectric:robolectric:4.13"
-app-cash-turbine = "app.cash.turbine:turbine:1.0.0"
 #se-eelde-toggles-toggles-core = { module = "se.eelde.toggles:toggles-core" }
 #se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow" }
 #se-eelde-toggles-toggles-prefs = { module = "se.eelde.toggles:toggles-prefs" }
@@ -101,14 +101,14 @@ se-premex-ownership-gradle-plugin = "se.premex:ownership-gradle-plugin:0.0.11"
 
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }
-com-autonomousapps-dependency-analysis = "com.autonomousapps.dependency-analysis:2.0.1"
+com-autonomousapps-dependency-analysis = "com.autonomousapps.dependency-analysis:2.0.2"
 com-github-ben-manes-versions = "com.github.ben-manes.versions:0.51.0"
 com-github-triplet-play = "com.github.triplet.play:3.11.0"
 com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "com-google-dagger" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-com-google-gms-google-services = "com.google.gms.google-services:4.3.15"
+com-google-gms-google-services = "com.google.gms.google-services:4.4.2"
 com-vanniktech-maven-publish = "com.vanniktech.maven.publish:0.27.0"
 nl-littlerobots-version-catalog-update = "nl.littlerobots.version-catalog-update:0.8.4"
 org-jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-org-jetbrains-kotlinx-binary-compatibility-validator = "org.jetbrains.kotlinx.binary-compatibility-validator:0.13.2"
+org-jetbrains-kotlinx-binary-compatibility-validator = "org.jetbrains.kotlinx.binary-compatibility-validator:0.16.3"
 se-premex-gross = "se.premex.gross:0.4.2"
