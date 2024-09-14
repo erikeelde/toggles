@@ -5,10 +5,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import se.eelde.toggles.database.WrenchApplication
-import se.eelde.toggles.database.WrenchApplicationDao
+import se.eelde.toggles.database.dao.application.TogglesApplicationDao
 import javax.inject.Inject
 
 internal data class ViewState(
@@ -22,7 +21,7 @@ internal sealed class PartialViewState {
 }
 
 @HiltViewModel
-internal class ApplicationViewModel @Inject constructor(applicationDao: WrenchApplicationDao) :
+internal class ApplicationViewModel @Inject constructor(applicationDao: TogglesApplicationDao) :
     ViewModel() {
 
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))

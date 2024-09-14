@@ -1,4 +1,4 @@
-package se.eelde.toggles.provider
+package se.eelde.toggles.provider.configuration
 
 import android.app.Application
 import android.content.Context
@@ -32,6 +32,7 @@ import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.WrenchDatabase
 import se.eelde.toggles.di.DatabaseModule
+import se.eelde.toggles.provider.TogglesProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 

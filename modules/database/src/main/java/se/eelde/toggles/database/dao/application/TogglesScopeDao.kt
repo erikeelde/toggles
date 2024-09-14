@@ -1,6 +1,6 @@
 @file:Suppress("MaxLineLength")
 
-package se.eelde.toggles.database
+package se.eelde.toggles.database.dao.application
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -8,10 +8,11 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import se.eelde.toggles.database.WrenchScope
 import se.eelde.toggles.database.tables.ScopeTable
 
 @Dao
-interface WrenchScopeDao {
+interface TogglesScopeDao {
 
     @Query(
         "SELECT * FROM " + ScopeTable.TABLE_NAME + " WHERE " + ScopeTable.COL_APP_ID + " = (:applicationId) AND " + ScopeTable.COL_NAME + " != '" + WrenchScope.SCOPE_DEFAULT + "'"

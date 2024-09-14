@@ -1,6 +1,6 @@
 @file:Suppress("MaxLineLength")
 
-package se.eelde.toggles.database
+package se.eelde.toggles.database.dao.application
 
 import android.database.Cursor
 import androidx.room.Dao
@@ -8,6 +8,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
+import se.eelde.toggles.database.WrenchConfiguration
+import se.eelde.toggles.database.WrenchConfigurationWithValues
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.ConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
@@ -15,7 +17,7 @@ import java.util.Date
 
 @Suppress("TooManyFunctions")
 @Dao
-interface WrenchConfigurationDao {
+interface TogglesConfigurationDao {
 
     @Query(
         "SELECT configuration.id, " +

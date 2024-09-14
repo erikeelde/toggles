@@ -18,11 +18,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import se.eelde.toggles.database.WrenchApplication
-import se.eelde.toggles.database.WrenchApplicationDao
-import se.eelde.toggles.database.WrenchConfigurationDao
+import se.eelde.toggles.database.dao.application.TogglesApplicationDao
+import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.WrenchConfigurationWithValues
 import se.eelde.toggles.database.WrenchScope
-import se.eelde.toggles.database.WrenchScopeDao
+import se.eelde.toggles.database.dao.application.TogglesScopeDao
 import javax.inject.Inject
 
 internal data class ViewState(
@@ -46,9 +46,9 @@ internal sealed class PartialViewState {
 @Suppress("StaticFieldLeak")
 class ConfigurationViewModel @Inject internal constructor(
     @ApplicationContext private val context: Context,
-    private val applicationDao: WrenchApplicationDao,
-    configurationDao: WrenchConfigurationDao,
-    scopeDao: WrenchScopeDao,
+    private val applicationDao: TogglesApplicationDao,
+    configurationDao: TogglesConfigurationDao,
+    scopeDao: TogglesScopeDao,
     val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!

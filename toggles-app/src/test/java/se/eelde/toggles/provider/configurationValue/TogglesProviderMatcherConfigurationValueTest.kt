@@ -1,4 +1,4 @@
-package se.eelde.toggles.provider
+package se.eelde.toggles.provider.configurationValue
 
 import android.app.Application
 import android.content.Context
@@ -17,7 +17,6 @@ import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -32,6 +31,7 @@ import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.WrenchDatabase
 import se.eelde.toggles.di.DatabaseModule
+import se.eelde.toggles.provider.TogglesProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,7 +39,7 @@ import javax.inject.Singleton
 @RunWith(AndroidJUnit4::class)
 @UninstallModules(DatabaseModule::class)
 @Config(application = HiltTestApplication::class, sdk = [Build.VERSION_CODES.P])
-class TogglesProviderMatcherConfigurationKeyTest {
+class TogglesProviderMatcherConfigurationValueTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
@@ -54,11 +54,6 @@ class TogglesProviderMatcherConfigurationKeyTest {
             return Room.inMemoryDatabaseBuilder(context, WrenchDatabase::class.java)
                 .allowMainThreadQueries().build()
         }
-    }
-
-    val togglesConfiguration = TogglesConfiguration {
-        type = Toggle.TYPE.BOOLEAN
-        key = "myConfigurationkey"
     }
 
     @Inject
@@ -83,57 +78,53 @@ class TogglesProviderMatcherConfigurationKeyTest {
 
     @Test
     fun testGetTypePredefinedConfigurationValue() {
-        val type = togglesProvider.getType(TogglesProviderContract.configurationUri("fakeKey"))
-        assertEquals("vnd.android.cursor.item/vnd.se.eelde.toggles.configuration", type)
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
-    fun testInsert() {
-        togglesProvider.insert(
-            TogglesProviderContract.configurationUri("key"),
-            null
-        )
+        val type = togglesProvider.getType(TogglesProviderContract.configurationUri())
+        assertEquals("vnd.android.cursor.dir/vnd.se.eelde.toggles.configuration", type)
     }
 
     @Test(expected = UnsupportedOperationException::class)
     fun testUpdate() {
         togglesProvider.update(
-            TogglesProviderContract.configurationUri("key"),
-            null,
-            null,
-            null
+            TogglesProviderContract.configurationUri(),
+            null, null, null
         )
     }
 
     @Test
-    fun testQuery() {
-        val uri = togglesProvider.insert(
-            TogglesProviderContract.configurationUri(),
-            togglesConfiguration.toContentValues(),
-        )
-
-        val configurationUri = TogglesProviderContract.configurationUri(togglesConfiguration.key)
-
-        val cursor = togglesProvider.query(configurationUri, null, null, null, null)
-        assertTrue(cursor.moveToFirst())
-        TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
-            assertEquals(togglesConfiguration.key, cursorConfiguration.key)
-            assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+    fun testInsert() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "myConfigurationkey"
         }
-    }
 
-    @Test
-    fun testDelete() {
         val uri = togglesProvider.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
 
-        val rowsDeleted = togglesProvider.delete(
-            TogglesProviderContract.configurationUri(togglesConfiguration.key),
+        assertEquals(
+            "content://se.eelde.toggles.configprovider/configuration/1?API_VERSION=1",
+            uri.toString()
+        )
+    }
+
+    @Test(expected = UnsupportedOperationException::class)
+    fun testQuery() {
+        togglesProvider.query(
+            TogglesProviderContract.configurationUri(),
+            null,
+            null,
             null,
             null
         )
-        assertEquals(1, rowsDeleted)
+    }
+
+    @Test(expected = UnsupportedOperationException::class)
+    fun testDelete() {
+        togglesProvider.delete(
+            TogglesProviderContract.configurationUri(),
+            null,
+            null,
+        )
     }
 }
