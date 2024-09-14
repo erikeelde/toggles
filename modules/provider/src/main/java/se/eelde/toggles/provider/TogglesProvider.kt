@@ -160,11 +160,11 @@ class TogglesProvider : ContentProvider() {
             }
 
             UriMatch.CONFIGURATION_KEY -> {
-                cursor = configurationDao.getToggles(uri.lastPathSegment!!)
+                cursor = configurationDao.getConfigurationCursor(callingApplication.id, uri.lastPathSegment!!)
             }
 
             UriMatch.CONFIGURATION_ID -> {
-                cursor = configurationDao.getConfigurationCursor(uri.lastPathSegment!!.toLong())
+                cursor = configurationDao.getConfigurationCursor(callingApplication.id, uri.lastPathSegment!!.toLong())
             }
 
             else -> {
@@ -340,6 +340,17 @@ class TogglesProvider : ContentProvider() {
                     configurationDao.deleteConfiguration(
                         callingApplication.id,
                         uri.lastPathSegment!!.toLong()
+                    )
+                if (deletedRows > 0) {
+                    context!!.contentResolver.notifyChange(uri, null)
+                }
+                return deletedRows
+            }
+            UriMatch.CONFIGURATION_KEY -> {
+                val deletedRows =
+                    configurationDao.deleteConfiguration(
+                        callingApplication.id,
+                        uri.lastPathSegment!!
                     )
                 if (deletedRows > 0) {
                     context!!.contentResolver.notifyChange(uri, null)
