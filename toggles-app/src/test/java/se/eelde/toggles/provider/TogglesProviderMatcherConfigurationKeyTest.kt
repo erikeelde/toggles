@@ -17,6 +17,7 @@ import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -26,6 +27,8 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.R
+import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.WrenchDatabase
 import se.eelde.toggles.di.DatabaseModule
@@ -51,6 +54,11 @@ class TogglesProviderMatcherConfigurationKeyTest {
             return Room.inMemoryDatabaseBuilder(context, WrenchDatabase::class.java)
                 .allowMainThreadQueries().build()
         }
+    }
+
+    val togglesConfiguration = TogglesConfiguration {
+        type = Toggle.TYPE.BOOLEAN
+        key = "myConfigurationkey"
     }
 
     @Inject
@@ -79,26 +87,53 @@ class TogglesProviderMatcherConfigurationKeyTest {
         assertEquals("vnd.android.cursor.item/vnd.se.eelde.toggles.configuration", type)
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException::class)
     fun testInsert() {
-        TODO("To be implemented")
+        togglesProvider.insert(
+            TogglesProviderContract.configurationUri("key"),
+            null
+        )
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException::class)
     fun testUpdate() {
-        TODO("To be implemented")
+        togglesProvider.update(
+            TogglesProviderContract.configurationUri("key"),
+            null,
+            null,
+            null
+        )
     }
 
     @Test
     fun testQuery() {
-        TODO("To be implemented")
+        val uri = togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            togglesConfiguration.toContentValues(),
+        )
+
+        val configurationUri = TogglesProviderContract.configurationUri(togglesConfiguration.key)
+
+        val cursor = togglesProvider.query(configurationUri, null, null, null, null)
+        assertTrue(cursor.moveToFirst())
+        TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
+            assertEquals(togglesConfiguration.key, cursorConfiguration.key)
+            assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+        }
     }
 
     @Test
     fun testDelete() {
-        togglesProvider.delete(
-            TogglesProviderContract.configurationUri("key"),
+        val uri = togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            togglesConfiguration.toContentValues(),
+        )
+
+        val rowsDeleted = togglesProvider.delete(
+            TogglesProviderContract.configurationUri(togglesConfiguration.key),
+            null,
             null
         )
+        assertEquals(1, rowsDeleted)
     }
 }

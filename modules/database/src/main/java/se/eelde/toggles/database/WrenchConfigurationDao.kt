@@ -92,9 +92,6 @@ interface WrenchConfigurationDao {
     @Query("SELECT * FROM configuration WHERE id = :configurationId")
     fun getConfiguration(configurationId: Long): Flow<WrenchConfiguration>
 
-    @Query("SELECT * FROM configuration WHERE id = :configurationId")
-    fun getConfigurationCursor(configurationId: Long): Cursor
-
     @Transaction
     @Query(
         "SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId ORDER BY lastUse DESC"
@@ -113,6 +110,9 @@ interface WrenchConfigurationDao {
     @Query("DELETE FROM configuration WHERE applicationId = :callingApplication AND id = :id")
     fun deleteConfiguration(callingApplication: Long, id: Long): Int
 
+    @Query("DELETE FROM configuration WHERE applicationId = :callingApplication AND configurationKey = :configurationKey")
+    fun deleteConfiguration(callingApplication: Long, configurationKey: String): Int
+
     @Insert
     fun insert(wrenchConfiguration: WrenchConfiguration): Long
 
@@ -121,4 +121,10 @@ interface WrenchConfigurationDao {
 
     @Query("UPDATE configuration SET configurationKey = :key, configurationType = :type WHERE applicationId = :callingApplication AND id= :id")
     fun updateConfiguration(callingApplication: Long, id: Long, key: String, type: String): Int
+
+    @Query("SELECT * FROM configuration WHERE id = :configurationId and applicationId = :callingApplication")
+    fun getConfigurationCursor(callingApplication: Long, configurationId: Long): Cursor
+
+    @Query("SELECT * FROM configuration WHERE configurationKey = :configurationKey and applicationId = :callingApplication")
+    fun getConfigurationCursor(callingApplication: Long, configurationKey: String): Cursor
 }
