@@ -12,41 +12,45 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import se.eelde.toggles.core.ColumnNames
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.database.WrenchApplication
-import se.eelde.toggles.database.WrenchApplicationDao
+import se.eelde.toggles.database.dao.application.TogglesApplicationDao
 import se.eelde.toggles.database.WrenchConfiguration
-import se.eelde.toggles.database.WrenchConfigurationDao
+import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.WrenchConfigurationValue
-import se.eelde.toggles.database.WrenchConfigurationValueDao
+import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
-import se.eelde.toggles.database.WrenchPredefinedConfigurationValueDao
+import se.eelde.toggles.database.dao.application.TogglesPredefinedConfigurationValueDao
 import se.eelde.toggles.database.WrenchScope
-import se.eelde.toggles.database.WrenchScopeDao
+import se.eelde.toggles.database.dao.application.TogglesScopeDao
+import se.eelde.toggles.database.dao.provider.ProviderApplicationDao
+import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
+import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
+import se.eelde.toggles.database.dao.provider.ProviderPredefinedConfigurationValueDao
+import se.eelde.toggles.database.dao.provider.ProviderScopeDao
 import se.eelde.toggles.prefs.TogglesPreferences
 import java.util.Date
 
 class TogglesProvider : ContentProvider() {
 
-    private val applicationDao: WrenchApplicationDao by lazy {
-        applicationEntryPoint.provideWrenchApplicationDao()
+    private val applicationDao: ProviderApplicationDao by lazy {
+        applicationEntryPoint.provideProviderApplicationDao()
     }
 
-    private val scopeDao: WrenchScopeDao by lazy {
-        applicationEntryPoint.provideWrenchScopeDao()
+    private val scopeDao: ProviderScopeDao by lazy {
+        applicationEntryPoint.provideProviderScopeDao()
     }
 
-    val configurationDao: WrenchConfigurationDao by lazy {
-        applicationEntryPoint.provideWrenchConfigurationDao()
+    val configurationDao: ProviderConfigurationDao by lazy {
+        applicationEntryPoint.provideProviderConfigurationDao()
     }
 
-    val configurationValueDao: WrenchConfigurationValueDao by lazy {
-        applicationEntryPoint.provideWrenchConfigurationValueDao()
+    val configurationValueDao: ProviderConfigurationValueDao by lazy {
+        applicationEntryPoint.provideProviderConfigurationValueDao()
     }
 
-    private val predefinedConfigurationDao: WrenchPredefinedConfigurationValueDao by lazy {
+    private val predefinedConfigurationDao: ProviderPredefinedConfigurationValueDao by lazy {
         applicationEntryPoint.providePredefinedConfigurationValueDao()
     }
 
@@ -55,11 +59,11 @@ class TogglesProvider : ContentProvider() {
     }
 
     private val togglesPreferences: TogglesPreferences by lazy {
-        applicationEntryPoint.providesWrenchPreferences()
+        applicationEntryPoint.provideTogglesPreferences()
     }
 
     private val togglesUriMatcher: TogglesUriMatcher by lazy {
-        applicationEntryPoint.providesTogglesUriMatcher()
+        applicationEntryPoint.provideTogglesUriMatcher()
     }
 
     private val applicationEntryPoint: TogglesProviderEntryPoint by lazy {
@@ -69,17 +73,17 @@ class TogglesProvider : ContentProvider() {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface TogglesProviderEntryPoint {
-        fun provideWrenchApplicationDao(): WrenchApplicationDao
-        fun provideWrenchConfigurationDao(): WrenchConfigurationDao
-        fun provideWrenchConfigurationValueDao(): WrenchConfigurationValueDao
-        fun provideWrenchScopeDao(): WrenchScopeDao
-        fun providePredefinedConfigurationValueDao(): WrenchPredefinedConfigurationValueDao
+        fun provideProviderApplicationDao(): ProviderApplicationDao
+        fun provideProviderConfigurationDao(): ProviderConfigurationDao
+        fun provideProviderConfigurationValueDao(): ProviderConfigurationValueDao
+        fun provideProviderScopeDao(): ProviderScopeDao
+        fun providePredefinedConfigurationValueDao(): ProviderPredefinedConfigurationValueDao
         fun providePackageManagerWrapper(): IPackageManagerWrapper
-        fun providesWrenchPreferences(): TogglesPreferences
-        fun providesTogglesUriMatcher(): TogglesUriMatcher
+        fun provideTogglesPreferences(): TogglesPreferences
+        fun provideTogglesUriMatcher(): TogglesUriMatcher
     }
 
-    private fun getCallingApplication(applicationDao: WrenchApplicationDao): WrenchApplication =
+    private fun getCallingApplication(applicationDao: ProviderApplicationDao): WrenchApplication =
         synchronized(this) {
             var wrenchApplication: WrenchApplication? =
                 applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)
@@ -404,7 +408,7 @@ class TogglesProvider : ContentProvider() {
         @Synchronized
         private fun getDefaultScope(
             context: Context?,
-            scopeDao: WrenchScopeDao?,
+            scopeDao: ProviderScopeDao?,
             applicationId: Long
         ): WrenchScope? {
             if (context == null) {
@@ -425,7 +429,7 @@ class TogglesProvider : ContentProvider() {
         @Synchronized
         private fun getSelectedScope(
             context: Context?,
-            scopeDao: WrenchScopeDao?,
+            scopeDao: ProviderScopeDao?,
             applicationId: Long
         ): WrenchScope? {
             if (context == null) {

@@ -26,26 +26,3 @@ object DatabaseModule {
             .build()
     }
 }
-
-@Module
-@InstallIn(SingletonComponent::class)
-object DaoModule {
-    @Provides
-    fun provideWrenchApplicationDao(wrenchDatabase: WrenchDatabase) =
-        wrenchDatabase.applicationDao()
-
-    @Provides
-    fun provideWrenchConfigurationDao(wrenchDatabase: WrenchDatabase) =
-        wrenchDatabase.configurationDao()
-
-    @Provides
-    fun provideWrenchConfigurationValueDao(wrenchDatabase: WrenchDatabase) =
-        wrenchDatabase.configurationValueDao()
-
-    @Provides
-    fun provideWrenchScopeDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.scopeDao()
-
-    @Provides
-    fun providePredefinedConfigurationValueDao(wrenchDatabase: WrenchDatabase) =
-        wrenchDatabase.predefinedConfigurationValueDao()
-}

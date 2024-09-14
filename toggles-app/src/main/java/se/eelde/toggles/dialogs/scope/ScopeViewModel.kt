@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import se.eelde.toggles.database.WrenchScope
-import se.eelde.toggles.database.WrenchScopeDao
+import se.eelde.toggles.database.dao.application.TogglesScopeDao
 import java.util.Date
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ private sealed class PartialViewState {
 @HiltViewModel
 class ScopeViewModel @Inject internal constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val scopeDao: WrenchScopeDao
+    private val scopeDao: TogglesScopeDao
 ) : ViewModel() {
 
     private val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!

@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.database.WrenchConfigurationDao
+import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.WrenchConfigurationValue
-import se.eelde.toggles.database.WrenchConfigurationValueDao
+import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
-import se.eelde.toggles.database.WrenchPredefinedConfigurationValueDao
+import se.eelde.toggles.database.dao.application.TogglesPredefinedConfigurationValueDao
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date
@@ -47,9 +47,9 @@ internal sealed class PartialViewState {
 class FragmentEnumValueViewModel @Inject internal constructor(
     private val savedStateHandle: SavedStateHandle,
     private val application: Application,
-    private val configurationDao: WrenchConfigurationDao,
-    private val configurationValueDao: WrenchConfigurationValueDao,
-    private val predefinedConfigurationValueDao: WrenchPredefinedConfigurationValueDao
+    private val configurationDao: TogglesConfigurationDao,
+    private val configurationValueDao: TogglesConfigurationValueDao,
+    private val predefinedConfigurationValueDao: TogglesPredefinedConfigurationValueDao
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))

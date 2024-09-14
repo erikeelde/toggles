@@ -1,4 +1,4 @@
-package se.eelde.toggles.provider
+package se.eelde.toggles.provider.configuration
 
 import android.app.Application
 import android.content.Context
@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import app.cash.turbine.test
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +16,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -29,10 +27,11 @@ import org.robolectric.annotation.Config
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.R
 import se.eelde.toggles.core.Toggle
-import se.eelde.toggles.core.ToggleValue
+import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.WrenchDatabase
 import se.eelde.toggles.di.DatabaseModule
+import se.eelde.toggles.provider.TogglesProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,7 +39,7 @@ import javax.inject.Singleton
 @RunWith(AndroidJUnit4::class)
 @UninstallModules(DatabaseModule::class)
 @Config(application = HiltTestApplication::class, sdk = [Build.VERSION_CODES.P])
-class TogglesProviderPredefinedConfigurationValuesTest {
+class TogglesProviderMatcherConfigurationTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
@@ -79,73 +78,53 @@ class TogglesProviderPredefinedConfigurationValuesTest {
 
     @Test
     fun testGetTypePredefinedConfigurationValue() {
-        val type = togglesProvider.getType(TogglesProviderContract.toggleValueUri())
-        assertEquals("vnd.android.cursor.dir/vnd.se.eelde.toggles.predefinedConfigurationValue", type)
+        val type = togglesProvider.getType(TogglesProviderContract.configurationUri())
+        assertEquals("vnd.android.cursor.dir/vnd.se.eelde.toggles.configuration", type)
+    }
+
+    @Test(expected = UnsupportedOperationException::class)
+    fun testUpdate() {
+        togglesProvider.update(
+            TogglesProviderContract.configurationUri(),
+            null, null, null
+        )
     }
 
     @Test
-    fun testInsertPredefinedConfigurationValueType() = runTest {
-        val insertToggleKey = "insertToggleKey"
-
-        val toggleUri = TogglesProviderContract.toggleUri()
-        val insertToggle = getToggle(insertToggleKey)
-        val insertToggleUri = togglesProvider.insert(toggleUri, insertToggle.toContentValues())
-
-        val configId = insertToggleUri.lastPathSegment!!.toLong()
-        val toggleValue = ToggleValue {
-            configurationId = configId
-            value = "FIRST"
+    fun testInsert() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "myConfigurationkey"
         }
 
-        togglesProvider.insert(TogglesProviderContract.toggleValueUri(), toggleValue.toContentValues())
-        wrenchDatabase.togglesPredefinedConfigurationValueDao().getByConfigurationId(configId).test {
-            val wrenchPredefinedConfigurationValueList = awaitItem()
-            assertEquals(1, wrenchPredefinedConfigurationValueList.size)
-            wrenchPredefinedConfigurationValueList[0].let {
-                assertEquals(toggleValue.value, it.value)
-                assertEquals(toggleValue.configurationId, it.configurationId)
-            }
-        }
+        val uri = togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            togglesConfiguration.toContentValues(),
+        )
+
+        assertEquals(
+            "content://se.eelde.toggles.configprovider/configuration/1?API_VERSION=1",
+            uri.toString()
+        )
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingQueryForToggleValues() {
-        togglesProvider.update(
-            TogglesProviderContract.toggleValueUri(),
-            getToggleValue("dummyToggleValue").toContentValues(),
+    fun testQuery() {
+        togglesProvider.query(
+            TogglesProviderContract.configurationUri(),
+            null,
+            null,
             null,
             null
         )
     }
 
     @Test(expected = UnsupportedOperationException::class)
-    fun testMissingUpdateForToggleValues() {
-        togglesProvider.update(
-            TogglesProviderContract.toggleValueUri(),
-            getToggleValue("dummyToggleValue").toContentValues(),
+    fun testDelete() {
+        togglesProvider.delete(
+            TogglesProviderContract.configurationUri(),
             null,
-            null
+            null,
         )
-    }
-
-    @Test(expected = UnsupportedOperationException::class)
-    fun testMissingDeleteForToggleValues() {
-        togglesProvider.delete(TogglesProviderContract.toggleValueUri(), null, null)
-    }
-
-    private fun getToggleValue(value: String): ToggleValue {
-        return ToggleValue {
-            id = 0
-            this.value = value
-        }
-    }
-
-    private fun getToggle(key: String): Toggle {
-        return Toggle {
-            id = 0L
-            type = "toggletype"
-            this.key = key
-            value = "togglevalue"
-        }
     }
 }
