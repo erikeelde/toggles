@@ -96,6 +96,9 @@ class TogglesProviderMatcherConfigurationKeyTest {
 
     @Test
     fun testDelete() {
-        TODO("To be implemented")
+        togglesProvider.delete(
+            TogglesProviderContract.configurationUri("key"),
+            null
+        )
     }
 }

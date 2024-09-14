@@ -26,6 +26,8 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import se.eelde.toggles.BuildConfig
 import se.eelde.toggles.R
+import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.WrenchDatabase
 import se.eelde.toggles.di.DatabaseModule
@@ -79,18 +81,49 @@ class TogglesProviderMatcherConfigurationTest {
         assertEquals("vnd.android.cursor.dir/vnd.se.eelde.toggles.configuration", type)
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException::class)
     fun testUpdate() {
-        TODO("To be implemented")
+        togglesProvider.update(
+            TogglesProviderContract.configurationUri(),
+            null, null, null
+        )
     }
 
     @Test
+    fun testInsert() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "myConfigurationkey"
+        }
+
+        val uri = togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            togglesConfiguration.toContentValues(),
+        )
+
+        assertEquals(
+            "content://se.eelde.toggles.configprovider/configuration/1?API_VERSION=1",
+            uri.toString()
+        )
+    }
+
+    @Test(expected = UnsupportedOperationException::class)
     fun testQuery() {
-        TODO("To be implemented")
+        togglesProvider.query(
+            TogglesProviderContract.configurationUri(),
+            null,
+            null,
+            null,
+            null
+        )
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException::class)
     fun testDelete() {
-        TODO("To be implemented")
+        togglesProvider.delete(
+            TogglesProviderContract.configurationUri(),
+            null,
+            null,
+        )
     }
 }
