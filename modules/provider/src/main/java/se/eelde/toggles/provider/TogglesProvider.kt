@@ -12,7 +12,9 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import se.eelde.toggles.core.ColumnNames
 import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.database.WrenchApplication
 import se.eelde.toggles.database.WrenchApplicationDao
 import se.eelde.toggles.database.WrenchConfiguration
@@ -161,6 +163,10 @@ class TogglesProvider : ContentProvider() {
                 cursor = configurationDao.getToggles(uri.lastPathSegment!!)
             }
 
+            UriMatch.CONFIGURATION_ID -> {
+                cursor = configurationDao.getConfigurationCursor(uri.lastPathSegment!!.toLong())
+            }
+
             else -> {
                 throw UnsupportedOperationException("Not yet implemented $uri")
             }
@@ -236,7 +242,14 @@ class TogglesProvider : ContentProvider() {
             }
 
             UriMatch.CONFIGURATIONS -> {
-                TODO("Not yet implemented")
+                val togglesConfiguration = TogglesConfiguration.fromContentValues(values!!)
+                val wrenchConfiguration = WrenchConfiguration(
+                    id = togglesConfiguration.id,
+                    applicationId = callingApplication.id,
+                    key = togglesConfiguration.key,
+                    type = togglesConfiguration.type
+                )
+                insertId = configurationDao.insert(wrenchConfiguration)
             }
 
             else -> {
@@ -292,6 +305,16 @@ class TogglesProvider : ContentProvider() {
                 }
             }
 
+            UriMatch.CONFIGURATION_ID -> {
+                val fromContentValues = TogglesConfiguration.fromContentValues(values!!)
+                updatedRows = configurationDao.updateConfiguration(
+                    callingApplication = callingApplication.id,
+                    id = uri.lastPathSegment!!.toLong(),
+                    key = fromContentValues.key,
+                    type = fromContentValues.type
+                )
+            }
+
             else -> {
                 throw UnsupportedOperationException("Not yet implemented $uri")
             }
@@ -311,7 +334,23 @@ class TogglesProvider : ContentProvider() {
             assertValidApiVersion(togglesPreferences, uri)
         }
 
-        throw UnsupportedOperationException("Not yet implemented")
+        when (togglesUriMatcher.match(uri)) {
+            UriMatch.CONFIGURATION_ID -> {
+                val deletedRows =
+                    configurationDao.deleteConfiguration(
+                        callingApplication.id,
+                        uri.lastPathSegment!!.toLong()
+                    )
+                if (deletedRows > 0) {
+                    context!!.contentResolver.notifyChange(uri, null)
+                }
+                return deletedRows
+            }
+
+            else -> {
+                throw UnsupportedOperationException("Not yet implemented $uri")
+            }
+        }
     }
 
     override fun getType(uri: Uri): String {
@@ -335,10 +374,10 @@ class TogglesProvider : ContentProvider() {
                 "vnd.android.cursor.dir/vnd.${context!!.packageName}.configuration"
 
             UriMatch.CONFIGURATION_ID ->
-                "vnd.android.cursor.dir/vnd.${context!!.packageName}.configuration"
+                "vnd.android.cursor.item/vnd.${context!!.packageName}.configuration"
 
             UriMatch.CONFIGURATION_KEY ->
-                "vnd.android.cursor.dir/vnd.${context!!.packageName}.configuration"
+                "vnd.android.cursor.item/vnd.${context!!.packageName}.configuration"
 
             UriMatch.PREDEFINED_CONFIGURATION_VALUES ->
                 "vnd.android.cursor.dir/vnd.${context!!.packageName}.predefinedConfigurationValue"
@@ -422,7 +461,7 @@ class TogglesProvider : ContentProvider() {
                     if (strictApiVersion) {
                         throw IllegalArgumentException(
                             "This content provider requires you to provide a " +
-                                "valid api-version in a queryParameter"
+                                    "valid api-version in a queryParameter"
                         )
                     }
                 }
