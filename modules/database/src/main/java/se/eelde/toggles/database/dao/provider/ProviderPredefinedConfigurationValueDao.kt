@@ -5,7 +5,6 @@ package se.eelde.toggles.database.dao.provider
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
 import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
 

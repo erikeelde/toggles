@@ -7,7 +7,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 import se.eelde.toggles.database.WrenchScope
 import se.eelde.toggles.database.tables.ScopeTable
 

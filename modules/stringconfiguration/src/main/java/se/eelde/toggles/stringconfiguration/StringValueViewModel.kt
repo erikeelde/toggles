@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.WrenchConfigurationValue
+import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.provider.notifyUpdate
 import java.util.Date

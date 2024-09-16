@@ -15,15 +15,10 @@ import dagger.hilt.components.SingletonComponent
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.database.WrenchApplication
-import se.eelde.toggles.database.dao.application.TogglesApplicationDao
 import se.eelde.toggles.database.WrenchConfiguration
-import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.WrenchConfigurationValue
-import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
-import se.eelde.toggles.database.dao.application.TogglesPredefinedConfigurationValueDao
 import se.eelde.toggles.database.WrenchScope
-import se.eelde.toggles.database.dao.application.TogglesScopeDao
 import se.eelde.toggles.database.dao.provider.ProviderApplicationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
@@ -187,6 +182,7 @@ class TogglesProvider : ContentProvider() {
         return callingApplication.packageName == context!!.packageName
     }
 
+    @Suppress("LongMethod")
     override fun insert(uri: Uri, values: ContentValues?): Uri {
         val callingApplication = getCallingApplication(applicationDao)
 
@@ -476,7 +472,7 @@ class TogglesProvider : ContentProvider() {
                     if (strictApiVersion) {
                         throw IllegalArgumentException(
                             "This content provider requires you to provide a " +
-                                    "valid api-version in a queryParameter"
+                                "valid api-version in a queryParameter"
                         )
                     }
                 }

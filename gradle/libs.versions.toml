@@ -40,6 +40,7 @@ androidx-compose-ui-ui-text = { module = "androidx.compose.ui:ui-text" }
 androidx-compose-ui-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-core-core-ktx = "androidx.core:core-ktx:1.13.1"
+androidx-core-core-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 androidx-hilt-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 androidx-hilt-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-hilt" }
 androidx-lifecycle-lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "androidx-lifecycle" }

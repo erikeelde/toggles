@@ -108,7 +108,7 @@ class TogglesProviderMatcherConfigurationKeyTest {
 
     @Test
     fun testQuery() {
-        val uri = togglesProvider.insert(
+        togglesProvider.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
@@ -125,7 +125,7 @@ class TogglesProviderMatcherConfigurationKeyTest {
 
     @Test
     fun testDelete() {
-        val uri = togglesProvider.insert(
+        togglesProvider.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
