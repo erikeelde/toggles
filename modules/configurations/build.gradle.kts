@@ -17,6 +17,7 @@ dependencies {
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.appcompat)
+    implementation(projects.modules.routes)
     implementation(libs.androidx.navigation.navigation.compose)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.compose.runtime)

@@ -91,6 +91,7 @@ org-jetbrains-kotlinx-kotlinx-collections-immutable = "org.jetbrains.kotlinx:kot
 org-jetbrains-kotlinx-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android" }
 org-jetbrains-kotlinx-kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "org-jetbrains-kotlinx" }
 org-jetbrains-kotlinx-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
+org-jetbrains-kotlinx-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1"
 org-robolectric = "org.robolectric:robolectric:4.13"
 #se-eelde-toggles-toggles-core = { module = "se.eelde.toggles:toggles-core" }
 #se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow" }
@@ -113,3 +114,4 @@ nl-littlerobots-version-catalog-update = "nl.littlerobots.version-catalog-update
 org-jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 org-jetbrains-kotlinx-binary-compatibility-validator = "org.jetbrains.kotlinx.binary-compatibility-validator:0.16.3"
 se-premex-gross = "se.premex.gross:0.4.2"
+org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization",  version.ref = "kotlin"}
