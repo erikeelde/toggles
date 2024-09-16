@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.coroutines.launch
+import se.eelde.toggles.routes.Applications
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.applicationNavigations(
@@ -45,7 +46,7 @@ fun NavGraphBuilder.applicationNavigations(
     navigateToOss: () -> Unit,
     navigateToHelp: () -> Unit,
 ) {
-    composable("applications") {
+    composable<Applications> {
         val viewModel = hiltViewModel<ApplicationViewModel>()
         val viewState = viewModel.state.collectAsState()
 

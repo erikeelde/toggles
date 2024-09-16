@@ -81,6 +81,7 @@ include(
     ":modules:configurations",
     ":modules:oss",
     ":modules:help",
+    ":modules:routes",
     ":modules:stringconfiguration",
     ":modules:booleanconfiguration",
     ":modules:integerconfiguration",

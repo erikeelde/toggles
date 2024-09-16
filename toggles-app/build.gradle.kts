@@ -148,7 +148,7 @@ dependencies {
     implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.navigation.navigation.compose)
     implementation(libs.androidx.startup.startup.runtime)
-
+    implementation(projects.modules.routes)
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.android.compiler)
     ksp(libs.androidx.hilt.hilt.compiler)

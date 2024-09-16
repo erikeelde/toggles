@@ -32,7 +32,12 @@ import se.eelde.toggles.enumconfiguration.EnumValueView
 import se.eelde.toggles.help.HelpView
 import se.eelde.toggles.integerconfiguration.IntegerValueView
 import se.eelde.toggles.oss.OssView
+import se.eelde.toggles.routes.Applications
+import se.eelde.toggles.routes.Configurations
+import se.eelde.toggles.routes.Help
+import se.eelde.toggles.routes.Oss
 import se.eelde.toggles.stringconfiguration.StringValueView
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongMethod")
@@ -43,16 +48,16 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "applications",
+        startDestination = Applications,
         modifier = modifier
     ) {
         applicationNavigations(
             navigateToConfigurations = { applicationId ->
-                navController.navigate("configurations/$applicationId")
+                navController.navigate(Configurations(applicationId))
             },
-            navigateToApplications = { navController.navigate("applications") },
-            navigateToOss = { navController.navigate("oss") },
-            navigateToHelp = { navController.navigate("help") },
+            navigateToApplications = { navController.navigate(Applications) },
+            navigateToOss = { navController.navigate(Oss) },
+            navigateToHelp = { navController.navigate(Help) },
         )
         configurationsNavigations(
             navigateToBooleanConfiguration = { scopeId: Long, configurationId: Long ->
@@ -113,9 +118,7 @@ fun Navigation(
         ) {
             EnumValueView { navController.popBackStack() }
         }
-        composable(
-            "oss",
-        ) {
+        composable<Oss> {
             Scaffold(
                 topBar = {
                     TopAppBar(
@@ -135,9 +138,7 @@ fun Navigation(
                 OssView(modifier = Modifier.padding(paddingValues))
             }
         }
-        composable(
-            "help",
-        ) {
+        composable<Help> {
             HelpView { navController.popBackStack() }
         }
     }

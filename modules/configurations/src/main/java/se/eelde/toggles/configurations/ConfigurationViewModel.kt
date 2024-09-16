@@ -7,6 +7,9 @@ import android.text.TextUtils
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,16 +45,20 @@ internal sealed class PartialViewState {
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
+@HiltViewModel(assistedFactory = ConfigurationViewModel.Factory::class)
 @Suppress("StaticFieldLeak")
-class ConfigurationViewModel @Inject internal constructor(
+class ConfigurationViewModel @AssistedInject internal constructor(
     @ApplicationContext private val context: Context,
     private val applicationDao: TogglesApplicationDao,
     configurationDao: TogglesConfigurationDao,
     scopeDao: TogglesScopeDao,
     val savedStateHandle: SavedStateHandle,
+    @Assisted val applicationId: Long,
 ) : ViewModel() {
-    private val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!
+    @AssistedFactory
+    interface Factory {
+        fun create(applicationId: Long): ConfigurationViewModel
+    }
 
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
@@ -107,6 +114,7 @@ class ConfigurationViewModel @Inject internal constructor(
             is PartialViewState.Configurations -> viewState.copy(
                 configurations = partialViewState.configurations
             )
+
             PartialViewState.Empty -> viewState
             is PartialViewState.DefaultScope -> viewState.copy(defaultScope = partialViewState.scope)
             is PartialViewState.SelectedScope -> viewState.copy(selectedScope = partialViewState.scope)

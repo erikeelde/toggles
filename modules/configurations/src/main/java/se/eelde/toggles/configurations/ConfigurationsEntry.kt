@@ -32,9 +32,9 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
+import se.eelde.toggles.routes.Configurations
 
 @Suppress("LongMethod", "LongParameterList")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,11 +46,14 @@ fun NavGraphBuilder.configurationsNavigations(
     navigateToScopeView: (Long) -> Unit,
     back: () -> Unit,
 ) {
-    composable(
-        "configurations/{applicationId}",
-        arguments = listOf(navArgument("applicationId") { type = NavType.LongType })
-    ) {
-        val viewModel: ConfigurationViewModel = hiltViewModel()
+    composable<Configurations> { backStackEntry ->
+        val configurations: Configurations = backStackEntry.toRoute()
+
+        val viewModel: ConfigurationViewModel =
+            hiltViewModel<ConfigurationViewModel, ConfigurationViewModel.Factory>(
+                creationCallback = { factory -> factory.create(applicationId = configurations.applicationId) }
+            )
+
         val uiState = viewModel.state.collectAsStateWithLifecycle()
 
         val launcher =
