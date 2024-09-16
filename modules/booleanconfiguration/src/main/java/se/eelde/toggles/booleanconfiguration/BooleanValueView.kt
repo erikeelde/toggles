@@ -1,5 +1,6 @@
 package se.eelde.toggles.booleanconfiguration
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,22 +27,53 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import se.eelde.toggles.routes.BooleanConfiguration
+import se.eelde.toggles.routes.StringConfiguration
+
+@SuppressLint("ComposeViewModelInjection")
+@Composable
+fun BooleanValueView(
+    booleanConfiguration: BooleanConfiguration,
+    back: () -> Unit,
+) {
+    val viewModel: BooleanValueViewModel =
+        hiltViewModel<BooleanValueViewModel, BooleanValueViewModel.Factory>(
+            creationCallback = { factory ->
+                factory.create(booleanConfiguration)
+            }
+        )
+
+    val viewState by viewModel.state.collectAsStateWithLifecycle()
+
+    val scope = rememberCoroutineScope()
+
+    BooleanValueView(
+        viewState = viewState,
+        save = { scope.launch { viewModel.saveClick() } },
+        revert = { scope.launch { viewModel.revertClick() } },
+        checkedChanged = { viewModel.checkedChanged(it) },
+        popBackStack = back,
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("LongParameterList")
 fun BooleanValueView(
+    viewState: ViewState,
+    save: () -> Unit,
+    revert: () -> Unit,
+    checkedChanged: (Boolean) -> Unit,
+    popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: FragmentBooleanValueViewModel = hiltViewModel(),
-    back: () -> Unit,
 ) {
-    val viewState by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Boolean configuration") },
                 navigationIcon =
                 {
-                    IconButton(onClick = { back() }) {
+                    IconButton(onClick = { popBackStack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = null
@@ -51,63 +83,47 @@ fun BooleanValueView(
             )
         },
     ) { paddingValues ->
-        BooleanValueView(
-            uiState = viewState,
-            popBackStack = { back() },
-            revert = { viewModel.revertClick() },
-            save = { viewModel.saveClick() },
-            setBooleanValue = { viewModel.checkedChanged(it) },
-            modifier = modifier.padding(paddingValues),
-        )
-    }
-}
+        val scope = rememberCoroutineScope()
+        Surface(modifier = modifier
+            .padding(paddingValues)
+            .padding(16.dp)) {
+            Column {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    style = MaterialTheme.typography.headlineMedium,
+                    text = viewState.title ?: ""
+                )
 
-@Composable
-@Suppress("LongParameterList")
-internal fun BooleanValueView(
-    uiState: ViewState,
-    popBackStack: () -> Unit,
-    setBooleanValue: (Boolean) -> Unit,
-    revert: suspend () -> Unit,
-    save: suspend () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val scope = rememberCoroutineScope()
-
-    Surface(modifier = modifier.padding(16.dp)) {
-        Column {
-            Text(
-                modifier = Modifier.padding(8.dp),
-                style = MaterialTheme.typography.headlineMedium,
-                text = uiState.title ?: ""
-            )
-
-            Switch(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(End),
-                checked = uiState.checked ?: false,
-                onCheckedChange = { setBooleanValue(it) }
-            )
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                Button(modifier = Modifier.padding(8.dp), onClick = {
-                    scope.launch {
-                        revert()
-                        popBackStack()
+                Switch(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(End),
+                    checked = viewState.checked ?: false,
+                    onCheckedChange = {
+                        checkedChanged(it)
                     }
-                }) {
-                    Text("Revert")
-                }
-
-                Button(modifier = Modifier.padding(8.dp), onClick = {
-                    scope.launch {
-                        save()
-                        popBackStack()
+                )
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Button(modifier = Modifier.padding(8.dp), onClick = {
+                        scope.launch {
+                            revert()
+                            popBackStack()
+                        }
+                    }) {
+                        Text("Revert")
                     }
-                }) {
-                    Text("Save")
+
+                    Button(modifier = Modifier.padding(8.dp), onClick = {
+                        scope.launch {
+                            save()
+                            popBackStack()
+                        }
+                    }) {
+                        Text("Save")
+                    }
                 }
             }
         }
     }
 }
+

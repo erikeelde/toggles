@@ -35,7 +35,7 @@ import se.eelde.toggles.routes.StringConfiguration
 private fun StringValueViewPreview() {
     TogglesTheme {
         StringValueView(
-            state = ViewState(title = "The title", stringValue = "This is value"),
+            viewState = ViewState(title = "The title", stringValue = "This is value"),
             setStringValue = {},
             save = {},
             revert = {},
@@ -62,7 +62,7 @@ fun StringValueView(
     val scope = rememberCoroutineScope()
 
     StringValueView(
-        state = viewState,
+        viewState = viewState,
         setStringValue = { viewModel.setStringValue(it) },
         save = { scope.launch { viewModel.saveClick() } },
         revert = { viewModel.revertClick() },
@@ -74,7 +74,7 @@ fun StringValueView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongParameterList")
 internal fun StringValueView(
-    state: ViewState,
+    viewState: ViewState,
     setStringValue: (String) -> Unit,
     save: suspend () -> Unit,
     revert: suspend () -> Unit,
@@ -104,12 +104,12 @@ internal fun StringValueView(
                 Text(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.headlineMedium,
-                    text = state.title ?: ""
+                    text = viewState.title ?: ""
                 )
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = state.stringValue ?: "",
+                    value = viewState.stringValue ?: "",
                     onValueChange = { setStringValue(it) },
                 )
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {

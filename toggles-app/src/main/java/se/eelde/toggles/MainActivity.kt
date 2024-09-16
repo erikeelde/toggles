@@ -34,6 +34,7 @@ import se.eelde.toggles.help.HelpView
 import se.eelde.toggles.integerconfiguration.IntegerValueView
 import se.eelde.toggles.oss.OssView
 import se.eelde.toggles.routes.Applications
+import se.eelde.toggles.routes.BooleanConfiguration
 import se.eelde.toggles.routes.Configurations
 import se.eelde.toggles.routes.Help
 import se.eelde.toggles.routes.Oss
@@ -63,7 +64,7 @@ fun Navigation(
         )
         configurationsNavigations(
             navigateToBooleanConfiguration = { scopeId: Long, configurationId: Long ->
-                navController.navigate("configuration/$configurationId/$scopeId/boolean")
+                navController.navigate(BooleanConfiguration(configurationId, scopeId))
             },
             navigateToIntegerConfiguration = { scopeId: Long, configurationId: Long ->
                 navController.navigate("configuration/$configurationId/$scopeId/integer")
@@ -83,14 +84,10 @@ fun Navigation(
                 navController.navigate("scopes/$applicationId")
             }
         ) { navController.popBackStack() }
-        composable(
-            "configuration/{configurationId}/{scopeId}/boolean",
-            arguments = listOf(
-                navArgument("configurationId") { type = NavType.LongType },
-                navArgument("scopeId") { type = NavType.LongType }
-            )
-        ) {
-            BooleanValueView { navController.popBackStack() }
+        composable<BooleanConfiguration> { backStackEntry ->
+            val booleanConfiguration: BooleanConfiguration = backStackEntry.toRoute()
+
+            BooleanValueView(booleanConfiguration) { navController.popBackStack() }
         }
         composable(
             "scopes/{applicationId}",
