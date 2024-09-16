@@ -22,6 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.applications.applicationNavigations
 import se.eelde.toggles.booleanconfiguration.BooleanValueView
@@ -36,6 +37,7 @@ import se.eelde.toggles.routes.Applications
 import se.eelde.toggles.routes.Configurations
 import se.eelde.toggles.routes.Help
 import se.eelde.toggles.routes.Oss
+import se.eelde.toggles.routes.StringConfiguration
 import se.eelde.toggles.stringconfiguration.StringValueView
 
 
@@ -67,7 +69,12 @@ fun Navigation(
                 navController.navigate("configuration/$configurationId/$scopeId/integer")
             },
             navigateToStringConfiguration = { scopeId: Long, configurationId: Long ->
-                navController.navigate("configuration/$configurationId/$scopeId/string")
+                navController.navigate(
+                    StringConfiguration(
+                        configurationId = configurationId,
+                        scopeId = scopeId
+                    )
+                )
             },
             navigateToEnumConfiguration = { scopeId: Long, configurationId: Long ->
                 navController.navigate("configuration/$configurationId/$scopeId/enum")
@@ -100,14 +107,10 @@ fun Navigation(
         ) {
             IntegerValueView { navController.popBackStack() }
         }
-        composable(
-            "configuration/{configurationId}/{scopeId}/string",
-            arguments = listOf(
-                navArgument("configurationId") { type = NavType.LongType },
-                navArgument("scopeId") { type = NavType.LongType }
-            )
-        ) {
-            StringValueView { navController.popBackStack() }
+        composable<StringConfiguration> { backStackEntry ->
+            val stringConfiguration: StringConfiguration = backStackEntry.toRoute()
+
+            StringValueView(stringConfiguration) { navController.popBackStack() }
         }
         composable(
             "configuration/{configurationId}/{scopeId}/enum",

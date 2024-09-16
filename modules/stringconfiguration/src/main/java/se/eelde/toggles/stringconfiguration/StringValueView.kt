@@ -1,12 +1,13 @@
 package se.eelde.toggles.stringconfiguration
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,10 +28,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import se.eelde.toggles.composetheme.TogglesTheme
+import se.eelde.toggles.routes.StringConfiguration
 
 @Preview
 @Composable
-fun StringValueViewPreview() {
+private fun StringValueViewPreview() {
     TogglesTheme {
         StringValueView(
             state = ViewState(title = "The title", stringValue = "This is value"),
@@ -42,42 +44,34 @@ fun StringValueViewPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("ComposeViewModelInjection")
 @Composable
 fun StringValueView(
-    modifier: Modifier = Modifier,
-    viewModel: FragmentStringValueViewModel = hiltViewModel(),
+    stringConfiguration: StringConfiguration,
     back: () -> Unit,
 ) {
-    val viewState by viewModel.state.collectAsStateWithLifecycle()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("String configuration") },
-                navigationIcon =
-                {
-                    IconButton(onClick = { back() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        },
-    ) { paddingValues ->
-        StringValueView(
-            state = viewState,
-            popBackStack = { back() },
-            revert = { viewModel.revertClick() },
-            save = { viewModel.saveClick() },
-            setStringValue = { viewModel.setStringValue(it) },
-            modifier = modifier.padding(paddingValues),
+    val viewModel: StringValueViewModel =
+        hiltViewModel<StringValueViewModel, StringValueViewModel.Factory>(
+            creationCallback = { factory ->
+                factory.create(stringConfiguration)
+            }
         )
-    }
+
+    val viewState by viewModel.state.collectAsStateWithLifecycle()
+
+    val scope = rememberCoroutineScope()
+
+    StringValueView(
+        state = viewState,
+        setStringValue = { viewModel.setStringValue(it) },
+        save = { scope.launch { viewModel.saveClick() } },
+        revert = { viewModel.revertClick() },
+        popBackStack = back,
+    )
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongParameterList")
 internal fun StringValueView(
     state: ViewState,
@@ -87,38 +81,55 @@ internal fun StringValueView(
     popBackStack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
-
-    Surface(modifier = modifier.padding(16.dp)) {
-        Column {
-            Text(
-                modifier = Modifier.padding(8.dp),
-                style = MaterialTheme.typography.headlineMedium,
-                text = state.title ?: ""
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = state.stringValue ?: "",
-                onValueChange = { setStringValue(it) },
-            )
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                Button(modifier = Modifier.padding(8.dp), onClick = {
-                    scope.launch {
-                        revert()
-                        popBackStack()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("String configuration") },
+                navigationIcon =
+                {
+                    IconButton(onClick = { popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
                     }
-                }) {
-                    Text("Revert")
                 }
+            )
+        },
+    ) { paddingValues ->
+        val scope = rememberCoroutineScope()
 
-                Button(modifier = Modifier.padding(8.dp), onClick = {
-                    scope.launch {
-                        save()
-                        popBackStack()
+        Surface(modifier = modifier.padding(paddingValues)) {
+            Column {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    style = MaterialTheme.typography.headlineMedium,
+                    text = state.title ?: ""
+                )
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = state.stringValue ?: "",
+                    onValueChange = { setStringValue(it) },
+                )
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Button(modifier = Modifier.padding(8.dp), onClick = {
+                        scope.launch {
+                            revert()
+                            popBackStack()
+                        }
+                    }) {
+                        Text("Revert")
                     }
-                }) {
-                    Text("Save")
+
+                    Button(modifier = Modifier.padding(8.dp), onClick = {
+                        scope.launch {
+                            save()
+                            popBackStack()
+                        }
+                    }) {
+                        Text("Save")
+                    }
                 }
             }
         }

@@ -15,17 +15,17 @@ object Help
 data class Configurations(val applicationId: Long)
 
 @Serializable
-object BooleanConfiguration
+data class BooleanConfiguration(val configurationId: Long, val scopeId: Long)
 
 @Serializable
-object IntegerConfiguration
+data class IntegerConfiguration(val configurationId: Long, val scopeId: Long)
 
 @Serializable
-object EnumConfiguration
+data class EnumConfiguration(val configurationId: Long, val scopeId: Long)
 
 @Serializable
-object StringConfiguration
+data class StringConfiguration(val configurationId: Long, val scopeId: Long)
 
 @Serializable
-object Scope
+data class Scope(val applicationId: Long)
 

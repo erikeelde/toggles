@@ -1,9 +1,11 @@
 package se.eelde.toggles.stringconfiguration
 
 import android.app.Application
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,8 +18,8 @@ import se.eelde.toggles.database.WrenchConfigurationValue
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.provider.notifyUpdate
+import se.eelde.toggles.routes.StringConfiguration
 import java.util.Date
-import javax.inject.Inject
 
 data class ViewState(
     val title: String? = null,
@@ -34,22 +36,28 @@ private sealed class PartialViewState {
     object Reverting : PartialViewState()
 }
 
-@HiltViewModel
-class FragmentStringValueViewModel
-@Inject internal constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = StringValueViewModel.Factory::class)
+class StringValueViewModel
+@AssistedInject internal constructor(
     private val application: Application,
     private val configurationDao: TogglesConfigurationDao,
-    private val configurationValueDao: TogglesConfigurationValueDao
+    private val configurationValueDao: TogglesConfigurationValueDao,
+    @Assisted stringConfiguration: StringConfiguration
 ) : ViewModel() {
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            stringConfiguration: StringConfiguration
+        ): StringValueViewModel
+    }
+
+    private val configurationId = stringConfiguration.configurationId
+    private val scopeId = stringConfiguration.scopeId
 
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
     val state: StateFlow<ViewState>
         get() = _state
-
-    private val configurationId: Long = savedStateHandle.get<Long>("configurationId")!!
-    private val scopeId: Long = savedStateHandle.get<Long>("scopeId")!!
 
     private var selectedConfigurationValue: WrenchConfigurationValue? = null
 
@@ -78,15 +86,19 @@ class FragmentStringValueViewModel
             is PartialViewState.NewConfiguration -> {
                 previousState.copy(title = partialViewState.title)
             }
+
             is PartialViewState.Empty -> {
                 previousState
             }
+
             is PartialViewState.Saving -> {
                 previousState.copy(saving = true)
             }
+
             is PartialViewState.Reverting -> {
                 previousState.copy(reverting = true)
             }
+
             is PartialViewState.NewConfigurationValue -> {
                 previousState.copy(stringValue = partialViewState.value)
             }
