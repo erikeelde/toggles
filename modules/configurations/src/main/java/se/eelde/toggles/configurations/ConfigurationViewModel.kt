@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import se.eelde.toggles.database.WrenchApplication
-import se.eelde.toggles.database.dao.application.TogglesApplicationDao
-import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.WrenchConfigurationWithValues
 import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.dao.application.TogglesApplicationDao
+import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesScopeDao
 import javax.inject.Inject
 

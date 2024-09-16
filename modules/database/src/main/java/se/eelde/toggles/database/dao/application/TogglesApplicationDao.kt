@@ -2,7 +2,6 @@ package se.eelde.toggles.database.dao.application
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import se.eelde.toggles.database.WrenchApplication

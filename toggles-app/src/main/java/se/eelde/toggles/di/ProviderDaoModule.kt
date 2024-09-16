@@ -6,7 +6,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import se.eelde.toggles.database.WrenchDatabase
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object ProviderDaoModule {

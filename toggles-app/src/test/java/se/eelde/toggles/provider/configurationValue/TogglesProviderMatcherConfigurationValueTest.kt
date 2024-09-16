@@ -86,7 +86,9 @@ class TogglesProviderMatcherConfigurationValueTest {
     fun testUpdate() {
         togglesProvider.update(
             TogglesProviderContract.configurationUri(),
-            null, null, null
+            null,
+            null,
+            null
         )
     }
 
