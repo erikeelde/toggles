@@ -14,6 +14,7 @@ dependencies {
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.database)
     implementation(projects.modules.provider)
+    implementation(projects.modules.routes)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.navigation.navigation.compose)

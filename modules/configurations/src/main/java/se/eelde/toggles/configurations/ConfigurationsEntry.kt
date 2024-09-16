@@ -7,13 +7,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Cyclone
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -94,7 +94,10 @@ fun NavGraphBuilder.configurationsNavigations(
                     navigationIcon =
                     {
                         IconButton(onClick = { back() }) {
-                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null
+                            )
                         }
                     },
                     actions = {
@@ -141,7 +144,7 @@ fun NavGraphBuilder.configurationsNavigations(
                                 onClick = { navigateToScopeView(uiState.value.application!!.id) },
                                 leadingIcon = {
                                     Icon(
-                                        imageVector = Icons.Outlined.List,
+                                        imageVector = Icons.AutoMirrored.Outlined.List,
                                         contentDescription = null
                                     )
                                 }
