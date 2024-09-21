@@ -1,9 +1,11 @@
 package se.eelde.toggles.integerconfiguration
 
 import android.app.Application
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,8 +18,8 @@ import se.eelde.toggles.database.WrenchConfigurationValue
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.provider.notifyUpdate
+import se.eelde.toggles.routes.IntegerConfiguration
 import java.util.Date
-import javax.inject.Inject
 
 data class ViewState(
     val title: String? = null,
@@ -34,21 +36,27 @@ private sealed class PartialViewState {
     object Reverting : PartialViewState()
 }
 
-@HiltViewModel
-class FragmentIntegerValueViewModel @Inject internal constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = IntegerValueViewModel.Factory::class)
+class IntegerValueViewModel @AssistedInject internal constructor(
     private val application: Application,
     private val configurationDao: TogglesConfigurationDao,
-    private val configurationValueDao: TogglesConfigurationValueDao
+    private val configurationValueDao: TogglesConfigurationValueDao,
+    @Assisted integerConfiguration: IntegerConfiguration,
 ) : ViewModel() {
 
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            integerConfiguration: IntegerConfiguration
+        ): IntegerValueViewModel
+    }
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
     val state: StateFlow<ViewState>
         get() = _state
 
-    private val configurationId: Long = savedStateHandle.get<Long>("configurationId")!!
-    private val scopeId: Long = savedStateHandle.get<Long>("scopeId")!!
+    private val configurationId: Long = integerConfiguration.configurationId
+    private val scopeId: Long = integerConfiguration.scopeId
 
     private var selectedConfigurationValue: WrenchConfigurationValue? = null
 
