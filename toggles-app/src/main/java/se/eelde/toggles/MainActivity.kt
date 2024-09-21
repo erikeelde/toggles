@@ -16,6 +16,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -32,15 +33,16 @@ import se.eelde.toggles.dialogs.scope.ScopeValueView
 import se.eelde.toggles.enumconfiguration.EnumValueView
 import se.eelde.toggles.help.HelpView
 import se.eelde.toggles.integerconfiguration.IntegerValueView
+import se.eelde.toggles.integerconfiguration.IntegerValueViewModel
 import se.eelde.toggles.oss.OssView
 import se.eelde.toggles.routes.Applications
 import se.eelde.toggles.routes.BooleanConfiguration
 import se.eelde.toggles.routes.Configurations
 import se.eelde.toggles.routes.Help
+import se.eelde.toggles.routes.IntegerConfiguration
 import se.eelde.toggles.routes.Oss
 import se.eelde.toggles.routes.StringConfiguration
 import se.eelde.toggles.stringconfiguration.StringValueView
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongMethod")
@@ -67,7 +69,7 @@ fun Navigation(
                 navController.navigate(BooleanConfiguration(configurationId, scopeId))
             },
             navigateToIntegerConfiguration = { scopeId: Long, configurationId: Long ->
-                navController.navigate("configuration/$configurationId/$scopeId/integer")
+                navController.navigate(IntegerConfiguration(configurationId, scopeId))
             },
             navigateToStringConfiguration = { scopeId: Long, configurationId: Long ->
                 navController.navigate(
@@ -95,14 +97,15 @@ fun Navigation(
         ) {
             ScopeValueView { navController.popBackStack() }
         }
-        composable(
-            "configuration/{configurationId}/{scopeId}/integer",
-            arguments = listOf(
-                navArgument("configurationId") { type = NavType.LongType },
-                navArgument("scopeId") { type = NavType.LongType }
-            )
-        ) {
-            IntegerValueView { navController.popBackStack() }
+        composable<IntegerConfiguration> { backStackEntry ->
+            val integerConfiguration: IntegerConfiguration = backStackEntry.toRoute()
+            IntegerValueView(
+                viewModel = hiltViewModel<IntegerValueViewModel, IntegerValueViewModel.Factory>(
+                    creationCallback = { factory ->
+                        factory.create(integerConfiguration)
+                    }
+                ),
+            ) { navController.popBackStack() }
         }
         composable<StringConfiguration> { backStackEntry ->
             val stringConfiguration: StringConfiguration = backStackEntry.toRoute()
