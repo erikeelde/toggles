@@ -1,8 +1,10 @@
 package se.eelde.toggles.dialogs.scope
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,8 +13,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import se.eelde.toggles.database.WrenchScope
 import se.eelde.toggles.database.dao.application.TogglesScopeDao
+import se.eelde.toggles.routes.Scope
 import java.util.Date
-import javax.inject.Inject
 
 internal data class ViewState(
     val title: String? = null,
@@ -30,13 +32,20 @@ private sealed class PartialViewState {
     object Reverting : PartialViewState()
 }
 
-@HiltViewModel
-class ScopeViewModel @Inject internal constructor(
-    private val savedStateHandle: SavedStateHandle,
-    private val scopeDao: TogglesScopeDao
+@HiltViewModel(assistedFactory = ScopeViewModel.Factory::class)
+class ScopeViewModel @AssistedInject internal constructor(
+    private val scopeDao: TogglesScopeDao,
+    @Assisted scope: Scope,
 ) : ViewModel() {
 
-    private val applicationId: Long = savedStateHandle.get<Long>("applicationId")!!
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            scope: Scope
+        ): ScopeViewModel
+    }
+
+    private val applicationId: Long = scope.applicationId
 
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 

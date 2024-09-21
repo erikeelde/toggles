@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import se.eelde.toggles.R
 import se.eelde.toggles.database.WrenchScope
@@ -37,8 +36,8 @@ import se.eelde.toggles.database.WrenchScope
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScopeValueView(
+    viewModel: ScopeViewModel,
     modifier: Modifier = Modifier,
-    viewModel: ScopeViewModel = hiltViewModel(),
     back: () -> Unit
 ) {
     val uiState = viewModel.state.collectAsStateWithLifecycle()
