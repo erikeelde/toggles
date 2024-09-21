@@ -1,9 +1,11 @@
 package se.eelde.toggles.enumconfiguration
 
 import android.app.Application
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -19,8 +21,8 @@ import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.database.dao.application.TogglesPredefinedConfigurationValueDao
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
+import se.eelde.toggles.routes.EnumConfiguration
 import java.util.Date
-import javax.inject.Inject
 
 data class ViewState(
     val title: String? = null,
@@ -43,22 +45,29 @@ internal sealed class PartialViewState {
     data object Reverting : PartialViewState()
 }
 
-@HiltViewModel
-class FragmentEnumValueViewModel @Inject internal constructor(
-    private val savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = EnumValueViewModel.Factory::class)
+class EnumValueViewModel @AssistedInject internal constructor(
     private val application: Application,
     private val configurationDao: TogglesConfigurationDao,
     private val configurationValueDao: TogglesConfigurationValueDao,
-    private val predefinedConfigurationValueDao: TogglesPredefinedConfigurationValueDao
+    private val predefinedConfigurationValueDao: TogglesPredefinedConfigurationValueDao,
+    @Assisted enumConfiguration: EnumConfiguration,
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            enumConfiguration: EnumConfiguration
+        ): EnumValueViewModel
+    }
 
     private val _state = MutableStateFlow(reduce(ViewState(), PartialViewState.Empty))
 
     val state: StateFlow<ViewState>
         get() = _state
 
-    private val configurationId: Long = savedStateHandle.get<Long>("configurationId")!!
-    private val scopeId: Long = savedStateHandle.get<Long>("scopeId")!!
+    private val configurationId: Long = enumConfiguration.configurationId
+    private val scopeId: Long = enumConfiguration.scopeId
 
     private var selectedConfigurationValue: WrenchConfigurationValue? = null
 

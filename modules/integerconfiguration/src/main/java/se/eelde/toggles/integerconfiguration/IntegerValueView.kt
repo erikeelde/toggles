@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable
-private fun IntegerValueViewPreview() {
+internal fun IntegerValueViewPreview() {
     IntegerValueView(
         uiState = ViewState(
             title = "Integer value",

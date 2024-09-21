@@ -57,7 +57,7 @@ fun BooleanValueView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "LongMethod")
 fun BooleanValueView(
     viewState: ViewState,
     save: () -> Unit,

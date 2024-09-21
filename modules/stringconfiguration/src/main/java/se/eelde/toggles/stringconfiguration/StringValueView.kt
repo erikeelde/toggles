@@ -32,7 +32,7 @@ import se.eelde.toggles.routes.StringConfiguration
 
 @Preview
 @Composable
-private fun StringValueViewPreview() {
+internal fun StringValueViewPreview() {
     TogglesTheme {
         StringValueView(
             viewState = ViewState(title = "The title", stringValue = "This is value"),

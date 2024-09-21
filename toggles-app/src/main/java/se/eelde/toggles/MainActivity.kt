@@ -31,6 +31,7 @@ import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.configurations.configurationsNavigations
 import se.eelde.toggles.dialogs.scope.ScopeValueView
 import se.eelde.toggles.enumconfiguration.EnumValueView
+import se.eelde.toggles.enumconfiguration.EnumValueViewModel
 import se.eelde.toggles.help.HelpView
 import se.eelde.toggles.integerconfiguration.IntegerValueView
 import se.eelde.toggles.integerconfiguration.IntegerValueViewModel
@@ -38,6 +39,7 @@ import se.eelde.toggles.oss.OssView
 import se.eelde.toggles.routes.Applications
 import se.eelde.toggles.routes.BooleanConfiguration
 import se.eelde.toggles.routes.Configurations
+import se.eelde.toggles.routes.EnumConfiguration
 import se.eelde.toggles.routes.Help
 import se.eelde.toggles.routes.IntegerConfiguration
 import se.eelde.toggles.routes.Oss
@@ -80,7 +82,7 @@ fun Navigation(
                 )
             },
             navigateToEnumConfiguration = { scopeId: Long, configurationId: Long ->
-                navController.navigate("configuration/$configurationId/$scopeId/enum")
+                navController.navigate(EnumConfiguration(configurationId, scopeId))
             },
             navigateToScopeView = { applicationId: Long ->
                 navController.navigate("scopes/$applicationId")
@@ -112,14 +114,16 @@ fun Navigation(
 
             StringValueView(stringConfiguration) { navController.popBackStack() }
         }
-        composable(
-            "configuration/{configurationId}/{scopeId}/enum",
-            arguments = listOf(
-                navArgument("configurationId") { type = NavType.LongType },
-                navArgument("scopeId") { type = NavType.LongType }
-            )
-        ) {
-            EnumValueView { navController.popBackStack() }
+        composable<EnumConfiguration> { backStackEntry ->
+            val enumConfiguration: EnumConfiguration = backStackEntry.toRoute()
+
+            EnumValueView(
+                viewModel = hiltViewModel<EnumValueViewModel, EnumValueViewModel.Factory>(
+                    creationCallback = { factory ->
+                        factory.create(enumConfiguration)
+                    }
+                )
+            ) { navController.popBackStack() }
         }
         composable<Oss> {
             Scaffold(
