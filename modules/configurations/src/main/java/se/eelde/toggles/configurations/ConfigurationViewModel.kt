@@ -26,7 +26,6 @@ import se.eelde.toggles.database.WrenchScope
 import se.eelde.toggles.database.dao.application.TogglesApplicationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesScopeDao
-import javax.inject.Inject
 
 internal data class ViewState(
     val application: WrenchApplication? = null,
