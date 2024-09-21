@@ -28,4 +28,3 @@ data class StringConfiguration(val configurationId: Long, val scopeId: Long)
 
 @Serializable
 data class Scope(val applicationId: Long)
-

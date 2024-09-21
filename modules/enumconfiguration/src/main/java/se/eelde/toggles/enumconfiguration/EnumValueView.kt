@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun EnumValueView(
     modifier: Modifier = Modifier,
-    viewModel: FragmentEnumValueViewModel = hiltViewModel(),
+    viewModel: EnumValueViewModel = hiltViewModel(),
     back: () -> Unit,
 ) {
     val viewState by viewModel.state.collectAsStateWithLifecycle()
