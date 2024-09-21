@@ -56,7 +56,7 @@ fun OssView(viewModel: OssProjectViewModel, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun OssView(artifacts: ImmutableList<ViewData>) {
+fun OssView(artifacts: ImmutableList<ViewData>, modifier: Modifier = Modifier) {
     val licenses: SnapshotStateList<License> = remember { mutableStateListOf() }
     var alertTitle by remember { mutableStateOf("") }
     LicenseSelector(alertTitle, licenses.toPersistentList()) {
@@ -64,7 +64,7 @@ fun OssView(artifacts: ImmutableList<ViewData>) {
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -107,9 +107,9 @@ fun OssView(artifacts: ImmutableList<ViewData>) {
 }
 
 @Composable
-fun CharacterHeader(initial: String) {
+fun CharacterHeader(initial: String, modifier: Modifier = Modifier) {
     Text(
-        modifier = Modifier.padding(
+        modifier = modifier.padding(
             start = 16.dp,
             top = 16.dp,
             end = 16.dp,
@@ -121,7 +121,7 @@ fun CharacterHeader(initial: String) {
 
 @Preview(showSystemUi = true)
 @Composable
-fun LicenseSelectorPreview() {
+internal fun LicenseSelectorPreview() {
     Column(Modifier.fillMaxSize()) {
         LicenseSelector("Licenses", persistentListOf(License("aaa", "http://google.se"))) {
         }
