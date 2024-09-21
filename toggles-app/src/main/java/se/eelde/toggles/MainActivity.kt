@@ -18,11 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.applications.applicationNavigations
@@ -30,6 +28,7 @@ import se.eelde.toggles.booleanconfiguration.BooleanValueView
 import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.configurations.configurationsNavigations
 import se.eelde.toggles.dialogs.scope.ScopeValueView
+import se.eelde.toggles.dialogs.scope.ScopeViewModel
 import se.eelde.toggles.enumconfiguration.EnumValueView
 import se.eelde.toggles.enumconfiguration.EnumValueViewModel
 import se.eelde.toggles.help.HelpView
@@ -43,6 +42,7 @@ import se.eelde.toggles.routes.EnumConfiguration
 import se.eelde.toggles.routes.Help
 import se.eelde.toggles.routes.IntegerConfiguration
 import se.eelde.toggles.routes.Oss
+import se.eelde.toggles.routes.Scope
 import se.eelde.toggles.routes.StringConfiguration
 import se.eelde.toggles.stringconfiguration.StringValueView
 
@@ -85,7 +85,7 @@ fun Navigation(
                 navController.navigate(EnumConfiguration(configurationId, scopeId))
             },
             navigateToScopeView = { applicationId: Long ->
-                navController.navigate("scopes/$applicationId")
+                navController.navigate(Scope(applicationId))
             }
         ) { navController.popBackStack() }
         composable<BooleanConfiguration> { backStackEntry ->
@@ -93,11 +93,16 @@ fun Navigation(
 
             BooleanValueView(booleanConfiguration) { navController.popBackStack() }
         }
-        composable(
-            "scopes/{applicationId}",
-            arguments = listOf(navArgument("applicationId") { type = NavType.LongType })
-        ) {
-            ScopeValueView { navController.popBackStack() }
+        composable<Scope> { backStackEntry ->
+            val scope: Scope = backStackEntry.toRoute()
+
+            ScopeValueView(
+                viewModel = hiltViewModel<ScopeViewModel, ScopeViewModel.Factory>(
+                    creationCallback = { factory ->
+                        factory.create(scope)
+                    }
+                )
+            ) { navController.popBackStack() }
         }
         composable<IntegerConfiguration> { backStackEntry ->
             val integerConfiguration: IntegerConfiguration = backStackEntry.toRoute()
