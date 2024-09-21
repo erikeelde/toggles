@@ -28,7 +28,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import se.eelde.toggles.routes.BooleanConfiguration
-import se.eelde.toggles.routes.StringConfiguration
 
 @SuppressLint("ComposeViewModelInjection")
 @Composable
@@ -84,9 +83,11 @@ fun BooleanValueView(
         },
     ) { paddingValues ->
         val scope = rememberCoroutineScope()
-        Surface(modifier = modifier
-            .padding(paddingValues)
-            .padding(16.dp)) {
+        Surface(
+            modifier = modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
             Column {
                 Text(
                     modifier = Modifier.padding(8.dp),
@@ -126,4 +127,3 @@ fun BooleanValueView(
         }
     }
 }
-
