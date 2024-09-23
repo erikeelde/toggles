@@ -1,9 +1,6 @@
 package se.eelde.toggles.core
 
 import android.net.Uri
-import java.util.Date
-
-
 
 public object TogglesProviderContract {
     private const val TOGGLES_AUTHORITY = "se.eelde.toggles.configprovider"

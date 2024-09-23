@@ -21,6 +21,7 @@ public class TogglesConfiguration private constructor(
         public var key: String = ""
 
         public fun setId(id: Long): Builder = apply { this.id = id }
+
         public fun setType(@Toggle.ToggleType type: String): Builder =
             apply { this.type = type }
 
