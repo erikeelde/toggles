@@ -111,6 +111,6 @@ public class TogglesConfigurationValue private constructor(
 @JvmSynthetic
 @Suppress("LibraryEntitiesShouldNotBePublic")
 public fun TogglesConfigurationValue(initializer: TogglesConfigurationValue.Builder.() -> Unit):
-        TogglesConfigurationValue {
+    TogglesConfigurationValue {
     return TogglesConfigurationValue.Builder().apply(initializer).build()
 }
