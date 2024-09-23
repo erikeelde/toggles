@@ -1,4 +1,4 @@
-package com.example.toggles
+package se.eelde.toggles.example.flow
 
 import android.content.res.Resources
 import androidx.compose.foundation.layout.Column
@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import se.eelde.toggles.example.MyEnum
+import se.eelde.toggles.example.R
 
 sealed class Config<out T : Any> {
     abstract val title: String

@@ -8,6 +8,7 @@ plugins {
     id("app.cash.licensee")
     alias(libs.plugins.se.premex.gross)
     alias(libs.plugins.com.google.devtools.ksp)
+    alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
 }
 
 val versionFile = File("versions.properties")
@@ -32,8 +33,9 @@ licensee {
 }
 
 android {
+    namespace = "se.eelde.toggles.example"
+
     defaultConfig {
-        applicationId = "se.eelde.toggles.example"
         versionName = versions.getProperty("V_VERSION", "0.0.1")
         versionCode = versions.getProperty("V_VERSION_CODE", "1").toInt()
 
@@ -50,7 +52,6 @@ android {
             applicationIdSuffix = ".debug"
         }
     }
-    namespace = "com.example.toggles"
 }
 
 kotlin {
@@ -73,7 +74,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.navigation.navigation.compose)
-
+    implementation(libs.co.touchlab.kermit)
+    implementation(libs.org.jetbrains.kotlinx.kotlinx.serialization.json)
+    implementation(libs.org.jetbrains.kotlinx.kotlinx.collections.immutable)
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.oss)
 
@@ -81,8 +84,8 @@ dependencies {
     ksp(libs.com.google.dagger.hilt.android.compiler)
     kspTest(libs.com.google.dagger.hilt.android.compiler)
 
+    implementation(libs.se.eelde.toggles.toggles.core)
     implementation(libs.se.eelde.toggles.toggles.flow)
-    implementation(libs.se.eelde.toggles.toggles.prefs)
 
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)

@@ -158,12 +158,36 @@ class TogglesProvider : ContentProvider() {
                 }
             }
 
+            UriMatch.CONFIGURATIONS -> {
+                cursor = configurationDao.getConfigurationCursor(callingApplication.id)
+            }
+
             UriMatch.CONFIGURATION_KEY -> {
-                cursor = configurationDao.getConfigurationCursor(callingApplication.id, uri.lastPathSegment!!)
+                cursor = configurationDao.getConfigurationCursor(
+                    callingApplication.id,
+                    uri.lastPathSegment!!
+                )
             }
 
             UriMatch.CONFIGURATION_ID -> {
-                cursor = configurationDao.getConfigurationCursor(callingApplication.id, uri.lastPathSegment!!.toLong())
+                cursor = configurationDao.getConfigurationCursor(
+                    callingApplication.id,
+                    uri.lastPathSegment!!.toLong()
+                )
+            }
+
+            UriMatch.CONFIGURATION_VALUE_KEY -> {
+                cursor = configurationDao.getConfigurationValueCursor(
+                    callingApplication.id,
+                    uri.pathSegments.get(uri.pathSegments.size - 2)
+                )
+            }
+
+            UriMatch.CONFIGURATION_VALUE_ID -> {
+                cursor = configurationDao.getConfigurationValueCursor(
+                    callingApplication.id,
+                    uri.pathSegments.get(uri.pathSegments.size - 2).toLong()
+                )
             }
 
             else -> {
@@ -346,6 +370,7 @@ class TogglesProvider : ContentProvider() {
                 }
                 return deletedRows
             }
+
             UriMatch.CONFIGURATION_KEY -> {
                 val deletedRows =
                     configurationDao.deleteConfiguration(
@@ -393,6 +418,8 @@ class TogglesProvider : ContentProvider() {
             UriMatch.PREDEFINED_CONFIGURATION_VALUES ->
                 "vnd.android.cursor.dir/vnd.${context!!.packageName}.predefinedConfigurationValue"
 
+            UriMatch.CONFIGURATION_VALUE_ID -> "vnd.android.cursor.dir/vnd.${context!!.packageName}.configurationValue"
+            UriMatch.CONFIGURATION_VALUE_KEY -> "vnd.android.cursor.dir/vnd.${context!!.packageName}.configurationValue"
             UriMatch.UNKNOWN -> TODO()
         }
     }

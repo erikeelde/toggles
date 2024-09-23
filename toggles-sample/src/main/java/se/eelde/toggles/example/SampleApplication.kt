@@ -1,4 +1,4 @@
-package com.example.toggles
+package se.eelde.toggles.example
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

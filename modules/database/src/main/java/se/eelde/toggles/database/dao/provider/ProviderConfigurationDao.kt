@@ -90,6 +90,11 @@ interface ProviderConfigurationDao {
     )
     fun updateConfiguration(callingApplication: Long, id: Long, key: String, type: String): Int
 
+    @Query(
+        "SELECT * FROM configuration WHERE applicationId = :callingApplication"
+    )
+    fun getConfigurationCursor(callingApplication: Long): Cursor
+
     @Query("SELECT * FROM configuration WHERE id = :configurationId and applicationId = :callingApplication")
     fun getConfigurationCursor(callingApplication: Long, configurationId: Long): Cursor
 
@@ -97,4 +102,20 @@ interface ProviderConfigurationDao {
         "SELECT * FROM configuration WHERE configurationKey = :configurationKey and applicationId = :callingApplication"
     )
     fun getConfigurationCursor(callingApplication: Long, configurationKey: String): Cursor
+
+    @Query(
+        """SELECT configurationValue.* FROM configuration 
+INNER JOIN configurationValue ON configuration.id = configurationValue.configurationId  
+WHERE configuration.applicationId = :callingApplication AND configurationId = :configurationId
+"""
+    )
+    fun getConfigurationValueCursor(callingApplication: Long, configurationId: Long): Cursor
+
+    @Query(
+        """SELECT configurationValue.* FROM configuration 
+INNER JOIN configurationValue ON configuration.id = configurationValue.configurationId  
+WHERE configuration.applicationId = :callingApplication AND configurationKey = :configurationKey
+"""
+    )
+    fun getConfigurationValueCursor(callingApplication: Long, configurationKey: String): Cursor
 }

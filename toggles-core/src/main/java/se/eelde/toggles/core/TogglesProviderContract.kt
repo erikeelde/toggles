@@ -8,9 +8,10 @@ public object TogglesProviderContract {
     private const val TOGGLES_API_VERSION = 1
 
     private val configurationUri = Uri.parse("content://$TOGGLES_AUTHORITY/configuration")
+
     private val currentConfigurationUri =
         Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
-    private val configurationValueUri =
+    private val currentConfigurationValueUri =
         Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
 
     @JvmStatic
@@ -41,7 +42,7 @@ public object TogglesProviderContract {
 
     @JvmStatic
     public fun toggleValueUri(): Uri {
-        return configurationValueUri
+        return currentConfigurationValueUri
             .buildUpon()
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
@@ -69,6 +70,26 @@ public object TogglesProviderContract {
         return configurationUri
             .buildUpon()
             .appendPath(id.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+            .build()
+    }
+
+    @JvmStatic
+    public fun configurationValueUri(key: String): Uri {
+        return configurationUri
+            .buildUpon()
+            .appendPath(key)
+            .appendPath("values")
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+            .build()
+    }
+
+    @JvmStatic
+    public fun configurationValueUri(id: Long): Uri {
+        return configurationUri
+            .buildUpon()
+            .appendPath(id.toString())
+            .appendPath("values")
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
     }

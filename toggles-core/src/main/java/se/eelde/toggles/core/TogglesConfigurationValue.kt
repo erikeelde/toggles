@@ -82,7 +82,7 @@ public class TogglesConfigurationValue private constructor(
     }
 
     override fun toString(): String {
-        return "TogglesConfigurationValue(id=$id, type='$configurationId', value=$value, scope='$scope')"
+        return "TogglesConfigurationValue(id=$id, configurationId='$configurationId', value=$value, scope='$scope')"
     }
 
     public companion object {
@@ -99,10 +99,10 @@ public class TogglesConfigurationValue private constructor(
         @JvmStatic
         public fun fromCursor(cursor: Cursor): TogglesConfigurationValue {
             return TogglesConfigurationValue(
-                id = cursor.getLongOrThrow(ColumnNames.Toggle.COL_ID),
-                configurationId = cursor.getLongOrThrow(ColumnNames.Toggle.COL_TYPE),
-                value = cursor.getStringOrNull(ColumnNames.Toggle.COL_VALUE),
-                scope = cursor.getLongOrThrow(ColumnNames.Toggle.COL_KEY),
+                id = cursor.getLongOrThrow(ColumnNames.ConfigurationValue.COL_ID),
+                configurationId = cursor.getLongOrThrow(ColumnNames.ConfigurationValue.COL_CONFIG_ID),
+                value = cursor.getStringOrNull(ColumnNames.ConfigurationValue.COL_VALUE),
+                scope = cursor.getLongOrThrow(ColumnNames.ConfigurationValue.COL_SCOPE),
             )
         }
     }

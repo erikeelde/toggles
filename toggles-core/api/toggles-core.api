@@ -255,6 +255,8 @@ public final class se/eelde/toggles/core/TogglesProviderContract {
 	public static final fun configurationUri ()Landroid/net/Uri;
 	public static final fun configurationUri (J)Landroid/net/Uri;
 	public static final fun configurationUri (Ljava/lang/String;)Landroid/net/Uri;
+	public static final fun configurationValueUri (J)Landroid/net/Uri;
+	public static final fun configurationValueUri (Ljava/lang/String;)Landroid/net/Uri;
 	public static final fun toggleUri ()Landroid/net/Uri;
 	public static final fun toggleUri (J)Landroid/net/Uri;
 	public static final fun toggleUri (Ljava/lang/String;)Landroid/net/Uri;

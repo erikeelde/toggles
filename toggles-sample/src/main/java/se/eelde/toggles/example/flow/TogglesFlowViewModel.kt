@@ -1,16 +1,14 @@
-package com.example.toggles.flow
+package se.eelde.toggles.example.flow
 
 import android.app.Application
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.toggles.Config
-import com.example.toggles.MyEnum
-import com.example.toggles.R
-import com.example.toggles.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import se.eelde.toggles.example.MyEnum
+import se.eelde.toggles.example.R
 import se.eelde.toggles.flow.Toggles
 import javax.inject.Inject
 

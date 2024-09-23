@@ -1,4 +1,4 @@
-package com.example.toggles.di
+package se.eelde.toggles.example.di
 
 import dagger.Module
 import dagger.Provides
