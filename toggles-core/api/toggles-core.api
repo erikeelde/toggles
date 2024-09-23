@@ -2,12 +2,36 @@ public final class se/eelde/toggles/core/ColumnNames {
 	public static final field INSTANCE Lse/eelde/toggles/core/ColumnNames;
 }
 
+public final class se/eelde/toggles/core/ColumnNames$Configuration {
+	public static final field COL_ID Ljava/lang/String;
+	public static final field COL_KEY Ljava/lang/String;
+	public static final field COL_TYPE Ljava/lang/String;
+	public static final field INSTANCE Lse/eelde/toggles/core/ColumnNames$Configuration;
+}
+
+public final class se/eelde/toggles/core/ColumnNames$ConfigurationValue {
+	public static final field COL_CONFIG_ID Ljava/lang/String;
+	public static final field COL_ID Ljava/lang/String;
+	public static final field COL_SCOPE Ljava/lang/String;
+	public static final field COL_VALUE Ljava/lang/String;
+	public static final field INSTANCE Lse/eelde/toggles/core/ColumnNames$ConfigurationValue;
+}
+
 public final class se/eelde/toggles/core/ColumnNames$Toggle {
 	public static final field COL_ID Ljava/lang/String;
 	public static final field COL_KEY Ljava/lang/String;
 	public static final field COL_TYPE Ljava/lang/String;
 	public static final field COL_VALUE Ljava/lang/String;
 	public static final field INSTANCE Lse/eelde/toggles/core/ColumnNames$Toggle;
+}
+
+public final class se/eelde/toggles/core/ColumnNames$ToggleScope {
+	public static final field COL_APP_ID Ljava/lang/String;
+	public static final field COL_ID Ljava/lang/String;
+	public static final field COL_NAME Ljava/lang/String;
+	public static final field COL_SELECTED_TIMESTAMP Ljava/lang/String;
+	public static final field DEFAULT_SCOPE Ljava/lang/String;
+	public static final field INSTANCE Lse/eelde/toggles/core/ColumnNames$ToggleScope;
 }
 
 public final class se/eelde/toggles/core/ColumnNames$ToggleValue {
@@ -19,7 +43,6 @@ public final class se/eelde/toggles/core/ColumnNames$ToggleValue {
 
 public final class se/eelde/toggles/core/Toggle {
 	public static final field Companion Lse/eelde/toggles/core/Toggle$Companion;
-	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun copy (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lse/eelde/toggles/core/Toggle;
 	public static synthetic fun copy$default (Lse/eelde/toggles/core/Toggle;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lse/eelde/toggles/core/Toggle;
 	public fun equals (Ljava/lang/Object;)Z
@@ -27,6 +50,7 @@ public final class se/eelde/toggles/core/Toggle {
 	public static final fun fromCursor (Landroid/database/Cursor;)Lse/eelde/toggles/core/Toggle;
 	public final fun getId ()J
 	public final fun getKey ()Ljava/lang/String;
+	public final fun getScope ()Ljava/lang/String;
 	public final fun getType ()Ljava/lang/String;
 	public final fun getValue ()Ljava/lang/String;
 	public fun hashCode ()I
@@ -68,6 +92,51 @@ public final class se/eelde/toggles/core/Toggle$TYPE {
 public abstract interface annotation class se/eelde/toggles/core/Toggle$ToggleType : java/lang/annotation/Annotation {
 }
 
+public final class se/eelde/toggles/core/ToggleKt {
+	public static final synthetic fun Toggle (Lkotlin/jvm/functions/Function1;)Lse/eelde/toggles/core/Toggle;
+}
+
+public final class se/eelde/toggles/core/ToggleScope {
+	public static final field Companion Lse/eelde/toggles/core/ToggleScope$Companion;
+	public synthetic fun <init> (JLjava/lang/String;Ljava/util/Date;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy (JLjava/lang/String;Ljava/util/Date;)Lse/eelde/toggles/core/ToggleScope;
+	public static synthetic fun copy$default (Lse/eelde/toggles/core/ToggleScope;JLjava/lang/String;Ljava/util/Date;ILjava/lang/Object;)Lse/eelde/toggles/core/ToggleScope;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromContentValues (Landroid/content/ContentValues;)Lse/eelde/toggles/core/ToggleScope;
+	public static final fun fromCursor (Landroid/database/Cursor;)Lse/eelde/toggles/core/ToggleScope;
+	public final fun getId ()J
+	public final fun getName ()Ljava/lang/String;
+	public final fun getTimeStamp ()Ljava/util/Date;
+	public fun hashCode ()I
+	public final fun toContentValues ()Landroid/content/ContentValues;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class se/eelde/toggles/core/ToggleScope$Builder {
+	public field name Ljava/lang/String;
+	public field timeStamp Ljava/util/Date;
+	public fun <init> ()V
+	public final fun build ()Lse/eelde/toggles/core/ToggleScope;
+	public final fun getId ()J
+	public final fun getName ()Ljava/lang/String;
+	public final fun getTimeStamp ()Ljava/util/Date;
+	public final fun setId (J)Lse/eelde/toggles/core/ToggleScope$Builder;
+	public final synthetic fun setId (J)V
+	public final fun setName (Ljava/lang/String;)Lse/eelde/toggles/core/ToggleScope$Builder;
+	public final synthetic fun setName (Ljava/lang/String;)V
+	public final fun setTimeStamp (Ljava/util/Date;)Lse/eelde/toggles/core/ToggleScope$Builder;
+	public final synthetic fun setTimeStamp (Ljava/util/Date;)V
+}
+
+public final class se/eelde/toggles/core/ToggleScope$Companion {
+	public final fun fromContentValues (Landroid/content/ContentValues;)Lse/eelde/toggles/core/ToggleScope;
+	public final fun fromCursor (Landroid/database/Cursor;)Lse/eelde/toggles/core/ToggleScope;
+}
+
+public final class se/eelde/toggles/core/ToggleScopeKt {
+	public static final synthetic fun ToggleScope (Lkotlin/jvm/functions/Function1;)Lse/eelde/toggles/core/ToggleScope;
+}
+
 public final class se/eelde/toggles/core/ToggleValue {
 	public synthetic fun <init> (JJLjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
@@ -93,17 +162,102 @@ public final class se/eelde/toggles/core/ToggleValue$Builder {
 	public final synthetic fun setValue (Ljava/lang/String;)V
 }
 
+public final class se/eelde/toggles/core/ToggleValueKt {
+	public static final synthetic fun ToggleValue (Lkotlin/jvm/functions/Function1;)Lse/eelde/toggles/core/ToggleValue;
+}
+
+public final class se/eelde/toggles/core/TogglesConfiguration {
+	public static final field Companion Lse/eelde/toggles/core/TogglesConfiguration$Companion;
+	public synthetic fun <init> (JLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy (JLjava/lang/String;Ljava/lang/String;)Lse/eelde/toggles/core/TogglesConfiguration;
+	public static synthetic fun copy$default (Lse/eelde/toggles/core/TogglesConfiguration;JLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lse/eelde/toggles/core/TogglesConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromContentValues (Landroid/content/ContentValues;)Lse/eelde/toggles/core/TogglesConfiguration;
+	public static final fun fromCursor (Landroid/database/Cursor;)Lse/eelde/toggles/core/TogglesConfiguration;
+	public final fun getId ()J
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setId (J)V
+	public final fun toContentValues ()Landroid/content/ContentValues;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class se/eelde/toggles/core/TogglesConfiguration$Builder {
+	public fun <init> ()V
+	public final fun build ()Lse/eelde/toggles/core/TogglesConfiguration;
+	public final fun getId ()J
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getType ()Ljava/lang/String;
+	public final fun setId (J)Lse/eelde/toggles/core/TogglesConfiguration$Builder;
+	public final synthetic fun setId (J)V
+	public final fun setKey (Ljava/lang/String;)Lse/eelde/toggles/core/TogglesConfiguration$Builder;
+	public final synthetic fun setKey (Ljava/lang/String;)V
+	public final fun setType (Ljava/lang/String;)Lse/eelde/toggles/core/TogglesConfiguration$Builder;
+	public final synthetic fun setType (Ljava/lang/String;)V
+}
+
+public final class se/eelde/toggles/core/TogglesConfiguration$Companion {
+	public final fun fromContentValues (Landroid/content/ContentValues;)Lse/eelde/toggles/core/TogglesConfiguration;
+	public final fun fromCursor (Landroid/database/Cursor;)Lse/eelde/toggles/core/TogglesConfiguration;
+}
+
+public final class se/eelde/toggles/core/TogglesConfigurationKt {
+	public static final synthetic fun TogglesConfiguration (Lkotlin/jvm/functions/Function1;)Lse/eelde/toggles/core/TogglesConfiguration;
+}
+
+public final class se/eelde/toggles/core/TogglesConfigurationValue {
+	public static final field Companion Lse/eelde/toggles/core/TogglesConfigurationValue$Companion;
+	public synthetic fun <init> (JJLjava/lang/String;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy (JJLjava/lang/String;J)Lse/eelde/toggles/core/TogglesConfigurationValue;
+	public static synthetic fun copy$default (Lse/eelde/toggles/core/TogglesConfigurationValue;JJLjava/lang/String;JILjava/lang/Object;)Lse/eelde/toggles/core/TogglesConfigurationValue;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromContentValues (Landroid/content/ContentValues;)Lse/eelde/toggles/core/TogglesConfigurationValue;
+	public static final fun fromCursor (Landroid/database/Cursor;)Lse/eelde/toggles/core/TogglesConfigurationValue;
+	public final fun getConfigurationId ()J
+	public final fun getId ()J
+	public final fun getScope ()J
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setId (J)V
+	public final fun toContentValues ()Landroid/content/ContentValues;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class se/eelde/toggles/core/TogglesConfigurationValue$Builder {
+	public fun <init> ()V
+	public final fun build ()Lse/eelde/toggles/core/TogglesConfigurationValue;
+	public final fun getConfigurationId ()J
+	public final fun getId ()J
+	public final fun getScope ()J
+	public final fun getValue ()Ljava/lang/String;
+	public final fun setConfigurationId (J)Lse/eelde/toggles/core/TogglesConfigurationValue$Builder;
+	public final synthetic fun setConfigurationId (J)V
+	public final fun setId (J)Lse/eelde/toggles/core/TogglesConfigurationValue$Builder;
+	public final synthetic fun setId (J)V
+	public final fun setScope (J)Lse/eelde/toggles/core/TogglesConfigurationValue$Builder;
+	public final synthetic fun setScope (J)V
+	public final fun setValue (Ljava/lang/String;)Lse/eelde/toggles/core/TogglesConfigurationValue$Builder;
+	public final synthetic fun setValue (Ljava/lang/String;)V
+}
+
+public final class se/eelde/toggles/core/TogglesConfigurationValue$Companion {
+	public final fun fromContentValues (Landroid/content/ContentValues;)Lse/eelde/toggles/core/TogglesConfigurationValue;
+	public final fun fromCursor (Landroid/database/Cursor;)Lse/eelde/toggles/core/TogglesConfigurationValue;
+}
+
+public final class se/eelde/toggles/core/TogglesConfigurationValueKt {
+	public static final synthetic fun TogglesConfigurationValue (Lkotlin/jvm/functions/Function1;)Lse/eelde/toggles/core/TogglesConfigurationValue;
+}
+
 public final class se/eelde/toggles/core/TogglesProviderContract {
 	public static final field INSTANCE Lse/eelde/toggles/core/TogglesProviderContract;
-	public static final fun applicationUri (J)Landroid/net/Uri;
+	public static final fun configurationUri ()Landroid/net/Uri;
+	public static final fun configurationUri (J)Landroid/net/Uri;
+	public static final fun configurationUri (Ljava/lang/String;)Landroid/net/Uri;
 	public static final fun toggleUri ()Landroid/net/Uri;
 	public static final fun toggleUri (J)Landroid/net/Uri;
 	public static final fun toggleUri (Ljava/lang/String;)Landroid/net/Uri;
 	public static final fun toggleValueUri ()Landroid/net/Uri;
-}
-
-public final class se/eelde/toggles/core/TogglesProviderContractKt {
-	public static final synthetic fun Toggle (Lkotlin/jvm/functions/Function1;)Lse/eelde/toggles/core/Toggle;
-	public static final synthetic fun ToggleValue (Lkotlin/jvm/functions/Function1;)Lse/eelde/toggles/core/ToggleValue;
 }
 
