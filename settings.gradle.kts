@@ -32,41 +32,43 @@ buildCache {
     }
 }
 
-private val localLibraries = true
+val localLibaries = providers.gradleProperty("se-eelde-toggles-use-local-libraries")
+    .map { it.toBoolean() }
+    .orElse(false)
 
 rootProject.name = "Toggles"
 includeBuild("build-logic/conventions")
 includeBuild("toggles-core") {
     dependencySubstitution {
-        if (localLibraries) {
+        if (localLibaries.get()) {
             substitute(module("se.eelde.toggles:toggles-core")).using(project(":"))
         }
     }
 }
 includeBuild("toggles-flow") {
     dependencySubstitution {
-        if (localLibraries) {
+        if (localLibaries.get()) {
             substitute(module("se.eelde.toggles:toggles-flow")).using(project(":"))
         }
     }
 }
 includeBuild("toggles-flow-noop") {
     dependencySubstitution {
-        if (localLibraries) {
+        if (localLibaries.get()) {
             substitute(module("se.eelde.toggles:toggles-flow-noop")).using(project(":"))
         }
     }
 }
 includeBuild("toggles-prefs") {
     dependencySubstitution {
-        if (localLibraries) {
+        if (localLibaries.get()) {
             substitute(module("se.eelde.toggles:toggles-prefs")).using(project(":"))
         }
     }
 }
 includeBuild("toggles-prefs-noop") {
     dependencySubstitution {
-        if (localLibraries) {
+        if (localLibaries.get()) {
             substitute(module("se.eelde.toggles:toggles-prefs-noop")).using(project(":"))
         }
     }
