@@ -17,6 +17,7 @@ import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -110,15 +111,24 @@ class TogglesProviderMatcherConfigurationTest {
         )
     }
 
-    @Test(expected = UnsupportedOperationException::class)
+    val togglesConfiguration = TogglesConfiguration {
+        type = Toggle.TYPE.BOOLEAN
+        key = "myConfigurationkey"
+    }
+
+    @Test
     fun testQuery() {
-        togglesProvider.query(
+        togglesProvider.insert(
             TogglesProviderContract.configurationUri(),
-            null,
-            null,
-            null,
-            null
+            togglesConfiguration.toContentValues(),
         )
+
+        val cursor = togglesProvider.query(TogglesProviderContract.configurationUri(), null, null, null, null)
+        assertTrue(cursor.moveToFirst())
+        TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
+            assertEquals(togglesConfiguration.key, cursorConfiguration.key)
+            assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+        }
     }
 
     @Test(expected = UnsupportedOperationException::class)

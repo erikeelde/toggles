@@ -1,4 +1,4 @@
-package com.example.toggles
+package se.eelde.toggles.example
 
 enum class MyEnum {
     FIRST, SECOND, THIRD

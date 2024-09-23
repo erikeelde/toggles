@@ -64,6 +64,7 @@ androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-
 androidx-test-runner = "androidx.test:runner:1.6.2"
 app-cash-licensee-licensee-gradle-plugin = "app.cash.licensee:licensee-gradle-plugin:1.11.0"
 app-cash-turbine = "app.cash.turbine:turbine:1.1.0"
+co-touchlab-kermit = "co.touchlab:kermit:2.0.4"
 com-android-tools-build-gradle = "com.android.tools.build:gradle:8.6.1"
 com-google-dagger = { module = "com.google.dagger:dagger", version.ref = "com-google-dagger" }
 com-google-dagger-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "com-google-dagger" }

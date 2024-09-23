@@ -1,4 +1,4 @@
-package com.example.toggles
+package se.eelde.toggles.example
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,10 +24,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.toggles.flow.FlowView
-import com.example.toggles.prefs.PrefsView
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.composetheme.TogglesTheme
+import se.eelde.toggles.example.flow.FlowView
+import se.eelde.toggles.example.info.InfoView
+import se.eelde.toggles.example.routes.Flow
+import se.eelde.toggles.example.routes.Info
+import se.eelde.toggles.example.routes.Oss
 import se.eelde.toggles.oss.OssView
 
 @AndroidEntryPoint
@@ -57,19 +60,19 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "flow",
+        startDestination = Flow,
         modifier = modifier
     ) {
-        composable("prefs") {
+        composable<Info> {
             Scaffold(bottomBar = {
                 BottomNavigationBar(
-                    prefsClick = { navController.navigate("prefs") },
-                    flowClick = { navController.navigate("flow") },
-                    ossClick = { navController.navigate("oss") },
-                    rootDestination = RootDestination.Prefs
+                    prefsClick = { navController.navigate(Info) },
+                    flowClick = { navController.navigate(Flow) },
+                    ossClick = { navController.navigate(Oss) },
+                    rootDestination = RootDestination.Info
                 )
             }) { paddingValues ->
-                PrefsView(
+                InfoView(
                     hiltViewModel(),
                     modifier = Modifier
                         .padding(paddingValues)
@@ -77,12 +80,12 @@ fun Navigation(
                 )
             }
         }
-        composable("flow") {
+        composable<Flow> {
             Scaffold(bottomBar = {
                 BottomNavigationBar(
-                    prefsClick = { navController.navigate("prefs") },
-                    flowClick = { navController.navigate("flow") },
-                    ossClick = { navController.navigate("oss") },
+                    prefsClick = { navController.navigate(Info) },
+                    flowClick = { navController.navigate(Flow) },
+                    ossClick = { navController.navigate(Oss) },
                     rootDestination = RootDestination.Flow
                 )
             }) { paddingValues ->
@@ -94,12 +97,12 @@ fun Navigation(
                 )
             }
         }
-        composable("oss") {
+        composable<Oss> {
             Scaffold(bottomBar = {
                 BottomNavigationBar(
-                    prefsClick = { navController.navigate("prefs") },
-                    flowClick = { navController.navigate("flow") },
-                    ossClick = { navController.navigate("oss") },
+                    prefsClick = { navController.navigate(Info) },
+                    flowClick = { navController.navigate(Flow) },
+                    ossClick = { navController.navigate(Oss) },
                     rootDestination = RootDestination.Oss
                 )
             }) { paddingValues ->
@@ -110,7 +113,7 @@ fun Navigation(
 }
 
 enum class RootDestination {
-    Prefs, Flow, Oss
+    Info, Flow, Oss
 }
 
 @Composable
@@ -123,7 +126,7 @@ fun BottomNavigationBar(
 ) {
     NavigationBar(modifier = modifier) {
         NavigationBarItem(
-            selected = rootDestination == RootDestination.Prefs,
+            selected = rootDestination == RootDestination.Info,
             onClick = { prefsClick() },
             icon = {
                 Icon(

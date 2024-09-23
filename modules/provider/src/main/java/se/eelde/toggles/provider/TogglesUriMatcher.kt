@@ -10,6 +10,8 @@ enum class UriMatch {
     CONFIGURATIONS,
     CONFIGURATION_ID,
     CONFIGURATION_KEY,
+    CONFIGURATION_VALUE_ID,
+    CONFIGURATION_VALUE_KEY,
     PREDEFINED_CONFIGURATION_VALUES,
     UNKNOWN,
 }
@@ -56,6 +58,16 @@ class TogglesUriMatcher(providerAuthority: String) {
             providerAuthority,
             "configuration/*",
             UriMatch.CONFIGURATION_KEY.ordinal
+        )
+        uriMatcher.addURI(
+            providerAuthority,
+            "configuration/#/values",
+            UriMatch.CONFIGURATION_VALUE_ID.ordinal
+        )
+        uriMatcher.addURI(
+            providerAuthority,
+            "configuration/*/values",
+            UriMatch.CONFIGURATION_VALUE_KEY.ordinal
         )
         uriMatcher.addURI(
             providerAuthority,
