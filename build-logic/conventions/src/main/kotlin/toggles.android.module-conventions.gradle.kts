@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
@@ -45,29 +45,6 @@ android {
                 }
             }
         }
-    }
-
-    sourceSets {
-//        val sharedTestDir = "src/sharedTest/"
-//        if(project.file(sharedTestDir).exists()) {
-//            val sharedTestSourceDir = sharedTestDir + "java"
-//            val sharedTestResourceDir = sharedTestDir + "resources"
-//            val sharedIsAndroid =
-//                providers.gradleProperty("shared-tests-are-android-tests").get().toBoolean()
-//            if (sharedIsAndroid) {
-//                logger.lifecycle("Shared tests are androidTests")
-//                named("androidTest") {
-//                    java.srcDir(sharedTestSourceDir)
-//                    resources.srcDir(sharedTestResourceDir)
-//                }
-//            } else {
-//                logger.lifecycle("Shared tests are unitTests")
-//                named("test") {
-//                    java.srcDir(sharedTestSourceDir)
-//                    resources.srcDir(sharedTestResourceDir)
-//                }
-//            }
-//        }
     }
 }
 

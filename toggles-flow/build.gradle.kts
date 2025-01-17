@@ -20,7 +20,7 @@ dependencies {
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.org.robolectric)
 
-    implementation(libs.se.eelde.toggles.toggles.core)
+    api(libs.se.eelde.toggles.toggles.core)
 
     implementation(libs.androidx.annotation)
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
