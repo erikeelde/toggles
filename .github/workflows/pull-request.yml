@@ -14,85 +14,17 @@ jobs:
         with:
           fetch-depth: '0'
 
-      - name: Check out java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v3
+      - name: "Calculate build number"
+        id: version_information
+        uses: ./.github/actions/version_information
 
-      - name: Run test
-        run: ./gradlew test
-
-      - name: Run android test
-        run: ./gradlew assembleAndroidTest
+      - uses: ./.github/actions/setup_android_and_java
 
       - name: Run check
         run: ./gradlew check
-
-      - name: Run core Checks
-        run: ./gradlew :toggles-core:check
-
-      - name: Run flow Checks
-        run: ./gradlew :toggles-flow:check --no-configuration-cache
-
-      - name: Run flow noop Checks
-        run: ./gradlew :toggles-flow-noop:check
-
-      - name: Run prefs Checks
-        run: ./gradlew :toggles-prefs:check --no-configuration-cache
-
-      - name: Run prefs noop Checks
-        run: ./gradlew :toggles-prefs-noop:check
-
-      - name: Upload reports
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: Reports
-          path: '**/build/reports/*'
-          retention-days: 2
-
-  check-libraries:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: '0'
-
-      - name: Check out java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-
-      - name: Copy CI gradle.properties
-        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
-
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
-      - name: Run core Checks
-        run: ./gradlew :toggles-core:check
-
-      - name: Run flow Checks
-        run: ./gradlew :toggles-flow:check
-
-      - name: Run flow noop Checks
-        run: ./gradlew :toggles-flow-noop:check
-
-      - name: Run prefs Checks
-        run: ./gradlew :toggles-prefs:check
-
-      - name: Run prefs noop Checks
-        run: ./gradlew :toggles-prefs-noop:check
 
       - name: Upload reports
         uses: actions/upload-artifact@v4
@@ -111,17 +43,14 @@ jobs:
         with:
           fetch-depth: '0'
 
-      - name: Check out java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+      - name: "Calculate build number"
+        id: version_information
+        uses: ./.github/actions/version_information
+
+      - uses: ./.github/actions/setup_android_and_java
 
       - name: Enable KVM group perms
         run: |
@@ -130,7 +59,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: run tests
-        run: ./gradlew :toggles-app:pixel2api30DebugAndroidTest
+        run: ./gradlew pixel2api30DebugAndroidTest
 
       - name: "Upload reports"
         uses: actions/upload-artifact@v4

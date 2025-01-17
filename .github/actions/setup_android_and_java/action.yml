@@ -1,0 +1,22 @@
+name: "Setup android"
+description: "Setup android and java to run in a workflow"
+
+inputs:
+  gradle-home-cache-cleanup:
+    required: false
+    default: "true"
+    description: "Removing unused files from Gradle User Home before saving to cache"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Setup java 17"
+      uses: ./.github/actions/setup_java_17
+
+    - name: "Setup gradle"
+      uses: ./.github/actions/setup_gradle
+      with:
+        gradle-home-cache-cleanup: ${{ inputs.gradle-home-cache-cleanup }}
+
+    - name: "Setup Android"
+      uses: ./.github/actions/setup_android

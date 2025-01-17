@@ -84,8 +84,8 @@ dependencies {
     ksp(libs.com.google.dagger.hilt.android.compiler)
     kspTest(libs.com.google.dagger.hilt.android.compiler)
 
-    implementation(libs.se.eelde.toggles.toggles.core)
-    implementation(libs.se.eelde.toggles.toggles.flow)
+    implementation(projects.togglesCore)
+    implementation(projects.togglesFlow)
 
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)

@@ -38,41 +38,6 @@ val localLibaries = providers.gradleProperty("se-eelde-toggles-use-local-librari
 
 rootProject.name = "Toggles"
 includeBuild("build-logic/conventions")
-includeBuild("toggles-core") {
-    dependencySubstitution {
-        if (localLibaries.get()) {
-            substitute(module("se.eelde.toggles:toggles-core")).using(project(":"))
-        }
-    }
-}
-includeBuild("toggles-flow") {
-    dependencySubstitution {
-        if (localLibaries.get()) {
-            substitute(module("se.eelde.toggles:toggles-flow")).using(project(":"))
-        }
-    }
-}
-includeBuild("toggles-flow-noop") {
-    dependencySubstitution {
-        if (localLibaries.get()) {
-            substitute(module("se.eelde.toggles:toggles-flow-noop")).using(project(":"))
-        }
-    }
-}
-includeBuild("toggles-prefs") {
-    dependencySubstitution {
-        if (localLibaries.get()) {
-            substitute(module("se.eelde.toggles:toggles-prefs")).using(project(":"))
-        }
-    }
-}
-includeBuild("toggles-prefs-noop") {
-    dependencySubstitution {
-        if (localLibaries.get()) {
-            substitute(module("se.eelde.toggles:toggles-prefs-noop")).using(project(":"))
-        }
-    }
-}
 include(
     ":toggles-app",
     ":toggles-sample",
@@ -89,6 +54,12 @@ include(
     ":modules:integerconfiguration",
     ":modules:enumconfiguration",
 )
+include(":toggles-core")
+include(":toggles-flow")
+include(":toggles-flow-noop")
+include(":toggles-prefs")
+include(":toggles-prefs-noop")
+
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
