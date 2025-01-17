@@ -26,17 +26,11 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
 
-      - name: Run test without shared tests
-        run: ./gradlew test -Pshared-tests-are-android-tests=false
+      - name: Run test
+        run: ./gradlew test
 
-#      - name: Run test with shared tests
-#        run: ./gradlew test -Pshared-tests-are-android-tests=true
-
-      - name: Run test without shared tests
-        run: ./gradlew assembleAndroidTest -Pshared-tests-are-android-tests=false
-
-#      - name: Run test with shared tests
-#        run: ./gradlew assembleAndroidTest -Pshared-tests-are-android-tests=true
+      - name: Run android test
+        run: ./gradlew assembleAndroidTest
 
       - name: Run check
         run: ./gradlew check
