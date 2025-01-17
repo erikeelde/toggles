@@ -1,0 +1,8 @@
+name: "Setup android"
+description: "Setup android to run in a workflow - generally called from another composite action"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Setup Android SDK"
+      uses: android-actions/setup-android@v3

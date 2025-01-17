@@ -43,11 +43,14 @@ for prefix in "${prefixes[@]}"; do
     # Convert prefix to uppercase for property names
     prefix_upper=$(echo "$prefix" | tr '[:lower:]' '[:upper:]')
 
+    library_version="0.0.3-SNAPSHOT"
+
     # Print the result
     printf "%s_VERSION=%s\n" "$prefix_upper" "$version"
     printf "%s_DEBUG_VERSION=%s\n" "$prefix_upper" "$debug_version"
     printf "%s_DEBUG_VERSION_SUFFIX=%s\n" "$prefix_upper" "$debug_version_suffix"
     printf "%s_VERSION_CODE=%d\n" "$prefix_upper" "$version_code"
+    printf "%s_LIBRARY_VERSION=%s\n" "$prefix_upper" "$library_version"
 
     # Write to versions.properties
     {
@@ -55,6 +58,7 @@ for prefix in "${prefixes[@]}"; do
         printf "%s_VERSION_CODE=%d\n" "$prefix_upper" "$version_code"
         printf "%s_DEBUG_VERSION_SUFFIX=%s\n" "$prefix_upper" "$debug_version_suffix"
         printf "%s_DEBUG_VERSION=%s\n" "$prefix_upper" "$debug_version"
+        printf "%s_LIBRARY_VERSION=%s\n" "$prefix_upper" "$library_version"
     } >> versions.properties
 
 done

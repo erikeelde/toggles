@@ -13,7 +13,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.database)
-    implementation(libs.se.eelde.toggles.toggles.core)
+    implementation(projects.togglesCore)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.appcompat)

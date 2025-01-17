@@ -21,6 +21,7 @@ ksp = "2.1.0-1.0.29"
 orchestrator = "1.5.1"
 org-jetbrains-kotlinx = "1.8.1"
 se-eelde-toggles = "0.0.1"
+com-vanniktech-maven-publish = "0.27.0"
 
 [libraries]
 androidx-activity-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
@@ -101,6 +102,7 @@ se-eelde-toggles-toggles-core = "se.eelde.toggles:toggles-core:0.0.2"
 se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-prefs = { module = "se.eelde.toggles:toggles-prefs", version.ref = "se-eelde-toggles" }
 se-premex-ownership-gradle-plugin = "se.premex:ownership-gradle-plugin:0.0.11"
+com-vanniktech-gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "com-vanniktech-maven-publish" }
 
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }
@@ -110,7 +112,8 @@ com-github-triplet-play = "com.github.triplet.play:3.12.1"
 com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "com-google-dagger" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 com-google-gms-google-services = "com.google.gms.google-services:4.4.2"
-com-vanniktech-maven-publish = "com.vanniktech.maven.publish:0.27.0"
+com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
+com-vanniktech-maven-publish-base = { id = "com.vanniktech.maven.publish.base", version.ref = "com-vanniktech-maven-publish" }
 nl-littlerobots-version-catalog-update = "nl.littlerobots.version-catalog-update:0.8.5"
 org-jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

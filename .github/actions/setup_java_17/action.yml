@@ -1,0 +1,11 @@
+name: "Generate version information"
+description: "Generate version information and expose using outputs - generally called from another composite action"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Set up JDK 17"
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'zulu'

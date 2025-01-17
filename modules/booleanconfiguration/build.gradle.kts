@@ -26,6 +26,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.ui.tooling.preview)
     implementation(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
-    implementation(libs.se.eelde.toggles.toggles.core)
+    implementation(projects.togglesCore)
     ksp(libs.com.google.dagger.hilt.compiler)
 }
