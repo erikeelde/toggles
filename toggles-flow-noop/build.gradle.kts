@@ -15,7 +15,7 @@ android {
 }
 
 dependencies {
-    api(projects.togglesCore)
+    implementation(projects.togglesCore)
 
     implementation(libs.androidx.annotation)
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))

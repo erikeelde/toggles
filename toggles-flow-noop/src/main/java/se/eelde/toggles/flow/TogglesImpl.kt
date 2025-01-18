@@ -18,6 +18,4 @@ public class TogglesImpl(@Suppress("UNUSED_PARAMETER") context: Context) : Toggl
         type: Class<T>,
         defaultValue: T
     ): Flow<T> = flowOf(defaultValue)
-
-    override suspend fun hasToggle(key: String): Boolean = false
 }

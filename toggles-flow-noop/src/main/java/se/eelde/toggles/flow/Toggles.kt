@@ -12,5 +12,4 @@ public interface Toggles {
         type: Class<T>,
         defaultValue: T
     ): Flow<T>
-    public suspend fun hasToggle(key: String): Boolean
 }
