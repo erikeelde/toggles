@@ -17,6 +17,10 @@ jobs:
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
+      - name: "Calculate build number"
+        id: version_information
+        uses: ./.github/actions/version_information
+
       - uses: ./.github/actions/setup_android_and_java
 
       - name: Run checks
