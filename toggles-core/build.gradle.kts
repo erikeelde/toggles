@@ -6,7 +6,7 @@ plugins {
     id("toggles.android.library-conventions")
     id("toggles.ownership-conventions")
     id("org.jetbrains.dokka")
-    alias(libs.plugins.com.vanniktech.maven.publish.base)
+    alias(libs.plugins.com.vanniktech.maven.publish)
     alias(libs.plugins.org.jetbrains.kotlinx.binary.compatibility.validator)
 }
 
