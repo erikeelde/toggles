@@ -15,7 +15,7 @@ android {
 }
 
 dependencies {
-    api(projects.togglesCore)
+    implementation(projects.togglesCore)
 
     implementation(libs.androidx.annotation)
 }

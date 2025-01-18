@@ -19,7 +19,6 @@ import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.Toggle.Companion.fromCursor
 import se.eelde.toggles.core.Toggle.ToggleType
 import se.eelde.toggles.core.ToggleValue
-import se.eelde.toggles.core.TogglesProviderContract.configurationUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 
@@ -115,18 +114,6 @@ public class TogglesImpl(context: Context) : Toggles {
                     else -> java.lang.Enum.valueOf(type, toggle.value!!)
                 }
             }
-
-    override suspend fun hasToggle(key: String): Boolean {
-        return contentResolver.query(
-            configurationUri(key),
-            null,
-            null,
-            null,
-            null
-        ).use { cursor ->
-            cursor != null && cursor.count > 0
-        }
-    }
 
     private fun providerToggleFlow(
         context: Context,
