@@ -33,8 +33,8 @@ dependencies {
     testImplementation(libs.androidx.arch.core.core.testing)
     testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
     testImplementation(libs.app.cash.turbine)
-    //testImplementation(projects.modules.provider)
-    //testImplementation(testFixtures(projects.modules.provider))
+    testImplementation(projects.modules.provider)
+     testImplementation(testFixtures(projects.modules.provider))
 }
 
 val versionFile = File("versions.properties")
