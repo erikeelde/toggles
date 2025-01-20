@@ -14,13 +14,13 @@ import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderPredefinedConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderScopeDao
 import se.eelde.toggles.flow.Toggles
-import se.eelde.toggles.flow.TogglesImpl
 
 object RobolectricTogglesProvider {
-    fun create(context: Context): TogglesProvider {
-        val database = Room.inMemoryDatabaseBuilder(context, WrenchDatabase::class.java)
-            .allowMainThreadQueries().build()
-
+    fun create(
+        context: Context,
+        database: WrenchDatabase,
+        toggles: Toggles
+    ): TogglesProvider {
         val contentProviderController =
             Robolectric.buildContentProvider(TogglesProvider::class.java)
                 .create("se.eelde.toggles.configprovider")
@@ -60,30 +60,6 @@ object RobolectricTogglesProvider {
 
                             override val callingApplicationPackageName: String?
                                 get() = "Test"
-                        }
-                    }
-
-                    override fun provideToggles(): Toggles {
-                        return object : Toggles {
-                            override fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> {
-                                return flowOf(defaultValue)
-                            }
-
-                            override fun toggle(key: String, defaultValue: String): Flow<String> {
-                                TODO("Not yet implemented")
-                            }
-
-                            override fun toggle(key: String, defaultValue: Int): Flow<Int> {
-                                TODO("Not yet implemented")
-                            }
-
-                            override fun <T : Enum<T>> toggle(
-                                key: String,
-                                type: Class<T>,
-                                defaultValue: T
-                            ): Flow<T> {
-                                TODO("Not yet implemented")
-                            }
                         }
                     }
 

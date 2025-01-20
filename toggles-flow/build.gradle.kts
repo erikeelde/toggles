@@ -34,7 +34,14 @@ dependencies {
     testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
     testImplementation(libs.app.cash.turbine)
     testImplementation(projects.modules.provider)
-     testImplementation(testFixtures(projects.modules.provider))
+    testImplementation(projects.modules.database)
+    testImplementation(libs.androidx.room.room.runtime)
+    testImplementation(testFixtures(projects.modules.provider))
+    testImplementation(testFixtures(projects.modules.database))
+    testImplementation(testFixtures(projects.togglesFlow))
+
+    testFixturesImplementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
+    testFixturesImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 }
 
 val versionFile = File("versions.properties")

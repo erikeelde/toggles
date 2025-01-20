@@ -17,8 +17,9 @@ class RoomSchemaArgProvider(
 
 android {
     namespace = "se.eelde.toggles.database"
+    @Suppress("UnstableApiUsage")
     testOptions {
-        unitTests{
+        unitTests {
             isIncludeAndroidResources = true
         }
     }
@@ -45,4 +46,6 @@ dependencies {
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.androidx.room.room.testing)
     testImplementation(libs.androidx.test.espresso.espresso.core)
+
+    testFixturesImplementation(libs.androidx.room.room.runtime)
 }
