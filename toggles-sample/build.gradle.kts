@@ -91,4 +91,6 @@ dependencies {
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 
     debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
+
+    testFixturesImplementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
 }
