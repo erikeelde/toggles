@@ -7,23 +7,28 @@ plugins {
 
 android {
     namespace = "se.eelde.toggles.provider"
-}
 
+    packaging {
+        resources.excludes.add("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+    }
+}
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(projects.modules.composeTheme)
     implementation(projects.modules.database)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(projects.togglesCore)
     implementation(projects.togglesPrefs)
-    implementation(libs.androidx.navigation.navigation.compose)
-    implementation(libs.androidx.hilt.hilt.navigation.compose)
-    implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.compose.material3)
-    debugImplementation(libs.androidx.compose.ui.ui.tooling)
-    implementation(libs.androidx.compose.ui.ui.tooling.preview)
     implementation(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
+
+    testFixturesImplementation(platform(libs.androidx.compose.bom))
+    testFixturesImplementation(libs.androidx.compose.runtime)
+
+    testFixturesImplementation(libs.org.robolectric)
+    testFixturesImplementation(libs.androidx.core.core.ktx)
+    testFixturesImplementation(projects.modules.database)
+    testFixturesImplementation(libs.androidx.room.room.runtime)
+    testFixturesImplementation(libs.androidx.room.room.ktx)
+    testFixturesImplementation(projects.togglesPrefs)
 }
