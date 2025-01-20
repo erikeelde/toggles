@@ -35,6 +35,11 @@ android {
             withJavadocJar()
         }
     }
+
+    @Suppress("UnstableApiUsage")
+    testFixtures {
+        enable = true
+    }
 }
 
 kotlin {

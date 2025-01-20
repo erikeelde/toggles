@@ -23,14 +23,6 @@ val versions = Properties().apply {
 
 licensee {
     allow("Apache-2.0")
-
-    allowUrl("https://developer.android.com/studio/terms.html")
-    //allowUrl("https://cloud.google.com/maps-platform/terms/")
-
-    // try remove or ping developer later
-    // allowUrl("http://www.opensource.org/licenses/mit-license.php")
-
-    allowUrl("https://raw.githubusercontent.com/erikeelde/toggles/master/LICENCE")
 }
 
 play {
