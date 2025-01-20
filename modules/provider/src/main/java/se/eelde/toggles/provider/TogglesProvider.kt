@@ -12,6 +12,8 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.database.WrenchApplication
@@ -24,7 +26,7 @@ import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderPredefinedConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderScopeDao
-import se.eelde.toggles.prefs.TogglesPreferences
+import se.eelde.toggles.flow.Toggles
 import java.util.Date
 
 class TogglesProvider : ContentProvider() {
@@ -53,8 +55,8 @@ class TogglesProvider : ContentProvider() {
         applicationEntryPoint.providePackageManagerWrapper()
     }
 
-    private val togglesPreferences: TogglesPreferences by lazy {
-        applicationEntryPoint.provideTogglesPreferences()
+    private val toggles: Toggles by lazy {
+        applicationEntryPoint.provideToggles()
     }
 
     private val togglesUriMatcher: TogglesUriMatcher by lazy {
@@ -71,7 +73,10 @@ class TogglesProvider : ContentProvider() {
 
     internal var entryPointBuilder: EntryPointBuilder = object : EntryPointBuilder {
         override fun build(context: Context): TogglesProviderEntryPoint {
-            return EntryPointAccessors.fromApplication(context, TogglesProviderEntryPoint::class.java)
+            return EntryPointAccessors.fromApplication(
+                context,
+                TogglesProviderEntryPoint::class.java
+            )
         }
     }
 
@@ -84,7 +89,7 @@ class TogglesProvider : ContentProvider() {
         fun provideProviderScopeDao(): ProviderScopeDao
         fun providePredefinedConfigurationValueDao(): ProviderPredefinedConfigurationValueDao
         fun providePackageManagerWrapper(): IPackageManagerWrapper
-        fun provideTogglesPreferences(): TogglesPreferences
+        fun provideToggles(): Toggles
         fun provideTogglesUriMatcher(): TogglesUriMatcher
     }
 
@@ -119,7 +124,7 @@ class TogglesProvider : ContentProvider() {
     ): Cursor {
         val callingApplication = getCallingApplication(applicationDao)
         if (!isTogglesApplication(callingApplication)) {
-            assertValidApiVersion(togglesPreferences, uri)
+            assertValidApiVersion(toggles, uri)
         }
 
         var cursor: Cursor?
@@ -221,7 +226,7 @@ class TogglesProvider : ContentProvider() {
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {
-            assertValidApiVersion(togglesPreferences, uri)
+            assertValidApiVersion(toggles, uri)
         }
 
         val insertId: Long
@@ -300,7 +305,7 @@ class TogglesProvider : ContentProvider() {
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {
-            assertValidApiVersion(togglesPreferences, uri)
+            assertValidApiVersion(toggles, uri)
         }
 
         return super.bulkInsert(uri, values)
@@ -315,7 +320,7 @@ class TogglesProvider : ContentProvider() {
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {
-            assertValidApiVersion(togglesPreferences, uri)
+            assertValidApiVersion(toggles, uri)
         }
 
         val updatedRows: Int
@@ -365,7 +370,7 @@ class TogglesProvider : ContentProvider() {
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {
-            assertValidApiVersion(togglesPreferences, uri)
+            assertValidApiVersion(toggles, uri)
         }
 
         when (togglesUriMatcher.match(uri)) {
@@ -403,7 +408,7 @@ class TogglesProvider : ContentProvider() {
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {
-            assertValidApiVersion(togglesPreferences, uri)
+            assertValidApiVersion(toggles, uri)
         }
 
         return when (togglesUriMatcher.match(uri)) {
@@ -488,14 +493,16 @@ class TogglesProvider : ContentProvider() {
         }
 
         @Synchronized
-        private fun assertValidApiVersion(togglesPreferences: TogglesPreferences, uri: Uri) {
+        private fun assertValidApiVersion(toggles: Toggles, uri: Uri) {
             var l: Long = 0
             val strictApiVersion = try {
                 l = Binder.clearCallingIdentity()
-                togglesPreferences.getBoolean(
-                    "Require valid wrench api version",
-                    false
-                )
+                runBlocking {
+                    toggles.toggle(
+                        "Require valid wrench api version",
+                        false
+                    ).first()
+                }
             } finally {
                 Binder.restoreCallingIdentity(l)
             }
