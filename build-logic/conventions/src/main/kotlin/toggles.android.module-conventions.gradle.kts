@@ -26,6 +26,7 @@ android {
         lintConfig = File("../../lint.xml")
     }
 
+    @Suppress("UnstableApiUsage")
     testOptions {
         animationsDisabled = true
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
@@ -45,6 +46,11 @@ android {
                 }
             }
         }
+    }
+
+    @Suppress("UnstableApiUsage")
+    testFixtures {
+        enable = true
     }
 }
 

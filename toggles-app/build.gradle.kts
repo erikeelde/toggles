@@ -191,4 +191,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
+
+    testFixturesImplementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
 }
