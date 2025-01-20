@@ -62,7 +62,17 @@ class TogglesProvider : ContentProvider() {
     }
 
     private val applicationEntryPoint: TogglesProviderEntryPoint by lazy {
-        EntryPointAccessors.fromApplication(context!!, TogglesProviderEntryPoint::class.java)
+        entryPointBuilder.build(context!!)
+    }
+
+    internal interface EntryPointBuilder {
+        fun build(context: Context): TogglesProviderEntryPoint
+    }
+
+    internal var entryPointBuilder: EntryPointBuilder = object : EntryPointBuilder {
+        override fun build(context: Context): TogglesProviderEntryPoint {
+            return EntryPointAccessors.fromApplication(context, TogglesProviderEntryPoint::class.java)
+        }
     }
 
     @EntryPoint
