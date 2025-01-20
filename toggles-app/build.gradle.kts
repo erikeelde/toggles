@@ -164,7 +164,6 @@ dependencies {
 
     implementation(projects.togglesCore)
     implementation(projects.togglesFlow)
-    implementation(projects.togglesPrefs)
 
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)

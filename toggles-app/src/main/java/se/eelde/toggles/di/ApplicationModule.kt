@@ -8,8 +8,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import se.eelde.toggles.BuildConfig
-import se.eelde.toggles.prefs.TogglesPreferences
-import se.eelde.toggles.prefs.TogglesPreferencesImpl
+import se.eelde.toggles.flow.Toggles
+import se.eelde.toggles.flow.TogglesImpl
 import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.PackageManagerWrapper
 import se.eelde.toggles.provider.TogglesUriMatcher
@@ -28,6 +28,6 @@ object ApplicationModule {
         PackageManagerWrapper(context.packageManager)
 
     @Provides
-    fun providesWrenchPreferences(@ApplicationContext context: Context): TogglesPreferences =
-        TogglesPreferencesImpl(context)
+    fun providesToggles(@ApplicationContext context: Context): Toggles =
+        TogglesImpl(context)
 }
