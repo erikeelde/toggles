@@ -13,6 +13,12 @@ hash=$(git rev-parse --short HEAD)
 git diff --quiet || dirty=true
 dirty=${dirty:-false}
 
+# Determine if we're in release mode
+release_mode=false
+if [[ $1 == "--release" ]]; then
+    release_mode=true
+fi
+
 # Loop over the prefixes
 for prefix in "${prefixes[@]}"; do
 
@@ -43,7 +49,12 @@ for prefix in "${prefixes[@]}"; do
     # Convert prefix to uppercase for property names
     prefix_upper=$(echo "$prefix" | tr '[:lower:]' '[:upper:]')
 
-    library_version="0.0.3-SNAPSHOT"
+    # Set the library version
+    if [[ $release_mode == true ]]; then
+        library_version="0.0.3"
+    else
+        library_version="0.0.3-SNAPSHOT"
+    fi
 
     # Print the result
     printf "%s_VERSION=%s\n" "$prefix_upper" "$version"
