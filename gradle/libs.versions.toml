@@ -12,6 +12,7 @@ androidx-test = "1.6.1"
 com-google-dagger = "2.55"
 com-squareup-leakcanary = "2.14"
 com-squareup-moshi = "1.15.2"
+com-vanniktech-maven-publish = "0.27.0"
 dokka = "2.0.0"
 espresso-core = "3.6.1"
 io-gitlab-arturbosch-detekt = "1.23.6"
@@ -21,7 +22,6 @@ ksp = "2.1.0-1.0.29"
 orchestrator = "1.5.1"
 org-jetbrains-kotlinx = "1.8.1"
 se-eelde-toggles = "0.0.1"
-com-vanniktech-maven-publish = "0.27.0"
 
 [libraries]
 androidx-activity-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
@@ -82,6 +82,7 @@ com-squareup-leakcanary-leakcanary-android = { module = "com.squareup.leakcanary
 com-squareup-moshi = { module = "com.squareup.moshi:moshi", version.ref = "com-squareup-moshi" }
 com-squareup-moshi-moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "com-squareup-moshi" }
 com-squareup-okio = "com.squareup.okio:okio:3.10.2"
+com-vanniktech-gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "com-vanniktech-maven-publish" }
 io-gitlab-arturbosch-detekt-detekt-formatting = "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7"
 io-gitlab-arturbosch-detekt-detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "io-gitlab-arturbosch-detekt" }
 io-gitlab-arturbosch-detekt-detekt-rules-libraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "io-gitlab-arturbosch-detekt" }
@@ -89,6 +90,7 @@ junit = { module = "junit:junit", version.ref = "junit" }
 org-jetbrains-dokka-dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 org-jetbrains-kotlin-compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 org-jetbrains-kotlin-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+org-jetbrains-kotlin-kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 org-jetbrains-kotlinx-kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"
 org-jetbrains-kotlinx-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android" }
 org-jetbrains-kotlinx-kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "org-jetbrains-kotlinx" }
@@ -102,7 +104,6 @@ se-eelde-toggles-toggles-core = "se.eelde.toggles:toggles-core:0.0.2"
 se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-prefs = { module = "se.eelde.toggles:toggles-prefs", version.ref = "se-eelde-toggles" }
 se-premex-ownership-gradle-plugin = "se.premex:ownership-gradle-plugin:0.0.11"
-com-vanniktech-gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "com-vanniktech-maven-publish" }
 
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }

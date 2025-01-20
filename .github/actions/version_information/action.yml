@@ -1,6 +1,12 @@
 name: "Generate version information"
 description: "Generate version information and expose using outputs"
 
+inputs:
+  release:
+    description: "Set to true to generate release version information"
+    required: false
+    default: "false"
+
 outputs:
   mobile-version-code:
     description: "Version code of application"
@@ -15,7 +21,12 @@ runs:
   steps:
     - name: "Generate versions"
       id: version_code
-      run: ./scripts/generate_versions.sh
+      run: |
+        if [ "${{ inputs.release }}" == "true" ]; then
+          ./scripts/generate_versions.sh --release
+        else
+          ./scripts/generate_versions.sh
+        fi
       shell: bash
 
     - name: "Get mobile version code"
