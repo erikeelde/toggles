@@ -21,7 +21,7 @@ kotlin = "2.1.10"
 ksp = "2.1.10-1.0.29"
 orchestrator = "1.5.1"
 org-jetbrains-kotlinx = "1.10.1"
-se-eelde-toggles = "0.0.1"
+se-eelde-toggles = "0.0.3"
 
 [libraries]
 androidx-activity-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
@@ -97,10 +97,7 @@ org-jetbrains-kotlinx-kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx
 org-jetbrains-kotlinx-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 org-jetbrains-kotlinx-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0"
 org-robolectric = "org.robolectric:robolectric:4.14.1"
-#se-eelde-toggles-toggles-core = { module = "se.eelde.toggles:toggles-core" }
-#se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow" }
-#se-eelde-toggles-toggles-prefs = { module = "se.eelde.toggles:toggles-prefs" }
-se-eelde-toggles-toggles-core = "se.eelde.toggles:toggles-core:0.0.2"
+se-eelde-toggles-toggles-core = { module = "se.eelde.toggles:toggles-core", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-prefs = { module = "se.eelde.toggles:toggles-prefs", version.ref = "se-eelde-toggles" }
 se-premex-ownership-gradle-plugin = "se.premex:ownership-gradle-plugin:0.0.11"
