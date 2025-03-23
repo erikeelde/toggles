@@ -24,7 +24,7 @@ jobs:
       - uses: ./.github/actions/setup_android_and_java
 
       - name: Run check
-        run: ./gradlew check
+        run: ./gradlew check detektMain
 
       - name: Upload reports
         uses: actions/upload-artifact@v4
