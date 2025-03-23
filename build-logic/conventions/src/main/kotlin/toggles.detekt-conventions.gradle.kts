@@ -1,12 +1,13 @@
-import org.gradle.api.JavaVersion
-import org.gradle.kotlin.dsl.kotlin
+import org.gradle.accessors.dm.LibrariesForLibs
+
+val libs = the<LibrariesForLibs>()
 
 plugins {
     id("io.gitlab.arturbosch.detekt")
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
+    detektPlugins(libs.io.gitlab.arturbosch.detekt.detekt.formatting)
 }
 
 detekt {

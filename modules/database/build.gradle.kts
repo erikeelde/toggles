@@ -9,9 +9,8 @@ class RoomSchemaArgProvider(
     @get:PathSensitive(PathSensitivity.RELATIVE)
     val schemaDir: File
 ) : CommandLineArgumentProvider {
-
     override fun asArguments(): Iterable<String> {
-        return listOf("room.schemaLocation=${schemaDir.path}")
+        return listOf("room.schemaLocation=${schemaDir.path}", "room.generateKotlin=true")
     }
 }
 
