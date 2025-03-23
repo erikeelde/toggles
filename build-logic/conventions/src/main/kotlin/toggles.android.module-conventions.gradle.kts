@@ -1,5 +1,4 @@
 import org.gradle.accessors.dm.LibrariesForLibs
-import org.gradle.kotlin.dsl.kotlin
 
 val libs = the<LibrariesForLibs>()
 
@@ -55,9 +54,7 @@ android {
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.toString()))
-    }
+    jvmToolchain(17)
 }
 
 dependencies {
