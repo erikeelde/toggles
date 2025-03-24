@@ -84,7 +84,7 @@ internal fun ConfigurationListView(
                         if (selectedScope != null) {
                             Text(
                                 style = MaterialTheme.typography.titleLarge,
-                                text = selectedScope.value ?: ""
+                                text = selectedScope.value.orEmpty()
                             )
                         }
                     }

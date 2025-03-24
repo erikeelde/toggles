@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>InjectDispatcher:TogglesProvider.kt$TogglesProvider$IO</ID>
+    <ID>UnsafeCallOnNullableType:PackageManagerWrapper.kt$PackageManagerWrapper$callingApplicationPackageName!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesProvider.kt$TogglesProvider$context!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesProvider.kt$TogglesProvider$defaultScope!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesProvider.kt$TogglesProvider$fullConfig.value!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesProvider.kt$TogglesProvider$packageManagerWrapper.callingApplicationPackageName!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesProvider.kt$TogglesProvider$scope!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesProvider.kt$TogglesProvider$toggle.value!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesProvider.kt$TogglesProvider$uri.lastPathSegment!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesProvider.kt$TogglesProvider$values!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesProvider.kt$TogglesProvider.Companion$scopeDao!!</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -13,6 +13,7 @@ import se.eelde.toggles.flow.TogglesImpl
 @InstallIn(SingletonComponent::class)
 object ApplicationModule {
     @Provides
+    @Suppress("InjectDispatcher")
     fun provideIoDispatcher() = Dispatchers.IO
 
     @Provides

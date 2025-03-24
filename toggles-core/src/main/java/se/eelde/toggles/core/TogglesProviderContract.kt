@@ -7,11 +7,11 @@ public object TogglesProviderContract {
     private const val TOGGLES_API_VERSION_QUERY_PARAM = "API_VERSION"
     private const val TOGGLES_API_VERSION = 1
 
-    private val configurationUri = Uri.parse("content://$TOGGLES_AUTHORITY/configuration")
+    private val configurationUri: Uri = Uri.parse("content://$TOGGLES_AUTHORITY/configuration")
 
-    private val currentConfigurationUri =
+    private val currentConfigurationUri: Uri =
         Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
-    private val currentConfigurationValueUri =
+    private val currentConfigurationValueUri: Uri =
         Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
 
     @JvmStatic
