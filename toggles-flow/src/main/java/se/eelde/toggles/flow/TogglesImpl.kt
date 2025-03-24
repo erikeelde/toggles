@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Handler
 import android.util.Log
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -23,61 +24,67 @@ import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 
 @Suppress("LibraryEntitiesShouldNotBePublic")
-public class TogglesImpl(context: Context) : Toggles {
+public class TogglesImpl(
+    context: Context,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : Toggles {
     private val context = context.applicationContext
     private val contentResolver = this.context.contentResolver
 
     override fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> =
         providerToggleFlow(context, Toggle.TYPE.BOOLEAN, key)
             .map { toggle ->
-                when {
-                    toggle == null -> defaultValue
-                    toggle.id == 0L -> {
-                        contentResolver.insert(
-                            toggleUri(),
-                            toggle.copy(value = defaultValue.toString()).toContentValues()
-                        )
-                        defaultValue
+                if (toggle == null) {
+                    defaultValue
+                } else if (toggle.id == 0L) {
+                    contentResolver.insert(
+                        toggleUri(),
+                        toggle.copy(value = defaultValue.toString()).toContentValues()
+                    )
+                    defaultValue
+                } else {
+                    when (val value = toggle.value) {
+                        null -> defaultValue
+                        else -> value.toBoolean()
                     }
-
-                    toggle.value == null -> defaultValue
-                    else -> toggle.value!!.toBoolean()
                 }
             }
 
     override fun toggle(key: String, defaultValue: Int): Flow<Int> =
         providerToggleFlow(context, Toggle.TYPE.INTEGER, key)
             .map { toggle ->
-                when {
-                    toggle == null -> defaultValue
-                    toggle.id == 0L -> {
-                        contentResolver.insert(
-                            toggleUri(),
-                            toggle.copy(value = defaultValue.toString()).toContentValues()
-                        )
-                        defaultValue
+                if (toggle == null) {
+                    defaultValue
+                } else if (toggle.id == 0L) {
+                    contentResolver.insert(
+                        toggleUri(),
+                        toggle.copy(value = defaultValue.toString()).toContentValues()
+                    )
+                    defaultValue
+                } else {
+                    when (val value = toggle.value) {
+                        null -> defaultValue
+                        else -> value.toInt()
                     }
-
-                    toggle.value == null -> defaultValue
-                    else -> toggle.value!!.toInt()
                 }
             }
 
     override fun toggle(key: String, defaultValue: String): Flow<String> =
         providerToggleFlow(context, Toggle.TYPE.STRING, key)
             .map { toggle ->
-                when {
-                    toggle == null -> defaultValue
-                    toggle.id == 0L -> {
-                        contentResolver.insert(
-                            toggleUri(),
-                            toggle.copy(value = defaultValue).toContentValues()
-                        )
-                        defaultValue
+                if (toggle == null) {
+                    defaultValue
+                } else if (toggle.id == 0L) {
+                    contentResolver.insert(
+                        toggleUri(),
+                        toggle.copy(value = defaultValue).toContentValues()
+                    )
+                    defaultValue
+                } else {
+                    when (val value = toggle.value) {
+                        null -> defaultValue
+                        else -> value
                     }
-
-                    toggle.value == null -> defaultValue
-                    else -> toggle.value!!
                 }
             }
 
@@ -89,29 +96,30 @@ public class TogglesImpl(context: Context) : Toggles {
     ): Flow<T> =
         providerToggleFlow(context, Toggle.TYPE.ENUM, key)
             .map { toggle ->
-                when {
-                    toggle == null -> defaultValue
-                    toggle.id == 0L -> {
-                        val uri = contentResolver.insert(
-                            toggleUri(),
-                            toggle.copy(value = defaultValue.toString()).toContentValues()
+                if (toggle == null) {
+                    defaultValue
+                } else if (toggle.id == 0L) {
+                    val uri = contentResolver.insert(
+                        toggleUri(),
+                        toggle.copy(value = defaultValue.toString()).toContentValues()
+                    )
+                    val configurationId = uri?.lastPathSegment?.toLong() ?: return@map defaultValue
+
+                    for (enumConstant in type.enumConstants!!) {
+                        contentResolver.insert(
+                            toggleValueUri(),
+                            ToggleValue {
+                                this.configurationId = configurationId
+                                value = enumConstant.toString()
+                            }.toContentValues()
                         )
-                        val configurationId = uri!!.lastPathSegment!!.toLong()
-
-                        for (enumConstant in type.enumConstants!!) {
-                            contentResolver.insert(
-                                toggleValueUri(),
-                                ToggleValue {
-                                    this.configurationId = configurationId
-                                    value = enumConstant.toString()
-                                }.toContentValues()
-                            )
-                        }
-                        defaultValue
                     }
-
-                    toggle.value == null -> defaultValue
-                    else -> java.lang.Enum.valueOf(type, toggle.value!!)
+                    defaultValue
+                } else {
+                    when (val value = toggle.value) {
+                        null -> defaultValue
+                        else -> java.lang.Enum.valueOf(type, value)
+                    }
                 }
             }
 
@@ -126,11 +134,10 @@ public class TogglesImpl(context: Context) : Toggles {
             }
         }
 
-        val providerInfo =
-            context.packageManager.resolveContentProvider(
-                toggleUri().authority!!,
-                0
-            )
+        val providerInfo = toggleUri().authority?.let { authority ->
+            context.packageManager.resolveContentProvider(authority, 0)
+        }
+
         if (providerInfo != null) {
             contentResolver
                 .registerContentObserver(toggleUri(), true, toggleContentObserver)
@@ -148,7 +155,7 @@ public class TogglesImpl(context: Context) : Toggles {
         @ToggleType type: String,
         key: String
     ): Toggle? =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             var cursor: Cursor? = null
             try {
                 cursor = contentResolver.query(

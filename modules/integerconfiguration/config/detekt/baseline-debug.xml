@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>InjectDispatcher:IntegerValueViewModel.kt$IntegerValueViewModel$IO</ID>
+    <ID>UnsafeCallOnNullableType:IntegerValueViewModel.kt$IntegerValueViewModel$it.value!!</ID>
+    <ID>UseOrEmpty:IntegerValueView.kt$uiState.title ?: ""</ID>
+  </CurrentIssues>
+</SmellBaseline>
