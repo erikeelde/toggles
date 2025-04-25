@@ -1,15 +1,15 @@
 [versions]
-agp = "8.9.0"
+agp = "8.9.2"
 androidx-activity = "1.10.1"
 androidx-appcompat = "1.7.0"
 androidx-arch-core = "2.2.0"
-androidx-compose-bom = "2025.03.00"
+androidx-compose-bom = "2025.04.01"
 androidx-hilt = "1.2.0"
 androidx-lifecycle = "2.8.7"
 androidx-navigation = "2.8.9"
-androidx-room = "2.6.1"
+androidx-room = "2.7.1"
 androidx-test = "1.6.1"
-com-google-dagger = "2.56"
+com-google-dagger = "2.56.2"
 com-squareup-leakcanary = "2.14"
 com-squareup-moshi = "1.15.2"
 com-vanniktech-maven-publish = "0.31.0"
@@ -18,9 +18,9 @@ espresso-core = "3.6.1"
 io-gitlab-arturbosch-detekt = "1.23.8"
 junit = "4.13.2"
 kotlin = "2.1.20"
-ksp = "2.1.20-1.0.31"
+ksp = "2.1.20-2.0.0"
 orchestrator = "1.5.1"
-org-jetbrains-kotlinx = "1.10.1"
+org-jetbrains-kotlinx = "1.10.2"
 se-eelde-toggles = "0.0.3"
 
 [libraries]
@@ -40,7 +40,7 @@ androidx-compose-ui-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-jun
 androidx-compose-ui-ui-text = { module = "androidx.compose.ui:ui-text" }
 androidx-compose-ui-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-core-core-ktx = "androidx.core:core-ktx:1.15.0"
+androidx-core-core-ktx = "androidx.core:core-ktx:1.16.0"
 androidx-core-core-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 androidx-hilt-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 androidx-hilt-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-hilt" }
@@ -66,7 +66,7 @@ androidx-test-runner = "androidx.test:runner:1.6.2"
 app-cash-licensee-licensee-gradle-plugin = "app.cash.licensee:licensee-gradle-plugin:1.13.0"
 app-cash-turbine = "app.cash.turbine:turbine:1.2.0"
 co-touchlab-kermit = "co.touchlab:kermit:2.0.5"
-com-android-tools-build-gradle = "com.android.tools.build:gradle:8.9.0"
+com-android-tools-build-gradle = "com.android.tools.build:gradle:8.9.2"
 com-google-dagger = { module = "com.google.dagger:dagger", version.ref = "com-google-dagger" }
 com-google-dagger-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "com-google-dagger" }
 com-google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "com-google-dagger" }
@@ -77,11 +77,11 @@ com-google-dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", 
 com-google-devtools-ksp-com-google-devtools-ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 com-google-gms-google-services = "com.google.gms:google-services:4.4.2"
 com-slack-lint-compose-compose-lint-checks = "com.slack.lint.compose:compose-lint-checks:1.4.2"
-com-squareup-kotlinpoet = "com.squareup:kotlinpoet:1.16.0"
+com-squareup-kotlinpoet = "com.squareup:kotlinpoet:2.1.0"
 com-squareup-leakcanary-leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "com-squareup-leakcanary" }
 com-squareup-moshi = { module = "com.squareup.moshi:moshi", version.ref = "com-squareup-moshi" }
 com-squareup-moshi-moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "com-squareup-moshi" }
-com-squareup-okio = "com.squareup.okio:okio:3.10.2"
+com-squareup-okio = "com.squareup.okio:okio:3.11.0"
 com-vanniktech-gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "com-vanniktech-maven-publish" }
 io-gitlab-arturbosch-detekt-detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "io-gitlab-arturbosch-detekt" }
 io-gitlab-arturbosch-detekt-detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "io-gitlab-arturbosch-detekt" }
@@ -95,7 +95,7 @@ org-jetbrains-kotlinx-kotlinx-collections-immutable = "org.jetbrains.kotlinx:kot
 org-jetbrains-kotlinx-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android" }
 org-jetbrains-kotlinx-kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "org-jetbrains-kotlinx" }
 org-jetbrains-kotlinx-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
-org-jetbrains-kotlinx-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0"
+org-jetbrains-kotlinx-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1"
 org-robolectric = "org.robolectric:robolectric:4.14.1"
 se-eelde-toggles-toggles-core = { module = "se.eelde.toggles:toggles-core", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow", version.ref = "se-eelde-toggles" }
@@ -104,15 +104,14 @@ se-premex-ownership-gradle-plugin = "se.premex:ownership-gradle-plugin:0.0.11"
 
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }
-com-autonomousapps-dependency-analysis = "com.autonomousapps.dependency-analysis:2.13.0"
-com-github-ben-manes-versions = "com.github.ben-manes.versions:0.52.0"
+com-autonomousapps-dependency-analysis = "com.autonomousapps.dependency-analysis:2.17.0"
 com-github-triplet-play = "com.github.triplet.play:3.12.1"
 com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "com-google-dagger" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 com-google-gms-google-services = "com.google.gms.google-services:4.4.2"
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "com-vanniktech-maven-publish" }
 com-vanniktech-maven-publish-base = { id = "com.vanniktech.maven.publish.base", version.ref = "com-vanniktech-maven-publish" }
-nl-littlerobots-version-catalog-update = "nl.littlerobots.version-catalog-update:0.8.5"
+nl-littlerobots-version-catalog-update = "nl.littlerobots.version-catalog-update:1.0.0"
 org-jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 org-jetbrains-kotlinx-binary-compatibility-validator = "org.jetbrains.kotlinx.binary-compatibility-validator:0.17.0"
