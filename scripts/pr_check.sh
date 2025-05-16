@@ -6,6 +6,7 @@ cd "$SCRIPT_DIR"/.. || exit
 
 ./gradlew detekt
 ./gradlew versionCatalogFormat
+./gradlew detektMain
 ./gradlew test
 ./gradlew assembleAndroidTest
 ./gradlew check

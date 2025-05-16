@@ -12,80 +12,108 @@ public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
     private val context = context.applicationContext
     private val contentResolver: ContentResolver = this.context.contentResolver
 
-    override fun getBoolean(key: String, defValue: Boolean): Boolean {
-        var toggle = getToggle(
+    override fun getBoolean(key: String, defaultValue: Boolean): Boolean {
+        val toggle = getToggle(
             contentResolver = contentResolver,
             toggleType = Toggle.TYPE.BOOLEAN,
             key = key
         )
-            ?: return defValue
 
-        if (toggle.id == 0L) {
-            toggle = toggle.copy(value = defValue.toString())
-            contentResolver.insert(toggleUri(), toggle.toContentValues())
+        return if (toggle == null) {
+            defaultValue
+        } else if (toggle.id == 0L) {
+            contentResolver.insert(
+                toggleUri(),
+                toggle.copy(value = defaultValue.toString()).toContentValues()
+            )
+            defaultValue
+        } else {
+            when (val value = toggle.value) {
+                null -> defaultValue
+                else -> value.toBoolean()
+            }
         }
-
-        return toggle.value!!.toBoolean()
     }
 
-    override fun getInt(key: String, defValue: Int): Int {
-        var toggle = getToggle(
+    override fun getInt(key: String, defaultValue: Int): Int {
+        val toggle = getToggle(
             contentResolver = contentResolver,
             toggleType = Toggle.TYPE.INTEGER,
             key = key
-        ) ?: return defValue
+        )
 
-        if (toggle.id == 0L) {
-            toggle = toggle.copy(value = defValue.toString())
-            contentResolver.insert(toggleUri(), toggle.toContentValues())
+        return if (toggle == null) {
+            defaultValue
+        } else if (toggle.id == 0L) {
+            contentResolver.insert(
+                toggleUri(),
+                toggle.copy(value = defaultValue.toString()).toContentValues()
+            )
+            defaultValue
+        } else {
+            when (val value = toggle.value) {
+                null -> defaultValue
+                else -> value.toInt()
+            }
         }
-
-        return toggle.value!!.toInt()
     }
 
-    override fun getString(key: String, defValue: String): String {
-        var toggle =
+    override fun getString(key: String, defaultValue: String): String {
+        val toggle =
             getToggle(
                 contentResolver = contentResolver,
                 toggleType = Toggle.TYPE.STRING,
                 key = key
             )
-                ?: return defValue
 
-        if (toggle.id == 0L) {
-            toggle = toggle.copy(value = defValue)
-            contentResolver.insert(toggleUri(), toggle.toContentValues())
+        return if (toggle == null) {
+            defaultValue
+        } else if (toggle.id == 0L) {
+            contentResolver.insert(
+                toggleUri(),
+                toggle.copy(value = defaultValue).toContentValues()
+            )
+            defaultValue
+        } else {
+            when (val value = toggle.value) {
+                null -> defaultValue
+                else -> value
+            }
         }
-
-        return toggle.value!!
     }
 
-    override fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defValue: T): T {
-        var toggle =
+    override fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defaultValue: T): T {
+        val toggle =
             getToggle(
                 contentResolver = contentResolver,
                 toggleType = Toggle.TYPE.ENUM,
                 key = key
             )
-                ?: return defValue
 
-        if (toggle.id == 0L) {
-            toggle = toggle.copy(value = defValue.toString())
-            val uri = contentResolver.insert(toggleUri(), toggle.toContentValues())
-            toggle.id = uri!!.lastPathSegment!!.toLong()
-
+        return if (toggle == null) {
+            defaultValue
+        } else if (toggle.id == 0L) {
+            val uri = contentResolver.insert(
+                toggleUri(),
+                toggle.copy(value = defaultValue.toString()).toContentValues()
+            )
+            val configurationId = uri?.lastPathSegment?.toLong() ?: return defaultValue
             for (enumConstant in type.enumConstants!!) {
                 contentResolver.insert(
                     toggleValueUri(),
                     ToggleValue {
-                        configurationId = toggle.id
+                        this.configurationId = configurationId
                         value = enumConstant.toString()
                     }.toContentValues()
                 )
             }
+            defaultValue
+        } else {
+            when (val value = toggle.value) {
+                null -> defaultValue
+                else -> java.lang.Enum.valueOf(type, value)
+            }
         }
-
-        return java.lang.Enum.valueOf(type, toggle.value!!)
     }
 
     @Suppress("ReturnCount")

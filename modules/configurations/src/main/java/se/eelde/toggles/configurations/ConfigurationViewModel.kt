@@ -67,10 +67,10 @@ class ConfigurationViewModel @AssistedInject internal constructor(
     private val queryString: MutableStateFlow<String> = MutableStateFlow("")
 
     init {
-        setQuery(savedStateHandle.get<String>("query") ?: "")
+        setQuery(savedStateHandle.get<String>("query").orEmpty())
 
         viewModelScope.launch {
-            queryString.value = (savedStateHandle.get<String>("query") ?: "")
+            queryString.value = (savedStateHandle.get<String>("query").orEmpty())
         }
 
         viewModelScope.launch {

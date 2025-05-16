@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>InjectDispatcher:BooleanValueViewModel.kt$BooleanValueViewModel$IO</ID>
+    <ID>UnsafeCallOnNullableType:BooleanValueViewModel.kt$BooleanValueViewModel$it.value!!</ID>
+    <ID>UseOrEmpty:BooleanValueView.kt$viewState.title ?: ""</ID>
+  </CurrentIssues>
+</SmellBaseline>

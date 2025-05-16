@@ -1,6 +1,3 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import java.util.Locale
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
@@ -18,16 +15,7 @@ buildscript {
     }
 }
 
-versionCatalogUpdate {
-    keep {
-        keepUnusedVersions = true
-        keepUnusedLibraries = true
-        keepUnusedPlugins = true
-    }
-}
-
 plugins {
-    alias(libs.plugins.com.github.ben.manes.versions)
     alias(libs.plugins.nl.littlerobots.version.catalog.update)
     // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
     alias(libs.plugins.com.github.triplet.play) apply (false)
@@ -40,21 +28,6 @@ develocity {
     buildScan {
         termsOfUseUrl.set("https://gradle.com/help/legal-terms-of-use")
         termsOfUseAgree.set("yes")
-    }
-}
-
-fun isNonStable(version: String): Boolean {
-    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any {
-        version.uppercase(Locale.getDefault()).contains(it)
-    }
-    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
-    val isStable = stableKeyword || regex.matches(version)
-    return isStable.not()
-}
-
-tasks.named("dependencyUpdates", DependencyUpdatesTask::class.java).configure {
-    rejectVersionIf {
-        isNonStable(candidate.version) && !isNonStable(currentVersion)
     }
 }
 

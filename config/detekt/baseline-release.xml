@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>UnsafeCallOnNullableType:TogglesImpl.kt$TogglesImpl$toggleUri().authority!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesImpl.kt$TogglesImpl$uri!!</ID>
+    <ID>UnsafeCallOnNullableType:TogglesImpl.kt$TogglesImpl$uri!!.lastPathSegment!!</ID>
+  </CurrentIssues>
+</SmellBaseline>

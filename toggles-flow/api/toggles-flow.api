@@ -6,7 +6,8 @@ public abstract interface class se/eelde/toggles/flow/Toggles {
 }
 
 public final class se/eelde/toggles/flow/TogglesImpl : se/eelde/toggles/flow/Toggles {
-	public fun <init> (Landroid/content/Context;)V
+	public fun <init> (Landroid/content/Context;Lkotlinx/coroutines/CoroutineDispatcher;)V
+	public synthetic fun <init> (Landroid/content/Context;Lkotlinx/coroutines/CoroutineDispatcher;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun toggle (Ljava/lang/String;I)Lkotlinx/coroutines/flow/Flow;
 	public fun toggle (Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Enum;)Lkotlinx/coroutines/flow/Flow;
 	public fun toggle (Ljava/lang/String;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;

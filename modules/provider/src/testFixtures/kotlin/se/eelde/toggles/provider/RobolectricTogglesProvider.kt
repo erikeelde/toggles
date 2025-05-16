@@ -2,6 +2,7 @@ package se.eelde.toggles.provider
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
+import androidx.core.graphics.drawable.toDrawable
 import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -27,7 +28,7 @@ object RobolectricTogglesProvider {
 
         val provider = contentProviderController.get()
 
-        val appIcon = ColorDrawable(0x00FF00).apply {
+        val appIcon = 0x00FF00.toDrawable().apply {
             setBounds(0, 0, intrinsicWidth, intrinsicHeight)
         }
         shadowOf(context.packageManager).setApplicationIcon(
