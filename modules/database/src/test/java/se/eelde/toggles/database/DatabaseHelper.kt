@@ -10,6 +10,8 @@ import org.junit.Assert.assertNotNull
 import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
+import se.eelde.toggles.database.tables.ScopeTable
+import java.util.Date
 
 object DatabaseHelper {
     fun insertPredefinedConfigurationValue(
@@ -31,7 +33,7 @@ object DatabaseHelper {
     fun getPredefinedConfigurationValueByConfigurationId(
         db: SupportSQLiteDatabase,
         configId: Long
-    ): List<WrenchPredefinedConfigurationValue> {
+    ): List<TogglesPredefinedConfigurationValue> {
         @Suppress("MaxLineLength")
         val query = db.query(
             "SELECT * FROM ${PredefinedConfigurationValueTable.TABLE_NAME} WHERE ${PredefinedConfigurationValueTable.COL_CONFIG_ID} = ?",
@@ -39,7 +41,7 @@ object DatabaseHelper {
         )
         assertNotNull(query)
 
-        val values = mutableListOf<WrenchPredefinedConfigurationValue>()
+        val values = mutableListOf<TogglesPredefinedConfigurationValue>()
         while (query.moveToNext()) {
             val id =
                 query.getLong(query.getColumnIndexOrThrow(PredefinedConfigurationValueTable.COL_ID))
@@ -47,7 +49,7 @@ object DatabaseHelper {
                 query.getLong(query.getColumnIndexOrThrow(PredefinedConfigurationValueTable.COL_CONFIG_ID))
             val value =
                 query.getString(query.getColumnIndexOrThrow(PredefinedConfigurationValueTable.COL_VALUE))
-            values.add(WrenchPredefinedConfigurationValue(id, configurationId, value))
+            values.add(TogglesPredefinedConfigurationValue(id, configurationId, value))
         }
 
         return values.toList()
@@ -114,7 +116,7 @@ object DatabaseHelper {
         return db.insert(ApplicationTable.TABLE_NAME, CONFLICT_FAIL, applicationValues)
     }
 
-    fun getApplication(db: SupportSQLiteDatabase, applicationId: Long): WrenchApplication {
+    fun getApplication(db: SupportSQLiteDatabase, applicationId: Long): TogglesApplication {
         val cursor = db.query(
             "SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE " + ApplicationTable.COL_ID + "=?",
             arrayOf<Any>(applicationId)
@@ -126,6 +128,32 @@ object DatabaseHelper {
         val packageName = cursor.getString(cursor.getColumnIndex(ApplicationTable.COL_PACK_NAME))
         val shortcutId = cursor.getString(cursor.getColumnIndex(ApplicationTable.COL_SHORTCUT_ID))
 
-        return WrenchApplication(id, shortcutId, packageName, label)
+        return TogglesApplication(id, shortcutId, packageName, label)
+    }
+
+    fun insertScope(db: SupportSQLiteDatabase, applicationId: Long, scopeName: String): Long {
+        val configurationValues = ContentValues()
+        configurationValues.put(ScopeTable.COL_APP_ID, applicationId)
+        configurationValues.put(ScopeTable.COL_NAME, scopeName)
+        configurationValues.put(ScopeTable.COL_SELECTED_TIMESTAMP, 6457)
+        return db.insert(
+            ScopeTable.TABLE_NAME,
+            CONFLICT_FAIL,
+            configurationValues
+        )
+    }
+
+    fun getScope(db: SupportSQLiteDatabase, scopeId: Long): TogglesScope {
+        val cursor = db.query(
+            "SELECT * FROM " + ScopeTable.TABLE_NAME + " WHERE " + ScopeTable.COL_ID + "=?",
+            arrayOf<Any>(scopeId)
+        )
+
+        cursor.moveToFirst()
+        val id = cursor.getLong(cursor.getColumnIndex(ScopeTable.COL_ID))
+        val name = cursor.getString(cursor.getColumnIndex(ScopeTable.COL_NAME))
+        val timeStamp = cursor.getLong(cursor.getColumnIndex(ScopeTable.COL_SELECTED_TIMESTAMP))
+
+        return TogglesScope(id, 1, name, Date(timeStamp))
     }
 }

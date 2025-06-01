@@ -31,7 +31,7 @@ import se.eelde.toggles.R
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.database.WrenchDatabase
+import se.eelde.toggles.database.TogglesDatabase
 import se.eelde.toggles.di.DatabaseModule
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -51,14 +51,14 @@ class TogglesProviderPredefinedConfigurationValuesTest {
     object TestModule {
         @Singleton
         @Provides
-        fun provideWrenchDb(@ApplicationContext context: Context): WrenchDatabase {
-            return Room.inMemoryDatabaseBuilder(context, WrenchDatabase::class.java)
+        fun provideTogglesDb(@ApplicationContext context: Context): TogglesDatabase {
+            return Room.inMemoryDatabaseBuilder(context, TogglesDatabase::class.java)
                 .allowMainThreadQueries().build()
         }
     }
 
     @Inject
-    lateinit var wrenchDatabase: WrenchDatabase
+    lateinit var togglesDatabase: TogglesDatabase
 
     @Before
     fun setUp() {
@@ -98,10 +98,10 @@ class TogglesProviderPredefinedConfigurationValuesTest {
         }
 
         togglesProvider.insert(TogglesProviderContract.toggleValueUri(), toggleValue.toContentValues())
-        wrenchDatabase.togglesPredefinedConfigurationValueDao().getByConfigurationId(configId).test {
-            val wrenchPredefinedConfigurationValueList = awaitItem()
-            assertEquals(1, wrenchPredefinedConfigurationValueList.size)
-            wrenchPredefinedConfigurationValueList[0].let {
+        togglesDatabase.togglesPredefinedConfigurationValueDao().getByConfigurationId(configId).test {
+            val togglesPredefinedConfigurationValueList = awaitItem()
+            assertEquals(1, togglesPredefinedConfigurationValueList.size)
+            togglesPredefinedConfigurationValueList[0].let {
                 assertEquals(toggleValue.value, it.value)
                 assertEquals(toggleValue.configurationId, it.configurationId)
             }

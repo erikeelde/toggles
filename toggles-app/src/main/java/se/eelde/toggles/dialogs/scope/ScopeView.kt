@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import se.eelde.toggles.R
-import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.TogglesScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,8 +72,8 @@ fun ScopeValueView(
 @Composable
 internal fun ScopeValueView(
     viewState: ViewState,
-    selectScope: (scope: WrenchScope) -> Unit,
-    deleteScope: (scope: WrenchScope) -> Unit,
+    selectScope: (scope: TogglesScope) -> Unit,
+    deleteScope: (scope: TogglesScope) -> Unit,
     createScope: (scopeName: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -138,7 +138,7 @@ internal fun ScopeValueView(
             if (showDeleteScopeView.value) {
                 DeleteScopeView(
                     scope = viewState.selectedScope!!,
-                    deleteScope = { scope: WrenchScope ->
+                    deleteScope = { scope: TogglesScope ->
                         deleteScope(scope)
                         showDeleteScopeView.value = false
                     },
@@ -178,8 +178,8 @@ fun AddScopeView(
 
 @Composable
 fun DeleteScopeView(
-    scope: WrenchScope,
-    deleteScope: (WrenchScope) -> Unit,
+    scope: TogglesScope,
+    deleteScope: (TogglesScope) -> Unit,
     dismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

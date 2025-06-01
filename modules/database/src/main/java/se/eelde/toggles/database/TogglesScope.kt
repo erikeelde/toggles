@@ -15,7 +15,7 @@ import java.util.Date
     indices = [Index(value = arrayOf(ScopeTable.COL_APP_ID, ScopeTable.COL_NAME), unique = true)],
     foreignKeys = [
         ForeignKey(
-            entity = WrenchApplication::class,
+            entity = TogglesApplication::class,
             parentColumns = arrayOf(
                 ApplicationTable.COL_ID
             ),
@@ -24,7 +24,7 @@ import java.util.Date
         )
     ]
 )
-data class WrenchScope constructor(
+data class TogglesScope constructor(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = ScopeTable.COL_ID)
     var id: Long,
@@ -44,9 +44,9 @@ data class WrenchScope constructor(
         const val SCOPE_DEFAULT = ColumnNames.ToggleScope.DEFAULT_SCOPE
         const val SCOPE_USER = "Development scope"
 
-        fun newWrenchScope() = WrenchScope(0, 0, SCOPE_DEFAULT, Date())
+        fun newScope() = TogglesScope(0, 0, SCOPE_DEFAULT, Date())
 
-        fun isDefaultScope(scope: WrenchScope): Boolean {
+        fun isDefaultScope(scope: TogglesScope): Boolean {
             return SCOPE_DEFAULT == scope.name
         }
     }

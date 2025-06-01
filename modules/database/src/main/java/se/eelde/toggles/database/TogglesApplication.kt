@@ -10,7 +10,7 @@ import se.eelde.toggles.database.tables.ApplicationTable
     tableName = ApplicationTable.TABLE_NAME,
     indices = [Index(value = arrayOf(ApplicationTable.COL_PACK_NAME), unique = true)]
 )
-data class WrenchApplication constructor(
+data class TogglesApplication constructor(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = ApplicationTable.COL_ID)
     var id: Long,

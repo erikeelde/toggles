@@ -81,10 +81,3 @@ To build and run the project locally, follow these steps:
 1. Clone the repository: `git clone https://github.com/eelde/toggles.git`
 2. Open the project in Android Studio.
 3. Build and run the project on an emulator or physical device.
-
-#### Previously known as wrench
-The idea dates way back to and was inspired by the now removed [Dash Clock Widget](https://play.google.com/store/apps/details?id=net.nurik.roman.dashclock) as well as the still maintained [muzei](https://play.google.com/store/apps/details?id=net.nurik.roman.muzei).
-
-Wrench can be downloaded on [play store](https://play.google.com/store/apps/details?id=com.izettle.wrench).
-and it's sources are on [github](https://github.com/iZettle/wrench)
-I made wrench while employed at izettle and to be able to continue to provide updates I unfortunately needed to rerelease the application.

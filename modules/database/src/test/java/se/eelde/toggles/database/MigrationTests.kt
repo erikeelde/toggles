@@ -11,11 +11,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import se.eelde.toggles.core.Toggle
+import se.eelde.toggles.database.migrations.Migrations.LEGACY_SCOPE_NAME
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_1_2
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_2_3
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_3_4
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_4_5
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_5_6
+import se.eelde.toggles.database.migrations.Migrations.MIGRATION_6_7
 import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 
@@ -26,7 +28,7 @@ class MigrationTests {
     @get:Rule
     var testHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
-        WrenchDatabase::class.java,
+        TogglesDatabase::class.java,
         listOf<AutoMigrationSpec>(),
         FrameworkSQLiteOpenHelperFactory()
     )
@@ -203,6 +205,31 @@ class MigrationTests {
             )
 
         assertEquals(3, values.size)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test6to7() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 6)
+
+        val applicationId = DatabaseHelper.insertApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.application",
+            "se.eelde.toggles.application",
+        )
+
+        val scopeId = DatabaseHelper.insertScope(
+            originalDb,
+            applicationId,
+            LEGACY_SCOPE_NAME
+        )
+
+        val upgradedDatabase =
+            testHelper.runMigrationsAndValidate(TEST_DB_NAME, 7, true, MIGRATION_6_7)
+
+        val scope = DatabaseHelper.getScope(upgradedDatabase, scopeId)
+        assertEquals(TogglesScope.SCOPE_DEFAULT, scope.name)
     }
 
     companion object {

@@ -15,8 +15,6 @@ modules/database/	@erikeelde
 modules/navigation/	@erikeelde
 # modules/oss/OWNERSHIP.toml
 modules/oss/	@erikeelde
-# modules/wrench-core/OWNERSHIP.toml
-modules/wrench-core/	@erikeelde
 # toggles-app/OWNERSHIP.toml
 toggles-app/	@erikeelde
 # toggles-core/OWNERSHIP.toml

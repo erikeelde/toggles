@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Relation
 import se.eelde.toggles.database.tables.ConfigurationTable
 
-data class WrenchConfigurationWithValues constructor(
+data class TogglesConfigurationWithValues constructor(
     var id: Long,
 
     var applicationId: Long,
@@ -16,5 +16,5 @@ data class WrenchConfigurationWithValues constructor(
     var type: String?,
 
     @Relation(parentColumn = "id", entityColumn = "configurationId")
-    var configurationValues: Set<WrenchConfigurationValue>? = null
+    var configurationValues: Set<TogglesConfigurationValue>? = null
 )

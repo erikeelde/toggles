@@ -6,12 +6,15 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 object Migrations {
-    const val databaseVersion1 = 1
-    const val databaseVersion2 = 2
-    const val databaseVersion3 = 3
-    const val databaseVersion4 = 4
-    const val databaseVersion5 = 5
-    const val databaseVersion6 = 6
+    internal const val LEGACY_SCOPE_NAME = "wrench_default"
+
+    private const val databaseVersion1 = 1
+    private const val databaseVersion2 = 2
+    private const val databaseVersion3 = 3
+    private const val databaseVersion4 = 4
+    private const val databaseVersion5 = 5
+    private const val databaseVersion6 = 6
+    private const val databaseVersion7 = 7
 
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -288,6 +291,18 @@ object Migrations {
 
                 // rename database
                 db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
+            }
+        }
+    }
+
+    val MIGRATION_6_7: Migration = object : Migration(databaseVersion6, databaseVersion7) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            run {
+                val tableName = "scope"
+
+                db.execSQL(
+                    "UPDATE $tableName SET name='toggles_default' WHERE name='$LEGACY_SCOPE_NAME'"
+                )
             }
         }
     }

@@ -17,11 +17,10 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
-import se.eelde.toggles.database.WrenchApplication
-import se.eelde.toggles.database.WrenchConfiguration
-import se.eelde.toggles.database.WrenchConfigurationValue
-import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
-import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.TogglesApplication
+import se.eelde.toggles.database.TogglesConfigurationValue
+import se.eelde.toggles.database.TogglesPredefinedConfigurationValue
+import se.eelde.toggles.database.TogglesScope
 import se.eelde.toggles.database.dao.provider.ProviderApplicationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
@@ -95,23 +94,23 @@ class TogglesProvider : ContentProvider() {
         fun provideTogglesUriMatcher(): TogglesUriMatcher
     }
 
-    private fun getCallingApplication(applicationDao: ProviderApplicationDao): WrenchApplication =
+    private fun getCallingApplication(applicationDao: ProviderApplicationDao): TogglesApplication =
         synchronized(this) {
-            var wrenchApplication: WrenchApplication? =
+            var togglesApplication: TogglesApplication? =
                 applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)
 
-            if (wrenchApplication == null) {
-                wrenchApplication = WrenchApplication(
+            if (togglesApplication == null) {
+                togglesApplication = TogglesApplication(
                     id = 0,
                     packageName = packageManagerWrapper.callingApplicationPackageName!!,
                     applicationLabel = packageManagerWrapper.applicationLabel,
                     shortcutId = packageManagerWrapper.callingApplicationPackageName!!,
                 )
 
-                wrenchApplication.id = applicationDao.insert(wrenchApplication)
+                togglesApplication.id = applicationDao.insert(togglesApplication)
             }
 
-            return wrenchApplication
+            return togglesApplication
         }
 
     override fun onCreate() = true
@@ -219,7 +218,7 @@ class TogglesProvider : ContentProvider() {
         return cursor
     }
 
-    private fun isTogglesApplication(callingApplication: WrenchApplication): Boolean {
+    private fun isTogglesApplication(callingApplication: TogglesApplication): Boolean {
         return callingApplication.packageName == context!!.packageName
     }
 
@@ -236,42 +235,47 @@ class TogglesProvider : ContentProvider() {
             UriMatch.CURRENT_CONFIGURATIONS -> {
                 val toggle = Toggle.fromContentValues(values!!)
 
-                var wrenchConfiguration: WrenchConfiguration? =
-                    configurationDao.getWrenchConfiguration(callingApplication.id, toggle.key)
+                var togglesConfiguration: se.eelde.toggles.database.TogglesConfiguration? =
+                    configurationDao.getTogglesConfiguration(callingApplication.id, toggle.key)
 
-                if (wrenchConfiguration == null) {
-                    wrenchConfiguration =
-                        WrenchConfiguration(0, callingApplication.id, toggle.key, toggle.type)
+                if (togglesConfiguration == null) {
+                    togglesConfiguration =
+                        se.eelde.toggles.database.TogglesConfiguration(
+                            id = 0,
+                            applicationId = callingApplication.id,
+                            key = toggle.key,
+                            type = toggle.type
+                        )
 
-                    wrenchConfiguration.id = configurationDao.insert(wrenchConfiguration)
+                    togglesConfiguration.id = configurationDao.insert(togglesConfiguration)
                 }
 
                 val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
 
-                val wrenchConfigurationValue = WrenchConfigurationValue(
+                val togglesConfigurationValue = TogglesConfigurationValue(
                     0,
-                    wrenchConfiguration.id,
+                    togglesConfiguration.id,
                     toggle.value,
                     defaultScope!!.id
                 )
-                wrenchConfigurationValue.configurationId = wrenchConfiguration.id
-                wrenchConfigurationValue.value = toggle.value
-                wrenchConfigurationValue.scope = defaultScope.id
+                togglesConfigurationValue.configurationId = togglesConfiguration.id
+                togglesConfigurationValue.value = toggle.value
+                togglesConfigurationValue.scope = defaultScope.id
 
                 @Suppress("SwallowedException")
                 try {
-                    wrenchConfigurationValue.id =
-                        configurationValueDao.insertSync(wrenchConfigurationValue)
+                    togglesConfigurationValue.id =
+                        configurationValueDao.insertSync(togglesConfigurationValue)
                 } catch (e: SQLiteConstraintException) {
                     // this happens when the app is initially launched because many of many calls
                     // into assertValidApiVersion()
                 }
 
-                insertId = wrenchConfiguration.id
+                insertId = togglesConfiguration.id
             }
 
             UriMatch.PREDEFINED_CONFIGURATION_VALUES -> {
-                val fullConfig = WrenchPredefinedConfigurationValue.fromContentValues(values!!)
+                val fullConfig = TogglesPredefinedConfigurationValue.fromContentValues(values!!)
                 insertId = try {
                     predefinedConfigurationDao.insert(fullConfig)
                 } catch (_: SQLiteConstraintException) {
@@ -284,13 +288,13 @@ class TogglesProvider : ContentProvider() {
 
             UriMatch.CONFIGURATIONS -> {
                 val togglesConfiguration = TogglesConfiguration.fromContentValues(values!!)
-                val wrenchConfiguration = WrenchConfiguration(
+                val databaseConfiguration = se.eelde.toggles.database.TogglesConfiguration(
                     id = togglesConfiguration.id,
                     applicationId = callingApplication.id,
                     key = togglesConfiguration.key,
                     type = togglesConfiguration.type
                 )
-                insertId = configurationDao.insert(wrenchConfiguration)
+                insertId = configurationDao.insert(databaseConfiguration)
             }
 
             else -> {
@@ -336,13 +340,13 @@ class TogglesProvider : ContentProvider() {
                     toggle.value!!
                 )
                 if (updatedRows == 0) {
-                    val wrenchConfigurationValue = WrenchConfigurationValue(
+                    val togglesConfigurationValue = TogglesConfigurationValue(
                         0,
                         java.lang.Long.parseLong(uri.lastPathSegment!!),
                         toggle.value,
                         scope.id
                     )
-                    configurationValueDao.insertSync(wrenchConfigurationValue)
+                    configurationValueDao.insertSync(togglesConfigurationValue)
                 }
             }
 
@@ -450,15 +454,15 @@ class TogglesProvider : ContentProvider() {
             context: Context?,
             scopeDao: ProviderScopeDao?,
             applicationId: Long
-        ): WrenchScope? {
+        ): TogglesScope? {
             if (context == null) {
                 return null
             }
 
-            var scope: WrenchScope? = scopeDao!!.getDefaultScope(applicationId)
+            var scope: TogglesScope? = scopeDao!!.getDefaultScope(applicationId)
 
             if (scope == null) {
-                scope = WrenchScope.newWrenchScope()
+                scope = TogglesScope.newScope()
                 scope.applicationId = applicationId
                 val id = scopeDao.insert(scope)
                 scope.id = id
@@ -471,22 +475,22 @@ class TogglesProvider : ContentProvider() {
             context: Context?,
             scopeDao: ProviderScopeDao?,
             applicationId: Long
-        ): WrenchScope? {
+        ): TogglesScope? {
             if (context == null) {
                 return null
             }
 
-            var scope: WrenchScope? = scopeDao!!.getSelectedScope(applicationId)
+            var scope: TogglesScope? = scopeDao!!.getSelectedScope(applicationId)
 
             if (scope == null) {
-                val defaultScope = WrenchScope.newWrenchScope()
+                val defaultScope = TogglesScope.newScope()
                 defaultScope.applicationId = applicationId
                 defaultScope.id = scopeDao.insert(defaultScope)
 
-                val customScope = WrenchScope.newWrenchScope()
+                val customScope = TogglesScope.newScope()
                 customScope.applicationId = applicationId
                 customScope.timeStamp = Date(defaultScope.timeStamp.time + oneSecond)
-                customScope.name = WrenchScope.SCOPE_USER
+                customScope.name = TogglesScope.SCOPE_USER
                 customScope.id = scopeDao.insert(customScope)
 
                 scope = customScope

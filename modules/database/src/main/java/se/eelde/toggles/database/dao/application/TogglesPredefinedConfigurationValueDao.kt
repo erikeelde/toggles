@@ -6,7 +6,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
+import se.eelde.toggles.database.TogglesPredefinedConfigurationValue
 import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
 
 @Dao
@@ -15,7 +15,7 @@ interface TogglesPredefinedConfigurationValueDao {
     @Query(
         """SELECT * FROM ${PredefinedConfigurationValueTable.TABLE_NAME} WHERE ${PredefinedConfigurationValueTable.COL_CONFIG_ID} = (:configurationId)"""
     )
-    fun getByConfigurationId(configurationId: Long): Flow<List<WrenchPredefinedConfigurationValue>>
+    fun getByConfigurationId(configurationId: Long): Flow<List<TogglesPredefinedConfigurationValue>>
 
     @Query(
         """SELECT * FROM ${PredefinedConfigurationValueTable.TABLE_NAME} WHERE ${PredefinedConfigurationValueTable.COL_CONFIG_ID} = (:configurationId) AND ${PredefinedConfigurationValueTable.COL_VALUE} = (:value) """
@@ -23,8 +23,8 @@ interface TogglesPredefinedConfigurationValueDao {
     fun getByConfigurationAndValueId(
         configurationId: Long,
         value: String
-    ): WrenchPredefinedConfigurationValue
+    ): TogglesPredefinedConfigurationValue
 
     @Insert
-    fun insert(fullConfig: WrenchPredefinedConfigurationValue): Long
+    fun insert(fullConfig: TogglesPredefinedConfigurationValue): Long
 }
