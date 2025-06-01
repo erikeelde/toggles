@@ -30,7 +30,7 @@ import se.eelde.toggles.R
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.database.WrenchDatabase
+import se.eelde.toggles.database.TogglesDatabase
 import se.eelde.toggles.di.DatabaseModule
 import se.eelde.toggles.provider.TogglesProvider
 import javax.inject.Inject
@@ -51,8 +51,8 @@ class TogglesProviderMatcherConfigurationIdTest {
     object TestModule {
         @Singleton
         @Provides
-        fun provideWrenchDb(@ApplicationContext context: Context): WrenchDatabase {
-            return Room.inMemoryDatabaseBuilder(context, WrenchDatabase::class.java)
+        fun provideTogglesDb(@ApplicationContext context: Context): TogglesDatabase {
+            return Room.inMemoryDatabaseBuilder(context, TogglesDatabase::class.java)
                 .allowMainThreadQueries().build()
         }
     }
@@ -63,7 +63,7 @@ class TogglesProviderMatcherConfigurationIdTest {
     }
 
     @Inject
-    lateinit var wrenchDatabase: WrenchDatabase
+    lateinit var togglesDatabase: TogglesDatabase
 
     @Before
     fun setUp() {

@@ -32,10 +32,6 @@ buildCache {
     }
 }
 
-val localLibaries = providers.gradleProperty("se-eelde-toggles-use-local-libraries")
-    .map { it.toBoolean() }
-    .orElse(false)
-
 rootProject.name = "Toggles"
 includeBuild("build-logic/conventions")
 include(
@@ -62,7 +58,9 @@ include(":toggles-prefs-noop")
 
 
 dependencyResolutionManagement {
+    @Suppress("UnstableApiUsage")
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    @Suppress("UnstableApiUsage")
     repositories {
         google()
         mavenCentral()

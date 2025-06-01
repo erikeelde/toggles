@@ -21,7 +21,7 @@ public object ColumnNames {
         public const val COL_NAME: String = "name"
         public const val COL_SELECTED_TIMESTAMP: String = "selectedTimestamp"
 
-        public const val DEFAULT_SCOPE: String = "wrench_default"
+        public const val DEFAULT_SCOPE: String = "toggles_default"
     }
 
     public object Configuration {

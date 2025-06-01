@@ -16,16 +16,16 @@ import se.eelde.toggles.database.dao.provider.ProviderScopeDao
 
 @Database(
     entities = [
-        WrenchApplication::class,
-        WrenchConfiguration::class,
-        WrenchConfigurationValue::class,
-        WrenchPredefinedConfigurationValue::class,
-        WrenchScope::class,
+        TogglesApplication::class,
+        TogglesConfiguration::class,
+        TogglesConfigurationValue::class,
+        TogglesPredefinedConfigurationValue::class,
+        TogglesScope::class,
     ],
-    version = 6
+    version = 7
 )
 @TypeConverters(RoomDateConverter::class)
-abstract class WrenchDatabase : RoomDatabase() {
+abstract class TogglesDatabase : RoomDatabase() {
 
     abstract fun togglesApplicationDao(): TogglesApplicationDao
     abstract fun providerApplicationDao(): ProviderApplicationDao

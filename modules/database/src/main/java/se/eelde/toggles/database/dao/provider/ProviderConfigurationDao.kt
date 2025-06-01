@@ -6,7 +6,7 @@ import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import se.eelde.toggles.database.WrenchConfiguration
+import se.eelde.toggles.database.TogglesConfiguration
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.ConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
@@ -69,7 +69,7 @@ interface ProviderConfigurationDao {
             " FROM " + ConfigurationTable.TABLE_NAME +
             " WHERE configuration.applicationId = (:applicationId) AND configuration.configurationKey = (:configurationKey)"
     )
-    fun getWrenchConfiguration(applicationId: Long, configurationKey: String): WrenchConfiguration?
+    fun getTogglesConfiguration(applicationId: Long, configurationKey: String): TogglesConfiguration?
 
     @Query("DELETE FROM configuration WHERE applicationId = :callingApplication AND id = :id")
     fun deleteConfiguration(callingApplication: Long, id: Long): Int
@@ -80,7 +80,7 @@ interface ProviderConfigurationDao {
     fun deleteConfiguration(callingApplication: Long, configurationKey: String): Int
 
     @Insert
-    fun insert(wrenchConfiguration: WrenchConfiguration): Long
+    fun insert(togglesConfiguration: TogglesConfiguration): Long
 
     @Query("UPDATE configuration set lastUse=:date WHERE id= :configurationId")
     suspend fun touch(configurationId: Long, date: Date)

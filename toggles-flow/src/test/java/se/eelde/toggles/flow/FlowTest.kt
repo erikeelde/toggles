@@ -10,8 +10,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
-import se.eelde.toggles.database.FakeWrenchDatabase
-import se.eelde.toggles.database.WrenchDatabase
+import se.eelde.toggles.database.FakeTogglesDatabase
+import se.eelde.toggles.database.TogglesDatabase
 import se.eelde.toggles.provider.RobolectricTogglesProvider
 import se.eelde.toggles.provider.TogglesProvider
 
@@ -21,11 +21,11 @@ internal class FlowTest {
     val context = ApplicationProvider.getApplicationContext<Application>()
 
     private lateinit var togglesProvider: TogglesProvider
-    private lateinit var database: WrenchDatabase
+    private lateinit var database: TogglesDatabase
 
     @Before
     fun setUp() {
-        database = FakeWrenchDatabase.create(context)
+        database = FakeTogglesDatabase.create(context)
         togglesProvider = RobolectricTogglesProvider.create(
             context,
             database,

@@ -81,19 +81,19 @@ internal fun EnumValueView(
                 text = state.title ?: ""
             )
             LazyColumn {
-                state.configurationValues.forEach { wrenchPredefinedConfigurationValue ->
+                state.configurationValues.forEach { togglesPredefinedConfigurationValue ->
                     item {
                         val selected =
-                            wrenchPredefinedConfigurationValue.value == state.selectedConfigurationValue?.value
+                            togglesPredefinedConfigurationValue.value == state.selectedConfigurationValue?.value
                         ListItem(
                             modifier = Modifier.selectable(
                                 selected = selected
                             ) {
                                 scope.launch {
-                                    setEnumValue(wrenchPredefinedConfigurationValue.value.toString())
+                                    setEnumValue(togglesPredefinedConfigurationValue.value.toString())
                                 }
                             },
-                            headlineContent = { Text(text = wrenchPredefinedConfigurationValue.value.toString()) },
+                            headlineContent = { Text(text = togglesPredefinedConfigurationValue.value.toString()) },
                             leadingContent = {
                                 if (selected) {
                                     Icon(

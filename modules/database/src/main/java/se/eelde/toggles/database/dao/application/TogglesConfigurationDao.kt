@@ -8,8 +8,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
-import se.eelde.toggles.database.WrenchConfiguration
-import se.eelde.toggles.database.WrenchConfigurationWithValues
+import se.eelde.toggles.database.TogglesConfiguration
+import se.eelde.toggles.database.TogglesConfigurationWithValues
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.ConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
@@ -72,33 +72,33 @@ interface TogglesConfigurationDao {
             " FROM " + ConfigurationTable.TABLE_NAME +
             " WHERE configuration.applicationId = (:applicationId) AND configuration.configurationKey = (:configurationKey)"
     )
-    fun getWrenchConfiguration(applicationId: Long, configurationKey: String): WrenchConfiguration?
+    fun getTogglesConfiguration(applicationId: Long, configurationKey: String): TogglesConfiguration?
 
     @Query(
         "SELECT * " +
             " FROM " + ConfigurationTable.TABLE_NAME +
             " WHERE configuration.applicationId = (:applicationId) AND configuration.configurationKey = (:configurationKey)"
     )
-    fun getWrenchConfigurationByKey(
+    fun getTogglesConfigurationByKey(
         applicationId: Long,
         configurationKey: String
-    ): WrenchConfiguration?
+    ): TogglesConfiguration?
 
     @Query(
         "SELECT * " +
             " FROM " + ConfigurationTable.TABLE_NAME +
             " WHERE configuration.applicationId = (:applicationId) AND configuration.id = (:configurationId)"
     )
-    fun getWrenchConfigurationById(applicationId: Long, configurationId: Long): WrenchConfiguration?
+    fun getTogglesConfigurationById(applicationId: Long, configurationId: Long): TogglesConfiguration?
 
     @Query("SELECT * FROM configuration WHERE id = :configurationId")
-    fun getConfiguration(configurationId: Long): Flow<WrenchConfiguration>
+    fun getConfiguration(configurationId: Long): Flow<TogglesConfiguration>
 
     @Transaction
     @Query(
         "SELECT id, applicationId, configurationKey, configurationType FROM configuration WHERE applicationId = :applicationId ORDER BY lastUse DESC"
     )
-    fun getApplicationConfigurations(applicationId: Long): Flow<List<WrenchConfigurationWithValues>>
+    fun getApplicationConfigurations(applicationId: Long): Flow<List<TogglesConfigurationWithValues>>
 
     @Transaction
     @Query(
@@ -107,7 +107,7 @@ interface TogglesConfigurationDao {
     fun getApplicationConfigurations(
         applicationId: Long,
         query: String
-    ): Flow<List<WrenchConfigurationWithValues>>
+    ): Flow<List<TogglesConfigurationWithValues>>
 
     @Query("DELETE FROM configuration WHERE applicationId = :callingApplication AND id = :id")
     fun deleteConfiguration(callingApplication: Long, id: Long): Int
@@ -118,7 +118,7 @@ interface TogglesConfigurationDao {
     fun deleteConfiguration(callingApplication: Long, configurationKey: String): Int
 
     @Insert
-    fun insert(wrenchConfiguration: WrenchConfiguration): Long
+    fun insert(togglesConfiguration: TogglesConfiguration): Long
 
     @Query("UPDATE configuration set lastUse=:date WHERE id= :configurationId")
     suspend fun touch(configurationId: Long, date: Date)

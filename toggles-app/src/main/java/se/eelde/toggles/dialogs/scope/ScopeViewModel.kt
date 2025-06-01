@@ -11,15 +11,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.TogglesScope
 import se.eelde.toggles.database.dao.application.TogglesScopeDao
 import se.eelde.toggles.routes.Scope
 import java.util.Date
 
 internal data class ViewState(
     val title: String? = null,
-    val scopes: List<WrenchScope> = listOf(),
-    val selectedScope: WrenchScope? = null,
+    val scopes: List<TogglesScope> = listOf(),
+    val selectedScope: TogglesScope? = null,
     val saving: Boolean = false,
     val reverting: Boolean = false
 )
@@ -27,7 +27,7 @@ internal data class ViewState(
 private sealed class PartialViewState {
     object Empty : PartialViewState()
     data class NewConfiguration(val title: String?) : PartialViewState()
-    class Scopes(val scopes: List<WrenchScope>) : PartialViewState()
+    class Scopes(val scopes: List<TogglesScope>) : PartialViewState()
     object Saving : PartialViewState()
     object Reverting : PartialViewState()
 }
@@ -52,7 +52,7 @@ class ScopeViewModel @AssistedInject internal constructor(
     internal val state: StateFlow<ViewState>
         get() = _state
 
-    internal var selectedScope: WrenchScope? = null
+    internal var selectedScope: TogglesScope? = null
 
     init {
         viewModelScope.launch {
@@ -77,25 +77,25 @@ class ScopeViewModel @AssistedInject internal constructor(
         }
     }
 
-    internal fun selectScope(wrenchScope: WrenchScope) {
+    internal fun selectScope(togglesScope: TogglesScope) {
         viewModelScope.launch {
-            wrenchScope.timeStamp = Date()
-            scopeDao.update(wrenchScope)
+            togglesScope.timeStamp = Date()
+            scopeDao.update(togglesScope)
         }
     }
 
     internal fun createScope(scopeName: String) {
         viewModelScope.launch {
-            val wrenchScope = WrenchScope.newWrenchScope()
-            wrenchScope.name = scopeName
-            wrenchScope.applicationId = applicationId
+            val togglesScope = TogglesScope.newScope()
+            togglesScope.name = scopeName
+            togglesScope.applicationId = applicationId
             withContext(Dispatchers.IO) {
-                wrenchScope.id = scopeDao.insert(wrenchScope)
+                togglesScope.id = scopeDao.insert(togglesScope)
             }
         }
     }
 
-    internal fun removeScope(scope: WrenchScope) {
+    internal fun removeScope(scope: TogglesScope) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 scopeDao.delete(scope)

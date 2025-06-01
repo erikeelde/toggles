@@ -19,9 +19,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import se.eelde.toggles.core.Toggle
-import se.eelde.toggles.database.WrenchConfigurationValue
-import se.eelde.toggles.database.WrenchConfigurationWithValues
-import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.TogglesConfigurationValue
+import se.eelde.toggles.database.TogglesConfigurationWithValues
+import se.eelde.toggles.database.TogglesScope
 
 @Composable
 @Suppress("LongParameterList")
@@ -96,16 +96,16 @@ internal fun ConfigurationListView(
 
 @Suppress("ReturnCount")
 private fun getItemForScope(
-    scope: WrenchScope?,
-    wrenchConfigurationValues: Set<WrenchConfigurationValue>
-): WrenchConfigurationValue? {
+    scope: TogglesScope?,
+    togglesConfigurationValues: Set<TogglesConfigurationValue>
+): TogglesConfigurationValue? {
     if (scope == null) {
         return null
     }
 
-    for (wrenchConfigurationValue in wrenchConfigurationValues) {
-        if (wrenchConfigurationValue.scope == scope.id) {
-            return wrenchConfigurationValue
+    for (togglesConfigurationValue in togglesConfigurationValues) {
+        if (togglesConfigurationValue.scope == scope.id) {
+            return togglesConfigurationValue
         }
     }
 
@@ -118,8 +118,8 @@ fun configurationClicked(
     navigateToIntegerConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
     navigateToStringConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
     navigateToEnumConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
-    configuration: WrenchConfigurationWithValues,
-    selectedScope: WrenchScope?
+    configuration: TogglesConfigurationWithValues,
+    selectedScope: TogglesScope?
 ) {
 //    if (viewModel.selectedScopeLiveData.value == null) {
 //        Snackbar.make(binding.animator, "No selected scope found", Snackbar.LENGTH_LONG).show()

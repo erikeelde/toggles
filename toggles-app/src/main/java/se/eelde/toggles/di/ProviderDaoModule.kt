@@ -4,27 +4,27 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import se.eelde.toggles.database.WrenchDatabase
+import se.eelde.toggles.database.TogglesDatabase
 
 @Module
 @InstallIn(SingletonComponent::class)
 object ProviderDaoModule {
     @Provides
-    fun provideProviderApplicationDao(wrenchDatabase: WrenchDatabase) =
-        wrenchDatabase.providerApplicationDao()
+    fun provideProviderApplicationDao(togglesDatabase: TogglesDatabase) =
+        togglesDatabase.providerApplicationDao()
 
     @Provides
-    fun provideProviderConfigurationDao(wrenchDatabase: WrenchDatabase) =
-        wrenchDatabase.providerConfigurationDao()
+    fun provideProviderConfigurationDao(togglesDatabase: TogglesDatabase) =
+        togglesDatabase.providerConfigurationDao()
 
     @Provides
-    fun provideProviderConfigurationValueDao(wrenchDatabase: WrenchDatabase) =
-        wrenchDatabase.providerConfigurationValueDao()
+    fun provideProviderConfigurationValueDao(togglesDatabase: TogglesDatabase) =
+        togglesDatabase.providerConfigurationValueDao()
 
     @Provides
-    fun provideProviderScopeDao(wrenchDatabase: WrenchDatabase) = wrenchDatabase.providerScopeDao()
+    fun provideProviderScopeDao(togglesDatabase: TogglesDatabase) = togglesDatabase.providerScopeDao()
 
     @Provides
-    fun provideProviderPredefinedConfigurationValueDao(wrenchDatabase: WrenchDatabase) =
-        wrenchDatabase.providerPredefinedConfigurationValueDao()
+    fun provideProviderPredefinedConfigurationValueDao(togglesDatabase: TogglesDatabase) =
+        togglesDatabase.providerPredefinedConfigurationValueDao()
 }

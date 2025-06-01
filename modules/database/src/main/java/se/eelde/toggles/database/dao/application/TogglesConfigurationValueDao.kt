@@ -8,7 +8,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import se.eelde.toggles.database.WrenchConfigurationValue
+import se.eelde.toggles.database.TogglesConfigurationValue
 import se.eelde.toggles.database.tables.ConfigurationValueTable
 
 @Dao
@@ -17,7 +17,7 @@ interface TogglesConfigurationValueDao {
         "SELECT * FROM " + ConfigurationValueTable.TABLE_NAME +
             " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId) AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId)"
     )
-    fun getConfigurationValue(configurationId: Long, scopeId: Long): Flow<WrenchConfigurationValue?>
+    fun getConfigurationValue(configurationId: Long, scopeId: Long): Flow<TogglesConfigurationValue?>
 
     @Query(
         "UPDATE " + ConfigurationValueTable.TABLE_NAME +
@@ -34,14 +34,14 @@ interface TogglesConfigurationValueDao {
     suspend fun updateConfigurationValue(configurationId: Long, scopeId: Long, value: String): Int
 
     @Insert
-    fun insertSync(wrenchConfigurationValue: WrenchConfigurationValue): Long
+    fun insertSync(togglesConfigurationValue: TogglesConfigurationValue): Long
 
     @Insert
-    suspend fun insert(wrenchConfigurationValue: WrenchConfigurationValue): Long
+    suspend fun insert(togglesConfigurationValue: TogglesConfigurationValue): Long
 
     @Update
-    fun update(wrenchConfigurationValue: WrenchConfigurationValue): Int
+    fun update(togglesConfigurationValue: TogglesConfigurationValue): Int
 
     @Delete
-    suspend fun delete(selectedConfigurationValue: WrenchConfigurationValue)
+    suspend fun delete(selectedConfigurationValue: TogglesConfigurationValue)
 }

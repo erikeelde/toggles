@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.database.WrenchConfigurationValue
-import se.eelde.toggles.database.WrenchPredefinedConfigurationValue
+import se.eelde.toggles.database.TogglesConfigurationValue
+import se.eelde.toggles.database.TogglesPredefinedConfigurationValue
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.database.dao.application.TogglesPredefinedConfigurationValueDao
@@ -26,8 +26,8 @@ import java.util.Date
 
 data class ViewState(
     val title: String? = null,
-    val selectedConfigurationValue: WrenchConfigurationValue? = null,
-    val configurationValues: List<WrenchPredefinedConfigurationValue> = listOf(),
+    val selectedConfigurationValue: TogglesConfigurationValue? = null,
+    val configurationValues: List<TogglesPredefinedConfigurationValue> = listOf(),
     val saving: Boolean = false,
     val reverting: Boolean = false
 )
@@ -35,10 +35,10 @@ data class ViewState(
 internal sealed class PartialViewState {
     data object Empty : PartialViewState()
     data class NewConfiguration(val title: String?) : PartialViewState()
-    data class ConfigurationValues(val configurationValues: List<WrenchPredefinedConfigurationValue>) :
+    data class ConfigurationValues(val configurationValues: List<TogglesPredefinedConfigurationValue>) :
         PartialViewState()
 
-    data class SelectedConfigurationValue(val selectedConfigurationValue: WrenchConfigurationValue) :
+    data class SelectedConfigurationValue(val selectedConfigurationValue: TogglesConfigurationValue) :
         PartialViewState()
 
     data object Saving : PartialViewState()
@@ -69,7 +69,7 @@ class EnumValueViewModel @AssistedInject internal constructor(
     private val configurationId: Long = enumConfiguration.configurationId
     private val scopeId: Long = enumConfiguration.scopeId
 
-    private var selectedConfigurationValue: WrenchConfigurationValue? = null
+    private var selectedConfigurationValue: TogglesConfigurationValue? = null
 
     init {
         viewModelScope.launch {
@@ -147,9 +147,9 @@ class EnumValueViewModel @AssistedInject internal constructor(
             if (selectedConfigurationValue != null) {
                 configurationValueDao.updateConfigurationValue(configurationId, scopeId, value)
             } else {
-                val wrenchConfigurationValue =
-                    WrenchConfigurationValue(0, configurationId, value, scopeId)
-                wrenchConfigurationValue.id = configurationValueDao.insert(wrenchConfigurationValue)
+                val togglesConfigurationValue =
+                    TogglesConfigurationValue(0, configurationId, value, scopeId)
+                togglesConfigurationValue.id = configurationValueDao.insert(togglesConfigurationValue)
             }
             configurationDao.touch(configurationId, Date())
 

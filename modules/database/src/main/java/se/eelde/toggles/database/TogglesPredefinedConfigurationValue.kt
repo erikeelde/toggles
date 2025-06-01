@@ -22,7 +22,7 @@ import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
     ],
     foreignKeys = [
         ForeignKey(
-            entity = WrenchConfiguration::class,
+            entity = TogglesConfiguration::class,
             parentColumns = arrayOf(
                 ConfigurationTable.COL_ID
             ),
@@ -31,7 +31,7 @@ import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
         )
     ]
 )
-data class WrenchPredefinedConfigurationValue constructor(
+data class TogglesPredefinedConfigurationValue constructor(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = PredefinedConfigurationValueTable.COL_ID)
     var id: Long,
@@ -45,19 +45,19 @@ data class WrenchPredefinedConfigurationValue constructor(
     companion object {
 
         @JvmStatic
-        fun fromContentValues(values: ContentValues): WrenchPredefinedConfigurationValue {
-            val wrenchConfigurationValue =
-                WrenchPredefinedConfigurationValue(id = 0, configurationId = 0, value = null)
+        fun fromContentValues(values: ContentValues): TogglesPredefinedConfigurationValue {
+            val togglesPredefinedConfigurationValue =
+                TogglesPredefinedConfigurationValue(id = 0, configurationId = 0, value = null)
             if (values.containsKey(PredefinedConfigurationValueTable.COL_ID)) {
-                wrenchConfigurationValue.id =
+                togglesPredefinedConfigurationValue.id =
                     values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!
             }
-            wrenchConfigurationValue.configurationId =
+            togglesPredefinedConfigurationValue.configurationId =
                 values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!
-            wrenchConfigurationValue.value =
+            togglesPredefinedConfigurationValue.value =
                 values.getAsString(PredefinedConfigurationValueTable.COL_VALUE)
 
-            return wrenchConfigurationValue
+            return togglesPredefinedConfigurationValue
         }
     }
 }

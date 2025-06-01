@@ -20,27 +20,27 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import se.eelde.toggles.database.WrenchApplication
-import se.eelde.toggles.database.WrenchConfigurationWithValues
-import se.eelde.toggles.database.WrenchScope
+import se.eelde.toggles.database.TogglesApplication
+import se.eelde.toggles.database.TogglesConfigurationWithValues
+import se.eelde.toggles.database.TogglesScope
 import se.eelde.toggles.database.dao.application.TogglesApplicationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesScopeDao
 
 internal data class ViewState(
-    val application: WrenchApplication? = null,
-    val configurations: List<WrenchConfigurationWithValues> = listOf(),
-    val defaultScope: WrenchScope? = null,
-    val selectedScope: WrenchScope? = null,
+    val application: TogglesApplication? = null,
+    val configurations: List<TogglesConfigurationWithValues> = listOf(),
+    val defaultScope: TogglesScope? = null,
+    val selectedScope: TogglesScope? = null,
 )
 
 internal sealed class PartialViewState {
     object Empty : PartialViewState()
-    data class Configurations(val configurations: List<WrenchConfigurationWithValues>) :
+    data class Configurations(val configurations: List<TogglesConfigurationWithValues>) :
         PartialViewState()
 
-    data class SelectedScope(val scope: WrenchScope) : PartialViewState()
-    data class DefaultScope(val scope: WrenchScope) : PartialViewState()
+    data class SelectedScope(val scope: TogglesScope) : PartialViewState()
+    data class DefaultScope(val scope: TogglesScope) : PartialViewState()
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -127,19 +127,19 @@ class ConfigurationViewModel @AssistedInject internal constructor(
         savedStateHandle["query"] = query
     }
 
-    internal fun deleteApplication(wrenchApplication: WrenchApplication) {
+    internal fun deleteApplication(togglesApplication: TogglesApplication) {
         viewModelScope.launch {
-            applicationDao.delete(wrenchApplication)
+            applicationDao.delete(togglesApplication)
         }
     }
 
-    fun restartApplication(wrenchApplication: WrenchApplication) {
+    fun restartApplication(togglesApplication: TogglesApplication) {
         val activityManager =
             context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        activityManager.killBackgroundProcesses(wrenchApplication.packageName)
+        activityManager.killBackgroundProcesses(togglesApplication.packageName)
 
         val intent =
-            context.packageManager.getLaunchIntentForPackage(wrenchApplication.packageName)
+            context.packageManager.getLaunchIntentForPackage(togglesApplication.packageName)
         if (intent != null) {
             context.startActivity(Intent.makeRestartActivityTask(intent.component))
         }

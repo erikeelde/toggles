@@ -1,14 +1,10 @@
 package se.eelde.toggles.provider
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import androidx.core.graphics.drawable.toDrawable
-import androidx.room.Room
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import org.robolectric.Robolectric
 import org.robolectric.Shadows.shadowOf
-import se.eelde.toggles.database.WrenchDatabase
+import se.eelde.toggles.database.TogglesDatabase
 import se.eelde.toggles.database.dao.provider.ProviderApplicationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
@@ -19,7 +15,7 @@ import se.eelde.toggles.flow.Toggles
 object RobolectricTogglesProvider {
     fun create(
         context: Context,
-        database: WrenchDatabase,
+        database: TogglesDatabase,
         toggles: Toggles
     ): TogglesProvider {
         val contentProviderController =

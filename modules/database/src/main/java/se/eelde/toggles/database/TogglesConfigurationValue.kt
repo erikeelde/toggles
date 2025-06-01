@@ -22,7 +22,7 @@ import se.eelde.toggles.database.tables.ConfigurationValueTable
     ],
     foreignKeys = [
         ForeignKey(
-            entity = WrenchConfiguration::class,
+            entity = TogglesConfiguration::class,
             parentColumns = arrayOf(
                 ConfigurationTable.COL_ID
             ),
@@ -31,7 +31,7 @@ import se.eelde.toggles.database.tables.ConfigurationValueTable
         )
     ]
 )
-data class WrenchConfigurationValue(
+data class TogglesConfigurationValue(
     @field:PrimaryKey(autoGenerate = true)
     @field:ColumnInfo(name = ConfigurationValueTable.COL_ID)
     var id: Long,

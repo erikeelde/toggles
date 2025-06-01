@@ -14,7 +14,7 @@ import java.util.Date
     indices = [Index(value = arrayOf(ConfigurationTable.COL_APP_ID, ConfigurationTable.COL_KEY), unique = true)],
     foreignKeys = [
         ForeignKey(
-            entity = WrenchApplication::class,
+            entity = TogglesApplication::class,
             parentColumns = arrayOf(
                 ApplicationTable.COL_ID
             ),
@@ -23,7 +23,7 @@ import java.util.Date
         )
     ]
 )
-data class WrenchConfiguration(
+data class TogglesConfiguration(
     @field:PrimaryKey(autoGenerate = true)
     @field:ColumnInfo(name = ConfigurationTable.COL_ID)
     var id: Long,

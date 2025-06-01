@@ -7,7 +7,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import se.eelde.toggles.database.WrenchConfigurationValue
+import se.eelde.toggles.database.TogglesConfigurationValue
 import se.eelde.toggles.database.tables.ConfigurationValueTable
 
 @Dao
@@ -20,14 +20,14 @@ interface ProviderConfigurationValueDao {
     fun updateConfigurationValueSync(configurationId: Long, scopeId: Long, value: String): Int
 
     @Insert
-    fun insertSync(wrenchConfigurationValue: WrenchConfigurationValue): Long
+    fun insertSync(togglesConfigurationValue: TogglesConfigurationValue): Long
 
     @Insert
-    suspend fun insert(wrenchConfigurationValue: WrenchConfigurationValue): Long
+    suspend fun insert(togglesConfigurationValue: TogglesConfigurationValue): Long
 
     @Update
-    fun update(wrenchConfigurationValue: WrenchConfigurationValue): Int
+    fun update(togglesConfigurationValue: TogglesConfigurationValue): Int
 
     @Delete
-    suspend fun delete(selectedConfigurationValue: WrenchConfigurationValue)
+    suspend fun delete(selectedConfigurationValue: TogglesConfigurationValue)
 }

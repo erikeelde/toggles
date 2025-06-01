@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.database.WrenchConfigurationValue
+import se.eelde.toggles.database.TogglesConfigurationValue
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.provider.notifyUpdate
@@ -58,7 +58,7 @@ class IntegerValueViewModel @AssistedInject internal constructor(
     private val configurationId: Long = integerConfiguration.configurationId
     private val scopeId: Long = integerConfiguration.scopeId
 
-    private var selectedConfigurationValue: WrenchConfigurationValue? = null
+    private var selectedConfigurationValue: TogglesConfigurationValue? = null
 
     init {
         viewModelScope.launch {
@@ -130,9 +130,9 @@ class IntegerValueViewModel @AssistedInject internal constructor(
             if (selectedConfigurationValue != null) {
                 configurationValueDao.updateConfigurationValue(configurationId, scopeId, value.toString())
             } else {
-                val wrenchConfigurationValue =
-                    WrenchConfigurationValue(0, configurationId, value.toString(), scopeId)
-                wrenchConfigurationValue.id = configurationValueDao.insert(wrenchConfigurationValue)
+                val togglesConfigurationValue =
+                    TogglesConfigurationValue(0, configurationId, value.toString(), scopeId)
+                togglesConfigurationValue.id = configurationValueDao.insert(togglesConfigurationValue)
             }
             configurationDao.touch(configurationId, Date())
 

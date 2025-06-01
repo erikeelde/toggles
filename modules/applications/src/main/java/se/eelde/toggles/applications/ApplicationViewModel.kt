@@ -6,17 +6,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import se.eelde.toggles.database.WrenchApplication
+import se.eelde.toggles.database.TogglesApplication
 import se.eelde.toggles.database.dao.application.TogglesApplicationDao
 import javax.inject.Inject
 
 internal data class ViewState(
-    val applications: List<WrenchApplication> = listOf(),
+    val applications: List<TogglesApplication> = listOf(),
 )
 
 internal sealed class PartialViewState {
     object Empty : PartialViewState()
-    class Applications(val applications: List<WrenchApplication>) :
+    class Applications(val applications: List<TogglesApplication>) :
         PartialViewState()
 }
 
