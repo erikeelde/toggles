@@ -70,11 +70,11 @@ fun EntryProviderBuilder<*>.applicationNavigations(
                     TopAppBar(
                         title = { Text("Applications") },
                         navigationIcon =
-                            {
-                                IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                    Icon(imageVector = Icons.Filled.Menu, contentDescription = null)
-                                }
+                        {
+                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                Icon(imageVector = Icons.Filled.Menu, contentDescription = null)
                             }
+                        }
                     )
                 },
             ) { paddingValues ->

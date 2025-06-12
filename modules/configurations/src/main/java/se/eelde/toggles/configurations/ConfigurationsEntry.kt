@@ -35,7 +35,6 @@ import androidx.navigation3.runtime.EntryProviderBuilder
 import androidx.navigation3.runtime.entry
 import se.eelde.toggles.routes.Configurations
 
-
 @Suppress("LongMethod", "LongParameterList")
 @OptIn(ExperimentalMaterial3Api::class)
 fun EntryProviderBuilder<*>.configurationsNavigations(
@@ -90,14 +89,14 @@ fun EntryProviderBuilder<*>.configurationsNavigations(
                         }
                     },
                     navigationIcon =
-                        {
-                            IconButton(onClick = { back() }) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
-                        },
+                    {
+                        IconButton(onClick = { back() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null
+                            )
+                        }
+                    },
                     actions = {
                         var showMenu by rememberSaveable { mutableStateOf(false) }
 

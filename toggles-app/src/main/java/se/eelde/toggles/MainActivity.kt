@@ -61,6 +61,7 @@ fun Navigation(
     val backStack = remember { mutableStateListOf<Any>(Applications) }
 
     NavDisplay(
+        modifier = modifier,
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         entryDecorators = listOf(
@@ -110,14 +111,14 @@ fun Navigation(
                         TopAppBar(
                             title = { Text("") },
                             navigationIcon =
-                                {
-                                    IconButton(onClick = { navController.popBackStack() }) {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = null
-                                        )
-                                    }
+                            {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = null
+                                    )
                                 }
+                            }
                         )
                     },
                 ) { paddingValues ->
@@ -158,10 +159,8 @@ fun Navigation(
                     backStack.add(Scope(applicationId))
                 }
             ) { navController.popBackStack() }
-
         }
     )
-
 }
 
 @AndroidEntryPoint
