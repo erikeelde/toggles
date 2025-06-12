@@ -34,19 +34,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import androidx.navigation3.runtime.EntryProviderBuilder
+import androidx.navigation3.runtime.entry
 import kotlinx.coroutines.launch
 import se.eelde.toggles.routes.Applications
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun NavGraphBuilder.applicationNavigations(
+fun EntryProviderBuilder<*>.applicationNavigations(
     navigateToConfigurations: (Long) -> Unit,
     navigateToApplications: () -> Unit,
     navigateToOss: () -> Unit,
     navigateToHelp: () -> Unit,
 ) {
-    composable<Applications> {
+    entry<Applications> {
         val viewModel = hiltViewModel<ApplicationViewModel>()
         val viewState = viewModel.state.collectAsState()
 
@@ -70,11 +70,11 @@ fun NavGraphBuilder.applicationNavigations(
                     TopAppBar(
                         title = { Text("Applications") },
                         navigationIcon =
-                        {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(imageVector = Icons.Filled.Menu, contentDescription = null)
+                            {
+                                IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                    Icon(imageVector = Icons.Filled.Menu, contentDescription = null)
+                                }
                             }
-                        }
                     )
                 },
             ) { paddingValues ->

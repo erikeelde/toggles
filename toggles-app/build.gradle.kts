@@ -139,6 +139,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3.android)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.startup.startup.runtime)
     implementation(projects.modules.routes)
