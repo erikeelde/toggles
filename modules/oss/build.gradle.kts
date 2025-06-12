@@ -28,10 +28,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.ui.text)
     implementation(libs.org.jetbrains.kotlinx.kotlinx.collections.immutable)
 
-    implementation(libs.androidx.navigation.navigation.compose)
-
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
 
     implementation(libs.com.squareup.moshi)

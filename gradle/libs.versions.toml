@@ -1,12 +1,11 @@
 [versions]
 agp = "8.10.1"
 androidx-activity = "1.10.1"
-androidx-appcompat = "1.7.0"
+androidx-appcompat = "1.7.1"
 androidx-arch-core = "2.2.0"
-androidx-compose-bom = "2025.05.01"
+androidx-compose-bom = "2025.06.00"
 androidx-hilt = "1.2.0"
-androidx-lifecycle = "2.9.0"
-androidx-navigation = "2.9.0"
+androidx-lifecycle = "2.9.1"
 androidx-room = "2.7.1"
 androidx-test = "1.6.1"
 com-google-dagger = "2.56.2"
@@ -18,10 +17,15 @@ espresso-core = "3.6.1"
 io-gitlab-arturbosch-detekt = "1.23.8"
 junit = "4.13.2"
 kotlin = "2.1.21"
-ksp = "2.1.21-2.0.1"
+kotlinxSerializationCore = "1.8.1"
+ksp = "2.1.21-2.0.2"
+lifecycleViewmodelNav3 = "1.0.0-alpha01"
+material3AdaptiveNav3 = "1.0.0-SNAPSHOT"
+nav3Core = "1.0.0-alpha03"
 orchestrator = "1.5.1"
-org-jetbrains-kotlinx = "1.10.2"
+org-jetbrains-kotlinx = "1.7.3"
 se-eelde-toggles = "0.0.3"
+lifecycleViewmodelNavigation3Android = "1.0.0-alpha01"
 
 [libraries]
 androidx-activity-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
@@ -49,8 +53,14 @@ androidx-lifecycle-lifecycle-runtime-compose = { module = "androidx.lifecycle:li
 androidx-lifecycle-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
-androidx-navigation-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
-androidx-navigation-navigation-runtime-ktx = { module = "androidx.navigation:navigation-runtime-ktx", version.ref = "androidx-navigation" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+# Note: The Material3 adaptive layouts library for Navigation 3 is currently
+# only available in snapshot builds. Follow the instructions at androidx.dev to
+# add the snapshot builds repository to your project.
+androidx-material3-adaptive-navigation3 = { module = "androidx.compose.material3.adaptive:adaptive-navigation3", version.ref = "material3AdaptiveNav3" }
+# Core Navigation 3 libraries
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-room-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 androidx-room-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
@@ -64,7 +74,7 @@ androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.re
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
 androidx-test-runner = "androidx.test:runner:1.6.2"
 app-cash-licensee-licensee-gradle-plugin = "app.cash.licensee:licensee-gradle-plugin:1.13.0"
-app-cash-turbine = "app.cash.turbine:turbine:1.2.0"
+app-cash-turbine = "app.cash.turbine:turbine:1.2.1"
 co-touchlab-kermit = "co.touchlab:kermit:2.0.5"
 com-android-tools-build-gradle = "com.android.tools.build:gradle:8.10.1"
 com-google-dagger = { module = "com.google.dagger:dagger", version.ref = "com-google-dagger" }
@@ -87,6 +97,7 @@ io-gitlab-arturbosch-detekt-detekt-formatting = { module = "io.gitlab.arturbosch
 io-gitlab-arturbosch-detekt-detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "io-gitlab-arturbosch-detekt" }
 io-gitlab-arturbosch-detekt-detekt-rules-libraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "io-gitlab-arturbosch-detekt" }
 junit = { module = "junit:junit", version.ref = "junit" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
 org-jetbrains-dokka-dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 org-jetbrains-kotlin-compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 org-jetbrains-kotlin-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -95,12 +106,13 @@ org-jetbrains-kotlinx-kotlinx-collections-immutable = "org.jetbrains.kotlinx:kot
 org-jetbrains-kotlinx-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android" }
 org-jetbrains-kotlinx-kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "org-jetbrains-kotlinx" }
 org-jetbrains-kotlinx-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
-org-jetbrains-kotlinx-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1"
+org-jetbrains-kotlinx-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "org-jetbrains-kotlinx" }
 org-robolectric = "org.robolectric:robolectric:4.14.1"
 se-eelde-toggles-toggles-core = { module = "se.eelde.toggles:toggles-core", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-prefs = { module = "se.eelde.toggles:toggles-prefs", version.ref = "se-eelde-toggles" }
 se-premex-ownership-gradle-plugin = "se.premex:ownership-gradle-plugin:0.0.11"
+androidx-lifecycle-viewmodel-navigation3-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3-android", version.ref = "lifecycleViewmodelNavigation3Android" }
 
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }

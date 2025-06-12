@@ -17,7 +17,8 @@ dependencies {
     implementation(projects.modules.routes)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.navigation.navigation.compose)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.compose.runtime)
@@ -26,7 +27,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.ui.tooling.preview)
     implementation(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
-    implementation(projects.togglesCore)
     implementation(projects.togglesCore)
     ksp(libs.com.google.dagger.hilt.compiler)
 }
