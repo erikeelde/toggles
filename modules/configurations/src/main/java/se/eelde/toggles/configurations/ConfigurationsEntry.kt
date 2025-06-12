@@ -31,14 +31,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
+import androidx.navigation3.runtime.EntryProviderBuilder
+import androidx.navigation3.runtime.entry
 import se.eelde.toggles.routes.Configurations
+
 
 @Suppress("LongMethod", "LongParameterList")
 @OptIn(ExperimentalMaterial3Api::class)
-fun NavGraphBuilder.configurationsNavigations(
+fun EntryProviderBuilder<*>.configurationsNavigations(
     navigateToBooleanConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
     navigateToIntegerConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
     navigateToStringConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
@@ -46,9 +46,7 @@ fun NavGraphBuilder.configurationsNavigations(
     navigateToScopeView: (Long) -> Unit,
     back: () -> Unit,
 ) {
-    composable<Configurations> { backStackEntry ->
-        val configurations: Configurations = backStackEntry.toRoute()
-
+    entry<Configurations> { configurations ->
         val viewModel: ConfigurationViewModel =
             hiltViewModel<ConfigurationViewModel, ConfigurationViewModel.Factory>(
                 creationCallback = { factory -> factory.create(applicationId = configurations.applicationId) }
@@ -92,14 +90,14 @@ fun NavGraphBuilder.configurationsNavigations(
                         }
                     },
                     navigationIcon =
-                    {
-                        IconButton(onClick = { back() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
-                    },
+                        {
+                            IconButton(onClick = { back() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        },
                     actions = {
                         var showMenu by rememberSaveable { mutableStateOf(false) }
 

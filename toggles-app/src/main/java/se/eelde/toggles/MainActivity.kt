@@ -14,14 +14,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
+import androidx.navigation3.runtime.entry
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.applications.applicationNavigations
 import se.eelde.toggles.booleanconfiguration.BooleanValueView
@@ -53,107 +58,110 @@ fun Navigation(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Applications,
-        modifier = modifier
-    ) {
-        applicationNavigations(
-            navigateToConfigurations = { applicationId ->
-                navController.navigate(Configurations(applicationId))
-            },
-            navigateToApplications = { navController.navigate(Applications) },
-            navigateToOss = { navController.navigate(Oss) },
-            navigateToHelp = { navController.navigate(Help) },
-        )
-        configurationsNavigations(
-            navigateToBooleanConfiguration = { scopeId: Long, configurationId: Long ->
-                navController.navigate(BooleanConfiguration(configurationId, scopeId))
-            },
-            navigateToIntegerConfiguration = { scopeId: Long, configurationId: Long ->
-                navController.navigate(IntegerConfiguration(configurationId, scopeId))
-            },
-            navigateToStringConfiguration = { scopeId: Long, configurationId: Long ->
-                navController.navigate(
-                    StringConfiguration(
-                        configurationId = configurationId,
-                        scopeId = scopeId
-                    )
-                )
-            },
-            navigateToEnumConfiguration = { scopeId: Long, configurationId: Long ->
-                navController.navigate(EnumConfiguration(configurationId, scopeId))
-            },
-            navigateToScopeView = { applicationId: Long ->
-                navController.navigate(Scope(applicationId))
+    val backStack = remember { mutableStateListOf<Any>(Applications) }
+
+    NavDisplay(
+        backStack = backStack,
+        onBack = { backStack.removeLastOrNull() },
+        entryDecorators = listOf(
+            rememberSceneSetupNavEntryDecorator(),
+            rememberSavedStateNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ),
+        entryProvider = entryProvider {
+            entry<BooleanConfiguration> { booleanConfiguration ->
+                BooleanValueView(booleanConfiguration) { navController.popBackStack() }
             }
-        ) { navController.popBackStack() }
-        composable<BooleanConfiguration> { backStackEntry ->
-            val booleanConfiguration: BooleanConfiguration = backStackEntry.toRoute()
 
-            BooleanValueView(booleanConfiguration) { navController.popBackStack() }
-        }
-        composable<Scope> { backStackEntry ->
-            val scope: Scope = backStackEntry.toRoute()
+            entry<Scope> { scope ->
 
-            ScopeValueView(
-                viewModel = hiltViewModel<ScopeViewModel, ScopeViewModel.Factory>(
-                    creationCallback = { factory ->
-                        factory.create(scope)
-                    }
-                )
-            ) { navController.popBackStack() }
-        }
-        composable<IntegerConfiguration> { backStackEntry ->
-            val integerConfiguration: IntegerConfiguration = backStackEntry.toRoute()
-            IntegerValueView(
-                viewModel = hiltViewModel<IntegerValueViewModel, IntegerValueViewModel.Factory>(
-                    creationCallback = { factory ->
-                        factory.create(integerConfiguration)
-                    }
-                ),
-            ) { navController.popBackStack() }
-        }
-        composable<StringConfiguration> { backStackEntry ->
-            val stringConfiguration: StringConfiguration = backStackEntry.toRoute()
-
-            StringValueView(stringConfiguration) { navController.popBackStack() }
-        }
-        composable<EnumConfiguration> { backStackEntry ->
-            val enumConfiguration: EnumConfiguration = backStackEntry.toRoute()
-
-            EnumValueView(
-                viewModel = hiltViewModel<EnumValueViewModel, EnumValueViewModel.Factory>(
-                    creationCallback = { factory ->
-                        factory.create(enumConfiguration)
-                    }
-                )
-            ) { navController.popBackStack() }
-        }
-        composable<Oss> {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text("") },
-                        navigationIcon =
-                        {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
+                ScopeValueView(
+                    viewModel = hiltViewModel<ScopeViewModel, ScopeViewModel.Factory>(
+                        creationCallback = { factory ->
+                            factory.create(scope)
                         }
                     )
-                },
-            ) { paddingValues ->
-                OssView(modifier = Modifier.padding(paddingValues))
+                ) { navController.popBackStack() }
             }
+            entry<IntegerConfiguration> { integerConfiguration ->
+                IntegerValueView(
+                    viewModel = hiltViewModel<IntegerValueViewModel, IntegerValueViewModel.Factory>(
+                        creationCallback = { factory ->
+                            factory.create(integerConfiguration)
+                        }
+                    ),
+                ) { navController.popBackStack() }
+            }
+            entry<StringConfiguration> { stringConfiguration ->
+                StringValueView(stringConfiguration) { navController.popBackStack() }
+            }
+            entry<EnumConfiguration> { enumConfiguration ->
+                EnumValueView(
+                    viewModel = hiltViewModel<EnumValueViewModel, EnumValueViewModel.Factory>(
+                        creationCallback = { factory ->
+                            factory.create(enumConfiguration)
+                        }
+                    )
+                ) { navController.popBackStack() }
+            }
+            entry<Oss> {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text("") },
+                            navigationIcon =
+                                {
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                        )
+                    },
+                ) { paddingValues ->
+                    OssView(modifier = Modifier.padding(paddingValues))
+                }
+            }
+            entry<Help> {
+                HelpView { navController.popBackStack() }
+            }
+
+            applicationNavigations(
+                navigateToConfigurations = { applicationId ->
+                    backStack.add(Configurations(applicationId))
+                },
+                navigateToApplications = { backStack.add(Applications) },
+                navigateToOss = { backStack.add(Oss) },
+                navigateToHelp = { backStack.add(Help) },
+            )
+            configurationsNavigations(
+                navigateToBooleanConfiguration = { scopeId: Long, configurationId: Long ->
+                    backStack.add(BooleanConfiguration(configurationId, scopeId))
+                },
+                navigateToIntegerConfiguration = { scopeId: Long, configurationId: Long ->
+                    backStack.add(IntegerConfiguration(configurationId, scopeId))
+                },
+                navigateToStringConfiguration = { scopeId: Long, configurationId: Long ->
+                    backStack.add(
+                        StringConfiguration(
+                            configurationId = configurationId,
+                            scopeId = scopeId
+                        )
+                    )
+                },
+                navigateToEnumConfiguration = { scopeId: Long, configurationId: Long ->
+                    backStack.add(EnumConfiguration(configurationId, scopeId))
+                },
+                navigateToScopeView = { applicationId: Long ->
+                    backStack.add(Scope(applicationId))
+                }
+            ) { navController.popBackStack() }
+
         }
-        composable<Help> {
-            HelpView { navController.popBackStack() }
-        }
-    }
+    )
+
 }
 
 @AndroidEntryPoint
