@@ -23,10 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
@@ -53,22 +49,21 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TogglesTheme {
-                val navController: NavHostController = rememberNavController()
-
-                Navigation(navController = navController)
+                Navigation()
             }
         }
     }
 }
 
 @Composable
+@Suppress("LongMethod")
 fun Navigation(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     val backStack = remember { mutableStateListOf<Any>(Flow) }
 
     NavDisplay(
+        modifier = modifier,
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         entryDecorators = listOf(
