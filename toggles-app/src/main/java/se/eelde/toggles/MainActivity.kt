@@ -20,8 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
@@ -55,7 +53,6 @@ import se.eelde.toggles.stringconfiguration.StringValueView
 @Suppress("LongMethod")
 @Composable
 fun Navigation(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     val backStack = remember { mutableStateListOf<Any>(Applications) }
@@ -71,7 +68,7 @@ fun Navigation(
         ),
         entryProvider = entryProvider {
             entry<BooleanConfiguration> { booleanConfiguration ->
-                BooleanValueView(booleanConfiguration) { navController.popBackStack() }
+                BooleanValueView(booleanConfiguration) { backStack.removeLastOrNull() }
             }
 
             entry<Scope> { scope ->
@@ -82,7 +79,7 @@ fun Navigation(
                             factory.create(scope)
                         }
                     )
-                ) { navController.popBackStack() }
+                ) { backStack.removeLastOrNull() }
             }
             entry<IntegerConfiguration> { integerConfiguration ->
                 IntegerValueView(
@@ -91,10 +88,10 @@ fun Navigation(
                             factory.create(integerConfiguration)
                         }
                     ),
-                ) { navController.popBackStack() }
+                ) { backStack.removeLastOrNull() }
             }
             entry<StringConfiguration> { stringConfiguration ->
-                StringValueView(stringConfiguration) { navController.popBackStack() }
+                StringValueView(stringConfiguration) { backStack.removeLastOrNull() }
             }
             entry<EnumConfiguration> { enumConfiguration ->
                 EnumValueView(
@@ -103,7 +100,7 @@ fun Navigation(
                             factory.create(enumConfiguration)
                         }
                     )
-                ) { navController.popBackStack() }
+                ) { backStack.removeLastOrNull() }
             }
             entry<Oss> {
                 Scaffold(
@@ -112,7 +109,7 @@ fun Navigation(
                             title = { Text("") },
                             navigationIcon =
                             {
-                                IconButton(onClick = { navController.popBackStack() }) {
+                                IconButton(onClick = { backStack.removeLastOrNull() }) {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                         contentDescription = null
@@ -126,7 +123,7 @@ fun Navigation(
                 }
             }
             entry<Help> {
-                HelpView { navController.popBackStack() }
+                HelpView { backStack.removeLastOrNull() }
             }
 
             applicationNavigations(
@@ -158,7 +155,7 @@ fun Navigation(
                 navigateToScopeView = { applicationId: Long ->
                     backStack.add(Scope(applicationId))
                 }
-            ) { navController.popBackStack() }
+            ) { backStack.removeLastOrNull() }
         }
     )
 }
@@ -174,9 +171,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TogglesTheme {
-                val navController: NavHostController = rememberNavController()
-
-                Navigation(navController = navController)
+                Navigation()
             }
         }
     }
