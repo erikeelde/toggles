@@ -123,7 +123,7 @@ class TogglesProviderMatcherConfigurationTest {
             togglesConfiguration.toContentValues(),
         )
 
-        val cursor = togglesProvider.query(TogglesProviderContract.configurationUri(), null, null, null, null)
+        val cursor = togglesProvider.query(ma, null, null, null, null)
         assertTrue(cursor.moveToFirst())
         TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
             assertEquals(togglesConfiguration.key, cursorConfiguration.key)

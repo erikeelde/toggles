@@ -13,6 +13,7 @@ enum class UriMatch {
     CONFIGURATION_VALUE_ID,
     CONFIGURATION_VALUE_KEY,
     PREDEFINED_CONFIGURATION_VALUES,
+    SCOPES,
     UNKNOWN,
 }
 
@@ -73,6 +74,11 @@ class TogglesUriMatcher(providerAuthority: String) {
             providerAuthority,
             "predefinedConfigurationValue",
             UriMatch.PREDEFINED_CONFIGURATION_VALUES.ordinal
+        )
+        uriMatcher.addURI(
+            providerAuthority,
+            "scope",
+            UriMatch.SCOPES.ordinal
         )
     }
 }

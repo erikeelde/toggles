@@ -13,6 +13,9 @@ public object TogglesProviderContract {
         Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
     private val currentConfigurationValueUri: Uri =
         Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
+    private val scopeUri: Uri =
+        Uri.parse("content://$TOGGLES_AUTHORITY/scope")
+
 
     @JvmStatic
     public fun toggleUri(id: Long): Uri {
@@ -90,6 +93,14 @@ public object TogglesProviderContract {
             .buildUpon()
             .appendPath(id.toString())
             .appendPath("values")
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+            .build()
+    }
+
+    @JvmStatic
+    public fun scopeUri(): Uri {
+        return scopeUri
+            .buildUpon()
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
     }

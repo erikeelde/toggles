@@ -118,4 +118,10 @@ WHERE configuration.applicationId = :callingApplication AND configurationKey = :
 """
     )
     fun getConfigurationValueCursor(callingApplication: Long, configurationKey: String): Cursor
+
+    @Query(
+        "SELECT * FROM scope WHERE applicationId = :callingApplication"
+    )
+    fun getScopeCursor(callingApplication: Long): Cursor
+
 }
