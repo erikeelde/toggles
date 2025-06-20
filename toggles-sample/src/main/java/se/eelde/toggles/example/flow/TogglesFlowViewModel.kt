@@ -1,6 +1,7 @@
 package se.eelde.toggles.example.flow
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -20,8 +21,15 @@ class TogglesFlowViewModel @Inject constructor(
     private val resources = application.resources
 
     internal val viewState: MutableState<ViewState> = mutableStateOf(ViewState.loading(resources))
+    private val toggles2 = Toggles2(application)
 
     init {
+        viewModelScope.launch {
+            toggles2.toggle(resources.getString(R.string.string_configuration)).collect {
+                Log.e("Toggles2", "toggle collect ${it.size} : $it")
+            }
+        }
+
         viewModelScope.launch {
             toggles.toggle(
                 resources.getString(R.string.string_configuration),
