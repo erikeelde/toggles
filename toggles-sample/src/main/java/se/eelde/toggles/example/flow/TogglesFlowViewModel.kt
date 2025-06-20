@@ -1,6 +1,7 @@
 package se.eelde.toggles.example.flow
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import se.eelde.toggles.example.MyEnum
 import se.eelde.toggles.example.R
+import se.eelde.toggles.example.toggles2.Toggles2
 import se.eelde.toggles.flow.Toggles
 import javax.inject.Inject
 
@@ -20,8 +22,24 @@ class TogglesFlowViewModel @Inject constructor(
     private val resources = application.resources
 
     internal val viewState: MutableState<ViewState> = mutableStateOf(ViewState.loading(resources))
+    private val toggles2 = Toggles2(application)
 
     init {
+        viewModelScope.launch {
+            toggles2.toggle("test1", "new_default").collect {
+                Log.e("Toggles2", "toggle string collect : $it")
+            }
+        }
+//        viewModelScope.launch {
+//            toggles2.toggleBoolean(resources.getString(R.string.boolean_configuration)).collect {
+//                Log.e("Toggles2", "toggle boolena collect ${it.size} : $it")
+//            }
+//        }
+//        viewModelScope.launch {
+//            toggles2.toggleInteger(resources.getString(R.string.int_configuration)).collect {
+//                Log.e("Toggles2", "toggle int collect ${it.size} : $it")
+//            }
+//        }
         viewModelScope.launch {
             toggles.toggle(
                 resources.getString(R.string.string_configuration),

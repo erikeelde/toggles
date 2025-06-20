@@ -89,10 +89,10 @@ public class TogglesConfigurationValue private constructor(
         @JvmStatic
         public fun fromContentValues(values: ContentValues): TogglesConfigurationValue {
             return TogglesConfigurationValue(
-                id = values.getAsLong(ColumnNames.Toggle.COL_ID) ?: 0,
-                configurationId = values.getAsLong(ColumnNames.Toggle.COL_TYPE),
-                value = values.getAsString(ColumnNames.Toggle.COL_VALUE),
-                scope = values.getAsLong(ColumnNames.Toggle.COL_KEY),
+                id = values.getAsLong(ColumnNames.ConfigurationValue.COL_ID) ?: 0,
+                configurationId = values.getAsLong(ColumnNames.ConfigurationValue.COL_CONFIG_ID),
+                value = values.getAsString(ColumnNames.ConfigurationValue.COL_VALUE),
+                scope = values.getAsLong(ColumnNames.ConfigurationValue.COL_SCOPE),
             )
         }
 

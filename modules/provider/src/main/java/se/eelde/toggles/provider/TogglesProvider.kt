@@ -206,6 +206,10 @@ class TogglesProvider : ContentProvider() {
                 )
             }
 
+            UriMatch.SCOPES -> {
+                cursor = configurationDao.getScopeCursor(callingApplication.id)
+            }
+
             else -> {
                 throw UnsupportedOperationException("Not yet implemented $uri")
             }
@@ -297,6 +301,18 @@ class TogglesProvider : ContentProvider() {
                 insertId = configurationDao.insert(databaseConfiguration)
             }
 
+            UriMatch.CONFIGURATION_VALUE_ID -> {
+                val togglesConfigurationValue =
+                    se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)
+                val databaseConfigurationValue = TogglesConfigurationValue(
+                    id = togglesConfigurationValue.id,
+                    configurationId = togglesConfigurationValue.configurationId,
+                    value = togglesConfigurationValue.value,
+                    scope = togglesConfigurationValue.scope
+                )
+                insertId = configurationValueDao.insertSync(databaseConfigurationValue)
+            }
+
             else -> {
                 throw UnsupportedOperationException("Not yet implemented $uri")
             }
@@ -357,6 +373,16 @@ class TogglesProvider : ContentProvider() {
                     id = uri.lastPathSegment!!.toLong(),
                     key = fromContentValues.key,
                     type = fromContentValues.type
+                )
+            }
+
+            UriMatch.CONFIGURATION_VALUE_ID -> {
+                val fromContentValues =
+                    se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)
+                updatedRows = configurationValueDao.updateConfigurationValueSync(
+                    configurationId = fromContentValues.configurationId,
+                    scopeId = fromContentValues.scope,
+                    value = fromContentValues.value!!
                 )
             }
 
@@ -441,6 +467,9 @@ class TogglesProvider : ContentProvider() {
 
             UriMatch.CONFIGURATION_VALUE_ID -> "vnd.android.cursor.dir/vnd.${context!!.packageName}.configurationValue"
             UriMatch.CONFIGURATION_VALUE_KEY -> "vnd.android.cursor.dir/vnd.${context!!.packageName}.configurationValue"
+            UriMatch.SCOPES ->
+                "vnd.android.cursor.dir/vnd.${context!!.packageName}.scope"
+
             UriMatch.UNKNOWN -> TODO()
         }
     }
@@ -508,7 +537,7 @@ class TogglesProvider : ContentProvider() {
                 API_INVALID -> {
                     throw IllegalArgumentException(
                         "This content provider requires you to provide a " +
-                            "valid api-version in a queryParameter"
+                                "valid api-version in a queryParameter"
                     )
                 }
             }
