@@ -1,4 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -35,10 +34,8 @@ version = versions.getProperty("V_LIBRARY_VERSION")
     ?: throw GradleException("No version found in versions.properties")
 
 mavenPublishing {
-    @Suppress("UnstableApiUsage")
     coordinates("se.eelde.toggles", "toggles-flow-noop", version.toString())
 
-    @Suppress("UnstableApiUsage")
     pom {
         name = "Toggles Flow Noop"
         description = "Toggles"
@@ -71,7 +68,7 @@ mavenPublishing {
         }
     }
 
-    publishToMavenCentral(SonatypeHost.S01)
+    publishToMavenCentral()
 
     signAllPublications()
 }

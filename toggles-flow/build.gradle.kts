@@ -1,4 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -58,10 +57,8 @@ version = versions.getProperty("V_LIBRARY_VERSION")
 
 
 mavenPublishing {
-    @Suppress("UnstableApiUsage")
     coordinates("se.eelde.toggles", "toggles-flow", version.toString())
 
-    @Suppress("UnstableApiUsage")
     pom {
         name = "Toggles Flow"
         description = "Toggles"
@@ -94,7 +91,7 @@ mavenPublishing {
         }
     }
 
-    publishToMavenCentral(SonatypeHost.S01)
+    publishToMavenCentral()
 
     signAllPublications()
 }
