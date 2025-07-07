@@ -1,3 +1,4 @@
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -28,6 +29,9 @@ licensee {
 play {
     serviceAccountCredentials.set(file("../service_account.json"))
     defaultToAppBundles.set(true)
+    releaseStatus.set(ReleaseStatus.DRAFT)
+    resolutionStrategy.set(com.github.triplet.gradle.androidpublisher.ResolutionStrategy.AUTO)
+
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
