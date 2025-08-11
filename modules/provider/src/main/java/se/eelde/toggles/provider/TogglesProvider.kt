@@ -115,7 +115,7 @@ class TogglesProvider : ContentProvider() {
 
     override fun onCreate() = true
 
-    @Suppress("LongMethod", "NestedBlockDepth")
+    @Suppress("LongMethod", "NestedBlockDepth", "CyclomaticComplexMethod")
     override fun query(
         uri: Uri,
         projection: Array<String>?,
@@ -377,13 +377,16 @@ class TogglesProvider : ContentProvider() {
             }
 
             UriMatch.CONFIGURATION_VALUE_ID -> {
-                val fromContentValues =
+                val togglesConfigurationValue =
                     se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)
-                updatedRows = configurationValueDao.updateConfigurationValueSync(
-                    configurationId = fromContentValues.configurationId,
-                    scopeId = fromContentValues.scope,
-                    value = fromContentValues.value!!
-                )
+
+                updatedRows = togglesConfigurationValue.value?.let {
+                    configurationValueDao.updateConfigurationValueSync(
+                        configurationId = togglesConfigurationValue.configurationId,
+                        scopeId = togglesConfigurationValue.scope,
+                        value = it
+                    )
+                } ?: throw NullPointerException("Configuration value cannot be null")
             }
 
             else -> {
@@ -537,7 +540,7 @@ class TogglesProvider : ContentProvider() {
                 API_INVALID -> {
                     throw IllegalArgumentException(
                         "This content provider requires you to provide a " +
-                                "valid api-version in a queryParameter"
+                            "valid api-version in a queryParameter"
                     )
                 }
             }

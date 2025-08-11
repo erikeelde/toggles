@@ -10,8 +10,8 @@ pluginManagement {
 }
 
 plugins {
-    id("com.gradle.develocity") version "3.19"
-    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.9.0")
+    id("com.gradle.develocity") version "4.1"
+    id("org.gradle.toolchains.foojay-resolver-convention") version ("1.0.0")
 }
 
 develocity {
@@ -25,7 +25,6 @@ buildCache {
     local {
         isEnabled = true
         directory = File(rootDir, "build-cache")
-        removeUnusedEntriesAfterDays = 30
     }
     remote<HttpBuildCache> {
         isEnabled = false

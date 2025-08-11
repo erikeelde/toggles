@@ -14,7 +14,9 @@ dependencyResolutionManagement {
             from(files("../../gradle/libs.versions.toml"))
         }
     }
+    @Suppress("UnstableApiUsage")
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    @Suppress("UnstableApiUsage")
     repositories {
         google()
         mavenCentral()
@@ -23,8 +25,8 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.develocity") version "3.19"
-    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.9.0")
+    id("com.gradle.develocity") version "4.1"
+    id("org.gradle.toolchains.foojay-resolver-convention") version ("1.0.0")
 }
 
 develocity {

@@ -2,7 +2,7 @@ name: "Release published workflow"
 
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   build:
@@ -24,6 +24,10 @@ jobs:
 
           echo "${{ secrets.SERVICE_ACCOUNT }}" > service_account.json.asc
           gpg -d --passphrase "${{ secrets.GPG_ENCRYPTION_KEY }}" --batch service_account.json.asc > service_account.json
+          
+          cp keystore.properties toggles-app/keystore.properties
+          cp toggles_keystore.jks toggles-app/toggles_keystore.jks
+          cp service_account.json toggles-app/service_account.json
 
       - name: "Calculate build number"
         id: version_information

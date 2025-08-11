@@ -16,7 +16,6 @@ public object TogglesProviderContract {
     private val scopeUri: Uri =
         Uri.parse("content://$TOGGLES_AUTHORITY/scope")
 
-
     @JvmStatic
     public fun toggleUri(id: Long): Uri {
         return currentConfigurationUri

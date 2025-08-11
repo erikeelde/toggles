@@ -27,14 +27,13 @@ licensee {
 }
 
 play {
-    serviceAccountCredentials.set(file("../service_account.json"))
+    serviceAccountCredentials.set(file("service_account.json"))
     defaultToAppBundles.set(true)
     releaseStatus.set(ReleaseStatus.DRAFT)
-    resolutionStrategy.set(com.github.triplet.gradle.androidpublisher.ResolutionStrategy.AUTO)
-
+//    resolutionStrategy.set(com.github.triplet.gradle.androidpublisher.ResolutionStrategy.AUTO)
 }
 
-val keystorePropertiesFile: File = rootProject.file("keystore.properties")
+val keystorePropertiesFile: File = project.file("keystore.properties")
 // Initialize a new Properties() object called keystoreProperties.
 val keystoreProperties = Properties()
 // Load your keystore.properties file into the keystoreProperties object.
@@ -47,7 +46,7 @@ android {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String?
             keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = file("../toggles_keystore.jks")
+            storeFile = file("toggles_keystore.jks")
             storePassword = keystoreProperties["storePassword"] as String?
         }
     }
@@ -96,7 +95,6 @@ android {
         animationsDisabled = true
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
         unitTests {
-            isReturnDefaultValues = true
             isIncludeAndroidResources = true
         }
         managedDevices {

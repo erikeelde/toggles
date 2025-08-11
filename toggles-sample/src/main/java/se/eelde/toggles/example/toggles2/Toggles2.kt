@@ -31,6 +31,7 @@ data class WrappedObject(
     val scopes: ImmutableList<ToggleScope>,
 )
 
+@Suppress("TooManyFunctions")
 class Toggles2(
     context: Context,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -52,24 +53,28 @@ class Toggles2(
 //        defaultValue: T
 //    ): Unit = TODO()
 
+    @Suppress("unused")
     fun <T : Enum<T>> toggle(
         key: String,
         type: Class<T>,
         defaultValue: T
     ): Flow<T> = TODO()
 
+    @Suppress("unused", "UnsafeCallOnNullableType")
     fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> =
         providerToggleFlow(context, Toggle.TYPE.BOOLEAN, key)
             .map { toggle: WrappedObject ->
                 toggle.configurationValues.last().value!!.toBoolean()
             }
 
+    @Suppress("unused", "UnsafeCallOnNullableType")
     fun toggle(key: String, defaultValue: Int): Flow<Int> =
         providerToggleFlow(context, Toggle.TYPE.INTEGER, key)
             .map { toggle: WrappedObject ->
                 toggle.configurationValues.last().value!!.toInt()
             }
 
+    @Suppress("UnsafeCallOnNullableType")
     fun toggle(key: String, defaultValue: String): Flow<String> {
         return providerToggleFlow(context, Toggle.TYPE.STRING, key)
             .map { wrappedObject: WrappedObject ->
@@ -204,8 +209,10 @@ class Toggles2(
         }
     }
 
+    @Suppress("UnsafeCallOnNullableType")
     private suspend fun getToggle(
         contentResolver: ContentResolver,
+        @Suppress("unused")
         @ToggleType type: String,
         key: String
     ): WrappedObject =
@@ -268,4 +275,3 @@ class Toggles2(
             }
         }
 }
-
