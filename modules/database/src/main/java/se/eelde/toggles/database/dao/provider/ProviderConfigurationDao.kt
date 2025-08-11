@@ -123,5 +123,4 @@ WHERE configuration.applicationId = :callingApplication AND configurationKey = :
         "SELECT * FROM scope WHERE applicationId = :callingApplication"
     )
     fun getScopeCursor(callingApplication: Long): Cursor
-
 }

@@ -30,7 +30,6 @@ android {
         animationsDisabled = true
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
         unitTests {
-            isReturnDefaultValues = true
             isIncludeAndroidResources = true
         }
         managedDevices {
