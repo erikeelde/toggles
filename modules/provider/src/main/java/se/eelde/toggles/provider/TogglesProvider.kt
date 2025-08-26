@@ -108,6 +108,9 @@ class TogglesProvider : ContentProvider() {
                 )
 
                 togglesApplication.id = applicationDao.insert(togglesApplication)
+
+                createDefaultScope(scopeDao, togglesApplication.id)
+                createDevelopmentScope(scopeDao, togglesApplication.id)
             }
 
             return togglesApplication
@@ -132,45 +135,33 @@ class TogglesProvider : ContentProvider() {
 
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATION_ID -> {
-                val scope = getSelectedScope(context, scopeDao, callingApplication.id)
+                val scope = getSelectedScope(scopeDao, callingApplication.id)
                 cursor = configurationDao.getToggle(
                     java.lang.Long.valueOf(uri.lastPathSegment!!),
-                    scope!!.id
+                    scope.id
                 )
 
                 if (cursor.count == 0) {
                     cursor.close()
 
-                    val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
+                    val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
                     cursor = configurationDao.getToggle(
                         java.lang.Long.valueOf(uri.lastPathSegment!!),
-                        defaultScope!!.id
+                        defaultScope.id
                     )
                 }
             }
 
             UriMatch.CURRENT_CONFIGURATION_KEY -> {
-                // this change is experimental and might be a way
-                // for consumers to
-                @Suppress("ConstantConditionIf")
-                if (false) {
-                    val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                    val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getToggles(
-                        uri.lastPathSegment!!,
-                        listOf(scope!!.id, defaultScope!!.id)
-                    )
-                } else {
-                    val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                    cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope!!.id)
+                val scope = getSelectedScope(scopeDao, callingApplication.id)
+                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope.id)
 
-                    if (cursor.count == 0) {
-                        cursor.close()
+                if (cursor.count == 0) {
+                    cursor.close()
 
-                        val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
-                        cursor =
-                            configurationDao.getToggle(uri.lastPathSegment!!, defaultScope!!.id)
-                    }
+                    val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
+                    cursor =
+                        configurationDao.getToggle(uri.lastPathSegment!!, defaultScope.id)
                 }
             }
 
@@ -195,18 +186,22 @@ class TogglesProvider : ContentProvider() {
             UriMatch.CONFIGURATION_VALUE_KEY -> {
                 cursor = configurationDao.getConfigurationValueCursor(
                     callingApplication.id,
-                    uri.pathSegments.get(uri.pathSegments.size - 2)
+                    uri.pathSegments[uri.pathSegments.size - 2]
                 )
             }
 
             UriMatch.CONFIGURATION_VALUE_ID -> {
                 cursor = configurationDao.getConfigurationValueCursor(
                     callingApplication.id,
-                    uri.pathSegments.get(uri.pathSegments.size - 2).toLong()
+                    uri.pathSegments[uri.pathSegments.size - 2].toLong()
                 )
             }
 
             UriMatch.SCOPES -> {
+                // getDefaultScope() ensures the default scope is created.
+                getDefaultScope(scopeDao, callingApplication.id)
+                // getSelectedScope() ensures there is a selected scope.
+                getSelectedScope(scopeDao, callingApplication.id)
                 cursor = configurationDao.getScopeCursor(callingApplication.id)
             }
 
@@ -254,13 +249,13 @@ class TogglesProvider : ContentProvider() {
                     togglesConfiguration.id = configurationDao.insert(togglesConfiguration)
                 }
 
-                val defaultScope = getDefaultScope(context, scopeDao, callingApplication.id)
+                val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
 
                 val togglesConfigurationValue = TogglesConfigurationValue(
                     0,
                     togglesConfiguration.id,
                     toggle.value,
-                    defaultScope!!.id
+                    defaultScope.id
                 )
                 togglesConfigurationValue.configurationId = togglesConfiguration.id
                 togglesConfigurationValue.value = toggle.value
@@ -349,20 +344,24 @@ class TogglesProvider : ContentProvider() {
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATION_ID -> {
                 val toggle = Toggle.fromContentValues(values!!)
-                val scope = getSelectedScope(context, scopeDao, callingApplication.id)
-                updatedRows = configurationValueDao.updateConfigurationValueSync(
+                val scope = getSelectedScope(scopeDao, callingApplication.id)
+                val updatedCount = configurationValueDao.updateConfigurationValueSync(
                     java.lang.Long.parseLong(uri.lastPathSegment!!),
-                    scope!!.id,
+                    scope.id,
                     toggle.value!!
                 )
-                if (updatedRows == 0) {
+
+                updatedRows = if (updatedCount > 0) {
+                    updatedCount
+                } else {
                     val togglesConfigurationValue = TogglesConfigurationValue(
                         0,
                         java.lang.Long.parseLong(uri.lastPathSegment!!),
                         toggle.value,
                         scope.id
                     )
-                    configurationValueDao.insertSync(togglesConfigurationValue)
+                    val insertSync = configurationValueDao.insertSync(togglesConfigurationValue)
+                    if (insertSync > 0) 1 else 0
                 }
             }
 
@@ -483,51 +482,40 @@ class TogglesProvider : ContentProvider() {
 
         @Synchronized
         private fun getDefaultScope(
-            context: Context?,
-            scopeDao: ProviderScopeDao?,
+            scopeDao: ProviderScopeDao,
             applicationId: Long
-        ): TogglesScope? {
-            if (context == null) {
-                return null
-            }
-
-            var scope: TogglesScope? = scopeDao!!.getDefaultScope(applicationId)
-
-            if (scope == null) {
-                scope = TogglesScope.newScope()
-                scope.applicationId = applicationId
-                val id = scopeDao.insert(scope)
-                scope.id = id
-            }
-            return scope
-        }
+        ): TogglesScope = scopeDao.getDefaultScope(applicationId)
+            ?: error("No default scope for application $applicationId")
 
         @Synchronized
         private fun getSelectedScope(
-            context: Context?,
-            scopeDao: ProviderScopeDao?,
+            scopeDao: ProviderScopeDao,
             applicationId: Long
-        ): TogglesScope? {
-            if (context == null) {
-                return null
-            }
+        ): TogglesScope = scopeDao.getSelectedScope(applicationId)
+            ?: error("No selected scope for application $applicationId")
 
-            var scope: TogglesScope? = scopeDao!!.getSelectedScope(applicationId)
-
-            if (scope == null) {
-                val defaultScope = TogglesScope.newScope()
-                defaultScope.applicationId = applicationId
-                defaultScope.id = scopeDao.insert(defaultScope)
-
-                val customScope = TogglesScope.newScope()
-                customScope.applicationId = applicationId
-                customScope.timeStamp = Date(defaultScope.timeStamp.time + oneSecond)
-                customScope.name = TogglesScope.SCOPE_USER
-                customScope.id = scopeDao.insert(customScope)
-
-                scope = customScope
-            }
+        private fun createDefaultScope(
+            scopeDao: ProviderScopeDao,
+            applicationId: Long
+        ): TogglesScope {
+            val scope = TogglesScope.newScope()
+            scope.applicationId = applicationId
+            val id = scopeDao.insert(scope)
+            scope.timeStamp = Date(Date().time - oneSecond)
+            scope.id = id
             return scope
+        }
+
+        private fun createDevelopmentScope(
+            scopeDao: ProviderScopeDao,
+            applicationId: Long
+        ): TogglesScope {
+            val developmentScope = TogglesScope.newScope()
+            developmentScope.applicationId = applicationId
+            developmentScope.timeStamp = Date()
+            developmentScope.name = TogglesScope.SCOPE_USER
+            developmentScope.id = scopeDao.insert(developmentScope)
+            return developmentScope
         }
 
         @Synchronized

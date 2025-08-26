@@ -13,7 +13,7 @@ public object TogglesProviderContract {
         Uri.parse("content://$TOGGLES_AUTHORITY/currentConfiguration")
     private val currentConfigurationValueUri: Uri =
         Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
-    private val scopeUri: Uri =
+    private val baseScopeUri: Uri =
         Uri.parse("content://$TOGGLES_AUTHORITY/scope")
 
     @JvmStatic
@@ -98,7 +98,7 @@ public object TogglesProviderContract {
 
     @JvmStatic
     public fun scopeUri(): Uri {
-        return scopeUri
+        return baseScopeUri
             .buildUpon()
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
