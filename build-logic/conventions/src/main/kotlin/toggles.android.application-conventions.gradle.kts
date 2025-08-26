@@ -57,6 +57,10 @@ android {
     }
 }
 
+tasks.withType(Test::class.java) {
+    failOnNoDiscoveredTests.set(false)
+}
+
 kotlin {
     jvmToolchain(17)
 }

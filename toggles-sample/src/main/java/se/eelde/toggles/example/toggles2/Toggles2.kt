@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -95,31 +96,40 @@ class Toggles2(
                 } else {
                     val selectedScope = getSelectedScope(wrappedObject.scopes)
 
+                    val defaultConfigurationValue =
+                        getConfigurationValueForScope(
+                            defaultScope,
+                            wrappedObject.configurationValues
+                        )
+
+                    if (defaultConfigurationValue == null) {
+                        insertConfigurationValue(
+                            contentResolver,
+                            wrappedObject.configuration.id,
+                            defaultValue,
+                            defaultScope.id
+                        )
+                    } else {
+                        if (defaultConfigurationValue.value != defaultValue) {
+                            updateConfigurationValue(
+                                contentResolver,
+                                defaultConfigurationValue,
+                                defaultValue
+                            )
+                        }
+                    }
+
                     val currentConfigurationValue =
                         getConfigurationValueForScope(
                             selectedScope,
                             wrappedObject.configurationValues
                         )
 
-                    val defaultConfigurationValue =
-                        getConfigurationValueForScope(
-                            defaultScope,
-                            wrappedObject.configurationValues
-                        )!!
-
-                    if (defaultConfigurationValue.value != defaultValue) {
-                        updateConfigurationValue(
-                            contentResolver,
-                            defaultConfigurationValue,
-                            defaultValue
-                        )
-                    }
-
                     if (currentConfigurationValue != null) {
                         return@map currentConfigurationValue.value!!
                     } else {
                         Log.e("Toggles2", "No scope override for '$key' found")
-                        return@map defaultConfigurationValue.value!!
+                        return@map defaultConfigurationValue!!.value!!
                     }
                 }
             }
@@ -128,7 +138,7 @@ class Toggles2(
     private fun insertConfiguration(
         contentResolver: ContentResolver,
         key: String,
-        @Toggle.ToggleType type: String
+        @ToggleType type: String
     ): Uri? {
         val configuration = TogglesConfiguration {
             setId(0)
@@ -144,20 +154,21 @@ class Toggles2(
         value: String,
         scope: Long,
     ) {
-        val configuration = TogglesConfigurationValue {
+        val configurationValue = TogglesConfigurationValue {
             setId(0)
             setConfigurationId(configurationId)
             setValue(value)
             setScope(scope)
         }
         contentResolver.insert(
-            configurationUri(configurationId),
-            configuration.toContentValues()
+            configurationValueUri(configurationId),
+            configurationValue.toContentValues()
         )
     }
 
     private fun getDefaultScope(scopes: ImmutableList<ToggleScope>): ToggleScope =
-        scopes.first { it.name == ColumnNames.ToggleScope.DEFAULT_SCOPE }
+        scopes.firstOrNull { it.name == ColumnNames.ToggleScope.DEFAULT_SCOPE }
+            ?: error("Default scope not found in the provided scopes list.")
 
     private fun getSelectedScope(scopes: ImmutableList<ToggleScope>): ToggleScope =
         scopes.maxBy { it.timeStamp }
@@ -202,14 +213,15 @@ class Toggles2(
                 .registerContentObserver(toggleUri(), true, toggleContentObserver)
         }
 
-        trySend(getToggle(contentResolver, type, key))
+        val toggle = getToggle(contentResolver, type, key)
+        trySend(toggle)
 
         awaitClose {
             contentResolver.unregisterContentObserver(toggleContentObserver)
         }
     }
 
-    @Suppress("UnsafeCallOnNullableType")
+    @Suppress("UnsafeCallOnNullableType", "LongMethod")
     private suspend fun getToggle(
         contentResolver: ContentResolver,
         @Suppress("unused")
@@ -226,10 +238,13 @@ class Toggles2(
                 null,
                 null
             ).use { scopesCursor ->
-                scopesCursor!!.moveToFirst()
-                do {
-                    scopes.add(ToggleScope.fromCursor(scopesCursor))
-                } while (scopesCursor.moveToNext())
+                if (scopesCursor!!.moveToFirst()) {
+                    do {
+                        scopes.add(ToggleScope.fromCursor(scopesCursor))
+                    } while (scopesCursor.moveToNext())
+                } else {
+                    error("No scopes found, make sure to insert at least the default scope")
+                }
             }
 
             contentResolver.query(
@@ -239,7 +254,20 @@ class Toggles2(
                 null,
                 null
             ).use { configurationCursor ->
-                configurationCursor!!.moveToFirst()
+                @Suppress("UseIsNullOrEmpty")
+                if (configurationCursor == null || configurationCursor.count == 0) {
+                    Log.e("Toggles2", "No configuration found for key: $key")
+                    return@withContext WrappedObject(
+                        null,
+                        persistentListOf(),
+                        scopes.toImmutableList()
+                    )
+                } else if (configurationCursor.count > 1) {
+                    error("Multiple configurations found for key: $key")
+                } else if (!configurationCursor.moveToFirst()) {
+                    error("Could not move to first in configuration cursor for key: $key")
+                }
+
                 val configuration = TogglesConfiguration.fromCursor(configurationCursor)
                 val configurationValues = mutableListOf<TogglesConfigurationValue>()
 
