@@ -30,8 +30,8 @@ import se.eelde.toggles.R
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.database.DatabaseModule
 import se.eelde.toggles.database.TogglesDatabase
-import se.eelde.toggles.di.DatabaseModule
 import se.eelde.toggles.provider.TogglesProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -103,7 +103,8 @@ class TogglesProviderMatcherConfigurationIdTest {
             togglesConfiguration.toContentValues(),
         )
 
-        val updatedConfiguration = togglesConfiguration.copy(key = "newKey", type = Toggle.TYPE.STRING)
+        val updatedConfiguration =
+            togglesConfiguration.copy(key = "newKey", type = Toggle.TYPE.STRING)
 
         val rowsUpdated = togglesProvider.update(
             TogglesProviderContract.configurationUri(uri.lastPathSegment!!),

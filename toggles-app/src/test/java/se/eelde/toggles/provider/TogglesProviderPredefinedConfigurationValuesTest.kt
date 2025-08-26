@@ -31,8 +31,8 @@ import se.eelde.toggles.R
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.database.DatabaseModule
 import se.eelde.toggles.database.TogglesDatabase
-import se.eelde.toggles.di.DatabaseModule
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -80,7 +80,10 @@ class TogglesProviderPredefinedConfigurationValuesTest {
     @Test
     fun testGetTypePredefinedConfigurationValue() {
         val type = togglesProvider.getType(TogglesProviderContract.toggleValueUri())
-        assertEquals("vnd.android.cursor.dir/vnd.se.eelde.toggles.predefinedConfigurationValue", type)
+        assertEquals(
+            "vnd.android.cursor.dir/vnd.se.eelde.toggles.predefinedConfigurationValue",
+            type
+        )
     }
 
     @Test
@@ -97,15 +100,19 @@ class TogglesProviderPredefinedConfigurationValuesTest {
             value = "FIRST"
         }
 
-        togglesProvider.insert(TogglesProviderContract.toggleValueUri(), toggleValue.toContentValues())
-        togglesDatabase.togglesPredefinedConfigurationValueDao().getByConfigurationId(configId).test {
-            val togglesPredefinedConfigurationValueList = awaitItem()
-            assertEquals(1, togglesPredefinedConfigurationValueList.size)
-            togglesPredefinedConfigurationValueList[0].let {
-                assertEquals(toggleValue.value, it.value)
-                assertEquals(toggleValue.configurationId, it.configurationId)
+        togglesProvider.insert(
+            TogglesProviderContract.toggleValueUri(),
+            toggleValue.toContentValues()
+        )
+        togglesDatabase.togglesPredefinedConfigurationValueDao().getByConfigurationId(configId)
+            .test {
+                val togglesPredefinedConfigurationValueList = awaitItem()
+                assertEquals(1, togglesPredefinedConfigurationValueList.size)
+                togglesPredefinedConfigurationValueList[0].let {
+                    assertEquals(toggleValue.value, it.value)
+                    assertEquals(toggleValue.configurationId, it.configurationId)
+                }
             }
-        }
     }
 
     @Test(expected = UnsupportedOperationException::class)

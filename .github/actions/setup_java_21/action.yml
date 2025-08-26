@@ -1,0 +1,11 @@
+name: "Setup java version"
+description: "Setup java version"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Set up JDK 21"
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'zulu'

@@ -30,8 +30,8 @@ import se.eelde.toggles.R
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.database.DatabaseModule
 import se.eelde.toggles.database.TogglesDatabase
-import se.eelde.toggles.di.DatabaseModule
 import se.eelde.toggles.provider.TogglesProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -123,7 +123,13 @@ class TogglesProviderMatcherConfigurationTest {
             togglesConfiguration.toContentValues(),
         )
 
-        val cursor = togglesProvider.query(TogglesProviderContract.configurationUri(), null, null, null, null)
+        val cursor = togglesProvider.query(
+            TogglesProviderContract.configurationUri(),
+            null,
+            null,
+            null,
+            null
+        )
         assertTrue(cursor.moveToFirst())
         TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
             assertEquals(togglesConfiguration.key, cursorConfiguration.key)

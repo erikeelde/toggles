@@ -12,9 +12,9 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(projects.modules.composeTheme)
-    implementation(projects.modules.database)
-    implementation(projects.modules.provider)
-    implementation(projects.modules.routes)
+    implementation(projects.modules.database.implementation)
+    implementation(projects.modules.provider.implementation)
+    implementation(projects.modules.routes.api)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.navigation3.runtime)
