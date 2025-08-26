@@ -10,8 +10,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Setup java 17"
-      uses: ./.github/actions/setup_java_17
+    - name: "Setup java"
+      uses: ./.github/actions/setup_java_21
 
     - name: "Setup gradle"
       uses: ./.github/actions/setup_gradle

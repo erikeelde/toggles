@@ -47,9 +47,7 @@ android {
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_17.toString()))
-    }
+    jvmToolchain(21)
 }
 
 dependencies {

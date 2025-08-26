@@ -30,8 +30,8 @@ import se.eelde.toggles.R
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.database.DatabaseModule
 import se.eelde.toggles.database.TogglesDatabase
-import se.eelde.toggles.di.DatabaseModule
 import se.eelde.toggles.provider.TogglesProvider
 import javax.inject.Inject
 import javax.inject.Singleton

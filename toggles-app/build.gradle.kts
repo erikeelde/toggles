@@ -72,7 +72,7 @@ android {
 
         buildConfigField("String", "CONFIG_AUTHORITY", "\"$togglesAuthority\"")
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "se.eelde.toggles.CustomTestRunner"
     }
     packaging {
         resources {
@@ -114,8 +114,8 @@ android {
 
 dependencies {
     implementation(projects.modules.composeTheme)
-    implementation(projects.modules.database)
-    implementation(projects.modules.provider)
+    implementation(projects.modules.database.implementation)
+    implementation(projects.modules.provider.implementation)
     implementation(projects.modules.applications)
     implementation(projects.modules.configurations)
     implementation(projects.modules.oss)
@@ -124,6 +124,8 @@ dependencies {
     implementation(projects.modules.integerconfiguration)
     implementation(projects.modules.stringconfiguration)
     implementation(projects.modules.enumconfiguration)
+    implementation(projects.modules.provider.wiring)
+    implementation(projects.modules.database.wiring)
 
     implementation(libs.androidx.compose.ui.ui.tooling)
     implementation(platform(libs.androidx.compose.bom))
@@ -144,7 +146,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3.android)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.startup.startup.runtime)
-    implementation(projects.modules.routes)
+    implementation(projects.modules.routes.api)
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.android.compiler)
     ksp(libs.androidx.hilt.hilt.compiler)
@@ -168,7 +170,6 @@ dependencies {
 
     testImplementation(libs.junit)
 
-
     testImplementation(libs.androidx.test.core.ktx)
     testImplementation(libs.androidx.test.ext.truth)
     testImplementation(libs.androidx.test.rules)
@@ -186,6 +187,10 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
+    androidTestImplementation(libs.androidx.arch.core.core.testing)
+    androidTestImplementation(libs.com.google.dagger.hilt.android.testing)
+    androidTestImplementation(libs.app.cash.turbine)
+    kspAndroidTest(libs.com.google.dagger.hilt.android.compiler)
 
     testFixturesImplementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
 }
