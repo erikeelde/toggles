@@ -1,6 +1,7 @@
 plugins {
     id("toggles.android.module-conventions")
     id("toggles.ownership-conventions")
+    id("dagger.hilt.android.plugin")
     alias(libs.plugins.com.google.devtools.ksp)
 }
 
