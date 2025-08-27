@@ -38,7 +38,7 @@ jobs:
 
       - name: "Setup Gradle Signing"
         if: github.repository == 'erikeelde/toggles'
-        uses: ./.github/actions/setup-gradle-setup_environment
+        uses: ./.github/actions/setup_environment
         with:
           gpg-key-b64: ${{ secrets.SECRING_GPG_B64 }}
           signing-key-id: ${{ secrets.SIGNING_KEYID }}
@@ -46,6 +46,6 @@ jobs:
           maven-username: ${{ secrets.MAVEN_CENTRAL_REPOSITORY_USERNAME }}
           maven-password: ${{ secrets.MAVEN_CENTRAL_REPOSITORY_PASSWORD }}
 
-      - name: Publish core library
+      - name: Publish snapshot libraries
         if: github.repository == 'erikeelde/toggles'
-        run: ./gradlew publish
+        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-configuration-cache
