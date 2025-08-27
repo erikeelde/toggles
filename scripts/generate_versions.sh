@@ -51,9 +51,9 @@ for prefix in "${prefixes[@]}"; do
 
     # Set the library version
     if [[ $release_mode == true ]]; then
-        library_version="0.0.3"
+        library_version="0.0.4"
     else
-        library_version="0.0.3-SNAPSHOT"
+        library_version="0.0.4-SNAPSHOT"
     fi
 
     # Print the result
