@@ -15,3 +15,4 @@ cd "$SCRIPT_DIR"/.. || exit
 ./gradlew :toggles-flow-noop:check
 ./gradlew :toggles-prefs:check --no-configuration-cache
 ./gradlew :toggles-prefs-noop:check
+./gradlew pixel2api35DebugAndroidTest
