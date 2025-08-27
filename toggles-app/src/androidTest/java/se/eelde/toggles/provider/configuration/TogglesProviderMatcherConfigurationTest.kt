@@ -90,13 +90,13 @@ class TogglesProviderMatcherConfigurationTest {
         )
     }
 
-    val togglesConfiguration = TogglesConfiguration {
-        type = Toggle.TYPE.BOOLEAN
-        key = "myConfigurationkey"
-    }
-
     @Test
     fun testQuery() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "myConfigurationkey"
+        }
+
         contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
