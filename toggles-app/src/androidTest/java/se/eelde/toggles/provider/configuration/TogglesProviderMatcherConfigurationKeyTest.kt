@@ -37,6 +37,11 @@ class TogglesProviderMatcherConfigurationKeyTest {
     private val context = ApplicationProvider.getApplicationContext<Application>()
     private val contentResolver = context.contentResolver
 
+    val togglesConfiguration = TogglesConfiguration {
+        type = Toggle.TYPE.BOOLEAN
+        key = "myConfigurationkey"
+    }
+
     @Module
     @InstallIn(SingletonComponent::class)
     object TestModule {
@@ -46,11 +51,6 @@ class TogglesProviderMatcherConfigurationKeyTest {
             return Room.inMemoryDatabaseBuilder(context, TogglesDatabase::class.java)
                 .allowMainThreadQueries().build()
         }
-    }
-
-    val togglesConfiguration = TogglesConfiguration {
-        type = Toggle.TYPE.BOOLEAN
-        key = "myConfigurationkey"
     }
 
     @Inject

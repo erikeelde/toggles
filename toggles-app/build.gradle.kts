@@ -149,21 +149,6 @@ dependencies {
 
     debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
 
-    testImplementation(libs.junit)
-
-    testImplementation(libs.androidx.test.core.ktx)
-    testImplementation(libs.androidx.test.ext.truth)
-    testImplementation(libs.androidx.test.rules)
-    testImplementation(libs.androidx.test.runner)
-    testImplementation(libs.androidx.test.ext.junit)
-    testImplementation(libs.org.robolectric)
-    testImplementation(libs.androidx.test.espresso.espresso.core)
-    testImplementation(libs.androidx.arch.core.core.testing)
-    testImplementation(libs.com.google.dagger.hilt.android.testing)
-    testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
-    testImplementation(libs.app.cash.turbine)
-    kspTest(libs.com.google.dagger.hilt.android.compiler)
-
     androidTestImplementation(libs.androidx.test.core.ktx)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
