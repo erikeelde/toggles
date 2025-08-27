@@ -26,7 +26,7 @@ jobs:
 
       - name: "Setup Gradle Signing"
         if: github.repository == 'erikeelde/toggles'
-        uses: ./.github/actions/setup-gradle-setup_environment
+        uses: ./.github/actions/setup_environment
         with:
           gpg-key-b64: ${{ secrets.SECRING_GPG_B64 }}
           signing-key-id: ${{ secrets.SIGNING_KEYID }}
