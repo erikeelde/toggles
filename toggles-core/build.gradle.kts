@@ -26,6 +26,7 @@ val versions = Properties().apply {
     }
 }
 
+group = "se.eelde.toggles"
 version = versions.getProperty("V_LIBRARY_VERSION")
     ?: throw GradleException("No version found in versions.properties")
 
