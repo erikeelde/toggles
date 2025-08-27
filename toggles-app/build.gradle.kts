@@ -91,25 +91,6 @@ android {
             versionNameSuffix = " debug"
         }
     }
-    testOptions {
-        animationsDisabled = true
-        execution = "ANDROIDX_TEST_ORCHESTRATOR"
-        unitTests {
-            isIncludeAndroidResources = true
-        }
-        managedDevices {
-            devices {
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30").apply {
-                    // Use device profiles you typically see in Android Studio.
-                    device = "Pixel 2"
-                    // Use only API levels 30 and higher.
-                    apiLevel = 30
-                    // To include Google services, use "google".
-                    systemImageSource = "aosp"
-                }
-            }
-        }
-    }
 }
 
 dependencies {

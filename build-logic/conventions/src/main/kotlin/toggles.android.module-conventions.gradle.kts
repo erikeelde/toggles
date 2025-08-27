@@ -34,11 +34,11 @@ android {
         }
         managedDevices {
             devices {
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30").apply {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api35").apply {
                     // Use device profiles you typically see in Android Studio.
                     device = "Pixel 2"
                     // Use only API levels 30 and higher.
-                    apiLevel = 30
+                    apiLevel = 35
                     // To include Google services, use "google".
                     systemImageSource = "aosp"
                 }
