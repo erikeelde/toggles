@@ -258,7 +258,7 @@
             <p style="text-align: center; margin-bottom: 40px;">The recommended reactive approach using Kotlin Flow</p>
             
             <div class="code-block">
-<code>// Add to your build.gradle
+<pre><code>// Add to your build.gradle
 implementation("se.eelde.toggles:toggles-flow:0.0.3")
 
 // Use in your Activity/Fragment
@@ -274,7 +274,7 @@ lifecycleScope.launch {
             showOldFeature()
         }
     }
-}</code>
+}</code></pre>
             </div>
         </div>
     </section>
@@ -292,14 +292,14 @@ lifecycleScope.launch {
                     <h3>🌊 Toggles-Flow</h3>
                     <p>Reactive toggle management using Kotlin Flow. Perfect for modern Android development.</p>
                     <div class="code-block">
-<code>implementation("se.eelde.toggles:toggles-flow:0.0.3")</code>
+<pre><code>implementation("se.eelde.toggles:toggles-flow:0.0.3")</code></pre>
                     </div>
                 </div>
                 <div class="card">
                     <h3>🔧 Toggles-Prefs</h3>
                     <p>Simple one-shot API similar to SharedPreferences for basic toggle fetching.</p>
                     <div class="code-block">
-<code>implementation("se.eelde.toggles:toggles-prefs:0.0.2")</code>
+<pre><code>implementation("se.eelde.toggles:toggles-prefs:0.0.2")</code></pre>
                     </div>
                 </div>
             </div>
@@ -310,7 +310,7 @@ lifecycleScope.launch {
         <div class="container">
             <h2>Support Multiple Data Types</h2>
             <div class="code-block">
-<code>// Boolean toggles
+<pre><code>// Boolean toggles
 toggles.toggle("enable_feature", false)
 
 // String configurations  
@@ -320,7 +320,7 @@ toggles.toggle("api_endpoint", "https://api.example.com")
 toggles.toggle("max_retry_count", 3)
 
 // Enum configurations
-toggles.toggle("log_level", LogLevel::class.java, LogLevel.INFO)</code>
+toggles.toggle("log_level", LogLevel::class.java, LogLevel.INFO)</code></pre>
             </div>
         </div>
     </section>
