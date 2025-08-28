@@ -1,51 +1,111 @@
-# Toggles - feature switching
+# Toggles - Feature Switching for Android Development
 
-Development tool to store app settings / feature toggles in an external application making in persist across clean data / reinstallations. 
+A powerful development tool that stores app settings and feature toggles in an external application, ensuring they persist across clean data operations and app reinstalls. Perfect for Android developers who need reliable feature flag management during development.
 
-## Toggles app
+## Quick Start with Toggles-Flow (Recommended)
 
-Toggles can be downloaded on [play store](https://play.google.com/store/apps/details?id=se.eelde.toggles).
-and it's sources are on [github](https://github.com/eelde/toggles)
+The **toggles-flow** library provides a reactive approach to feature toggles using Kotlin Flow, making it easy to respond to configuration changes in real-time.
 
-Stores settings / toggles behind a content provider.
+### Installation
 
-This is a development tools meant to facilitate feature switching in an external app so that configurations will be retained across clear data / uninstalls.
+Add the toggles-flow library to your project:
 
-## Usage Instructions
-
-1. Install the Toggles app from the Play Store.
-2. Add the Toggles library to your project.
-3. Use the provided APIs to manage feature toggles in your app.
-
-## Examples
-
-### Toggles-flow library
-[![Flow](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-flow/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-flow)
-
-Exposes switches from toggles using a kotlin flow.
-``` 
-    implementation("se.eelde.toggles:toggles-flow:0.0.1")
+```gradle
+implementation("se.eelde.toggles:toggles-flow:0.0.3")
 ```
 
-Example usage:
+### Basic Usage
+
 ```kotlin
 import se.eelde.toggles.flow.Toggles
 
-val toggles = Toggles(context)
-toggles.getToggleFlow("feature_toggle_key").collect { isEnabled ->
-    // Use the toggle value
+class MyActivity : AppCompatActivity() {
+    private val toggles = Toggles(this)
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        // Boolean toggle with default value
+        lifecycleScope.launch {
+            toggles.toggle("enable_new_feature", false).collect { isEnabled ->
+                if (isEnabled) {
+                    showNewFeature()
+                } else {
+                    showOldFeature()
+                }
+            }
+        }
+        
+        // String configuration
+        lifecycleScope.launch {
+            toggles.toggle("api_endpoint", "https://api.example.com").collect { endpoint ->
+                configureApiClient(endpoint)
+            }
+        }
+        
+        // Integer configuration
+        lifecycleScope.launch {
+            toggles.toggle("max_retry_count", 3).collect { retryCount ->
+                setMaxRetries(retryCount)
+            }
+        }
+    }
 }
 ```
 
-### Toggles-prefs library
-[![Prefs](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-prefs/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-prefs)
+## Toggles App
 
-One-shot fetch of a toggle. Similar API as androids SharedPreferences.
-``` 
-    implementation("se.eelde.toggles:toggles-prefs:0.0.1")
+Install the companion app to manage your feature toggles:
+
+- Download from [Google Play Store](https://play.google.com/store/apps/details?id=se.eelde.toggles)
+- View source code on [GitHub](https://github.com/eelde/toggles)
+
+The app stores your settings behind a content provider, ensuring configurations persist across app reinstalls and clean data operations.
+
+## Advanced Examples
+
+### Working with Enums
+[![Flow](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-flow/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-flow)
+
+```kotlin
+enum class LogLevel { DEBUG, INFO, WARN, ERROR }
+
+lifecycleScope.launch {
+    toggles.toggle("log_level", LogLevel::class.java, LogLevel.INFO).collect { level ->
+        logger.setLevel(level)
+    }
+}
 ```
 
-Example usage:
+### ViewModel Integration
+
+```kotlin
+@HiltViewModel
+class FeatureViewModel @Inject constructor(
+    application: Application,
+    private val toggles: Toggles
+) : ViewModel() {
+    
+    val featureEnabled = toggles.toggle("new_dashboard", false)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
+        )
+}
+```
+
+## Alternative Libraries
+
+### Toggles-prefs library (One-shot API)
+[![Prefs](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-prefs/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-prefs)
+
+For simple one-time toggle fetching without reactive updates. Similar API to Android's SharedPreferences.
+
+```gradle
+implementation("se.eelde.toggles:toggles-prefs:0.0.2")
+```
+
 ```kotlin
 import se.eelde.toggles.prefs.TogglesPreferences
 
@@ -53,12 +113,15 @@ val togglesPrefs = TogglesPreferences(context)
 val isEnabled = togglesPrefs.getBoolean("feature_toggle_key", false)
 ```
 
-## Toggles-core library
+**Note:** Consider using toggles-flow for reactive updates and better integration with modern Android development patterns.
+
+### Toggles-core library (Advanced)
 [![Core](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-core/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-core)
 
-Base library exposing common bit to help communicating with the toggles application via the provider. Generally shouldn't be needed unless implementing your own library.
-```
-    implementation("se.eelde.toggles:toggles-core:0.0.2")
+Low-level library for communicating with the toggles application via content provider. Generally not needed unless you're implementing custom toggle management.
+
+```gradle
+implementation("se.eelde.toggles:toggles-core:0.0.3")
 ```
 
 ## Contribution Guidelines
@@ -74,10 +137,34 @@ We welcome contributions! Please follow these steps to contribute:
 
 If you encounter any issues or have questions, please open an issue on GitHub.
 
-## Building and Running Locally
+## Development Setup
 
-To build and run the project locally, follow these steps:
+### Building and Running Locally
 
-1. Clone the repository: `git clone https://github.com/eelde/toggles.git`
-2. Open the project in Android Studio.
-3. Build and run the project on an emulator or physical device.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/eelde/toggles.git
+   cd toggles
+   ```
+
+2. Build the project:
+   ```bash
+   ./gradlew build
+   ```
+
+3. Run tests:
+   ```bash
+   ./gradlew test
+   ```
+
+4. Install the sample app to test the libraries:
+   ```bash
+   ./gradlew :toggles-sample:installDebug
+   ```
+
+### Requirements
+
+- Android Studio Arctic Fox or newer
+- JDK 17 or higher
+- Android SDK API 21+ (for using the libraries)
+- Android SDK API 35 (for building the sample app)

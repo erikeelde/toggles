@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggles - Feature Switching for Android Development</title>
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --primary-dark: #1976D2;
+            --text-color: #333;
+            --light-bg: #f5f5f5;
+            --border-color: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: var(--primary-color);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section:nth-child(even) {
+            background: var(--light-bg);
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--primary-dark);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h3 {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .card p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        code {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, transparent 0%, rgba(33, 150, 243, 0.1) 0%);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        
+        .stat {
+            text-align: center;
+            margin: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Toggles</h1>
+            <p class="subtitle">Feature Switching for Android Development</p>
+            <p style="margin-bottom: 40px;">Persistent feature flags that survive app reinstalls and clean data operations</p>
+            
+            <div class="cta-buttons">
+                <a href="https://github.com/erikeelde/toggles" class="btn btn-primary">
+                    ⭐ Star on GitHub
+                </a>
+                <a href="https://github.com/erikeelde/toggles/fork" class="btn btn-secondary">
+                    🍴 Fork Project
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=se.eelde.toggles" class="btn btn-secondary">
+                    📱 Download App
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <h2>Why Toggles?</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>🔄 Reactive by Design</h3>
+                    <p>Built on Kotlin Flow for real-time configuration updates. Your app responds instantly to toggle changes without restarts.</p>
+                </div>
+                <div class="card">
+                    <h3>💾 Persistent Storage</h3>
+                    <p>Configurations survive app reinstalls, clean data operations, and device reboots. Perfect for development workflows.</p>
+                </div>
+                <div class="card">
+                    <h3>🚀 Developer Focused</h3>
+                    <p>Simple API designed for Android developers. Integrate feature flags in minutes, not hours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>Quick Start with Toggles-Flow</h2>
+            <p style="text-align: center; margin-bottom: 40px;">The recommended reactive approach using Kotlin Flow</p>
+            
+            <div class="code-block">
+<code>// Add to your build.gradle
+implementation("se.eelde.toggles:toggles-flow:0.0.3")
+
+// Use in your Activity/Fragment
+import se.eelde.toggles.flow.Toggles
+
+val toggles = Toggles(this)
+
+lifecycleScope.launch {
+    toggles.<span class="highlight">toggle("enable_new_feature", false)</span>.collect { isEnabled ->
+        if (isEnabled) {
+            showNewFeature()
+        } else {
+            showOldFeature()
+        }
+    }
+}</code>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>Libraries & Apps</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>📱 Toggles App</h3>
+                    <p>Companion app for managing your feature toggles. Available on Google Play Store.</p>
+                    <a href="https://play.google.com/store/apps/details?id=se.eelde.toggles" class="btn btn-primary">Download</a>
+                </div>
+                <div class="card">
+                    <h3>🌊 Toggles-Flow</h3>
+                    <p>Reactive toggle management using Kotlin Flow. Perfect for modern Android development.</p>
+                    <div class="code-block">
+<code>implementation("se.eelde.toggles:toggles-flow:0.0.3")</code>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🔧 Toggles-Prefs</h3>
+                    <p>Simple one-shot API similar to SharedPreferences for basic toggle fetching.</p>
+                    <div class="code-block">
+<code>implementation("se.eelde.toggles:toggles-prefs:0.0.2")</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>Support Multiple Data Types</h2>
+            <div class="code-block">
+<code>// Boolean toggles
+toggles.toggle("enable_feature", false)
+
+// String configurations  
+toggles.toggle("api_endpoint", "https://api.example.com")
+
+// Integer values
+toggles.toggle("max_retry_count", 3)
+
+// Enum configurations
+toggles.toggle("log_level", LogLevel::class.java, LogLevel.INFO)</code>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2>Join the Community</h2>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">⭐</div>
+                    <div class="stat-label">Star the Project</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">🍴</div>
+                    <div class="stat-label">Fork & Contribute</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">🐛</div>
+                    <div class="stat-label">Report Issues</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">💡</div>
+                    <div class="stat-label">Share Ideas</div>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="https://github.com/erikeelde/toggles/issues/new" class="btn btn-primary">
+                    🐛 Report Issue
+                </a>
+                <a href="https://github.com/erikeelde/toggles/fork" class="btn btn-secondary">
+                    🛠️ Contribute
+                </a>
+                <a href="https://github.com/erikeelde/toggles/discussions" class="btn btn-secondary">
+                    💬 Discussions
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://github.com/erikeelde/toggles">GitHub Repository</a>
+                <a href="https://github.com/erikeelde/toggles/blob/main/README.md">Documentation</a>
+                <a href="https://github.com/erikeelde/toggles/releases">Releases</a>
+                <a href="https://github.com/erikeelde/toggles/issues">Issues</a>
+                <a href="https://play.google.com/store/apps/details?id=se.eelde.toggles">Android App</a>
+            </div>
+            <p>&copy; 2024 Toggles Project. Open source under Apache 2.0 license.</p>
+            <p style="margin-top: 10px; opacity: 0.7;">Made with ❤️ for Android developers</p>
+        </div>
+    </footer>
+</body>
+</html>
