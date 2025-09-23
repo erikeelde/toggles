@@ -29,24 +29,12 @@ import javax.inject.Singleton
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@UninstallModules(DatabaseModule::class)
 class TogglesProviderMatcherCurrentConfigurationKeyTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     private val context = ApplicationProvider.getApplicationContext<Application>()
     private val contentResolver = context.contentResolver
-
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object TestModule {
-        @Singleton
-        @Provides
-        fun provideTogglesDb(@ApplicationContext context: Context): TogglesDatabase {
-            return Room.inMemoryDatabaseBuilder(context, TogglesDatabase::class.java)
-                .allowMainThreadQueries().build()
-        }
-    }
 
     @Inject
     lateinit var togglesDatabase: TogglesDatabase

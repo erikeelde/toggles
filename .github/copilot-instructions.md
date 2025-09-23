@@ -85,7 +85,7 @@ Toggles is a multi-module Android project providing feature switching capabiliti
 
 5. **Android instrumentation tests**:
    ```bash
-   ./gradlew pixel2api35DebugAndroidTest  # Emulator tests - takes 10-20 minutes. NEVER CANCEL. Set timeout to 45+ minutes.
+   ./gradlew pixel6api35googleDebugAndroidTest  # Emulator tests - takes 10-20 minutes. NEVER CANCEL. Set timeout to 45+ minutes.
    ```
 
 6. **Complete PR check** (runs all validations):

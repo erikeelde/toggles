@@ -2,6 +2,7 @@ package se.eelde.toggles.provider
 
 import android.content.Context
 import androidx.core.graphics.drawable.toDrawable
+import kotlinx.coroutines.CoroutineDispatcher
 import org.robolectric.Robolectric
 import org.robolectric.Shadows.shadowOf
 import se.eelde.toggles.database.TogglesDatabase
@@ -16,7 +17,8 @@ object RobolectricTogglesProvider {
     fun create(
         context: Context,
         database: TogglesDatabase,
-        toggles: Toggles
+        toggles: Toggles,
+        ioDispatcher: CoroutineDispatcher,
     ): TogglesProvider {
         val contentProviderController =
             Robolectric.buildContentProvider(TogglesProvider::class.java)

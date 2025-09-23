@@ -11,10 +11,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.database.TogglesApplication
@@ -73,13 +69,6 @@ class TogglesProvider : ContentProvider() {
                 TogglesProviderEntryPoint::class.java
             )
         }
-    }
-
-    private val providerScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
-    override fun shutdown() {
-        super.shutdown()
-        providerScope.cancel()
     }
 
     @EntryPoint

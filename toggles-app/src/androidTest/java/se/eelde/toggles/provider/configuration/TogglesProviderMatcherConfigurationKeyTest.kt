@@ -29,29 +29,12 @@ import javax.inject.Singleton
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@UninstallModules(DatabaseModule::class)
 class TogglesProviderMatcherConfigurationKeyTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     private val context = ApplicationProvider.getApplicationContext<Application>()
     private val contentResolver = context.contentResolver
-
-    val togglesConfiguration = TogglesConfiguration {
-        type = Toggle.TYPE.BOOLEAN
-        key = "myConfigurationkey"
-    }
-
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object TestModule {
-        @Singleton
-        @Provides
-        fun provideTogglesDb(@ApplicationContext context: Context): TogglesDatabase {
-            return Room.inMemoryDatabaseBuilder(context, TogglesDatabase::class.java)
-                .allowMainThreadQueries().build()
-        }
-    }
 
     @Inject
     lateinit var togglesDatabase: TogglesDatabase
@@ -87,10 +70,19 @@ class TogglesProviderMatcherConfigurationKeyTest {
 
     @Test
     fun testQuery() {
-        contentResolver.insert(
-            TogglesProviderContract.configurationUri(),
-            togglesConfiguration.toContentValues(),
-        )
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "${this@TogglesProviderMatcherConfigurationKeyTest::class.simpleName}QueryKey"
+        }
+
+        try {
+            contentResolver.insert(
+                TogglesProviderContract.configurationUri(),
+                togglesConfiguration.toContentValues(),
+            )
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to insert configuration, ${togglesConfiguration.key}", e)
+        }
 
         val configurationUri = TogglesProviderContract.configurationUri(togglesConfiguration.key)
 
@@ -104,6 +96,11 @@ class TogglesProviderMatcherConfigurationKeyTest {
 
     @Test
     fun testDelete() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "${this@TogglesProviderMatcherConfigurationKeyTest::class.simpleName}DeleteKey"
+        }
+
         contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),

@@ -2,7 +2,6 @@ package se.eelde.toggles.composetheme
 
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
-import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -16,8 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 /**
  * Light default theme color scheme
  */
-@VisibleForTesting
-val LightDefaultColorScheme = lightColorScheme(
+internal val LightDefaultColorScheme = lightColorScheme(
     primary = Purple40,
     onPrimary = Color.White,
     primaryContainer = Purple90,
@@ -48,8 +46,7 @@ val LightDefaultColorScheme = lightColorScheme(
 /**
  * Dark default theme color scheme
  */
-@VisibleForTesting
-val DarkDefaultColorScheme = darkColorScheme(
+internal val DarkDefaultColorScheme = darkColorScheme(
     primary = Purple80,
     onPrimary = Purple20,
     primaryContainer = Purple30,
@@ -80,8 +77,7 @@ val DarkDefaultColorScheme = darkColorScheme(
 /**
  * Light Android theme color scheme
  */
-@VisibleForTesting
-val LightAndroidColorScheme = lightColorScheme(
+internal val LightAndroidColorScheme = lightColorScheme(
     primary = Green40,
     onPrimary = Color.White,
     primaryContainer = Green90,
@@ -112,8 +108,7 @@ val LightAndroidColorScheme = lightColorScheme(
 /**
  * Dark Android theme color scheme
  */
-@VisibleForTesting
-val DarkAndroidColorScheme = darkColorScheme(
+internal val DarkAndroidColorScheme = darkColorScheme(
     primary = Green80,
     onPrimary = Green20,
     primaryContainer = Green30,
@@ -167,4 +162,4 @@ fun TogglesTheme(
 }
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)
-fun supportsDynamicTheming() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+internal fun supportsDynamicTheming() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S

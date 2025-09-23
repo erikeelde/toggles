@@ -24,29 +24,18 @@ import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.DatabaseModule
 import se.eelde.toggles.database.TogglesDatabase
+import se.eelde.toggles.provider.configuration.mapRows
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@UninstallModules(DatabaseModule::class)
 class TogglesProviderMatcherConfigurationValueTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     private val context = ApplicationProvider.getApplicationContext<Application>()
     private val contentResolver = context.contentResolver
-
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object TestModule {
-        @Singleton
-        @Provides
-        fun provideTogglesDb(@ApplicationContext context: Context): TogglesDatabase {
-            return Room.inMemoryDatabaseBuilder(context, TogglesDatabase::class.java)
-                .allowMainThreadQueries().build()
-        }
-    }
 
     @Inject
     lateinit var togglesDatabase: TogglesDatabase
@@ -76,25 +65,26 @@ class TogglesProviderMatcherConfigurationValueTest {
     fun testInsert() {
         val togglesConfiguration = TogglesConfiguration {
             type = Toggle.TYPE.BOOLEAN
-            key = "myConfigurationkey"
+            key = "TogglesProviderMatcherConfigurationValueTestInsertKey"
         }
 
         val uri = contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
-        )
+        )!!
 
-        assertEquals(
-            "content://se.eelde.toggles.configprovider/configuration/1?API_VERSION=1",
-            uri.toString()
-        )
+        assertEquals("content", uri.scheme)
+        assertEquals("se.eelde.toggles.configprovider", uri.host)
+        assertEquals("configuration", uri.pathSegments[0])
+        assertTrue("Invalid id in path: ${uri.pathSegments[1]}", uri.pathSegments[1].toLong() > 0)
+        assertEquals("1", uri.getQueryParameter("API_VERSION"))
     }
 
     @Test
     fun testQuery() {
         val togglesConfiguration = TogglesConfiguration {
             type = Toggle.TYPE.BOOLEAN
-            key = "myConfigurationkey"
+            key = "TogglesProviderMatcherConfigurationValueTestQueryKey"
         }
 
         contentResolver.insert(
@@ -102,17 +92,21 @@ class TogglesProviderMatcherConfigurationValueTest {
             togglesConfiguration.toContentValues(),
         )
 
-        val values = contentResolver.query(
+        contentResolver.query(
             TogglesProviderContract.configurationUri(),
             null,
             null,
             null,
             null
-        )!!
-        assertTrue(values.moveToFirst())
-        val toggle = TogglesConfiguration.fromCursor(values)
-        assertEquals("myConfigurationkey", toggle.key)
-        assertEquals(Toggle.TYPE.BOOLEAN, toggle.type)
+        )!!.use {
+            val configurations = it.mapRows { cursor -> TogglesConfiguration.fromCursor(cursor) }
+            val toggle = configurations.first { toggle ->
+                toggle.key == togglesConfiguration.key && toggle.type == togglesConfiguration.type
+            }
+
+            assertEquals(togglesConfiguration.key, toggle.key)
+            assertEquals(Toggle.TYPE.BOOLEAN, toggle.type)
+        }
     }
 
     @Test(expected = UnsupportedOperationException::class)

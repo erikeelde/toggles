@@ -17,11 +17,19 @@ buildscript {
 
 plugins {
     alias(libs.plugins.nl.littlerobots.version.catalog.update)
-    // https://github.com/Kotlin/KEEP/blob/master/proposals/explicit-api-mode.md
-    alias(libs.plugins.com.github.triplet.play) apply (false)
-    id("toggles.ownership-conventions")
+    alias(libs.plugins.com.github.triplet.play) apply false
     alias(libs.plugins.com.google.devtools.ksp) apply false
     alias(libs.plugins.com.autonomousapps.dependency.analysis)
+
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.com.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.compose) apply false
+    alias(libs.plugins.io.gitlab.arturbosch.detekt) apply false
+    alias(libs.plugins.org.jetbrains.kotlinx.binary.compatibility.validator) apply false
+    alias(libs.plugins.com.vanniktech.maven.publish) apply false
+    alias(libs.plugins.org.jetbrains.dokka) apply false
+    alias(libs.plugins.com.google.dagger.hilt.android) apply false
 }
 
 develocity {
@@ -31,6 +39,6 @@ develocity {
     }
 }
 
-task<Delete>("clean") {
+tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }

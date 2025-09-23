@@ -29,15 +29,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.EntryProviderBuilder
-import androidx.navigation3.runtime.entry
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
 import se.eelde.toggles.routes.Configurations
 
 @Suppress("LongMethod", "LongParameterList")
 @OptIn(ExperimentalMaterial3Api::class)
-fun EntryProviderBuilder<*>.configurationsNavigations(
+fun EntryProviderScope<NavKey>.configurationsNavigations(
     navigateToBooleanConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
     navigateToIntegerConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
     navigateToStringConfiguration: (scopeId: Long, configurationId: Long) -> Unit,

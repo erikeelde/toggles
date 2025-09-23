@@ -108,7 +108,7 @@ class TogglesProviderMatcherConfigurationValueTest {
         )
         assertTrue(values.moveToFirst())
         val toggle = TogglesConfiguration.fromCursor(values)
-        assertEquals("myConfigurationkey", toggle.key)
+        assertEquals(togglesConfiguration.key, toggle.key)
         assertEquals(Toggle.TYPE.BOOLEAN, toggle.type)
     }
 

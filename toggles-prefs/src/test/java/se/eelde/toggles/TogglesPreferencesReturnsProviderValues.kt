@@ -159,7 +159,7 @@ internal class MockContentProvider : ContentProvider() {
 
                 uri.lastPathSegment?.let { key ->
                     toggles[key]?.let { toggle ->
-                        cursor.addRow(arrayOf(toggle.id, toggle.key, toggle.type, toggle.value))
+                        cursor.addRow(arrayOf<Any?>(toggle.id, toggle.key, toggle.type, toggle.value))
                     }
                 }
 

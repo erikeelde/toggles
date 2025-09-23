@@ -2,12 +2,11 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("toggles.android.application-conventions")
-    id("dagger.hilt.android.plugin")
-    id("toggles.ownership-conventions")
+    alias(libs.plugins.toggles.android.application)
+    alias(libs.plugins.toggles.android.compose.application)
+    alias(libs.plugins.toggles.hilt)
     id("app.cash.licensee")
     alias(libs.plugins.se.premex.gross)
-    alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
 }
 
@@ -37,7 +36,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
         getByName("debug") {
             versionNameSuffix = " debug"
@@ -71,10 +70,7 @@ dependencies {
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.oss)
 
-    implementation(libs.com.google.dagger.hilt.android)
-    implementation(libs.androidx.lifecycle.viewmodel.navigation3.android)
-    ksp(libs.com.google.dagger.hilt.android.compiler)
-    kspTest(libs.com.google.dagger.hilt.android.compiler)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
     implementation(projects.togglesCore)
     implementation(projects.togglesFlow)
@@ -84,5 +80,7 @@ dependencies {
 
     debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
 
-    testFixturesImplementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.runner)
 }

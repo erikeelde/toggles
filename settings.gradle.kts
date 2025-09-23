@@ -3,9 +3,15 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 pluginManagement {
     repositories {
-        gradlePluginPortal()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
-        google()
+        gradlePluginPortal()
     }
 }
 
@@ -31,12 +37,26 @@ buildCache {
     }
 }
 
+dependencyResolutionManagement {
+    @Suppress("UnstableApiUsage")
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+
+    @Suppress("UnstableApiUsage")
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+
 rootProject.name = "Toggles"
-includeBuild("build-logic/conventions")
+includeBuild("build-logic")
 include(
     ":toggles-app",
     ":toggles-sample",
     ":modules:compose-theme",
+    ":modules:coroutines:api",
+    ":modules:coroutines:wiring",
     ":modules:database:api",
     ":modules:database:implementation",
     ":modules:database:wiring",
@@ -53,19 +73,10 @@ include(
     ":modules:integerconfiguration",
     ":modules:enumconfiguration",
 )
-include(":toggles-core")
-include(":toggles-flow")
-include(":toggles-flow-noop")
-include(":toggles-prefs")
-include(":toggles-prefs-noop")
-
-
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+include(
+    ":toggles-core",
+    ":toggles-flow",
+    ":toggles-flow-noop",
+    ":toggles-prefs",
+    ":toggles-prefs-noop"
+)

@@ -2,8 +2,7 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("toggles.android.library-conventions")
-    id("toggles.ownership-conventions")
+    alias(libs.plugins.toggles.android.library)
     id("org.jetbrains.dokka")
     alias(libs.plugins.com.vanniktech.maven.publish)
     alias(libs.plugins.org.jetbrains.kotlinx.binary.compatibility.validator)
