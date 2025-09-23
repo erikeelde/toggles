@@ -7,13 +7,14 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.coroutines.IoDispatcher
 import se.eelde.toggles.database.TogglesConfigurationValue
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
@@ -41,6 +42,8 @@ class BooleanValueViewModel @AssistedInject internal constructor(
     private val application: Application,
     private val configurationDao: TogglesConfigurationDao,
     private val configurationValueDao: TogglesConfigurationValueDao,
+    @IoDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
     @Assisted booleanConfiguration: BooleanConfiguration
 ) : ViewModel() {
 
@@ -123,13 +126,14 @@ class BooleanValueViewModel @AssistedInject internal constructor(
     }
 
     private suspend fun updateConfigurationValue(value: String): Job = coroutineScope {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             if (selectedConfigurationValue != null) {
                 configurationValueDao.updateConfigurationValue(configurationId, scopeId, value)
             } else {
                 val togglesConfigurationValue =
                     TogglesConfigurationValue(0, configurationId, value, scopeId)
-                togglesConfigurationValue.id = configurationValueDao.insert(togglesConfigurationValue)
+                togglesConfigurationValue.id =
+                    configurationValueDao.insert(togglesConfigurationValue)
             }
             configurationDao.touch(configurationId, Date())
 
@@ -142,7 +146,7 @@ class BooleanValueViewModel @AssistedInject internal constructor(
     }
 
     private suspend fun deleteConfigurationValue(): Job = coroutineScope {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             selectedConfigurationValue?.let {
                 configurationValueDao.delete(it)
 

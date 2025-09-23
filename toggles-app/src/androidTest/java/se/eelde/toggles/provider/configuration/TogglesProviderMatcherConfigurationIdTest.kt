@@ -29,29 +29,12 @@ import javax.inject.Singleton
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@UninstallModules(DatabaseModule::class)
 class TogglesProviderMatcherConfigurationIdTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     private val context = ApplicationProvider.getApplicationContext<Application>()
     private val contentResolver = context.contentResolver
-
-    val togglesConfiguration = TogglesConfiguration {
-        type = Toggle.TYPE.BOOLEAN
-        key = "myConfigurationkey"
-    }
-
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object TestModule {
-        @Singleton
-        @Provides
-        fun provideTogglesDb(@ApplicationContext context: Context): TogglesDatabase {
-            return Room.inMemoryDatabaseBuilder(context, TogglesDatabase::class.java)
-                .allowMainThreadQueries().build()
-        }
-    }
 
     @Inject
     lateinit var togglesDatabase: TogglesDatabase
@@ -77,6 +60,10 @@ class TogglesProviderMatcherConfigurationIdTest {
 
     @Test
     fun testUpdate() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "${this@TogglesProviderMatcherConfigurationIdTest::class.simpleName}UpdateKey"
+        }
         val uri = contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
@@ -97,11 +84,16 @@ class TogglesProviderMatcherConfigurationIdTest {
         val fromCursor = TogglesConfiguration.fromCursor(query)
 
         assertEquals(1, rowsUpdated)
-        assertEquals(1, fromCursor.id)
+        assertEquals(fromCursor.key, updatedConfiguration.key)
     }
 
     @Test
     fun testQuery() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "${this@TogglesProviderMatcherConfigurationIdTest::class.simpleName}QueryKey"
+        }
+
         val uri = contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
@@ -121,7 +113,10 @@ class TogglesProviderMatcherConfigurationIdTest {
     fun testDelete() {
         val uri = contentResolver.insert(
             TogglesProviderContract.configurationUri(),
-            togglesConfiguration.toContentValues(),
+            TogglesConfiguration {
+                type = Toggle.TYPE.BOOLEAN
+                key = "${this@TogglesProviderMatcherConfigurationIdTest::class.simpleName}DeleteKey"
+            }.toContentValues(),
         )!!
 
         val rowsDeleted = contentResolver.delete(

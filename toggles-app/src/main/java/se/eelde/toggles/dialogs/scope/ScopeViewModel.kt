@@ -6,11 +6,12 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import se.eelde.toggles.coroutines.IoDispatcher
 import se.eelde.toggles.database.TogglesScope
 import se.eelde.toggles.database.dao.application.TogglesScopeDao
 import se.eelde.toggles.routes.Scope
@@ -36,6 +37,8 @@ private sealed class PartialViewState {
 class ScopeViewModel @AssistedInject internal constructor(
     private val scopeDao: TogglesScopeDao,
     @Assisted scope: Scope,
+    @IoDispatcher
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     @AssistedFactory
@@ -51,8 +54,6 @@ class ScopeViewModel @AssistedInject internal constructor(
 
     internal val state: StateFlow<ViewState>
         get() = _state
-
-    internal var selectedScope: TogglesScope? = null
 
     init {
         viewModelScope.launch {
@@ -70,7 +71,7 @@ class ScopeViewModel @AssistedInject internal constructor(
             PartialViewState.Saving -> previousState
             is PartialViewState.Scopes -> {
                 previousState.copy(
-                    selectedScope = partialViewState.scopes.sortedByDescending { it.timeStamp }.first(),
+                    selectedScope = partialViewState.scopes.maxByOrNull { it.timeStamp }!!,
                     scopes = partialViewState.scopes
                 )
             }
@@ -89,7 +90,7 @@ class ScopeViewModel @AssistedInject internal constructor(
             val togglesScope = TogglesScope.newScope()
             togglesScope.name = scopeName
             togglesScope.applicationId = applicationId
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 togglesScope.id = scopeDao.insert(togglesScope)
             }
         }
@@ -97,7 +98,7 @@ class ScopeViewModel @AssistedInject internal constructor(
 
     internal fun removeScope(scope: TogglesScope) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 scopeDao.delete(scope)
             }
         }

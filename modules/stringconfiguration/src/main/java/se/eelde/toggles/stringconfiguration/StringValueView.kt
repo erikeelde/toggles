@@ -24,7 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import se.eelde.toggles.composetheme.TogglesTheme
@@ -104,12 +104,12 @@ internal fun StringValueView(
                 Text(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.headlineMedium,
-                    text = viewState.title ?: ""
+                    text = viewState.title.orEmpty()
                 )
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = viewState.stringValue ?: "",
+                    value = viewState.stringValue.orEmpty(),
                     onValueChange = { setStringValue(it) },
                 )
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {

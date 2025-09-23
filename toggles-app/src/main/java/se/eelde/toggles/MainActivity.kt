@@ -14,17 +14,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.applications.applicationNavigations
 import se.eelde.toggles.booleanconfiguration.BooleanValueView
@@ -55,24 +52,25 @@ import se.eelde.toggles.stringconfiguration.StringValueView
 fun Navigation(
     modifier: Modifier = Modifier,
 ) {
-    val backStack = remember { mutableStateListOf<Any>(Applications) }
+    val backStack = rememberNavBackStack(Applications)
 
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         entryDecorators = listOf(
-            rememberSceneSetupNavEntryDecorator(),
-            rememberSavedStateNavEntryDecorator(),
+            rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
         entryProvider = entryProvider {
             entry<BooleanConfiguration> { booleanConfiguration ->
-                BooleanValueView(booleanConfiguration) { backStack.removeLastOrNull() }
+                BooleanValueView(
+                    booleanConfiguration = booleanConfiguration,
+                    back = { backStack.removeLastOrNull() }
+                )
             }
 
             entry<Scope> { scope ->
-
                 ScopeValueView(
                     viewModel = hiltViewModel<ScopeViewModel, ScopeViewModel.Factory>(
                         creationCallback = { factory ->
@@ -134,6 +132,7 @@ fun Navigation(
                 navigateToOss = { backStack.add(Oss) },
                 navigateToHelp = { backStack.add(Help) },
             )
+
             configurationsNavigations(
                 navigateToBooleanConfiguration = { scopeId: Long, configurationId: Long ->
                     backStack.add(BooleanConfiguration(configurationId, scopeId))

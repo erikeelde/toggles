@@ -1,8 +1,6 @@
 plugins {
-    id("toggles.android.module-conventions")
-    id("toggles.ownership-conventions")
-    id("dagger.hilt.android.plugin")
-    alias(libs.plugins.com.google.devtools.ksp)
+    alias(libs.plugins.toggles.android.module)
+    alias(libs.plugins.toggles.hilt)
 }
 
 android {
@@ -18,4 +16,8 @@ dependencies {
 
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
+
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.arch.core.core.testing)
 }

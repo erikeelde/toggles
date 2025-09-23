@@ -3,14 +3,14 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("toggles.android.application-conventions")
+    alias(libs.plugins.toggles.android.application)
+    alias(libs.plugins.toggles.android.compose.application)
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.toggles.hilt)
     id("com.github.triplet.play")
     id("app.cash.licensee")
     alias(libs.plugins.se.premex.gross)
-    alias(libs.plugins.com.google.devtools.ksp)
 }
 
 val versionFile = File("versions.properties")
@@ -82,12 +82,12 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
             signingConfig = signingConfigs["release"]
         }
         getByName("debug") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
             versionNameSuffix = " debug"
         }
     }
@@ -105,6 +105,8 @@ dependencies {
     implementation(projects.modules.integerconfiguration)
     implementation(projects.modules.stringconfiguration)
     implementation(projects.modules.enumconfiguration)
+    implementation(projects.modules.coroutines.wiring)
+    implementation(projects.modules.coroutines.api)
     implementation(projects.modules.provider.wiring)
     implementation(projects.modules.database.wiring)
 
@@ -124,18 +126,15 @@ dependencies {
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.lifecycle.viewmodel.navigation3.android)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.startup.startup.runtime)
     implementation(projects.modules.routes.api)
-    implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.android.compiler)
-    ksp(libs.androidx.hilt.hilt.compiler)
 
     implementation(libs.androidx.lifecycle.lifecycle.common.java8)
 
     implementation(libs.com.google.dagger)
-    ksp(libs.com.google.dagger.dagger.compiler)
 
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
@@ -151,6 +150,7 @@ dependencies {
 
     androidTestImplementation(libs.androidx.test.core.ktx)
     androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
     androidTestImplementation(libs.androidx.arch.core.core.testing)

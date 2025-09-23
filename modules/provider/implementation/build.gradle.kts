@@ -1,6 +1,5 @@
 plugins {
-    id("toggles.android.module-conventions")
-    id("toggles.ownership-conventions")
+    alias(libs.plugins.toggles.android.module)
     alias(libs.plugins.com.google.devtools.ksp)
 }
 
@@ -18,6 +17,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(projects.togglesCore)
     implementation(projects.togglesFlow)
+    implementation(projects.modules.coroutines.api)
     implementation(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)

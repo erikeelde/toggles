@@ -25,7 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 
@@ -78,7 +78,7 @@ internal fun EnumValueView(
             Text(
                 modifier = Modifier.padding(8.dp),
                 style = MaterialTheme.typography.headlineMedium,
-                text = state.title ?: ""
+                text = state.title.orEmpty()
             )
             LazyColumn {
                 state.configurationValues.forEach { togglesPredefinedConfigurationValue ->

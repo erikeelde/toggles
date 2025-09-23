@@ -97,7 +97,7 @@ internal fun IntegerValueView(
             Text(
                 modifier = Modifier.padding(8.dp),
                 style = MaterialTheme.typography.headlineMedium,
-                text = uiState.title ?: ""
+                text = uiState.title.orEmpty()
             )
             OutlinedTextField(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),

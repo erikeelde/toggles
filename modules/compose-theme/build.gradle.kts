@@ -1,7 +1,6 @@
 plugins {
-    id("toggles.android.module-conventions")
-    id("toggles.ownership-conventions")
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.toggles.android.module)
+    alias(libs.plugins.toggles.android.compose.module)
 }
 
 android {

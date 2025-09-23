@@ -1,8 +1,7 @@
 plugins {
-    id("toggles.android.module-conventions")
-    id("toggles.ownership-conventions")
+    alias(libs.plugins.toggles.android.module)
+    alias(libs.plugins.toggles.android.compose.module)
     alias(libs.plugins.com.google.devtools.ksp)
-    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -17,6 +16,7 @@ dependencies {
     implementation(projects.modules.routes.api)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(projects.modules.coroutines.api)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.hilt.hilt.navigation.compose)

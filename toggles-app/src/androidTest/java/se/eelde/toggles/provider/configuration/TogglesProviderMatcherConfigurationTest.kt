@@ -2,6 +2,7 @@ package se.eelde.toggles.provider.configuration
 
 import android.app.Application
 import android.content.Context
+import android.database.Cursor
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -29,24 +30,12 @@ import javax.inject.Singleton
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@UninstallModules(DatabaseModule::class)
 class TogglesProviderMatcherConfigurationTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     private val context = ApplicationProvider.getApplicationContext<Application>()
     private val contentResolver = context.contentResolver
-
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object TestModule {
-        @Singleton
-        @Provides
-        fun provideTogglesDb(@ApplicationContext context: Context): TogglesDatabase {
-            return Room.inMemoryDatabaseBuilder(context, TogglesDatabase::class.java)
-                .allowMainThreadQueries().build()
-        }
-    }
 
     @Inject
     lateinit var togglesDatabase: TogglesDatabase
@@ -76,25 +65,26 @@ class TogglesProviderMatcherConfigurationTest {
     fun testInsert() {
         val togglesConfiguration = TogglesConfiguration {
             type = Toggle.TYPE.BOOLEAN
-            key = "myConfigurationkey"
+            key = "${this@TogglesProviderMatcherConfigurationTest::class.simpleName}Insertkey"
         }
 
         val uri = contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
-        )
+        )!!
 
-        assertEquals(
-            "content://se.eelde.toggles.configprovider/configuration/1?API_VERSION=1",
-            uri.toString()
-        )
+        assertEquals("content", uri.scheme)
+        assertEquals("se.eelde.toggles.configprovider", uri.host)
+        assertEquals("configuration", uri.pathSegments[0])
+        assertTrue("Invalid id in path: ${uri.pathSegments[1]}", uri.pathSegments[1].toLong() > 0)
+        assertEquals("1", uri.getQueryParameter("API_VERSION"))
     }
 
     @Test
     fun testQuery() {
         val togglesConfiguration = TogglesConfiguration {
             type = Toggle.TYPE.BOOLEAN
-            key = "myConfigurationkey"
+            key = "${this@TogglesProviderMatcherConfigurationTest::class.simpleName}Query"
         }
 
         contentResolver.insert(
@@ -102,17 +92,20 @@ class TogglesProviderMatcherConfigurationTest {
             togglesConfiguration.toContentValues(),
         )
 
-        val cursor = contentResolver.query(
+        contentResolver.query(
             TogglesProviderContract.configurationUri(),
             null,
             null,
             null,
             null
-        )!!
-        assertTrue(cursor.moveToFirst())
-        TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
-            assertEquals(togglesConfiguration.key, cursorConfiguration.key)
-            assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+        )!!.use { cursor ->
+            val configurations =
+                cursor.mapRows { cursor -> TogglesConfiguration.fromCursor(cursor) }
+
+            assertTrue(
+                configurations.any {
+                    it.key == togglesConfiguration.key && it.type == togglesConfiguration.type
+                })
         }
     }
 
@@ -124,4 +117,14 @@ class TogglesProviderMatcherConfigurationTest {
             null,
         )
     }
+}
+
+fun <T> Cursor.mapRows(converter: (Cursor) -> T): List<T> {
+    moveToFirst()
+    val objects = mutableListOf<T>()
+    do {
+        objects.add(converter(this))
+    } while (moveToNext())
+
+    return objects.toList()
 }

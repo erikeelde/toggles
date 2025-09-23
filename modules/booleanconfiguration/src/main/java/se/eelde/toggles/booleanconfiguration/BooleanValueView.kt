@@ -1,6 +1,5 @@
 package se.eelde.toggles.booleanconfiguration
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,24 +23,22 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import se.eelde.toggles.routes.BooleanConfiguration
 
-@SuppressLint("ComposeViewModelInjection")
 @Composable
 fun BooleanValueView(
     booleanConfiguration: BooleanConfiguration,
-    back: () -> Unit,
-) {
-    val viewModel: BooleanValueViewModel =
+    viewModel: BooleanValueViewModel =
         hiltViewModel<BooleanValueViewModel, BooleanValueViewModel.Factory>(
             creationCallback = { factory ->
                 factory.create(booleanConfiguration)
             }
-        )
-
+        ),
+    back: () -> Unit,
+) {
     val viewState by viewModel.state.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
@@ -92,7 +89,7 @@ fun BooleanValueView(
                 Text(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.headlineMedium,
-                    text = viewState.title ?: ""
+                    text = viewState.title.orEmpty()
                 )
 
                 Switch(
