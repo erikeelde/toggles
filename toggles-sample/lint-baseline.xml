@@ -1,4 +1,231 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 7.0.0-alpha10" type="baseline" client="cli" name="cli" variant="all" version="7.0.0-alpha10">
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="true" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                toggle.configurationValues.last().value!!.toBoolean()"
+        errorLine2="                                                       ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/example/toggles2/Toggles2.kt"
+            line="68"
+            column="56"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                toggle.configurationValues.last().value!!.toInt()"
+        errorLine2="                                                       ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/example/toggles2/Toggles2.kt"
+            line="75"
+            column="56"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        configurationUri!!.lastPathSegment!!.toLong(),"
+        errorLine2="                                        ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/example/toggles2/Toggles2.kt"
+            line="91"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        configurationUri!!.lastPathSegment!!.toLong(),"
+        errorLine2="                                                          ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/example/toggles2/Toggles2.kt"
+            line="91"
+            column="59"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        return@map currentConfigurationValue.value!!"
+        errorLine2="                                                                  ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/example/toggles2/Toggles2.kt"
+            line="129"
+            column="67"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        return@map defaultConfigurationValue!!.value!!"
+        errorLine2="                                                            ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/example/toggles2/Toggles2.kt"
+            line="132"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        return@map defaultConfigurationValue!!.value!!"
+        errorLine2="                                                                    ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/example/toggles2/Toggles2.kt"
+            line="132"
+            column="69"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                if (scopesCursor!!.moveToFirst()) {"
+        errorLine2="                                ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/example/toggles2/Toggles2.kt"
+            line="241"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    if (configurationValuesCursor!!.moveToFirst()) {"
+        errorLine2="                                                 ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/example/toggles2/Toggles2.kt"
+            line="281"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    for (enumConstant in type.enumConstants!!) {"
+        errorLine2="                                                           ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/flow/TogglesImpl.kt"
+            line="108"
+            column="60"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        put(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP, timeStamp.time)"
+        errorLine2="                                                                      ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="41"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        result = 31 * result + timeStamp.hashCode()"
+        errorLine2="                                         ~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="60"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="83"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="83"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="ConvertToWebp"
+        message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun ErrorView(errorString: String) ="
+        errorLine2="    ~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/oss/ErrorView.kt"
+            line="18"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun ErrorView(content: @Composable () -> Unit) {"
+        errorLine2="    ~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/oss/ErrorView.kt"
+            line="24"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun LoadingView(loadingTitle: String) ="
+        errorLine2="    ~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/oss/LoadingView.kt"
+            line="16"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun LoadingView(content: @Composable () -> Unit = {}) {"
+        errorLine2="    ~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/oss/LoadingView.kt"
+            line="22"
+            column="5"/>
+    </issue>
 
 </issues>

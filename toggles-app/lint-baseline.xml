@@ -1,102 +1,1425 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 7.4.1" type="baseline" client="gradle" dependencies="false" name="AGP (7.4.1)" variant="all" version="7.4.1">
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="true" name="AGP (8.13.0)" variant="all" version="8.13.0">
 
     <issue
-        id="ComposeViewModelInjection"
-        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
-        errorLine1="            val viewModel: FragmentBooleanValueViewModel = hiltViewModel()"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        PartialViewState.NewConfigurationValue(it.value!!.toBoolean())"
+        errorLine2="                                                                       ~~">
         <location
-            file="src/main/java/se/eelde/toggles/MainActivity.kt"
-            line="99"
-            column="13"/>
+            file="src/main/java/se/eelde/toggles/booleanconfiguration/BooleanValueViewModel.kt"
+            line="80"
+            column="72"/>
     </issue>
 
     <issue
-        id="ComposeViewModelInjection"
-        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
-        errorLine1="            val viewModel: FragmentIntegerValueViewModel = hiltViewModel()"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(providerInfo!!.authority, &quot;se.eelde.toggles.configprovider&quot;)"
+        errorLine2="                                 ~~">
         <location
-            file="src/main/java/se/eelde/toggles/MainActivity.kt"
-            line="129"
-            column="13"/>
+            file="src/androidTest/java/se/eelde/toggles/CheckForProviders.kt"
+            line="49"
+            column="34"/>
     </issue>
 
     <issue
-        id="ComposeViewModelInjection"
-        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
-        errorLine1="            val viewModel: FragmentStringValueViewModel = hiltViewModel()"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    getItemForScope(uiState.value.defaultScope, configuration.configurationValues!!)"
+        errorLine2="                                                                                                 ~~">
         <location
-            file="src/main/java/se/eelde/toggles/MainActivity.kt"
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationListView.kt"
+            line="40"
+            column="98"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    configuration.configurationValues!!"
+        errorLine2="                                                     ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationListView.kt"
+            line="43"
+            column="54"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                            text = configuration.key!!"
+        errorLine2="                                                    ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationListView.kt"
+            line="65"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        navigateToStringConfiguration(selectedScope!!.id, configuration.id)"
+        errorLine2="                                                   ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationListView.kt"
+            line="134"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        navigateToIntegerConfiguration(selectedScope!!.id, configuration.id)"
+        errorLine2="                                                    ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationListView.kt"
+            line="140"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        navigateToBooleanConfiguration(selectedScope!!.id, configuration.id)"
+        errorLine2="                                                    ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationListView.kt"
+            line="146"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        navigateToEnumConfiguration(selectedScope!!.id, configuration.id)"
+        errorLine2="                                                 ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationListView.kt"
             line="152"
-            column="13"/>
+            column="50"/>
     </issue>
 
     <issue
-        id="ComposeViewModelInjection"
-        message="Implicit dependencies of composables should be made explicit.&#xA;Usages of hiltViewModel to acquire a ViewModel should be done in composable default parameters, so that it is more testable and flexible.&#xA;See https://slackhq.github.io/compose-lints/rules/#viewmodels for more information."
-        errorLine1="            val viewModel: FragmentEnumValueViewModel = hiltViewModel()"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                flowOf(applicationDao.getApplication(applicationId)!!),"
+        errorLine2="                                                                   ~~">
         <location
-            file="src/main/java/se/eelde/toggles/MainActivity.kt"
-            line="175"
-            column="13"/>
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationViewModel.kt"
+            line="78"
+            column="68"/>
     </issue>
 
     <issue
-        id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
-        errorLine1="fun HelpView() {"
-        errorLine2="    ~~~~~~~~">
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                                onClick = { viewModel.restartApplication(uiState.value.application!!) },"
+        errorLine2="                                                                                                  ~~">
         <location
-            file="src/main/java/se/eelde/toggles/help/HelpView.kt"
-            line="13"
-            column="5"/>
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationsEntry.kt"
+            line="109"
+            column="99"/>
     </issue>
 
     <issue
-        id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
-        errorLine1="fun Navigation("
-        errorLine2="    ~~~~~~~~~~">
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                                                uiState.value.application!!.packageName,"
+        errorLine2="                                                                         ~~">
         <location
-            file="src/main/java/se/eelde/toggles/MainActivity.kt"
-            line="73"
-            column="5"/>
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationsEntry.kt"
+            line="126"
+            column="74"/>
     </issue>
 
     <issue
-        id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
-        errorLine1="fun TogglesAppBar(drawerState: DrawerState, appState: AppState, appBarState: AppBarState) {"
-        errorLine2="    ~~~~~~~~~~~~~">
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                                onClick = { navigateToScopeView(uiState.value.application!!.id) },"
+        errorLine2="                                                                                         ~~">
         <location
-            file="src/main/java/se/eelde/toggles/MainActivity.kt"
-            line="258"
-            column="5"/>
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationsEntry.kt"
+            line="141"
+            column="90"/>
     </issue>
 
     <issue
-        id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
-        errorLine1="fun TogglesDrawer(navController: NavHostController, drawerState: DrawerState) {"
-        errorLine2="    ~~~~~~~~~~~~~">
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                                onClick = { viewModel.deleteApplication(uiState.value.application!!) },"
+        errorLine2="                                                                                                 ~~">
         <location
-            file="src/main/java/se/eelde/toggles/MainActivity.kt"
-            line="283"
-            column="5"/>
+            file="src/main/java/se/eelde/toggles/configurations/ConfigurationsEntry.kt"
+            line="151"
+            column="98"/>
     </issue>
 
     <issue
-        id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
-        errorLine1="fun ScopeValueView(navController: NavController, viewModel: ScopeFragmentViewModel) {"
-        errorLine2="    ~~~~~~~~~~~~~~">
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                            PartialViewState.NewConfigurationValue(it.value!!.toInt())"
+        errorLine2="                                                                           ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/integerconfiguration/IntegerValueViewModel.kt"
+            line="80"
+            column="76"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                callingApplicationPackageName!!,"
+        errorLine2="                                             ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/PackageManagerWrapper.kt"
+            line="18"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    scope = viewState.selectedScope!!,"
+        errorLine2="                                                   ~~">
         <location
             file="src/main/java/se/eelde/toggles/dialogs/scope/ScopeView.kt"
-            line="26"
+            line="140"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    selectedScope = partialViewState.scopes.maxByOrNull { it.timeStamp }!!,"
+        errorLine2="                                                                                        ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/dialogs/scope/ScopeViewModel.kt"
+            line="74"
+            column="89"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        PartialViewState.NewConfigurationValue(it.value!!)"
+        errorLine2="                                                                       ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/stringconfiguration/StringValueViewModel.kt"
+            line="80"
+            column="72"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    for (enumConstant in type.enumConstants!!) {"
+        errorLine2="                                                           ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/flow/TogglesImpl.kt"
+            line="108"
+            column="60"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
+        errorLine2="                                                                              ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
+            line="53"
+            column="79"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
+        errorLine2="                                                                              ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
+            line="53"
+            column="79"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
+        errorLine2="                                                                                 ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
+            line="56"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
+        errorLine2="                                                                                 ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
+            line="56"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        entryPointBuilder.build(context!!)"
+        errorLine2="                                       ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="58"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)"
+        errorLine2="                                                                                                    ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="89"
+            column="101"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    packageName = packageManagerWrapper.callingApplicationPackageName!!,"
+        errorLine2="                                                                                     ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="94"
+            column="86"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    shortcutId = packageManagerWrapper.callingApplicationPackageName!!,"
+        errorLine2="                                                                                    ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="96"
+            column="85"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    java.lang.Long.valueOf(uri.lastPathSegment!!),"
+        errorLine2="                                                              ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="129"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        java.lang.Long.valueOf(uri.lastPathSegment!!),"
+        errorLine2="                                                                  ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="138"
+            column="67"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope.id)"
+        errorLine2="                                                                       ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="146"
+            column="72"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        configurationDao.getToggle(uri.lastPathSegment!!, defaultScope.id)"
+        errorLine2="                                                                      ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="153"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    uri.lastPathSegment!!"
+        errorLine2="                                       ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="164"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    uri.lastPathSegment!!.toLong()"
+        errorLine2="                                       ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="171"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            cursor.setNotificationUri(context!!.contentResolver, uri)"
+        errorLine2="                                             ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="203"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        return callingApplication.packageName == context!!.packageName"
+        errorLine2="                                                        ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="210"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                val toggle = Toggle.fromContentValues(values!!)"
+        errorLine2="                                                            ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="224"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                val fullConfig = TogglesPredefinedConfigurationValue.fromContentValues(values!!)"
+        errorLine2="                                                                                             ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="266"
+            column="94"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        fullConfig.value!!"
+        errorLine2="                                        ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="272"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                val togglesConfiguration = TogglesConfiguration.fromContentValues(values!!)"
+        errorLine2="                                                                                        ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="278"
+            column="89"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)"
+        errorLine2="                                                                                            ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="290"
+            column="93"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        context!!.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))"
+        errorLine2="               ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="305"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                val toggle = Toggle.fromContentValues(values!!)"
+        errorLine2="                                                            ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="335"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    java.lang.Long.parseLong(uri.lastPathSegment!!),"
+        errorLine2="                                                                ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="338"
+            column="65"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    toggle.value!!"
+        errorLine2="                                ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="340"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        java.lang.Long.parseLong(uri.lastPathSegment!!),"
+        errorLine2="                                                                    ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="348"
+            column="69"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                val fromContentValues = TogglesConfiguration.fromContentValues(values!!)"
+        errorLine2="                                                                                     ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="358"
+            column="86"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    id = uri.lastPathSegment!!.toLong(),"
+        errorLine2="                                            ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="361"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)"
+        errorLine2="                                                                                            ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="369"
+            column="93"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            context!!.contentResolver.notifyUpdate(uri)"
+        errorLine2="                   ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="386"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        uri.lastPathSegment!!.toLong()"
+        errorLine2="                                           ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="404"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    context!!.contentResolver.notifyChange(uri, null)"
+        errorLine2="                           ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="407"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                        uri.lastPathSegment!!"
+        errorLine2="                                           ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="416"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    context!!.contentResolver.notifyChange(uri, null)"
+        errorLine2="                           ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="419"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="70"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),"
+        errorLine2="                                                                        ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="76"
+            column="73"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val query = contentResolver.query(uri, null, null, null, null)!!"
+        errorLine2="                                                                      ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="82"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),"
+        errorLine2="                                                                        ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="87"
+            column="73"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="100"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val configurationUri = TogglesProviderContract.configurationUri(uri.lastPathSegment!!)"
+        errorLine2="                                                                                           ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="102"
+            column="92"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val cursor = contentResolver.query(configurationUri, null, null, null, null)!!"
+        errorLine2="                                                                                    ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="104"
+            column="85"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val configurationUri = TogglesProviderContract.configurationUri(uri.lastPathSegment!!)"
+        errorLine2="                                                                                           ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="108"
+            column="92"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="120"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),"
+        errorLine2="                                                                        ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="123"
+            column="73"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),"
+        errorLine2="                                                                        ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="126"
+            column="73"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val cursor = contentResolver.query(configurationUri, null, null, null, null)!!"
+        errorLine2="                                                                                    ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationKeyTest.kt"
+            line="89"
+            column="85"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationTest.kt"
+            line="74"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!.use { cursor ->"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationTest.kt"
+            line="101"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configurationValue/TogglesProviderMatcherConfigurationValueTest.kt"
+            line="74"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!.use {"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/configurationValue/TogglesProviderMatcherConfigurationValueTest.kt"
+            line="101"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="62"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                        ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="75"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                                                 ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="75"
+            column="66"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                        ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="83"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                                                 ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="83"
+            column="66"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="92"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                       ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="98"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                                              ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="98"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                       ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="106"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                                              ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
+            line="106"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val insertToggleUri = contentResolver.insert(uri, insertToggle.toContentValues())!!"
+        errorLine2="                                                                                         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="49"
+            column="90"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="58"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            Integer.parseInt(insertToggleUri.lastPathSegment!!).toLong()"
+        errorLine2="                                                            ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="70"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        cursor = contentResolver.query(toggleUri, null, null, null, null)!!"
+        errorLine2="                                                                         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="72"
+            column="74"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            Integer.parseInt(insertToggleUri.lastPathSegment!!).toLong()"
+        errorLine2="                                                            ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="88"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="100"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                        ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="113"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                                                 ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="113"
+            column="66"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                        ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="130"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                                                 ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="130"
+            column="66"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="130"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                       ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="136"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                                              ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="136"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                       ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="153"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                                              ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="153"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val configId = insertToggleUri.lastPathSegment!!.toLong()"
+        errorLine2="                                                      ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderPredefinedConfigurationValuesTest.kt"
+            line="73"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        )!!"
+        errorLine2="         ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderPredefinedConfigurationValuesTeste.kt"
+            line="55"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val configId = insertToggleUri.lastPathSegment!!.toLong()"
+        errorLine2="                                                      ~~">
+        <location
+            file="src/androidTest/java/se/eelde/toggles/provider/TogglesProviderPredefinedConfigurationValuesTeste.kt"
+            line="57"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="FullyQualifiedResource"
+        message="Use an import alias instead"
+        errorLine1="                modifier = Modifier.background(colorResource(id = se.eelde.toggles.composetheme.R.color.toggles_blue)),"
+        errorLine2="                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/applications/ApplicationEntry.kt"
+            line="114"
+            column="67"/>
+    </issue>
+
+    <issue
+        id="FullyQualifiedResource"
+        message="Use an import alias instead"
+        errorLine1="                    painterResource(id = se.eelde.toggles.composetheme.R.drawable.ic_settings_white_24dp),"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/applications/ApplicationEntry.kt"
+            line="123"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="FullyQualifiedResource"
+        message="Use an import alias instead"
+        errorLine1="                    painterResource(id = se.eelde.toggles.composetheme.R.drawable.ic_oss),"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/applications/ApplicationEntry.kt"
+            line="139"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="            configurationDao.touch(configurationId, Date())"
+        errorLine2="                                                    ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/booleanconfiguration/BooleanValueViewModel.kt"
+            line="138"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        return TogglesScope(id, 1, name, Date(timeStamp))"
+        errorLine2="                                         ~~~~">
+        <location
+            file="src/test/java/se/eelde/toggles/database/DatabaseHelper.kt"
+            line="157"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="            configurationDao.touch(configurationId, Date())"
+        errorLine2="                                                    ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/enumconfiguration/EnumValueViewModel.kt"
+            line="158"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="            configurationDao.touch(configurationId, Date())"
+        errorLine2="                                                    ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/integerconfiguration/IntegerValueViewModel.kt"
+            line="140"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        return if (value == null) null else Date(value)"
+        errorLine2="                                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/RoomDateConverter.kt"
+            line="9"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        return date?.time"
+        errorLine2="                     ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/RoomDateConverter.kt"
+            line="14"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="            togglesScope.timeStamp = Date()"
+        errorLine2="                                     ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/dialogs/scope/ScopeViewModel.kt"
+            line="83"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="            configurationDao.touch(configurationId, Date())"
+        errorLine2="                                                    ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/stringconfiguration/StringValueViewModel.kt"
+            line="138"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        put(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP, timeStamp.time)"
+        errorLine2="                                                                      ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="41"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        result = 31 * result + timeStamp.hashCode()"
+        errorLine2="                                         ~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="60"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="83"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="83"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="    var lastUse: Date = Date()"
+        errorLine2="                        ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
+            line="41"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        this.lastUse = Date()"
+        errorLine2="                       ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
+            line="44"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        this.lastUse = Date()"
+        errorLine2="                       ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
+            line="44"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="            scope.timeStamp = Date(Date().time - oneSecond)"
+        errorLine2="                              ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="495"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="            scope.timeStamp = Date(Date().time - oneSecond)"
+        errorLine2="                                   ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="495"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="            scope.timeStamp = Date(Date().time - oneSecond)"
+        errorLine2="                                          ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="495"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="            developmentScope.timeStamp = Date()"
+        errorLine2="                                         ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="506"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        fun newScope() = TogglesScope(0, 0, SCOPE_DEFAULT, Date())"
+        errorLine2="                                                           ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesScope.kt"
+            line="47"
+            column="60"/>
+    </issue>
+
+    <issue
+        id="PermissionNamingConvention"
+        message="`${togglesPermission} does not follow recommended naming convention`"
+        errorLine1="        android:name=&quot;${togglesPermission}&quot;"
+        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="6"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="ConvertToWebp"
+        message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
+        <location
+            file="src/debug/res/mipmap-xxxhdpi/ic_launcher_round.png"/>
+    </issue>
+
+    <issue
+        id="ConvertToWebp"
+        message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun ErrorView(errorString: String) ="
+        errorLine2="    ~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/oss/ErrorView.kt"
+            line="18"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun ErrorView(content: @Composable () -> Unit) {"
+        errorLine2="    ~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/oss/ErrorView.kt"
+            line="24"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun LoadingView(loadingTitle: String) ="
+        errorLine2="    ~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/oss/LoadingView.kt"
+            line="16"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ComposeModifierMissing"
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        errorLine1="fun LoadingView(content: @Composable () -> Unit = {}) {"
+        errorLine2="    ~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/oss/LoadingView.kt"
+            line="22"
             column="5"/>
     </issue>
 

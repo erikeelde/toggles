@@ -40,6 +40,7 @@ internal fun Project.configureAndroidCompose(
             "androidTestImplementation"(platform(bom))
             "implementation"(libs.findLibrary("androidx-compose-ui-tooling-preview").get())
             "debugImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
+            "lintChecks"(libs.findLibrary("com.slack.lint.compose.compose.lint.checks").get())
         }
 
         testOptions {
@@ -66,9 +67,5 @@ internal fun Project.configureAndroidCompose(
         project.providers.gradleProperty("enableComposeCompilerReports").onlyIfTrue()
             .relativeToRootProject("compose-reports")
             .let(reportsDestination::set)
-
-        @Suppress("UnstableApiUsage")
-        stabilityConfigurationFiles
-            .add(isolated.rootProject.projectDirectory.file("compose_compiler_config.conf"))
     }
 }

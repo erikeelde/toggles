@@ -43,6 +43,7 @@ internal fun Project.configureKotlinAndroid(
     }
 
     configureKotlin<KotlinAndroidProjectExtension>(enableExplicitApi)
+    configureLint(commonExtension)
 }
 
 /**

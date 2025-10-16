@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="InjectInJava" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="DeprecatedCall" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="DoNotCallProviders" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="SyntheticAccessor" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="UnknownNullness" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="RestrictedApi" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="LambdaLast" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="MissingFirebaseInstanceTokenRefresh" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="DeprecatedSqlUsage" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="ObsoleteSdkInt" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="UnusedResources" severity="ignore">
+        <ignore path="*build/generated/res/processDebugGoogleServices/values/values.xml" />
+    </issue>
+    <issue id="ExceptionMessage" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="TypographyQuotes" severity="ignore">
+        <ignore path="*build/generated*" />
+    </issue>
+    <issue id="LintBaseline" severity="ignore" />
+    <issue id="StopShip" severity="ignore" />
+    <issue id="NewerVersionAvailable" severity="ignore" />
+    <issue id="RawDispatchersUse" severity="ignore" />
+    <issue id="InvalidPackage" severity="ignore" />
+    <issue id="MissingTranslation" severity="ignore" />
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="DuplicateStrings" severity="ignore" />
+    <issue id="UnknownIssueId" severity="ignore" />
+</lint>
