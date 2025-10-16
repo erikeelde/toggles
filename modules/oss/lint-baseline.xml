@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 7.4.1" type="baseline" client="gradle" dependencies="false" name="AGP (7.4.1)" variant="all" version="7.4.1">
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="true" name="AGP (8.13.0)" variant="all" version="8.13.0">
 
     <issue
         id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
         errorLine1="fun ErrorView(errorString: String) ="
         errorLine2="    ~~~~~~~~~">
         <location
@@ -14,7 +14,7 @@
 
     <issue
         id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
         errorLine1="fun ErrorView(content: @Composable () -> Unit) {"
         errorLine2="    ~~~~~~~~~">
         <location
@@ -25,7 +25,7 @@
 
     <issue
         id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
         errorLine1="fun LoadingView(loadingTitle: String) ="
         errorLine2="    ~~~~~~~~~~~">
         <location
@@ -36,57 +36,13 @@
 
     <issue
         id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
+        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
         errorLine1="fun LoadingView(content: @Composable () -> Unit = {}) {"
         errorLine2="    ~~~~~~~~~~~">
         <location
             file="src/main/java/se/eelde/toggles/oss/LoadingView.kt"
             line="22"
             column="5"/>
-    </issue>
-
-    <issue
-        id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
-        errorLine1="fun OssView(artifacts: List&lt;ViewData>) {"
-        errorLine2="    ~~~~~~~">
-        <location
-            file="src/main/java/se/eelde/toggles/oss/OssView.kt"
-            line="56"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="ComposeModifierMissing"
-        message="This @Composable function emits content but doesn&apos;t have a modifier parameter.&#xA;See https://slackhq.github.io/compose-lints/rules/#when-should-i-expose-modifier-parameters for more information."
-        errorLine1="fun CharacterHeader(initial: String) {"
-        errorLine2="    ~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/se/eelde/toggles/oss/OssView.kt"
-            line="107"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="ComposeUnstableCollections"
-        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;ViewData> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `artifacts: ImmutableList&lt;ViewData>` or create an `@Immutable` wrapper for this class: `@Immutable data class ArtifactsList(val items: List&lt;ViewData>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
-        errorLine1="fun OssView(artifacts: List&lt;ViewData>) {"
-        errorLine2="                       ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/se/eelde/toggles/oss/OssView.kt"
-            line="56"
-            column="24"/>
-    </issue>
-
-    <issue
-        id="ComposeUnstableCollections"
-        message="The Compose Compiler cannot infer the stability of a parameter if a List&lt;License> is used in it, even if the item type is stable.&#xA;You should use Kotlinx Immutable Collections instead: `licenses: ImmutableList&lt;License>` or create an `@Immutable` wrapper for this class: `@Immutable data class LicensesList(val items: List&lt;License>)`&#xA;See https://slackhq.github.io/compose-lints/rules/#avoid-using-unstable-collections for more information."
-        errorLine1="fun LicenseSelector(title: String, licenses: List&lt;License>, close: () -> Unit) {"
-        errorLine2="                                             ~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/se/eelde/toggles/oss/OssView.kt"
-            line="130"
-            column="46"/>
     </issue>
 
 </issues>

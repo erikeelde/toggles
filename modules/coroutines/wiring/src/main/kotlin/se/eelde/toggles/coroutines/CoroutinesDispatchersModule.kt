@@ -13,10 +13,12 @@ object CoroutinesDispatchersModule {
 
     @DefaultDispatcher
     @Provides
+    @Suppress("InjectDispatcher")
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
     @IoDispatcher
     @Provides
+    @Suppress("InjectDispatcher")
     fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @MainDispatcher

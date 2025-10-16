@@ -128,6 +128,7 @@ com-google-dagger-hilt-core = { module = "com.google.dagger:hilt-core", version.
 com-google-devtools-ksp-com-google-devtools-ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 com-google-gms-google-services = "com.google.gms:google-services:4.4.4"
 com-slack-lint-compose-compose-lint-checks = "com.slack.lint.compose:compose-lint-checks:1.4.2"
+com-slack-lint-slack-lint-checks = "com.slack.lint:slack-lint-checks:0.11.0"
 com-squareup-kotlinpoet = "com.squareup:kotlinpoet:2.2.0"
 com-squareup-leakcanary-leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "com-squareup-leakcanary" }
 com-squareup-moshi = { module = "com.squareup.moshi:moshi", version.ref = "com-squareup-moshi" }

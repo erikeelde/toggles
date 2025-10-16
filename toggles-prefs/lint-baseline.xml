@@ -1,4 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues by="lint 3.5.0-alpha03" client="gradle" format="5" variant="all" version="3.5.0-alpha03">
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="true" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            for (enumConstant in type.enumConstants!!) {"
+        errorLine2="                                                   ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/prefs/TogglesPreferencesImpl.kt"
+            line="101"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            ProviderInfo().apply { authority = TogglesProviderContract.toggleUri().authority!! }"
+        errorLine2="                                                                                            ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
+            line="44"
+            column="93"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                TogglesProviderContract.toggleUri().authority!!,"
+        errorLine2="                                                             ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
+            line="110"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                TogglesProviderContract.toggleUri().authority!!,"
+        errorLine2="                                                             ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
+            line="115"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                TogglesProviderContract.toggleUri().authority!!,"
+        errorLine2="                                                             ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
+            line="120"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                TogglesProviderContract.toggleUri().authority!!,"
+        errorLine2="                                                             ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
+            line="125"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                val toggle = Toggle.fromContentValues(values!!)"
+        errorLine2="                                                            ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
+            line="178"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                toggleValues.add(values!!.getAsString(ColumnNames.ToggleValue.COL_VALUE))"
+        errorLine2="                                       ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
+            line="185"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        put(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP, timeStamp.time)"
+        errorLine2="                                                                      ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="41"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        result = 31 * result + timeStamp.hashCode()"
+        errorLine2="                                         ~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="60"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="83"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="83"
+            column="29"/>
+    </issue>
 
 </issues>

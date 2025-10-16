@@ -1,4 +1,191 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 7.4.0" type="baseline" client="gradle" dependencies="false" name="AGP (7.4.0)" variant="all" version="7.4.0">
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="true" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
+        errorLine2="                                                                              ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
+            line="53"
+            column="79"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
+        errorLine2="                                                                              ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
+            line="53"
+            column="79"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
+        errorLine2="                                                                                 ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
+            line="56"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
+        errorLine2="                                                                                 ~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
+            line="56"
+            column="82"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        return TogglesScope(id, 1, name, Date(timeStamp))"
+        errorLine2="                                         ~~~~">
+        <location
+            file="src/test/java/se/eelde/toggles/database/DatabaseHelper.kt"
+            line="157"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        return if (value == null) null else Date(value)"
+        errorLine2="                                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/RoomDateConverter.kt"
+            line="9"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        return date?.time"
+        errorLine2="                     ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/RoomDateConverter.kt"
+            line="14"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        put(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP, timeStamp.time)"
+        errorLine2="                                                                      ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="41"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        result = 31 * result + timeStamp.hashCode()"
+        errorLine2="                                         ~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="60"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="83"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="83"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="    var lastUse: Date = Date()"
+        errorLine2="                        ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
+            line="41"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        this.lastUse = Date()"
+        errorLine2="                       ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
+            line="44"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        this.lastUse = Date()"
+        errorLine2="                       ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
+            line="44"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        fun newScope() = TogglesScope(0, 0, SCOPE_DEFAULT, Date())"
+        errorLine2="                                                           ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesScope.kt"
+            line="47"
+            column="60"/>
+    </issue>
 
 </issues>
