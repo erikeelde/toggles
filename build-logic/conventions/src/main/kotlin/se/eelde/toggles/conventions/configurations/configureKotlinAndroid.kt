@@ -18,10 +18,8 @@ package se.eelde.toggles.conventions.configurations
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
-import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
@@ -66,5 +64,7 @@ private inline fun <reified T : KotlinBaseExtension> Project.configureKotlin(ena
             }
             jvmToolchain(21)
             allWarningsAsErrors = warningsAsErrors
+            freeCompilerArgs.add("-Xannotation-target-all")
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
         }
     }
