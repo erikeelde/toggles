@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -41,6 +42,7 @@ internal class FlowTest {
     fun test() = runTest {
         val toggles = TogglesImpl(context)
         toggles.toggle("test item", "my value").first().apply {
+            @OptIn(ExperimentalCoroutinesApi::class)
             advanceUntilIdle()
             assert(this == "my value")
         }
@@ -49,6 +51,7 @@ internal class FlowTest {
             .updateConfigurationValue(1, 1, "the test configuration value")
 
         toggles.toggle("test item", "my value").first().apply {
+            @OptIn(ExperimentalCoroutinesApi::class)
             advanceUntilIdle()
             assert(this == "the test configuration value")
         }

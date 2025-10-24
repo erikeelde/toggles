@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.collectAsState
@@ -64,29 +65,35 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
                 TopAppBar(
                     title = {
                         SearchBar(
-                            query = query,
-                            onQueryChange = {
-                                viewModel.setQuery(it)
+                            inputField = {
+                                SearchBarDefaults.InputField(
+                                    query = query,
+                                    onQueryChange = {
+                                        viewModel.setQuery(it)
+                                    },
+                                    onSearch = {},
+                                    expanded = false,
+                                    onExpandedChange = { },
+                                    placeholder = { Text("Search") },
+                                    trailingIcon = {
+                                        if (searching) {
+                                            IconButton(onClick = {
+                                                viewModel.setQuery("")
+                                                searching = false
+                                            }) {
+                                                Icon(
+                                                    imageVector = Icons.Filled.Close,
+                                                    contentDescription = null
+                                                )
+                                            }
+                                        }
+                                    },
+                                )
                             },
-                            onSearch = {},
-                            placeholder = { Text("Search") },
-                            active = false, // active,
-                            trailingIcon = {
-                                if (searching) {
-                                    IconButton(onClick = {
-                                        viewModel.setQuery("")
-                                        searching = false
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Close,
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            },
-                            onActiveChange = {}
-                        ) {
-                        }
+                            expanded = false,
+                            onExpandedChange = { },
+                            content = { },
+                        )
                     },
                     navigationIcon =
                     {
