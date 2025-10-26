@@ -18,8 +18,6 @@ class AndroidModuleConventionPlugin : Plugin<Project> {
             apply(plugin = "org.jetbrains.kotlin.android")
             apply(plugin = "toggles.android.lint")
             apply(plugin = "toggles.detekt.common")
-            apply(plugin = "org.jetbrains.dokka")
-            apply(plugin = "com.vanniktech.maven.publish")
 
             extensions.configure<LibraryExtension> {
                 @Suppress("UnstableApiUsage")
