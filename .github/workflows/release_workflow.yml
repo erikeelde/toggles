@@ -50,7 +50,7 @@ jobs:
         run: ./gradlew :toggles-sample:assembleRelease
 
       - name: Upload binaries
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Apks
           path: '**/build/outputs/*'

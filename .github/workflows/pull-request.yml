@@ -27,7 +27,7 @@ jobs:
         run: ./gradlew check detektMain
 
       - name: Upload reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: Reports
@@ -62,7 +62,7 @@ jobs:
         run: ./gradlew pixel6api35googleDebugAndroidTest
 
       - name: "Upload reports"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: "Android test results"
