@@ -1,7 +1,8 @@
-name: Libraries release
+name: Test snapshot release
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ test-snapshot-release ]
 
 jobs:
   build:
@@ -16,13 +17,13 @@ jobs:
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - uses: ./.github/actions/setup_android_and_java
-
       - name: "Calculate build number"
         id: version_information
         uses: ./.github/actions/version_information
         with:
           release: true
+
+      - uses: ./.github/actions/setup_android_and_java
 
       - name: "Setup Gradle Signing"
         if: github.repository == 'erikeelde/toggles'
@@ -34,6 +35,11 @@ jobs:
           maven-username: ${{ secrets.MAVEN_CENTRAL_REPOSITORY_USERNAME }}
           maven-password: ${{ secrets.MAVEN_CENTRAL_REPOSITORY_PASSWORD }}
 
-      - name: Publish release libraries
+      - name: List keys
+        shell: bash
+        run: |
+          cat gradle.properties
+
+      - name: Publish snapshot libraries
         if: github.repository == 'erikeelde/toggles'
-        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
+        run: ./gradlew :toggles-core:signMavenPublication
