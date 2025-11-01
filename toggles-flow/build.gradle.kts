@@ -10,6 +10,9 @@ plugins {
 
 android {
     namespace = "se.eelde.toggles.flow"
+
+    @Suppress("UnstableApiUsage")
+    testFixtures.enable = true
 }
 
 dependencies {
@@ -38,8 +41,8 @@ dependencies {
     testImplementation(testFixtures(projects.modules.database.implementation))
     testImplementation(testFixtures(projects.togglesFlow))
 
-    testFixturesImplementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
-    testFixturesImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
+    testImplementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
+    testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 }
 
 val versionFile = File("versions.properties")

@@ -28,9 +28,9 @@ jobs:
         if: github.repository == 'erikeelde/toggles'
         uses: ./.github/actions/setup_environment
         with:
-          gpg-key-b64: ${{ secrets.SECRING_GPG_B64 }}
           signing-key-id: ${{ secrets.SIGNING_KEYID }}
           signing-password: ${{ secrets.SIGNING_PASSWORD }}
+          signing-key-base64: ${{ secrets.SIGNING_GPG_KEY_BASE64_ENCODED }}
           maven-username: ${{ secrets.MAVEN_CENTRAL_REPOSITORY_USERNAME }}
           maven-password: ${{ secrets.MAVEN_CENTRAL_REPOSITORY_PASSWORD }}
 

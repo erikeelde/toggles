@@ -1,11 +1,11 @@
 name: "Setup Gradle Signing Environment"
 description: "Sets up gradle.properties and secret key ring for signing/publishing"
 inputs:
-  gpg-key-b64:
-    required: true
   signing-key-id:
     required: true
   signing-password:
+    required: true
+  signing-key-base64:
     required: true
   maven-username:
     required: true
@@ -19,13 +19,9 @@ runs:
       shell: bash
       run: |
         cat <<EOF >> gradle.properties
-        signing.keyId=${{ inputs.signing-key-id }}
-        signing.password=${{ inputs.signing-password }}
-        signing.secretKeyRingFile=secring.gpg
+        signingInMemoryKeyId=${{ inputs.signing-key-id }}
+        signingInMemoryKeyPassword=${{ inputs.signing-password }}
+        signingInMemoryKey=${{ inputs.signing-key-base64 }}
         mavenCentralUsername=${{ inputs.maven-username }}
         mavenCentralPassword=${{ inputs.maven-password }}
         EOF
-
-    - name: "Decode GPG key"
-      shell: bash
-      run: echo "${{ inputs.gpg-key-b64 }}" | base64 -d > secring.gpg
