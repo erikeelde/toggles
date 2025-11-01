@@ -3,7 +3,7 @@ package se.eelde.toggles.flow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-public class FakeToggles : Toggles {
+internal class FakeToggles : Toggles {
     override fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> =
         flowOf(defaultValue)
 

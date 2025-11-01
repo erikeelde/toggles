@@ -20,8 +20,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             apply(plugin = "org.jetbrains.kotlinx.binary-compatibility-validator")
 
             extensions.configure<LibraryExtension> {
-                testFixtures.enable = true
-
                 configureKotlinAndroid(commonExtension = this, enableExplicitApi = false)
 
                 publishing {
