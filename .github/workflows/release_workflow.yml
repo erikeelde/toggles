@@ -62,20 +62,25 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const path = 'toggles-sample/build/outputs/apk/release/toggles-sample-release-unsigned.apk';
+            const apkFiles = [
+            'toggles-sample/build/outputs/apk/release/toggles-sample-release-unsigned.apk',
+            'toggles-app/build/outputs/apk/release/toggles-app-release.apk'
+            ];
             const content_type = 'application/vnd.android.package-archive';
-            const release_id = '136748606';
+            const release_id = context.payload.release.id;
             
-            const response = await github.rest.repos.uploadReleaseAsset({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: release_id,
-              name: 'toggles-sample.apk',
-              data: fs.readFileSync(path),
-              headers: {
-                'content-type': content_type,
-                'content-length': fs.statSync(path).size
-              }
-            });
-            
-            console.log(response);
+            for (const filePath of apkFiles) {
+              const fileName = filePath.split('/').pop();
+              const response = await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release_id,
+                name: fileName,
+                data: fs.readFileSync(filePath),
+                headers: {
+                  'content-type': content_type,
+                  'content-length': fs.statSync(filePath).size
+                }
+              });
+              console.log(`Uploaded: ${fileName}`, response.data.browser_download_url);
+            }
