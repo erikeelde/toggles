@@ -69,18 +69,28 @@ jobs:
             const content_type = 'application/vnd.android.package-archive';
             const release_id = context.payload.release.id;
             
+            const uploadErrors = [];
             for (const filePath of apkFiles) {
-              const fileName = filePath.split('/').pop();
-              const response = await github.rest.repos.uploadReleaseAsset({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: release_id,
-                name: fileName,
-                data: fs.readFileSync(filePath),
-                headers: {
-                  'content-type': content_type,
-                  'content-length': fs.statSync(filePath).size
-                }
-              });
-              console.log(`Uploaded: ${fileName}`, response.data.browser_download_url);
+              try {
+                const fileName = filePath.split('/').pop();
+                const response = await github.rest.repos.uploadReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: release_id,
+                  name: fileName,
+                  data: fs.readFileSync(filePath),
+                  headers: {
+                    'content-type': content_type,
+                    'content-length': fs.statSync(filePath).size
+                  }
+                });
+                console.log(`Uploaded: ${fileName}`, response.data.browser_download_url);
+              } catch (error) {
+                console.error(`Failed to upload ${filePath}:`, error);
+                uploadErrors.push({ file: filePath, error: error.message || error });
+              }
+            }
+            if (uploadErrors.length > 0) {
+              console.error('Some APK uploads failed:', uploadErrors);
+              throw new Error('One or more APK uploads failed. See logs for details.');
             }
