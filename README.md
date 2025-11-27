@@ -126,9 +126,14 @@ implementation("se.eelde.toggles:toggles-core:0.0.3")
 
 ## Build Variant Configuration
 
-The toggles library provides no-op implementations that are useful for release builds. The no-op versions return default values immediately without connecting to the Toggles app, eliminating unnecessary overhead in production builds.
+For release builds, you have two options to disable the toggles functionality:
 
-### Using Toggles in Debug Builds Only
+1. **Use the provided no-op libraries** (recommended for convenience)
+2. **Implement your own no-op variant** of the `Toggles` or `TogglesPreferences` interface
+
+The no-op versions return default values immediately without connecting to the Toggles app, eliminating unnecessary overhead in production builds.
+
+### Option 1: Using the No-Op Libraries (Recommended)
 
 To enable feature toggles in debug builds while automatically disabling them in release builds, configure your dependencies based on build type:
 
@@ -175,6 +180,34 @@ toggles.toggle("enable_new_feature", false).collect { isEnabled ->
 - **Production efficiency**: Zero overhead in release builds
 - **Seamless transition**: Same code works in both debug and release
 - **No app dependency**: Release builds don't require the Toggles app to be installed
+
+### Option 2: Implementing Your Own No-Op Variant
+
+If you prefer more control or want to customize the behavior, you can implement your own no-op version:
+
+#### For Toggles-Flow
+
+```kotlin
+class MyNoOpToggles(context: Context) : Toggles {
+    override fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> = flowOf(defaultValue)
+    override fun toggle(key: String, defaultValue: Int): Flow<Int> = flowOf(defaultValue)
+    override fun toggle(key: String, defaultValue: String): Flow<String> = flowOf(defaultValue)
+    override fun <T : Enum<T>> toggle(key: String, type: Class<T>, defaultValue: T): Flow<T> = flowOf(defaultValue)
+}
+```
+
+#### For Toggles-Prefs
+
+```kotlin
+class MyNoOpTogglesPreferences(context: Context) : TogglesPreferences {
+    override fun getBoolean(key: String, defValue: Boolean): Boolean = defValue
+    override fun getInt(key: String, defValue: Int): Int = defValue
+    override fun getString(key: String, defValue: String): String = defValue
+    override fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defValue: T): T = defValue
+}
+```
+
+Then configure your dependency injection or factory to provide the appropriate implementation based on build type. The provided no-op libraries exist for convenience so you don't have to write this boilerplate yourself.
 
 ## Contribution Guidelines
 
