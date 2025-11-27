@@ -64,6 +64,47 @@ The app stores your settings behind a content provider, ensuring configurations 
 
 ## Advanced Examples
 
+### Scoped Toggles (Per-User Feature Flags)
+
+Want to enable different features for different users or environments? Use scoped instances:
+
+```kotlin
+import se.eelde.toggles.flow.TogglesImpl
+
+class MultiUserActivity : AppCompatActivity() {
+    // Create separate toggle instances for each user
+    private val adminToggles = TogglesImpl(this, scope = "admin")
+    private val guestToggles = TogglesImpl(this, scope = "guest")
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        lifecycleScope.launch {
+            // Admin sees advanced features
+            adminToggles.toggle("advanced_mode", false).collect { enabled ->
+                if (enabled) showAdminFeatures()
+            }
+        }
+        
+        lifecycleScope.launch {
+            // Guest has limited features
+            guestToggles.toggle("advanced_mode", false).collect { enabled ->
+                // Will use guest scope value
+                if (enabled) showAdminFeatures()
+            }
+        }
+    }
+}
+```
+
+**Use cases for scoped toggles:**
+- Per-user feature flags (admin vs regular users)
+- A/B testing with different user groups
+- Environment-specific settings (dev, staging, prod)
+- Multi-tenant applications
+
+The scope parameter is optional. If not provided, the system uses the currently selected scope in the Toggles app.
+
 ### Working with Enums
 [![Flow](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-flow/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-flow)
 
@@ -108,12 +149,18 @@ implementation("se.eelde.toggles:toggles-prefs:0.0.2")
 
 ```kotlin
 import se.eelde.toggles.prefs.TogglesPreferences
+import se.eelde.toggles.prefs.TogglesPreferencesImpl
 
-val togglesPrefs = TogglesPreferences(context)
+// Default scope
+val togglesPrefs = TogglesPreferencesImpl(context)
 val isEnabled = togglesPrefs.getBoolean("feature_toggle_key", false)
+
+// With custom scope for per-user toggles
+val userToggles = TogglesPreferencesImpl(context, scope = "user_123")
+val userFeature = userToggles.getBoolean("feature_toggle_key", false)
 ```
 
-**Note:** Consider using toggles-flow for reactive updates and better integration with modern Android development patterns.
+**Note:** Consider using toggles-flow for reactive updates and better integration with modern Android development patterns. Scoped toggles are also supported in the prefs library.
 
 ### Toggles-core library (Advanced)
 [![Core](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-core/badge.png)](https://maven-badges.herokuapp.com/maven-central/se.eelde.toggles/toggles-core)
