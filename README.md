@@ -124,6 +124,58 @@ Low-level library for communicating with the toggles application via content pro
 implementation("se.eelde.toggles:toggles-core:0.0.3")
 ```
 
+## Build Variant Configuration
+
+The toggles library provides no-op implementations that are useful for release builds. The no-op versions return default values immediately without connecting to the Toggles app, eliminating unnecessary overhead in production builds.
+
+### Using Toggles in Debug Builds Only
+
+To enable feature toggles in debug builds while automatically disabling them in release builds, configure your dependencies based on build type:
+
+#### For Toggles-Flow (Recommended)
+
+```gradle
+dependencies {
+    debugImplementation("se.eelde.toggles:toggles-flow:0.0.3")
+    releaseImplementation("se.eelde.toggles:toggles-flow-noop:0.0.3")
+}
+```
+
+#### For Toggles-Prefs
+
+```gradle
+dependencies {
+    debugImplementation("se.eelde.toggles:toggles-prefs:0.0.2")
+    releaseImplementation("se.eelde.toggles:toggles-prefs-noop:0.0.2")
+}
+```
+
+### How No-Op Implementations Work
+
+The no-op libraries provide identical APIs but with minimal implementations:
+- They **do not** connect to the Toggles app
+- They **immediately return** the default values you provide
+- They **add zero runtime overhead** to your release builds
+- They **maintain the same API**, so no code changes are needed
+
+#### Example: No-Op Behavior
+
+```kotlin
+// In debug builds: reads from Toggles app, observes changes
+// In release builds: immediately returns 'false', never changes
+toggles.toggle("enable_new_feature", false).collect { isEnabled ->
+    // Debug: reflects actual toggle value from Toggles app
+    // Release: always receives 'false' (the default value)
+}
+```
+
+### Benefits
+
+- **Development flexibility**: Full feature toggle control during development
+- **Production efficiency**: Zero overhead in release builds
+- **Seamless transition**: Same code works in both debug and release
+- **No app dependency**: Release builds don't require the Toggles app to be installed
+
 ## Contribution Guidelines
 
 We welcome contributions! Please follow these steps to contribute:
