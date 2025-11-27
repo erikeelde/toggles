@@ -124,7 +124,7 @@ class TogglesProvider : ContentProvider() {
 
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATION_ID -> {
-                val scope = getSelectedScope(scopeDao, callingApplication.id)
+                val scope = getScopeFromUri(uri, scopeDao, callingApplication.id)
                 cursor = configurationDao.getToggle(
                     java.lang.Long.valueOf(uri.lastPathSegment!!),
                     scope.id
@@ -142,7 +142,7 @@ class TogglesProvider : ContentProvider() {
             }
 
             UriMatch.CURRENT_CONFIGURATION_KEY -> {
-                val scope = getSelectedScope(scopeDao, callingApplication.id)
+                val scope = getScopeFromUri(uri, scopeDao, callingApplication.id)
                 cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope.id)
 
                 if (cursor.count == 0) {
@@ -484,6 +484,21 @@ class TogglesProvider : ContentProvider() {
             applicationId: Long
         ): TogglesScope = scopeDao.getSelectedScope(applicationId)
             ?: error("No selected scope for application $applicationId")
+
+        @Synchronized
+        private fun getScopeFromUri(
+            uri: Uri,
+            scopeDao: ProviderScopeDao,
+            applicationId: Long
+        ): TogglesScope {
+            val scopeName = uri.getQueryParameter("SCOPE")
+            return if (scopeName != null) {
+                scopeDao.getScopeByName(applicationId, scopeName)
+                    ?: getDefaultScope(scopeDao, applicationId)
+            } else {
+                getSelectedScope(scopeDao, applicationId)
+            }
+        }
 
         private fun createDefaultScope(
             scopeDao: ProviderScopeDao,
