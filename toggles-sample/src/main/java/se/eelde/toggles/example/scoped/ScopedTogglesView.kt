@@ -1,6 +1,7 @@
 package se.eelde.toggles.example.scoped
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +19,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ScopedTogglesView(viewModel: ScopedTogglesViewModel, modifier: Modifier = Modifier) {
-    val viewState = viewModel.viewState.value
+    val viewState by viewModel.viewState
 
     Column(
         modifier = modifier

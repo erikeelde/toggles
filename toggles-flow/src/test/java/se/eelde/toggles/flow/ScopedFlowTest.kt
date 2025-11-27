@@ -40,6 +40,7 @@ internal class ScopedFlowTest {
         )
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testScopedToggleAccess() = runTest {
         // Create a custom scope for user1
@@ -93,7 +94,6 @@ internal class ScopedFlowTest {
         // Test that user1 scope gets "true"
         val togglesUser1 = TogglesImpl(context, scope = "user1")
         togglesUser1.toggle("feature_flag", false).first().apply {
-            @OptIn(ExperimentalCoroutinesApi::class)
             advanceUntilIdle()
             assert(this == true) { "Expected true for user1 scope, got $this" }
         }
@@ -101,23 +101,23 @@ internal class ScopedFlowTest {
         // Test that user2 scope gets "false"
         val togglesUser2 = TogglesImpl(context, scope = "user2")
         togglesUser2.toggle("feature_flag", false).first().apply {
-            @OptIn(ExperimentalCoroutinesApi::class)
             advanceUntilIdle()
             assert(this == false) { "Expected false for user2 scope, got $this" }
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testDefaultScopeWhenScopeNotSpecified() = runTest {
         // Without specifying scope, should use the selected scope
         val toggles = TogglesImpl(context)
         toggles.toggle("test_flag", true).first().apply {
-            @OptIn(ExperimentalCoroutinesApi::class)
             advanceUntilIdle()
             assert(this == true) { "Expected default value when toggle not set" }
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testFallbackToDefaultScopeWhenCustomScopeNotFound() = runTest {
         // Create a toggle value in the default scope
@@ -143,7 +143,6 @@ internal class ScopedFlowTest {
         // Request with non-existent scope should fall back to default
         val toggles = TogglesImpl(context, scope = "nonexistent_scope")
         toggles.toggle("fallback_flag", "fallback").first().apply {
-            @OptIn(ExperimentalCoroutinesApi::class)
             advanceUntilIdle()
             assert(this == "default_value") { "Expected default scope value, got $this" }
         }
