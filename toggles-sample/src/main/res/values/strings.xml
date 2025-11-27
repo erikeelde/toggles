@@ -8,5 +8,6 @@
 
     <string name="nav_menu_toggles_flow">Flow</string>
     <string name="nav_menu_toggles_prefs">Prefs</string>
+    <string name="nav_menu_scoped">Scoped</string>
     <string name="oss">oss</string>
 </resources>

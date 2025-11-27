@@ -10,3 +10,6 @@ object Flow
 
 @Serializable
 object Info
+
+@Serializable
+object ScopedToggles

@@ -33,6 +33,8 @@ import se.eelde.toggles.example.info.InfoView
 import se.eelde.toggles.example.routes.Flow
 import se.eelde.toggles.example.routes.Info
 import se.eelde.toggles.example.routes.Oss
+import se.eelde.toggles.example.routes.ScopedToggles
+import se.eelde.toggles.example.scoped.ScopedTogglesView
 import se.eelde.toggles.oss.OssView
 
 @AndroidEntryPoint
@@ -74,6 +76,7 @@ fun Navigation(
                     BottomNavigationBar(
                         prefsClick = { backStack.add(Info) },
                         flowClick = { backStack.add(Flow) },
+                        scopedClick = { backStack.add(ScopedToggles) },
                         ossClick = { backStack.add(Oss) },
                         rootDestination = RootDestination.Info
                     )
@@ -91,6 +94,7 @@ fun Navigation(
                     BottomNavigationBar(
                         prefsClick = { backStack.add(Info) },
                         flowClick = { backStack.add(Flow) },
+                        scopedClick = { backStack.add(ScopedToggles) },
                         ossClick = { backStack.add(Oss) },
                         rootDestination = RootDestination.Flow
                     )
@@ -103,11 +107,30 @@ fun Navigation(
                     )
                 }
             }
+            entry<ScopedToggles> {
+                Scaffold(bottomBar = {
+                    BottomNavigationBar(
+                        prefsClick = { backStack.add(Info) },
+                        flowClick = { backStack.add(Flow) },
+                        scopedClick = { backStack.add(ScopedToggles) },
+                        ossClick = { backStack.add(Oss) },
+                        rootDestination = RootDestination.Scoped
+                    )
+                }) { paddingValues ->
+                    ScopedTogglesView(
+                        hiltViewModel(),
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
+                    )
+                }
+            }
             entry<Oss> {
                 Scaffold(bottomBar = {
                     BottomNavigationBar(
                         prefsClick = { backStack.add(Info) },
                         flowClick = { backStack.add(Flow) },
+                        scopedClick = { backStack.add(ScopedToggles) },
                         ossClick = { backStack.add(Oss) },
                         rootDestination = RootDestination.Oss
                     )
@@ -120,13 +143,14 @@ fun Navigation(
 }
 
 enum class RootDestination {
-    Info, Flow, Oss
+    Info, Flow, Scoped, Oss
 }
 
 @Composable
 fun BottomNavigationBar(
     prefsClick: () -> Unit,
     flowClick: () -> Unit,
+    scopedClick: () -> Unit,
     ossClick: () -> Unit,
     rootDestination: RootDestination,
     modifier: Modifier = Modifier,
@@ -154,6 +178,18 @@ fun BottomNavigationBar(
                 )
             },
             label = { Text(text = stringResource(id = R.string.nav_menu_toggles_flow)) }
+        )
+
+        NavigationBarItem(
+            selected = rootDestination == RootDestination.Scoped,
+            onClick = { scopedClick() },
+            icon = {
+                Icon(
+                    imageVector = Icons.Filled.SettingsEthernet,
+                    contentDescription = null
+                )
+            },
+            label = { Text(text = stringResource(id = R.string.nav_menu_scoped)) }
         )
 
         NavigationBarItem(

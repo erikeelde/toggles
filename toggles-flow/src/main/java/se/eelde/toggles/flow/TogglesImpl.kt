@@ -26,6 +26,7 @@ import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 @Suppress("LibraryEntitiesShouldNotBePublic")
 public class TogglesImpl(
     context: Context,
+    private val scope: String? = null,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : Toggles {
     private val context = context.applicationContext
@@ -159,7 +160,7 @@ public class TogglesImpl(
             var cursor: Cursor? = null
             try {
                 cursor = contentResolver.query(
-                    toggleUri(key),
+                    toggleUri(key, scope),
                     null,
                     null,
                     null,
