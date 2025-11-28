@@ -322,13 +322,17 @@ object Migrations {
                     "CREATE UNIQUE INDEX `index_configurationValue_temp_configurationId_scope` ON `$tableNameTemp` (`configurationId`, `scope`)"
                 )
 
-                // Migrate data - for each (configurationId, scope) keep only the most recent value
+                // Migrate data - for each (configurationId, scope) keep only the row with highest id (most recent)
                 // This handles cases where multiple values existed for the same config+scope
                 db.execSQL(
                     "INSERT INTO $tableNameTemp (id, configurationId, value, scope) " +
-                        "SELECT MAX(id) as id, configurationId, value, scope " +
-                        "FROM $tableName " +
-                        "GROUP BY configurationId, scope"
+                        "SELECT t1.id, t1.configurationId, t1.value, t1.scope " +
+                        "FROM $tableName t1 " +
+                        "INNER JOIN (" +
+                        "  SELECT MAX(id) as maxId, configurationId, scope " +
+                        "  FROM $tableName " +
+                        "  GROUP BY configurationId, scope" +
+                        ") t2 ON t1.id = t2.maxId"
                 )
 
                 // Drop old table
