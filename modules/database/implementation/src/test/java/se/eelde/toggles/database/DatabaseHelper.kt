@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import org.junit.Assert.assertNotNull
 import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ConfigurationTable
+import se.eelde.toggles.database.tables.ConfigurationValueTable
 import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
 import java.util.Date
@@ -155,5 +156,56 @@ object DatabaseHelper {
         val timeStamp = cursor.getLong(cursor.getColumnIndex(ScopeTable.COL_SELECTED_TIMESTAMP))
 
         return TogglesScope(id, 1, name, Date(timeStamp))
+    }
+
+    fun insertConfiguration(
+        db: SupportSQLiteDatabase,
+        applicationId: Long,
+        key: String,
+        type: String
+    ): Long {
+        val configurationValues = ContentValues()
+        configurationValues.put(ConfigurationTable.COL_APP_ID, applicationId)
+        configurationValues.put(ConfigurationTable.COL_KEY, key)
+        configurationValues.put(ConfigurationTable.COL_TYPE, type)
+        return db.insert(ConfigurationTable.TABLE_NAME, CONFLICT_FAIL, configurationValues)
+    }
+
+    fun insertConfigurationValue(
+        db: SupportSQLiteDatabase,
+        configurationId: Long,
+        value: String,
+        scopeId: Long
+    ): Long {
+        val configurationValues = ContentValues()
+        configurationValues.put(ConfigurationValueTable.COL_CONFIG_ID, configurationId)
+        configurationValues.put(ConfigurationValueTable.COL_VALUE, value)
+        configurationValues.put(ConfigurationValueTable.COL_SCOPE, scopeId)
+        return db.insert(ConfigurationValueTable.TABLE_NAME, CONFLICT_FAIL, configurationValues)
+    }
+
+    fun getConfigurationValues(
+        db: SupportSQLiteDatabase,
+        configurationId: Long,
+        scopeId: Long
+    ): List<TogglesConfigurationValue> {
+        val query = db.query(
+            "SELECT * FROM ${ConfigurationValueTable.TABLE_NAME} WHERE ${ConfigurationValueTable.COL_CONFIG_ID} = ? AND ${ConfigurationValueTable.COL_SCOPE} = ?",
+            arrayOf<Any>(configurationId, scopeId)
+        )
+        assertNotNull(query)
+
+        val values = mutableListOf<TogglesConfigurationValue>()
+        while (query.moveToNext()) {
+            val id = query.getLong(query.getColumnIndexOrThrow(ConfigurationValueTable.COL_ID))
+            val configId =
+                query.getLong(query.getColumnIndexOrThrow(ConfigurationValueTable.COL_CONFIG_ID))
+            val value =
+                query.getString(query.getColumnIndexOrThrow(ConfigurationValueTable.COL_VALUE))
+            val scope = query.getLong(query.getColumnIndexOrThrow(ConfigurationValueTable.COL_SCOPE))
+            values.add(TogglesConfigurationValue(id, configId, value, scope))
+        }
+
+        return values.toList()
     }
 }

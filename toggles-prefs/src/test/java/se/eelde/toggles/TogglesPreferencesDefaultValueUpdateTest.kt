@@ -67,26 +67,18 @@ internal class TogglesPreferencesDefaultValueUpdateTest {
     }
 
     @Test
-    fun `second query with different default should detect old default and update it`() {
+    fun `second query with different default should update the default value`() {
         // Step 1: Initial query with default=false
         val firstResult = togglesPreferences.getBoolean(key, false)
         assertEquals(false, firstResult)
         
         // Step 2: Feature is rolled out, query with new default=true
-        // EXPECTED BEHAVIOR (this test documents what SHOULD happen):
-        // - System should recognize the stored value is an old default
-        // - System should update to new default=true
-        // - Should return true
+        // EXPECTED BEHAVIOR: System should update the default value
         val secondResult = togglesPreferences.getBoolean(key, true)
         
-        // CURRENT BEHAVIOR (what actually happens):
-        // - System returns stored value (false) regardless of new default
-        // This is the bug described in the issue
-        assertEquals(false, secondResult) // Current: returns old value
-        
-        // What SHOULD happen:
-        // assertEquals(true, secondResult) // Expected: returns new default
-        // assertEquals("true", contentProviderController.get().toggles[key]?.value) // Expected: value updated
+        // After the fix, this should return the new default value
+        assertEquals(true, secondResult)
+        assertEquals("true", contentProviderController.get().toggles[key]?.value)
     }
 
     @Test
@@ -191,10 +183,18 @@ internal class DefaultValueTrackingProvider : ContentProvider() {
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATIONS -> {
                 val toggle = Toggle.fromContentValues(values!!)
-                require(!toggles.containsKey(toggle.key)) { "toggle exists" }
-                toggles[toggle.key] = toggle
-                insertId = toggles.size.toLong()
-                toggle.id = insertId
+                
+                // Simulate the new behavior: if toggle exists, update its value
+                if (toggles.containsKey(toggle.key)) {
+                    // Update the existing toggle with new value
+                    toggles[toggle.key] = toggles[toggle.key]!!.copy(value = toggle.value)
+                    insertId = toggles[toggle.key]!!.id
+                } else {
+                    // Insert new toggle
+                    toggles[toggle.key] = toggle
+                    insertId = toggles.size.toLong()
+                    toggle.id = insertId
+                }
             }
             PREDEFINED_CONFIGURATION_VALUES -> {
                 toggleValues.add(values!!.getAsString(ColumnNames.ToggleValue.COL_VALUE))

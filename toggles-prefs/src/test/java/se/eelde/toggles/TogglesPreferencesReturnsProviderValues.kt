@@ -75,24 +75,36 @@ internal class TogglesPreferencesReturnsProviderValues {
     fun `return provider string when available`() {
         assertEquals(0, contentProviderController.get().toggles.size)
 
+        // First call with default="first" should store and return "first"
         assertEquals("first", togglesPreferences.getString(key, "first"))
-        assertEquals("first", togglesPreferences.getString(key, "second"))
+        
+        // Second call with different default="second" should update stored value to "second"
+        // This is the new behavior after the fix
+        assertEquals("second", togglesPreferences.getString(key, "second"))
     }
 
     @Test
     fun `return provider boolean when available`() {
         assertEquals(0, contentProviderController.get().toggles.size)
 
+        // First call with default=true should store and return true
         assertEquals(true, togglesPreferences.getBoolean(key, true))
-        assertEquals(true, togglesPreferences.getBoolean(key, false))
+        
+        // Second call with different default=false should update stored value to false
+        // This is the new behavior after the fix
+        assertEquals(false, togglesPreferences.getBoolean(key, false))
     }
 
     @Test
     fun `return provider int when available`() {
         assertEquals(0, contentProviderController.get().toggles.size)
 
+        // First call with default=1 should store and return 1
         assertEquals(1, togglesPreferences.getInt(key, 1))
-        assertEquals(1, togglesPreferences.getInt(key, 2))
+        
+        // Second call with different default=2 should update stored value to 2
+        // This is the new behavior after the fix
+        assertEquals(2, togglesPreferences.getInt(key, 2))
     }
 }
 
@@ -176,10 +188,18 @@ internal class MockContentProvider : ContentProvider() {
         when (uriMatcher.match(uri)) {
             CURRENT_CONFIGURATIONS -> {
                 val toggle = Toggle.fromContentValues(values!!)
-                require(!toggles.containsKey(toggle.key)) { "toggle exists" }
-                toggles[toggle.key] = toggle
-                insertId = toggles.size.toLong()
-                toggle.id = insertId
+                
+                // Simulate the new behavior: if toggle exists, update its value
+                if (toggles.containsKey(toggle.key)) {
+                    // Update the existing toggle with new value
+                    toggles[toggle.key] = toggles[toggle.key]!!.copy(value = toggle.value)
+                    insertId = toggles[toggle.key]!!.id
+                } else {
+                    // Insert new toggle
+                    toggles[toggle.key] = toggle
+                    insertId = toggles.size.toLong()
+                    toggle.id = insertId
+                }
             }
             PREDEFINED_CONFIGURATION_VALUES -> {
                 toggleValues.add(values!!.getAsString(ColumnNames.ToggleValue.COL_VALUE))

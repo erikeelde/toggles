@@ -15,6 +15,7 @@ object Migrations {
     private const val databaseVersion5 = 5
     private const val databaseVersion6 = 6
     private const val databaseVersion7 = 7
+    private const val databaseVersion8 = 8
 
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -303,6 +304,44 @@ object Migrations {
                 db.execSQL(
                     "UPDATE $tableName SET name='toggles_default' WHERE name='$LEGACY_SCOPE_NAME'"
                 )
+            }
+        }
+    }
+
+    val MIGRATION_7_8: Migration = object : Migration(databaseVersion7, databaseVersion8) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            run {
+                val tableName = "configurationValue"
+                val tableNameTemp = tableName + "_temp"
+
+                // Create new table with updated unique constraint (configurationId, scope) instead of (configurationId, value, scope)
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `$tableNameTemp` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configurationId` INTEGER NOT NULL, `value` TEXT, `scope` INTEGER NOT NULL, FOREIGN KEY(`configurationId`) REFERENCES `configuration`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+                )
+                db.execSQL(
+                    "CREATE UNIQUE INDEX `index_configurationValue_temp_configurationId_scope` ON `$tableNameTemp` (`configurationId`, `scope`)"
+                )
+
+                // Migrate data - for each (configurationId, scope) keep only the most recent value
+                // This handles cases where multiple values existed for the same config+scope
+                db.execSQL(
+                    "INSERT INTO $tableNameTemp (id, configurationId, value, scope) " +
+                        "SELECT MAX(id) as id, configurationId, value, scope " +
+                        "FROM $tableName " +
+                        "GROUP BY configurationId, scope"
+                )
+
+                // Drop old table
+                db.execSQL("DROP TABLE $tableName")
+
+                // Recreate index with correct name
+                db.execSQL("DROP INDEX IF EXISTS `index_configurationValue_temp_configurationId_scope`")
+                db.execSQL(
+                    "CREATE UNIQUE INDEX `index_configurationValue_configurationId_scope` ON `$tableNameTemp` (`configurationId`, `scope`)"
+                )
+
+                // Rename temp table to final name
+                db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
             }
         }
     }
