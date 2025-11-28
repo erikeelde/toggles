@@ -88,18 +88,18 @@ internal class TogglesPreferencesDefaultValueUpdateTest {
         
         // Step 2: User explicitly sets value to true via UI
         // (This would be done through the Toggles app, simulated here)
-        contentProviderController.get().toggles[key]?.let { toggle ->
-            contentProviderController.get().toggles[key] = toggle.copy(value = "true")
-            contentProviderController.get().userSetValues[key] = true
+        val provider = contentProviderController.get()
+        provider.toggles[key]?.let { toggle ->
+            provider.toggles[key] = toggle.copy(value = "true")
+            provider.userSetValues[key] = true
         }
         
         // Step 3: App queries with new default=false
         // EXPECTED: Should return user's explicitly set value (true), not default (false)
         val result = togglesPreferences.getBoolean(key, false)
         
-        // If properly implemented, this should return true (user's choice)
-        // Currently, it would return true because that's what's stored,
-        // but there's no way to distinguish if it's user-set or an old default
+        // With user-set values properly tracked via scopes, user's choice is preserved
+        // even when code provides a different default
         assertEquals(true, result)
     }
 }
