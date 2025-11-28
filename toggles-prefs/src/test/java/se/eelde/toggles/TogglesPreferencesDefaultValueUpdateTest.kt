@@ -25,90 +25,89 @@ import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.prefs.TogglesPreferencesImpl
 
+/**
+ * Test to validate the scenario described in the GitHub issue:
+ * "Difficult to differentiate between old default, updated default and user set value"
+ * 
+ * Scenario:
+ * 1. Query toggle "thought-experiment-A-roll-out" with default=false (feature not rolled out)
+ * 2. Feature is rolled out, query same toggle with default=true
+ * 3. System should distinguish between:
+ *    - Old default value (false, from initial query)
+ *    - New default value (true, from rollout)
+ *    - User-set value (explicitly changed by user via UI)
+ */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [O])
-internal class TogglesPreferencesReturnsProviderValues {
+internal class TogglesPreferencesDefaultValueUpdateTest {
 
     private lateinit var togglesPreferences: TogglesPreferences
-    private val key = "myKey"
-
-    private enum class TestEnum {
-        FIRST, SECOND
-    }
-
-    private lateinit var contentProviderController: ContentProviderController<MockContentProvider>
+    private lateinit var contentProviderController: ContentProviderController<DefaultValueTrackingProvider>
+    private val key = "thought-experiment-A-roll-out"
 
     @Before
     fun setUp() {
         val info =
             ProviderInfo().apply { authority = TogglesProviderContract.toggleUri().authority!! }
         contentProviderController =
-            Robolectric.buildContentProvider(MockContentProvider::class.java).create(info)
+            Robolectric.buildContentProvider(DefaultValueTrackingProvider::class.java).create(info)
 
         togglesPreferences =
             TogglesPreferencesImpl(ApplicationProvider.getApplicationContext<Application>())
     }
 
     @Test
-    fun `return provider enum when available`() {
-        assertEquals(0, contentProviderController.get().toggles.size)
-
-        assertEquals(
-            TestEnum.FIRST,
-            togglesPreferences.getEnum(
-                key,
-                TestEnum::class.java,
-                TestEnum.FIRST
-            )
-        )
-        assertEquals(
-            TestEnum.FIRST,
-            togglesPreferences.getEnum(
-                key,
-                TestEnum::class.java,
-                TestEnum.SECOND
-            )
-        )
+    fun `first query with default false stores false and returns false`() {
+        // Initial query with default=false (feature not rolled out yet)
+        val result = togglesPreferences.getBoolean(key, false)
+        
+        assertEquals(false, result)
+        assertEquals(1, contentProviderController.get().toggles.size)
+        assertEquals("false", contentProviderController.get().toggles[key]?.value)
     }
 
     @Test
-    fun `return provider string when available`() {
-        assertEquals(0, contentProviderController.get().toggles.size)
-
-        // First call with default="first" should store and return "first"
-        assertEquals("first", togglesPreferences.getString(key, "first"))
+    fun `second query with different default should update the default value`() {
+        // Step 1: Initial query with default=false
+        val firstResult = togglesPreferences.getBoolean(key, false)
+        assertEquals(false, firstResult)
         
-        // Second call with different default="second" should update stored value to "second"
-        // This is the new behavior after the fix
-        assertEquals("second", togglesPreferences.getString(key, "second"))
+        // Step 2: Feature is rolled out, query with new default=true
+        // EXPECTED BEHAVIOR: System should update the default value
+        val secondResult = togglesPreferences.getBoolean(key, true)
+        
+        // After the fix, this should return the new default value
+        assertEquals(true, secondResult)
+        assertEquals("true", contentProviderController.get().toggles[key]?.value)
     }
 
     @Test
-    fun `return provider boolean when available`() {
-        assertEquals(0, contentProviderController.get().toggles.size)
-
-        // First call with default=true should store and return true
-        assertEquals(true, togglesPreferences.getBoolean(key, true))
+    fun `user explicitly set value should not be overridden by new default`() {
+        // Step 1: Initial query with default=false
+        togglesPreferences.getBoolean(key, false)
         
-        // Second call with different default=false should update stored value to false
-        // This is the new behavior after the fix
-        assertEquals(false, togglesPreferences.getBoolean(key, false))
-    }
-
-    @Test
-    fun `return provider int when available`() {
-        assertEquals(0, contentProviderController.get().toggles.size)
-
-        // First call with default=1 should store and return 1
-        assertEquals(1, togglesPreferences.getInt(key, 1))
+        // Step 2: User explicitly sets value to true via UI
+        // (This would be done through the Toggles app, simulated here)
+        val provider = contentProviderController.get()
+        provider.toggles[key]?.let { toggle ->
+            provider.toggles[key] = toggle.copy(value = "true")
+            provider.userSetValues[key] = true
+        }
         
-        // Second call with different default=2 should update stored value to 2
-        // This is the new behavior after the fix
-        assertEquals(2, togglesPreferences.getInt(key, 2))
+        // Step 3: App queries with new default=false
+        // EXPECTED: Should return user's explicitly set value (true), not default (false)
+        val result = togglesPreferences.getBoolean(key, false)
+        
+        // With user-set values properly tracked via scopes, user's choice is preserved
+        // even when code provides a different default
+        assertEquals(true, result)
     }
 }
 
-internal class MockContentProvider : ContentProvider() {
+/**
+ * Mock ContentProvider that tracks whether values are user-set vs defaults
+ */
+internal class DefaultValueTrackingProvider : ContentProvider() {
     companion object {
         private const val CURRENT_CONFIGURATION_ID = 1
         private const val CURRENT_CONFIGURATION_KEY = 2
@@ -142,11 +141,10 @@ internal class MockContentProvider : ContentProvider() {
     }
 
     val toggles: MutableMap<String, Toggle> = mutableMapOf()
+    val userSetValues: MutableMap<String, Boolean> = mutableMapOf()
     private val toggleValues: MutableList<String> = mutableListOf()
 
-    override fun onCreate(): Boolean {
-        return true
-    }
+    override fun onCreate(): Boolean = true
 
     override fun query(
         uri: Uri,
@@ -156,9 +154,6 @@ internal class MockContentProvider : ContentProvider() {
         sortOrder: String?
     ): Cursor {
         when (uriMatcher.match(uri)) {
-            CURRENT_CONFIGURATION_ID -> {
-                throw IllegalArgumentException("toggle exists")
-            }
             CURRENT_CONFIGURATION_KEY -> {
                 val cursor = MatrixCursor(
                     arrayOf(
