@@ -124,6 +124,91 @@ Low-level library for communicating with the toggles application via content pro
 implementation("se.eelde.toggles:toggles-core:0.0.3")
 ```
 
+## Build Variant Configuration
+
+For release builds, you have two options to disable the toggles functionality:
+
+1. **Use the provided no-op libraries** (recommended for convenience)
+2. **Implement your own no-op variant** of the `Toggles` or `TogglesPreferences` interface
+
+The no-op versions return default values immediately without connecting to the Toggles app, eliminating unnecessary overhead in production builds.
+
+### Option 1: Using the No-Op Libraries (Recommended)
+
+To enable feature toggles in debug builds while automatically disabling them in release builds, configure your dependencies based on build type:
+
+#### For Toggles-Flow (Recommended)
+
+```gradle
+dependencies {
+    debugImplementation("se.eelde.toggles:toggles-flow:0.0.3")
+    releaseImplementation("se.eelde.toggles:toggles-flow-noop:0.0.3")
+}
+```
+
+#### For Toggles-Prefs
+
+```gradle
+dependencies {
+    debugImplementation("se.eelde.toggles:toggles-prefs:0.0.2")
+    releaseImplementation("se.eelde.toggles:toggles-prefs-noop:0.0.2")
+}
+```
+
+### How No-Op Implementations Work
+
+The no-op libraries provide identical APIs but with minimal implementations:
+- They **do not** connect to the Toggles app
+- They **immediately return** the default values you provide
+- They **add zero runtime overhead** to your release builds
+- They **maintain the same API**, so no code changes are needed
+
+#### Example: No-Op Behavior
+
+```kotlin
+// In debug builds: reads from Toggles app, observes changes
+// In release builds: immediately returns 'false', never changes
+toggles.toggle("enable_new_feature", false).collect { isEnabled ->
+    // Debug: reflects actual toggle value from Toggles app
+    // Release: always receives 'false' (the default value)
+}
+```
+
+### Benefits
+
+- **Development flexibility**: Full feature toggle control during development
+- **Production efficiency**: Zero overhead in release builds
+- **Seamless transition**: Same code works in both debug and release
+- **No app dependency**: Release builds don't require the Toggles app to be installed
+
+### Option 2: Implementing Your Own No-Op Variant
+
+If you prefer more control or want to customize the behavior, you can implement your own no-op version:
+
+#### For Toggles-Flow
+
+```kotlin
+class MyNoOpToggles(context: Context) : Toggles {
+    override fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> = flowOf(defaultValue)
+    override fun toggle(key: String, defaultValue: Int): Flow<Int> = flowOf(defaultValue)
+    override fun toggle(key: String, defaultValue: String): Flow<String> = flowOf(defaultValue)
+    override fun <T : Enum<T>> toggle(key: String, type: Class<T>, defaultValue: T): Flow<T> = flowOf(defaultValue)
+}
+```
+
+#### For Toggles-Prefs
+
+```kotlin
+class MyNoOpTogglesPreferences(context: Context) : TogglesPreferences {
+    override fun getBoolean(key: String, defValue: Boolean): Boolean = defValue
+    override fun getInt(key: String, defValue: Int): Int = defValue
+    override fun getString(key: String, defValue: String): String = defValue
+    override fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defValue: T): T = defValue
+}
+```
+
+Then configure your dependency injection or factory to provide the appropriate implementation based on build type. The provided no-op libraries exist for convenience so you don't have to write this boilerplate yourself.
+
 ## Contribution Guidelines
 
 We welcome contributions! Please follow these steps to contribute:
