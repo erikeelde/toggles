@@ -8,7 +8,10 @@ import se.eelde.toggles.core.TogglesProviderContract.toggleUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 
 @Suppress("LibraryEntitiesShouldNotBePublic")
-public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
+public class TogglesPreferencesImpl(
+    context: Context,
+    private val scope: String? = null
+) : TogglesPreferences {
     private val context = context.applicationContext
     private val contentResolver: ContentResolver = this.context.contentResolver
 
@@ -122,7 +125,7 @@ public class TogglesPreferencesImpl(context: Context) : TogglesPreferences {
         @Toggle.ToggleType toggleType: String,
         key: String
     ): Toggle? {
-        val cursor = contentResolver.query(toggleUri(key), null, null, null, null)
+        val cursor = contentResolver.query(toggleUri(key, scope), null, null, null, null)
         cursor.use {
             if (cursor == null) {
                 return null

@@ -29,6 +29,11 @@ interface ProviderScopeDao {
     )
     fun getDefaultScope(applicationId: Long): TogglesScope?
 
+    @Query(
+        "SELECT * FROM " + ScopeTable.TABLE_NAME + " WHERE " + ScopeTable.COL_APP_ID + " = (:applicationId) AND " + ScopeTable.COL_NAME + " = (:scopeName)"
+    )
+    fun getScopeByName(applicationId: Long, scopeName: String): TogglesScope?
+
     @Update
     suspend fun update(scope: TogglesScope)
 }

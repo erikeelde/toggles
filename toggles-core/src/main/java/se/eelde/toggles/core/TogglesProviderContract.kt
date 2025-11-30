@@ -6,6 +6,7 @@ public object TogglesProviderContract {
     private const val TOGGLES_AUTHORITY = "se.eelde.toggles.configprovider"
     private const val TOGGLES_API_VERSION_QUERY_PARAM = "API_VERSION"
     private const val TOGGLES_API_VERSION = 1
+    private const val TOGGLES_SCOPE_QUERY_PARAM = "SCOPE"
 
     private val configurationUri: Uri = Uri.parse("content://$TOGGLES_AUTHORITY/configuration")
 
@@ -26,6 +27,18 @@ public object TogglesProviderContract {
     }
 
     @JvmStatic
+    public fun toggleUri(id: Long, scope: String?): Uri {
+        val builder = configurationValueUri
+            .buildUpon()
+            .appendPath(id.toString())
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+        if (scope != null) {
+            builder.appendQueryParameter(TOGGLES_SCOPE_QUERY_PARAM, scope)
+        }
+        return builder.build()
+    }
+
+    @JvmStatic
     public fun toggleUri(key: String): Uri {
         return configurationValueUri
             .buildUpon()
@@ -35,11 +48,34 @@ public object TogglesProviderContract {
     }
 
     @JvmStatic
+    public fun toggleUri(key: String, scope: String?): Uri {
+        val builder = configurationValueUri
+            .buildUpon()
+            .appendPath(key)
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+        if (scope != null) {
+            builder.appendQueryParameter(TOGGLES_SCOPE_QUERY_PARAM, scope)
+        }
+        return builder.build()
+    }
+
+    @JvmStatic
     public fun toggleUri(): Uri {
         return configurationValueUri
             .buildUpon()
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
+    }
+
+    @JvmStatic
+    public fun toggleUri(scope: String?): Uri {
+        val builder = configurationValueUri
+            .buildUpon()
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+        if (scope != null) {
+            builder.appendQueryParameter(TOGGLES_SCOPE_QUERY_PARAM, scope)
+        }
+        return builder.build()
     }
 
     @JvmStatic
