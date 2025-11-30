@@ -255,8 +255,14 @@ class TogglesProvider : ContentProvider() {
                     togglesConfigurationValue.id =
                         configurationValueDao.insertSync(togglesConfigurationValue)
                 } catch (e: SQLiteConstraintException) {
-                    // this happens when the app is initially launched because many of many calls
-                    // into assertValidApiVersion()
+                    // A value already exists for this configuration in the default scope.
+                    // Update it with the new default value. This allows default values to be
+                    // updated when the code changes, while preserving user-set values in other scopes.
+                    configurationValueDao.updateConfigurationValueSync(
+                        togglesConfiguration.id,
+                        defaultScope.id,
+                        toggle.value!!
+                    )
                 }
 
                 insertId = togglesConfiguration.id

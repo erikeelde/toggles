@@ -18,6 +18,7 @@ import se.eelde.toggles.database.migrations.Migrations.MIGRATION_3_4
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_4_5
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_5_6
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_6_7
+import se.eelde.toggles.database.migrations.Migrations.MIGRATION_7_8
 import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 
@@ -230,6 +231,43 @@ class MigrationTests {
 
         val scope = DatabaseHelper.getScope(upgradedDatabase, scopeId)
         assertEquals(TogglesScope.SCOPE_DEFAULT, scope.name)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test7to8() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 7)
+
+        val applicationId = DatabaseHelper.insertApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.application",
+            "se.eelde.toggles.application",
+        )
+
+        val scopeId = DatabaseHelper.insertScope(
+            originalDb,
+            applicationId,
+            TogglesScope.SCOPE_DEFAULT
+        )
+
+        val configId = DatabaseHelper.insertConfiguration(
+            originalDb,
+            applicationId,
+            "test_key",
+            Toggle.TYPE.BOOLEAN
+        )
+
+        // Insert multiple values for the same config+scope (old schema allowed this)
+        DatabaseHelper.insertConfigurationValue(originalDb, configId, "false", scopeId)
+        DatabaseHelper.insertConfigurationValue(originalDb, configId, "true", scopeId)
+
+        val upgradedDatabase =
+            testHelper.runMigrationsAndValidate(TEST_DB_NAME, 8, true, MIGRATION_7_8)
+
+        // After migration, should have only one value per config+scope
+        val values = DatabaseHelper.getConfigurationValues(upgradedDatabase, configId, scopeId)
+        assertEquals("Migration should leave only one value per config+scope", 1, values.size)
     }
 
     companion object {
