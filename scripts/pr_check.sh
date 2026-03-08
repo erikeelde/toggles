@@ -57,7 +57,7 @@ if $run_static; then
   ./gradlew assembleAndroidTest
   ./gradlew detekt
   ./gradlew versionCatalogFormat
-  ./gradlew detektMain
+  ./gradlew detekt
 fi
 
 if $run_unit; then

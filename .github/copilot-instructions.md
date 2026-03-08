@@ -64,7 +64,7 @@ Toggles is a multi-module Android project providing feature switching capabiliti
    ```bash
    ./gradlew detekt  # Static analysis - takes 2-5 minutes. NEVER CANCEL. Set timeout to 10+ minutes.
    ./gradlew versionCatalogFormat  # Version catalog formatting - takes 30 seconds
-   ./gradlew detektMain --no-configuration-cache  # Main source detekt - takes 1-2 minutes
+   ./gradlew detekt  # Detekt analysis - takes 1-2 minutes
    ```
 
 3. **Build and test**:
@@ -275,7 +275,7 @@ toggles/
 
 # Static analysis
 ./gradlew detekt  # Full detekt analysis - takes 2-5 minutes. Set timeout to 10+ minutes.
-./gradlew detektMain  # Main source only
+./gradlew detekt  # Run detekt analysis
 ```
 
 ### Library Publishing
