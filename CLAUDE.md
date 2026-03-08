@@ -71,6 +71,30 @@ Version catalog: `gradle/libs.versions.toml`. Properties: `gradle.properties` (1
 
 The core mechanism uses Android ContentProvider for inter-process communication between the Toggles app (provider) and consuming apps (clients). The `modules/provider/` module implements the provider side; `toggles-core/` implements the client side.
 
+**Old API** (`Toggle`, `ToggleValue`) — flat model where a single `Toggle` object bundles configuration metadata (key, type) with its current value. Uses `toggleUri()` endpoints (`/currentConfiguration/...`). Insert auto-creates both the configuration and a default-scope value in one call. `toggleValueUri()` manages predefined allowed values. Still supported but being superseded. Published client: `toggles-flow` (`TogglesImpl`).
+
+**New API** (`TogglesConfiguration`, `TogglesConfigurationValue`, `ToggleScope`) — normalized model that separates concerns:
+- `TogglesConfiguration` (key, type) — the toggle definition, managed via `configurationUri()` endpoints (`/configuration/...`)
+- `TogglesConfigurationValue` (configurationId, value, scope) — per-scope values, managed via `configurationValueUri()` endpoints (`/configuration/{id|key}/values`)
+- `ToggleScope` — scopes (default + development auto-created), read-only via `scopeUri()` (`/scope`)
+
+New code should use the new API. The new API enables multi-scope support (e.g. different values per environment).
+
+**Toggles2** (`toggles-sample/.../toggles2/Toggles2.kt`) — experimental client using the new API. Lives in the sample app, not yet published. Uses `resolveToggleValue()` to handle scope-aware value resolution with auto-creation of missing configurations and default values. Intended to eventually replace `toggles-flow`'s `TogglesImpl`. Open question: whether `WrappedObject` (bundles configuration + values + scopes) should be public or internal.
+
+**URI endpoints** (defined in `TogglesProviderContract` in `toggles-core`):
+- `configurationUri()` / `configurationUri(id: Long)` / `configurationUri(key: String)` — CRUD for configurations
+- `configurationValueUri(id: Long)` / `configurationValueUri(key: String)` — configuration values. Insert/update only by ID; key variants are read-only
+- `toggleUri()` / `toggleUri(id: Long)` / `toggleUri(key: String)` — legacy current configuration endpoint
+- `toggleValueUri()` — predefined configuration values (insert-only, no query/update/delete)
+- `scopeUri()` — scopes (read-only; default + development scopes auto-created per application)
+
+**Provider tests** use Robolectric with Hilt (`modules/provider/implementation/src/test/`), organized by endpoint:
+- `configuration/` — tests for configuration CRUD by ID and key
+- `configurationValue/` — tests for configuration value operations
+- `scope/` — tests for scope queries
+- Root package — tests for current configuration (legacy toggle API) and predefined values
+
 ## CI/CD
 
 GitHub Actions in `.github/workflows/`:
