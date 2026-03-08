@@ -7,7 +7,6 @@ buildscript {
 
     dependencies {
         classpath(libs.com.android.tools.build.gradle)
-        classpath(libs.org.jetbrains.kotlin.kotlin.gradle.plugin)
         classpath(libs.com.google.dagger.hilt.android.gradle.plugin)
         classpath(libs.com.google.gms.google.services)
         classpath(libs.org.jetbrains.dokka.dokka.gradle.plugin)
@@ -23,7 +22,6 @@ plugins {
 
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.com.android.library) apply false
-    alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.io.gitlab.arturbosch.detekt) apply false
     alias(libs.plugins.org.jetbrains.kotlinx.binary.compatibility.validator) apply false
