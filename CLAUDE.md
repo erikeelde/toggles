@@ -71,7 +71,7 @@ Version catalog: `gradle/libs.versions.toml`. Properties: `gradle.properties` (1
 
 The core mechanism uses Android ContentProvider for inter-process communication between the Toggles app (provider) and consuming apps (clients). The `modules/provider/` module implements the provider side; `toggles-core/` implements the client side.
 
-**Old API** (`Toggle`, `ToggleValue`) — flat model where a single `Toggle` object bundles configuration metadata (key, type) with its current value. Uses `toggleUri()` endpoints (`/currentConfiguration/...`). Insert auto-creates both the configuration and a default-scope value in one call. `toggleValueUri()` manages predefined allowed values. Still supported but being superseded.
+**Old API** (`Toggle`, `ToggleValue`) — flat model where a single `Toggle` object bundles configuration metadata (key, type) with its current value. Uses `toggleUri()` endpoints (`/currentConfiguration/...`). Insert auto-creates both the configuration and a default-scope value in one call. `toggleValueUri()` manages predefined allowed values. Still supported but being superseded. Published client: `toggles-flow` (`TogglesImpl`).
 
 **New API** (`TogglesConfiguration`, `TogglesConfigurationValue`, `ToggleScope`) — normalized model that separates concerns:
 - `TogglesConfiguration` (key, type) — the toggle definition, managed via `configurationUri()` endpoints (`/configuration/...`)
@@ -79,6 +79,9 @@ The core mechanism uses Android ContentProvider for inter-process communication 
 - `ToggleScope` — scopes (default + development auto-created), read-only via `scopeUri()` (`/scope`)
 
 New code should use the new API. The new API enables multi-scope support (e.g. different values per environment).
+
+**Toggles2** (`toggles-sample/.../toggles2/Toggles2.kt`) — experimental client using the new API. Lives in the sample app, not yet published. Uses `resolveToggleValue()` to handle scope-aware value resolution with auto-creation of missing configurations and default values. Intended to eventually replace `toggles-flow`'s `TogglesImpl`. Open question: whether `WrappedObject` (bundles configuration + values + scopes) should be public or internal.
+
 
 **URI endpoints** (defined in `TogglesProviderContract` in `toggles-core`):
 - `configurationUri()` / `configurationUri(id: Long)` / `configurationUri(key: String)` — CRUD for configurations
