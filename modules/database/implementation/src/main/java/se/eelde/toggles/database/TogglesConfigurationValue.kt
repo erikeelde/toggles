@@ -14,7 +14,6 @@ import se.eelde.toggles.database.tables.ConfigurationValueTable
         Index(
             value = arrayOf(
                 ConfigurationValueTable.COL_CONFIG_ID,
-                ConfigurationValueTable.COL_VALUE,
                 ConfigurationValueTable.COL_SCOPE
             ),
             unique = true
