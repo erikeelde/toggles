@@ -26,6 +26,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
                 dependencies {
                     "testImplementation"(libs.findLibrary("androidx-test-runner").get())
+                    "androidTestImplementation"(libs.findLibrary("androidx-test-runner").get())
                 }
             }
 
