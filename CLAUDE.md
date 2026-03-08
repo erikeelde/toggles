@@ -8,7 +8,7 @@ Toggles is a multi-module Android library for feature switching. It stores featu
 
 ## Build Commands
 
-Requires **Java 21** and **Android SDK** (API 35). Gradle 9.2.0 with Kotlin DSL.
+Requires **Java 21** and **Android SDK** (API 36). Gradle 9.4.0 with Kotlin DSL.
 
 ```bash
 # Build
@@ -81,10 +81,10 @@ CI uses `warningsAsErrors=true` (`.github/ci-gradle.properties`).
 
 ## Dependency Upgrade Notes
 
-AGP (Android Gradle Plugin), Kotlin, Hilt/Dagger, KSP, and triplet-play are tightly coupled and must be upgraded together:
-- **Hilt/Dagger 2.59+** requires AGP 9+
-- **Kotlin 2.3+** produces metadata v2.3 which is incompatible with Hilt 2.57.x
-- **triplet-play 4.0+** requires AGP 9+
-- **AGP 9** removes type parameters from `CommonExtension` — convention plugins in `build-logic/` need updating
+AGP (Android Gradle Plugin), Kotlin, Hilt/Dagger, KSP, and triplet-play are tightly coupled and must be upgraded together. When running `versionCatalogUpdate`, review the diff carefully and keep these versions in sync.
 
-When running `versionCatalogUpdate`, review the diff carefully and keep these versions in sync. Update them as a group when doing the AGP 9 migration.
+### AGP 9 Convention Plugin Notes
+
+- **Built-in Kotlin**: AGP 9 bundles Kotlin — convention plugins do not apply `org.jetbrains.kotlin.android`. The `kotlin-gradle-plugin` is still a `compileOnly` dependency in `build-logic/conventions/build.gradle.kts` for access to `KotlinAndroidProjectExtension`.
+- **`CommonExtension` has no type parameters**: Use direct property access (e.g. `commonExtension.compileSdk = 36`, `commonExtension.lint.apply { ... }`) instead of DSL lambda blocks.
+- **`detektMain` unavailable**: AGP 9 built-in Kotlin changes source set registration, breaking `detektMain`. Tracked in [detekt#8320](https://github.com/detekt/detekt/issues/8320). Currently commented out in CI — restore when fixed.
