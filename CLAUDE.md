@@ -82,6 +82,7 @@ New code should use the new API. The new API enables multi-scope support (e.g. d
 
 **Toggles2** (`toggles-sample/.../toggles2/Toggles2.kt`) — experimental client using the new API. Lives in the sample app, not yet published. Uses `resolveToggleValue()` to handle scope-aware value resolution with auto-creation of missing configurations and default values. Intended to eventually replace `toggles-flow`'s `TogglesImpl`. Open question: whether `WrappedObject` (bundles configuration + values + scopes) should be public or internal.
 
+
 **URI endpoints** (defined in `TogglesProviderContract` in `toggles-core`):
 - `configurationUri()` / `configurationUri(id: Long)` / `configurationUri(key: String)` — CRUD for configurations
 - `configurationValueUri(id: Long)` / `configurationValueUri(key: String)` — configuration values. Insert/update only by ID; key variants are read-only

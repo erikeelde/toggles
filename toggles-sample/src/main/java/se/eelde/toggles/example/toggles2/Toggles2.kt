@@ -19,13 +19,19 @@ import se.eelde.toggles.core.ColumnNames
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.Toggle.ToggleType
 import se.eelde.toggles.core.ToggleScope
+import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesConfigurationValue
 import se.eelde.toggles.core.TogglesProviderContract.configurationUri
 import se.eelde.toggles.core.TogglesProviderContract.configurationValueUri
 import se.eelde.toggles.core.TogglesProviderContract.scopeUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleUri
+import se.eelde.toggles.core.TogglesProviderContract.toggleValueUri
 
+// Open question: should WrappedObject be an internal detail or part of the public API?
+// Currently it's a data class used to bundle provider query results. If Toggles2 moves to a
+// published library, consider whether consumers need access to the raw configuration/scope data
+// or if this should be encapsulated behind the toggle() methods.
 data class WrappedObject(
     val configuration: TogglesConfiguration?,
     val configurationValues: ImmutableList<TogglesConfigurationValue>,
@@ -40,100 +46,114 @@ class Toggles2(
     private val context = context.applicationContext
     private val contentResolver = this.context.contentResolver
 
-//    fun toggleHasOverride(): Flow<Boolean> = TODO()
-//
-//    fun setDefaultValue(key: String, defaultValue: String): Unit = TODO()
-//
-//    fun setDefaultValue(key: String, defaultValue: Boolean): Unit = TODO()
-//
-//    fun setDefaultValue(key: String, defaultValue: Int): Unit = TODO()
-//
-//    fun <T : Enum<T>> setDefaultValue(
-//        key: String,
-//        type: Class<T>,
-//        defaultValue: T
-//    ): Unit = TODO()
+    fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> =
+        resolveToggleValue(key, Toggle.TYPE.BOOLEAN, defaultValue.toString())
+            .map { it.toBoolean() }
 
-    @Suppress("unused")
+    fun toggle(key: String, defaultValue: Int): Flow<Int> =
+        resolveToggleValue(key, Toggle.TYPE.INTEGER, defaultValue.toString())
+            .map { it.toInt() }
+
+    fun toggle(key: String, defaultValue: String): Flow<String> =
+        resolveToggleValue(key, Toggle.TYPE.STRING, defaultValue)
+
     fun <T : Enum<T>> toggle(
         key: String,
         type: Class<T>,
         defaultValue: T
-    ): Flow<T> = TODO()
-
-    @Suppress("unused", "UnsafeCallOnNullableType")
-    fun toggle(key: String, defaultValue: Boolean): Flow<Boolean> =
-        providerToggleFlow(context, Toggle.TYPE.BOOLEAN, key)
-            .map { toggle: WrappedObject ->
-                toggle.configurationValues.last().value!!.toBoolean()
+    ): Flow<T> =
+        resolveToggleValue(key, Toggle.TYPE.ENUM, defaultValue.toString()) { configurationId ->
+            for (enumConstant in type.enumConstants!!) {
+                contentResolver.insert(
+                    toggleValueUri(),
+                    ToggleValue {
+                        this.configurationId = configurationId
+                        value = enumConstant.toString()
+                    }.toContentValues()
+                )
             }
+        }.map { java.lang.Enum.valueOf(type, it) }
 
-    @Suppress("unused", "UnsafeCallOnNullableType")
-    fun toggle(key: String, defaultValue: Int): Flow<Int> =
-        providerToggleFlow(context, Toggle.TYPE.INTEGER, key)
-            .map { toggle: WrappedObject ->
-                toggle.configurationValues.last().value!!.toInt()
-            }
+    /**
+     * Core resolution logic shared by all toggle types.
+     *
+     * Observes the provider for changes and for each emission:
+     * 1. If no configuration exists, creates it with the default value
+     * 2. If configuration exists but has no default-scope value, inserts it
+     * 3. If default-scope value differs from [defaultValue], updates it
+     * 4. Returns the selected scope's value if present, otherwise the default scope's value
+     *
+     * @param onFirstCreate optional callback invoked after creating a new configuration,
+     *   useful for inserting predefined values (e.g. enum constants)
+     */
+    private fun resolveToggleValue(
+        key: String,
+        @ToggleType type: String,
+        defaultValue: String,
+        onFirstCreate: ((configurationId: Long) -> Unit)? = null,
+    ): Flow<String> =
+        providerToggleFlow(context, type, key)
+            .map { wrappedObject ->
+                if (wrappedObject.scopes.isEmpty()) {
+                    Log.w(TAG, "No scopes available, returning default for '$key'")
+                    return@map defaultValue
+                }
 
-    @Suppress("UnsafeCallOnNullableType")
-    fun toggle(key: String, defaultValue: String): Flow<String> {
-        return providerToggleFlow(context, Toggle.TYPE.STRING, key)
-            .map { wrappedObject: WrappedObject ->
                 val defaultScope = getDefaultScope(wrappedObject.scopes)
 
                 if (wrappedObject.configuration == null) {
-                    Log.e("Toggles2", "No configuration for '$key' created")
-
+                    Log.d(TAG, "No configuration for '$key', creating")
                     val configurationUri =
-                        insertConfiguration(contentResolver, key, Toggle.TYPE.STRING)
+                        insertConfiguration(contentResolver, key, type)
+                            ?: return@map defaultValue
+                    val configurationId = configurationUri.lastPathSegment!!.toLong()
                     insertConfigurationValue(
                         contentResolver,
-                        configurationUri!!.lastPathSegment!!.toLong(),
+                        configurationId,
                         defaultValue,
                         defaultScope.id
                     )
+                    onFirstCreate?.invoke(configurationId)
                     return@map defaultValue
+                }
+
+                val selectedScope = getSelectedScope(wrappedObject.scopes)
+
+                val defaultConfigurationValue =
+                    getConfigurationValueForScope(
+                        defaultScope,
+                        wrappedObject.configurationValues
+                    )
+
+                if (defaultConfigurationValue == null) {
+                    insertConfigurationValue(
+                        contentResolver,
+                        wrappedObject.configuration.id,
+                        defaultValue,
+                        defaultScope.id
+                    )
+                } else if (defaultConfigurationValue.value != defaultValue) {
+                    updateConfigurationValue(
+                        contentResolver,
+                        wrappedObject.configuration.id,
+                        defaultConfigurationValue,
+                        defaultValue
+                    )
+                }
+
+                val selectedConfigurationValue =
+                    getConfigurationValueForScope(
+                        selectedScope,
+                        wrappedObject.configurationValues
+                    )
+
+                if (selectedConfigurationValue != null) {
+                    selectedConfigurationValue.value ?: defaultValue
                 } else {
-                    val selectedScope = getSelectedScope(wrappedObject.scopes)
-
-                    val defaultConfigurationValue =
-                        getConfigurationValueForScope(
-                            defaultScope,
-                            wrappedObject.configurationValues
-                        )
-
-                    if (defaultConfigurationValue == null) {
-                        insertConfigurationValue(
-                            contentResolver,
-                            wrappedObject.configuration.id,
-                            defaultValue,
-                            defaultScope.id
-                        )
-                    } else {
-                        if (defaultConfigurationValue.value != defaultValue) {
-                            updateConfigurationValue(
-                                contentResolver,
-                                defaultConfigurationValue,
-                                defaultValue
-                            )
-                        }
-                    }
-
-                    val currentConfigurationValue =
-                        getConfigurationValueForScope(
-                            selectedScope,
-                            wrappedObject.configurationValues
-                        )
-
-                    if (currentConfigurationValue != null) {
-                        return@map currentConfigurationValue.value!!
-                    } else {
-                        Log.e("Toggles2", "No scope override for '$key' found")
-                        return@map defaultConfigurationValue!!.value!!
-                    }
+                    Log.d(TAG, "No scope override for '$key', using default")
+                    defaultConfigurationValue?.value ?: defaultValue
                 }
             }
-    }
 
     private fun insertConfiguration(
         contentResolver: ContentResolver,
@@ -182,12 +202,13 @@ class Toggles2(
 
     private fun updateConfigurationValue(
         contentResolver: ContentResolver,
-        defaultConfigurationValue: TogglesConfigurationValue,
-        defaultValue: String
+        configurationId: Long,
+        configurationValue: TogglesConfigurationValue,
+        newValue: String
     ) {
         contentResolver.update(
-            configurationValueUri(defaultConfigurationValue.id),
-            defaultConfigurationValue.copy(value = defaultValue).toContentValues(),
+            configurationValueUri(configurationId),
+            configurationValue.copy(value = newValue).toContentValues(),
             null,
             null
         )
@@ -221,7 +242,7 @@ class Toggles2(
         }
     }
 
-    @Suppress("UnsafeCallOnNullableType", "LongMethod")
+    @Suppress("LongMethod")
     private suspend fun getToggle(
         contentResolver: ContentResolver,
         @Suppress("unused")
@@ -231,67 +252,70 @@ class Toggles2(
         withContext(ioDispatcher) {
             val scopes = mutableListOf<ToggleScope>()
 
-            contentResolver.query(
+            val scopesCursor = contentResolver.query(
                 scopeUri(),
                 null,
                 null,
                 null,
                 null
-            ).use { scopesCursor ->
-                if (scopesCursor!!.moveToFirst()) {
+            )
+            if (scopesCursor == null) {
+                Log.w(TAG, "Toggles provider not available")
+                return@withContext WrappedObject(null, persistentListOf(), persistentListOf())
+            }
+            scopesCursor.use { cursor ->
+                if (cursor.moveToFirst()) {
                     do {
-                        scopes.add(ToggleScope.fromCursor(scopesCursor))
-                    } while (scopesCursor.moveToNext())
+                        scopes.add(ToggleScope.fromCursor(cursor))
+                    } while (cursor.moveToNext())
                 } else {
-                    error("No scopes found, make sure to insert at least the default scope")
+                    Log.w(TAG, "No scopes found")
+                    return@withContext WrappedObject(null, persistentListOf(), persistentListOf())
                 }
             }
 
-            contentResolver.query(
+            val configurationCursor = contentResolver.query(
                 configurationUri(key),
                 null,
                 null,
                 null,
                 null
-            ).use { configurationCursor ->
-                @Suppress("UseIsNullOrEmpty")
-                if (configurationCursor == null || configurationCursor.count == 0) {
-                    Log.e("Toggles2", "No configuration found for key: $key")
-                    return@withContext WrappedObject(
-                        null,
-                        persistentListOf(),
-                        scopes.toImmutableList()
-                    )
-                } else if (configurationCursor.count > 1) {
+            )
+            if (configurationCursor == null || configurationCursor.count == 0) {
+                configurationCursor?.close()
+                Log.d(TAG, "No configuration found for key: $key")
+                return@withContext WrappedObject(
+                    null,
+                    persistentListOf(),
+                    scopes.toImmutableList()
+                )
+            }
+
+            configurationCursor.use { cursor ->
+                if (cursor.count > 1) {
                     error("Multiple configurations found for key: $key")
-                } else if (!configurationCursor.moveToFirst()) {
+                }
+                if (!cursor.moveToFirst()) {
                     error("Could not move to first in configuration cursor for key: $key")
                 }
 
-                val configuration = TogglesConfiguration.fromCursor(configurationCursor)
+                val configuration = TogglesConfiguration.fromCursor(cursor)
                 val configurationValues = mutableListOf<TogglesConfigurationValue>()
 
-                contentResolver.query(
+                val valuesCursor = contentResolver.query(
                     configurationValueUri(configuration.id),
                     null,
                     null,
                     null,
                     null
-                ).use { configurationValuesCursor ->
-                    if (configurationValuesCursor!!.moveToFirst()) {
+                )
+                valuesCursor?.use { vc ->
+                    if (vc.moveToFirst()) {
                         do {
                             configurationValues.add(
-                                TogglesConfigurationValue.fromCursor(
-                                    configurationValuesCursor
-                                )
+                                TogglesConfigurationValue.fromCursor(vc)
                             )
-                        } while (configurationValuesCursor.moveToNext())
-
-                        return@withContext WrappedObject(
-                            configuration,
-                            configurationValues.toImmutableList(),
-                            scopes.toImmutableList()
-                        )
+                        } while (vc.moveToNext())
                     }
                 }
 
@@ -302,4 +326,8 @@ class Toggles2(
                 )
             }
         }
+
+    companion object {
+        private const val TAG = "Toggles2"
+    }
 }

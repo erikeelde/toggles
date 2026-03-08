@@ -93,9 +93,10 @@ class TogglesProviderPredefinedConfigurationValuesTest {
 
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingQueryForToggleValues() {
-        togglesProvider.update(
+        togglesProvider.query(
             TogglesProviderContract.toggleValueUri(),
-            getToggleValue("dummyToggleValue").toContentValues(),
+            null,
+            null,
             null,
             null
         )

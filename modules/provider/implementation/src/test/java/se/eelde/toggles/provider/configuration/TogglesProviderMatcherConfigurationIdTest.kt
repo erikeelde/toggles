@@ -84,18 +84,21 @@ class TogglesProviderMatcherConfigurationIdTest {
             togglesConfiguration.copy(key = "newKey", type = Toggle.TYPE.STRING)
 
         val rowsUpdated = togglesProvider.update(
-            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),
+            TogglesProviderContract.configurationUri(uri.lastPathSegment!!.toLong()),
             updatedConfiguration.toContentValues(),
             null,
             null
         )
 
-        val query = togglesProvider.query(uri, null, null, null, null)
-        assertTrue(query.moveToFirst())
-        val fromCursor = TogglesConfiguration.fromCursor(query)
+        togglesProvider.query(uri, null, null, null, null).use { query ->
+            assertTrue(query.moveToFirst())
+            val fromCursor = TogglesConfiguration.fromCursor(query)
 
-        assertEquals(1, rowsUpdated)
-        assertEquals(1, fromCursor.id)
+            assertEquals(1, rowsUpdated)
+            assertEquals(1, fromCursor.id)
+            assertEquals("newKey", fromCursor.key)
+            assertEquals(Toggle.TYPE.STRING, fromCursor.type)
+        }
     }
 
     @Test
@@ -105,13 +108,14 @@ class TogglesProviderMatcherConfigurationIdTest {
             togglesConfiguration.toContentValues(),
         )
 
-        val configurationUri = TogglesProviderContract.configurationUri(uri.lastPathSegment!!)
+        val configurationUri = TogglesProviderContract.configurationUri(uri.lastPathSegment!!.toLong())
 
-        val cursor = togglesProvider.query(configurationUri, null, null, null, null)
-        assertTrue(cursor.moveToFirst())
-        TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
-            assertEquals(togglesConfiguration.key, cursorConfiguration.key)
-            assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+        togglesProvider.query(configurationUri, null, null, null, null).use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
+                assertEquals(togglesConfiguration.key, cursorConfiguration.key)
+                assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+            }
         }
     }
 
@@ -123,7 +127,7 @@ class TogglesProviderMatcherConfigurationIdTest {
         )
 
         val rowsDeleted = togglesProvider.delete(
-            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),
+            TogglesProviderContract.configurationUri(uri.lastPathSegment!!.toLong()),
             null,
             null
         )
