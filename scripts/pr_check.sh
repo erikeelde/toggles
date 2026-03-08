@@ -57,7 +57,8 @@ if $run_static; then
   ./gradlew assembleAndroidTest
   ./gradlew detekt
   ./gradlew versionCatalogFormat
-  ./gradlew detekt
+  # TODO: restore detektMain when detekt supports AGP 9 built-in Kotlin (https://github.com/detekt/detekt/issues/8320)
+  # ./gradlew detektMain
 fi
 
 if $run_unit; then
