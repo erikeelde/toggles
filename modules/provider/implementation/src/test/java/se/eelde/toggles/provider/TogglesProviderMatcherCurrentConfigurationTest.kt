@@ -165,12 +165,42 @@ class TogglesProviderMatcherCurrentConfigurationTest {
 
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingQueryForToggles() {
-        togglesProvider.update(
+        togglesProvider.query(
             TogglesProviderContract.toggleUri(),
-            getToggle("dummyToggle").toContentValues(),
+            null,
+            null,
             null,
             null
         )
+    }
+
+    @Test
+    fun testDuplicateInsertDoesNotFail() {
+        val toggleKey = "duplicateToggle"
+        val insertToggle = getToggle(toggleKey)
+
+        val firstUri = togglesProvider.insert(
+            TogglesProviderContract.toggleUri(),
+            insertToggle.toContentValues()
+        )
+        assertNotNull(firstUri)
+
+        // Second insert with same key should not throw
+        val secondUri = togglesProvider.insert(
+            TogglesProviderContract.toggleUri(),
+            insertToggle.toContentValues()
+        )
+        assertNotNull(secondUri)
+
+        // Should still return the same configuration
+        togglesProvider.query(
+            TogglesProviderContract.toggleUri(toggleKey),
+            null, null, null, null
+        ).use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            val toggle = Toggle.fromCursor(cursor)
+            assertEquals(toggleKey, toggle.key)
+        }
     }
 
     @Test(expected = UnsupportedOperationException::class)
