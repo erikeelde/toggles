@@ -85,7 +85,10 @@ class TogglesProviderMatcherCurrentConfigurationIdTest {
         // Query by ID should fall back to default scope and find the value
         togglesProvider.query(
             TogglesProviderContract.toggleUri(configId),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.moveToFirst())
             val toggle = Toggle.fromCursor(cursor)
@@ -116,13 +119,17 @@ class TogglesProviderMatcherCurrentConfigurationIdTest {
         togglesProvider.update(
             TogglesProviderContract.toggleUri(configId),
             updateToggle.toContentValues(),
-            null, null
+            null,
+            null
         )
 
         // Query should return the selected scope value, not the default
         togglesProvider.query(
             TogglesProviderContract.toggleUri(configId),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.moveToFirst())
             val toggle = Toggle.fromCursor(cursor)
@@ -153,14 +160,18 @@ class TogglesProviderMatcherCurrentConfigurationIdTest {
         val updatedRows = togglesProvider.update(
             TogglesProviderContract.toggleUri(configId),
             updateToggle.toContentValues(),
-            null, null
+            null,
+            null
         )
         assertEquals(1, updatedRows)
 
         // Verify the value was created in the selected scope
         togglesProvider.query(
             TogglesProviderContract.toggleUri(configId),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.moveToFirst())
             val toggle = Toggle.fromCursor(cursor)

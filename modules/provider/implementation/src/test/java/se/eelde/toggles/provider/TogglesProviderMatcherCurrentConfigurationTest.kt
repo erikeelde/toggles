@@ -195,7 +195,10 @@ class TogglesProviderMatcherCurrentConfigurationTest {
         // Should still return the same configuration
         togglesProvider.query(
             TogglesProviderContract.toggleUri(toggleKey),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.moveToFirst())
             val toggle = Toggle.fromCursor(cursor)

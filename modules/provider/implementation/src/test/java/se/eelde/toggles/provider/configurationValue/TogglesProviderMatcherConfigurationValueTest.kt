@@ -90,7 +90,10 @@ class TogglesProviderMatcherConfigurationValueTest {
 
         togglesProvider.query(
             TogglesProviderContract.configurationValueUri(configId),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.moveToFirst())
             val fromCursor = TogglesConfigurationValue.fromCursor(cursor)
@@ -123,7 +126,10 @@ class TogglesProviderMatcherConfigurationValueTest {
 
         togglesProvider.query(
             TogglesProviderContract.configurationValueUri("myConfigurationkey"),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.moveToFirst())
             val fromCursor = TogglesConfigurationValue.fromCursor(cursor)
@@ -183,14 +189,18 @@ class TogglesProviderMatcherConfigurationValueTest {
         val rowsUpdated = togglesProvider.update(
             TogglesProviderContract.configurationValueUri(configId),
             updatedValue.toContentValues(),
-            null, null
+            null,
+            null
         )
 
         assertEquals(1, rowsUpdated)
 
         togglesProvider.query(
             TogglesProviderContract.configurationValueUri(configId),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.moveToFirst())
             val fromCursor = TogglesConfigurationValue.fromCursor(cursor)
@@ -202,7 +212,8 @@ class TogglesProviderMatcherConfigurationValueTest {
     fun testDeleteById() {
         togglesProvider.delete(
             TogglesProviderContract.configurationValueUri(1L),
-            null, null,
+            null,
+            null,
         )
     }
 
@@ -210,7 +221,8 @@ class TogglesProviderMatcherConfigurationValueTest {
     fun testDeleteByKey() {
         togglesProvider.delete(
             TogglesProviderContract.configurationValueUri("key"),
-            null, null,
+            null,
+            null,
         )
     }
 
@@ -226,7 +238,9 @@ class TogglesProviderMatcherConfigurationValueTest {
     fun testUpdateByKey() {
         togglesProvider.update(
             TogglesProviderContract.configurationValueUri("key"),
-            null, null, null
+            null,
+            null,
+            null
         )
     }
 }

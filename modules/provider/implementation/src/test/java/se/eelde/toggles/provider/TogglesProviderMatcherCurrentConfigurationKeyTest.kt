@@ -149,7 +149,10 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
         // Query by key should fall back to default scope and find the value
         togglesProvider.query(
             TogglesProviderContract.toggleUri(toggleKey),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.moveToFirst())
             val toggle = Toggle.fromCursor(cursor)
@@ -180,13 +183,17 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
         togglesProvider.update(
             TogglesProviderContract.toggleUri(configId),
             updateToggle.toContentValues(),
-            null, null
+            null,
+            null
         )
 
         // Query by key should return the selected scope value, not the default
         togglesProvider.query(
             TogglesProviderContract.toggleUri(toggleKey),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.moveToFirst())
             val toggle = Toggle.fromCursor(cursor)

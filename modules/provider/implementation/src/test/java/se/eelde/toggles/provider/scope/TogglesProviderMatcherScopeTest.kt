@@ -61,7 +61,10 @@ class TogglesProviderMatcherScopeTest {
     fun testQuery() {
         togglesProvider.query(
             TogglesProviderContract.scopeUri(),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             assertTrue(cursor.count >= 2)
         }
@@ -79,7 +82,9 @@ class TogglesProviderMatcherScopeTest {
     fun testUpdate() {
         togglesProvider.update(
             TogglesProviderContract.scopeUri(),
-            null, null, null
+            null,
+            null,
+            null
         )
     }
 
@@ -87,7 +92,8 @@ class TogglesProviderMatcherScopeTest {
     fun testDelete() {
         togglesProvider.delete(
             TogglesProviderContract.scopeUri(),
-            null, null
+            null,
+            null
         )
     }
 }
