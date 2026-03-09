@@ -77,7 +77,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = configUri.lastPathSegment!!.toLong()
+        val configId = requireNotNull(configUri.lastPathSegment).toLong()
 
         val configValue = TogglesConfigurationValue {
             configurationId = configId
@@ -110,7 +110,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = configUri.lastPathSegment!!.toLong()
+        val configId = requireNotNull(configUri.lastPathSegment).toLong()
 
         val configValue = TogglesConfigurationValue {
             configurationId = configId
@@ -143,7 +143,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = configUri.lastPathSegment!!.toLong()
+        val configId = requireNotNull(configUri.lastPathSegment).toLong()
 
         val configValue = TogglesConfigurationValue {
             configurationId = configId
@@ -168,7 +168,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = configUri.lastPathSegment!!.toLong()
+        val configId = requireNotNull(configUri.lastPathSegment).toLong()
 
         val configValue = TogglesConfigurationValue {
             configurationId = configId

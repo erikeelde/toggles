@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="true" name="AGP (8.13.0)" variant="all" version="8.13.0">
+<issues format="6" by="lint 9.1.0" type="baseline" client="gradle" dependencies="true" name="AGP (9.1.0)" variant="all" version="9.1.0">
 
     <issue
         id="AvoidUsingNotNullOperator"
@@ -96,7 +96,7 @@
         errorLine2="                                                                                                  ~~">
         <location
             file="src/main/java/se/eelde/toggles/configurations/ConfigurationsEntry.kt"
-            line="109"
+            line="116"
             column="99"/>
     </issue>
 
@@ -107,7 +107,7 @@
         errorLine2="                                                                         ~~">
         <location
             file="src/main/java/se/eelde/toggles/configurations/ConfigurationsEntry.kt"
-            line="126"
+            line="133"
             column="74"/>
     </issue>
 
@@ -118,7 +118,7 @@
         errorLine2="                                                                                         ~~">
         <location
             file="src/main/java/se/eelde/toggles/configurations/ConfigurationsEntry.kt"
-            line="141"
+            line="148"
             column="90"/>
     </issue>
 
@@ -129,7 +129,7 @@
         errorLine2="                                                                                                 ~~">
         <location
             file="src/main/java/se/eelde/toggles/configurations/ConfigurationsEntry.kt"
-            line="151"
+            line="158"
             column="98"/>
     </issue>
 
@@ -285,17 +285,6 @@
             file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
             line="41"
             column="25"/>
-    </issue>
-
-    <issue
-        id="DenyListedApi"
-        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
-        errorLine1="        this.lastUse = Date()"
-        errorLine2="                       ~~~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
-            line="44"
-            column="24"/>
     </issue>
 
     <issue

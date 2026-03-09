@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="true" name="AGP (8.13.0)" variant="all" version="8.13.0">
+<issues format="6" by="lint 9.1.0" type="baseline" client="gradle" dependencies="true" name="AGP (9.1.0)" variant="all" version="9.1.0">
 
     <issue
         id="AvoidUsingNotNullOperator"
@@ -400,7 +400,7 @@
     <issue
         id="AvoidUsingNotNullOperator"
         message="Avoid using the `!!` operator"
-        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),"
+        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!.toLong()),"
         errorLine2="                                                                        ~~">
         <location
             file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
@@ -411,67 +411,23 @@
     <issue
         id="AvoidUsingNotNullOperator"
         message="Avoid using the `!!` operator"
-        errorLine1="        val configurationUri = TogglesProviderContract.configurationUri(uri.lastPathSegment!!)"
+        errorLine1="        val configurationUri = TogglesProviderContract.configurationUri(uri.lastPathSegment!!.toLong())"
         errorLine2="                                                                                           ~~">
         <location
             file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
-            line="108"
+            line="111"
             column="92"/>
     </issue>
 
     <issue
         id="AvoidUsingNotNullOperator"
         message="Avoid using the `!!` operator"
-        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),"
+        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!.toLong()),"
         errorLine2="                                                                        ~~">
         <location
             file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
-            line="126"
+            line="130"
             column="73"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
-        errorLine2="                                        ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
-            line="83"
-            column="41"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
-        errorLine2="                                                                 ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
-            line="83"
-            column="66"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
-        errorLine2="                                       ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
-            line="106"
-            column="40"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
-        errorLine2="                                                              ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationKeyTest.kt"
-            line="106"
-            column="63"/>
     </issue>
 
     <issue
@@ -659,17 +615,6 @@
             file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
             line="41"
             column="25"/>
-    </issue>
-
-    <issue
-        id="DenyListedApi"
-        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
-        errorLine1="        this.lastUse = Date()"
-        errorLine2="                       ~~~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
-            line="44"
-            column="24"/>
     </issue>
 
     <issue

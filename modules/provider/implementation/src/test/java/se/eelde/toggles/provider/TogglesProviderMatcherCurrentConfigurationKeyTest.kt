@@ -80,7 +80,7 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
             id = providerToggle.id
             type = providerToggle.type
             key = providerToggle.key
-            value = providerToggle.value!! + providerToggle.value!!
+            value = requireNotNull(providerToggle.value) + requireNotNull(providerToggle.value)
         }
 
         val update = togglesProvider.update(
@@ -103,7 +103,7 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
         assertTrue(cursor.moveToFirst())
         val updatedToggle = Toggle.fromCursor(cursor)
 
-        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)
+        assertEquals(requireNotNull(insertToggle.value) + requireNotNull(insertToggle.value), updatedToggle.value)
     }
 
     @Test
@@ -168,7 +168,7 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
             TogglesProviderContract.toggleUri(),
             insertToggle.toContentValues()
         )
-        val configId = insertUri.lastPathSegment!!.toLong()
+        val configId = requireNotNull(insertUri.lastPathSegment).toLong()
 
         // Update creates value in selected (development) scope via insert fallback
         val updateToggle = Toggle {

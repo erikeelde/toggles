@@ -80,7 +80,7 @@ class TogglesProviderMatcherCurrentConfigurationIdTest {
             TogglesProviderContract.toggleUri(),
             insertToggle.toContentValues()
         )
-        val configId = insertUri.lastPathSegment!!.toLong()
+        val configId = requireNotNull(insertUri.lastPathSegment).toLong()
 
         // Query by ID should fall back to default scope and find the value
         togglesProvider.query(
@@ -104,7 +104,7 @@ class TogglesProviderMatcherCurrentConfigurationIdTest {
             TogglesProviderContract.toggleUri(),
             insertToggle.toContentValues()
         )
-        val configId = insertUri.lastPathSegment!!.toLong()
+        val configId = requireNotNull(insertUri.lastPathSegment).toLong()
 
         // Update creates value in selected (development) scope via insert fallback
         val updateToggle = Toggle {
@@ -140,7 +140,7 @@ class TogglesProviderMatcherCurrentConfigurationIdTest {
             TogglesProviderContract.toggleUri(),
             insertToggle.toContentValues()
         )
-        val configId = insertUri.lastPathSegment!!.toLong()
+        val configId = requireNotNull(insertUri.lastPathSegment).toLong()
 
         // Update targets selected (development) scope - no value exists there yet
         // This should trigger the insert fallback path
