@@ -29,16 +29,11 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
  * Configure base Kotlin with Android options
  */
 internal fun Project.configureKotlinAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
+    commonExtension: CommonExtension,
     enableExplicitApi: Boolean = false,
 ) {
-    commonExtension.apply {
-        compileSdk = 36
-
-        defaultConfig {
-            minSdk = 23
-        }
-    }
+    commonExtension.compileSdk = 36
+    commonExtension.defaultConfig.minSdk = 23
 
     configureKotlin<KotlinAndroidProjectExtension>(enableExplicitApi)
     configureLint(commonExtension)

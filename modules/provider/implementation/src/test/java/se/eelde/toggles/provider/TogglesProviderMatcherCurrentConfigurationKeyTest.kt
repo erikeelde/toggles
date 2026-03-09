@@ -80,7 +80,7 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
             id = providerToggle.id
             type = providerToggle.type
             key = providerToggle.key
-            value = providerToggle.value!! + providerToggle.value!!
+            value = requireNotNull(providerToggle.value) + requireNotNull(providerToggle.value)
         }
 
         val update = togglesProvider.update(
@@ -103,7 +103,7 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
         assertTrue(cursor.moveToFirst())
         val updatedToggle = Toggle.fromCursor(cursor)
 
-        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)
+        assertEquals(requireNotNull(insertToggle.value) + requireNotNull(insertToggle.value), updatedToggle.value)
     }
 
     @Test
@@ -133,6 +133,72 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
     @Test(expected = UnsupportedOperationException::class)
     fun testMissingDeleteForToggleWithKey() {
         togglesProvider.delete(TogglesProviderContract.toggleUri("fake"), null, null)
+    }
+
+    @Test
+    fun testQueryFallsBackToDefaultScope() {
+        val toggleKey = "scopeFallbackToggle"
+        val insertToggle = getToggle(toggleKey)
+
+        // Insert creates value in default scope only
+        togglesProvider.insert(
+            TogglesProviderContract.toggleUri(),
+            insertToggle.toContentValues()
+        )
+
+        // Query by key should fall back to default scope and find the value
+        togglesProvider.query(
+            TogglesProviderContract.toggleUri(toggleKey),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            val toggle = Toggle.fromCursor(cursor)
+            assertEquals(toggleKey, toggle.key)
+            assertEquals("togglevalue", toggle.value)
+        }
+    }
+
+    @Test
+    fun testQueryReturnsSelectedScopeOverDefault() {
+        val toggleKey = "scopePriorityToggle"
+        val insertToggle = getToggle(toggleKey)
+
+        // Insert creates value in default scope
+        val insertUri = togglesProvider.insert(
+            TogglesProviderContract.toggleUri(),
+            insertToggle.toContentValues()
+        )
+        val configId = requireNotNull(insertUri.lastPathSegment).toLong()
+
+        // Update creates value in selected (development) scope via insert fallback
+        val updateToggle = Toggle {
+            id = configId
+            type = insertToggle.type
+            key = insertToggle.key
+            value = "updatedvalue"
+        }
+        togglesProvider.update(
+            TogglesProviderContract.toggleUri(configId),
+            updateToggle.toContentValues(),
+            null,
+            null
+        )
+
+        // Query by key should return the selected scope value, not the default
+        togglesProvider.query(
+            TogglesProviderContract.toggleUri(toggleKey),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            val toggle = Toggle.fromCursor(cursor)
+            assertEquals("updatedvalue", toggle.value)
+        }
     }
 
     private fun getToggle(key: String): Toggle {

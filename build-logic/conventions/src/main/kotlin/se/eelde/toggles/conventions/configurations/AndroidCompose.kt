@@ -27,28 +27,18 @@ import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginE
  * Configure Compose-specific options
  */
 internal fun Project.configureAndroidCompose(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
+    commonExtension: CommonExtension,
 ) {
-    commonExtension.apply {
-        buildFeatures {
-            compose = true
-        }
+    commonExtension.buildFeatures.compose = true
+    commonExtension.testOptions.unitTests.isIncludeAndroidResources = true
 
-        dependencies {
-            val bom = libs.findLibrary("androidx-compose-bom").get()
-            "implementation"(platform(bom))
-            "androidTestImplementation"(platform(bom))
-            "implementation"(libs.findLibrary("androidx-compose-ui-tooling-preview").get())
-            "debugImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
-            "lintChecks"(libs.findLibrary("com.slack.lint.compose.compose.lint.checks").get())
-        }
-
-        testOptions {
-            unitTests {
-                // For Robolectric
-                isIncludeAndroidResources = true
-            }
-        }
+    dependencies {
+        val bom = libs.findLibrary("androidx-compose-bom").get()
+        "implementation"(platform(bom))
+        "androidTestImplementation"(platform(bom))
+        "implementation"(libs.findLibrary("androidx-compose-ui-tooling-preview").get())
+        "debugImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
+        "lintChecks"(libs.findLibrary("com.slack.lint.compose.compose.lint.checks").get())
     }
 
     extensions.configure<ComposeCompilerGradlePluginExtension> {

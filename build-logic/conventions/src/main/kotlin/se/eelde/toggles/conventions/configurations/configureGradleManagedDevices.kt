@@ -18,14 +18,12 @@ package se.eelde.toggles.conventions.configurations
 
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.ManagedVirtualDevice
-import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.invoke
 
 /**
  * Configure project for Gradle managed devices
  */
 internal fun configureGradleManagedDevices(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
+    commonExtension: CommonExtension,
 ) {
 //    val pixel4 = DeviceConfig("Pixel 4", 30, "aosp-atd")
     val pixel6 = DeviceConfig("Pixel 6", 35, "google")
@@ -34,27 +32,14 @@ internal fun configureGradleManagedDevices(
     val allDevices = listOf(pixel6)//listOf(pixel4, pixel6, pixelC)
 //    val ciDevices = listOf(pixel6)
 
-    commonExtension.testOptions {
+    @Suppress("UnstableApiUsage")
+    val managedDevicesContainer = commonExtension.testOptions.managedDevices.allDevices
+    allDevices.forEach { deviceConfig ->
         @Suppress("UnstableApiUsage")
-        managedDevices {
-            allDevices {
-                allDevices.forEach { deviceConfig ->
-                    @Suppress("UnstableApiUsage")
-                    maybeCreate(deviceConfig.taskName, ManagedVirtualDevice::class.java).apply {
-                        device = deviceConfig.device
-                        apiLevel = deviceConfig.apiLevel
-                        systemImageSource = deviceConfig.systemImageSource
-                    }
-                }
-            }
-//            groups {
-//                maybeCreate("ci").apply {
-//                    ciDevices.forEach { deviceConfig ->
-//                        @Suppress("UnstableApiUsage", "DEPRECATION")
-//                        targetDevices.add(devices[deviceConfig.taskName])
-//                    }
-//                }
-//            }
+        managedDevicesContainer.maybeCreate(deviceConfig.taskName, ManagedVirtualDevice::class.java).apply {
+            device = deviceConfig.device
+            apiLevel = deviceConfig.apiLevel
+            systemImageSource = deviceConfig.systemImageSource
         }
     }
 }
