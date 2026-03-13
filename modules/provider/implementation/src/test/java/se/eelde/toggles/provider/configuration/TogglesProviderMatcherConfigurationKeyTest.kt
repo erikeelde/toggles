@@ -10,6 +10,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -112,5 +113,29 @@ class TogglesProviderMatcherConfigurationKeyTest {
             null
         )
         assertEquals(1, rowsDeleted)
+    }
+
+    @Test
+    fun testQueryNonExistentConfigurationByKeyReturnsEmptyCursor() {
+        togglesProvider.query(
+            TogglesProviderContract.configurationUri("nonExistentKey"),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertFalse(cursor.moveToFirst())
+            assertEquals(0, cursor.count)
+        }
+    }
+
+    @Test
+    fun testDeleteNonExistentConfigurationByKeyReturnsZero() {
+        val rowsDeleted = togglesProvider.delete(
+            TogglesProviderContract.configurationUri("nonExistentKey"),
+            null,
+            null
+        )
+        assertEquals(0, rowsDeleted)
     }
 }

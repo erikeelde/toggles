@@ -43,3 +43,6 @@ build-cache
 .kotlin
 
 versions.properties
+
+# Worktrees
+.worktrees/

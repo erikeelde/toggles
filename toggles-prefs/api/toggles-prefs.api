@@ -7,9 +7,13 @@ public abstract interface class se/eelde/toggles/prefs/TogglesPreferences {
 
 public final class se/eelde/toggles/prefs/TogglesPreferencesImpl : se/eelde/toggles/prefs/TogglesPreferences {
 	public fun <init> (Landroid/content/Context;)V
+	public fun <init> (Landroid/content/Context;Z)V
+	public fun <init> (Landroid/content/Context;ZZ)V
+	public fun <init> (Landroid/content/Context;ZZLkotlin/jvm/functions/Function3;)V
+	public fun <init> (Landroid/content/Context;ZZLkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;)V
+	public synthetic fun <init> (Landroid/content/Context;ZZLkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function4;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getBoolean (Ljava/lang/String;Z)Z
 	public fun getEnum (Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Enum;)Ljava/lang/Enum;
 	public fun getInt (Ljava/lang/String;I)I
 	public fun getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 }
-

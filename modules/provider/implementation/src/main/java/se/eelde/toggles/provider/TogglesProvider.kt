@@ -13,6 +13,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
+import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.TogglesApplication
 import se.eelde.toggles.database.TogglesConfigurationValue
 import se.eelde.toggles.database.TogglesPredefinedConfigurationValue
@@ -100,6 +101,10 @@ class TogglesProvider : ContentProvider() {
 
                 createDefaultScope(scopeDao, togglesApplication.id)
                 createDevelopmentScope(scopeDao, togglesApplication.id)
+
+                context?.contentResolver?.notifyInsert(
+                    TogglesProviderContract.scopeUri()
+                )
             }
 
             return togglesApplication

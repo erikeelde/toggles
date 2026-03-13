@@ -133,6 +133,16 @@ public final class se/eelde/toggles/core/ToggleScope$Companion {
 	public final fun fromCursor (Landroid/database/Cursor;)Lse/eelde/toggles/core/ToggleScope;
 }
 
+public final class se/eelde/toggles/core/ToggleState {
+	public fun <init> (Lse/eelde/toggles/core/TogglesConfiguration;Ljava/util/List;Ljava/util/List;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getConfiguration ()Lse/eelde/toggles/core/TogglesConfiguration;
+	public final fun getConfigurationValues ()Ljava/util/List;
+	public final fun getScopes ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class se/eelde/toggles/core/ToggleScopeKt {
 	public static final synthetic fun ToggleScope (Lkotlin/jvm/functions/Function1;)Lse/eelde/toggles/core/ToggleScope;
 }

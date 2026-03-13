@@ -11,8 +11,12 @@ Toggles is a multi-module Android library for feature switching. It stores featu
 Requires **Java 21** and **Android SDK** (API 36). Gradle 9.4.0 with Kotlin DSL.
 
 ```bash
+# PR validation (interactive — mirrors CI)
+./scripts/pr_check.sh
+
 # Build
 ./gradlew assembleDebug                          # All debug APKs (~5-8 min)
+./gradlew assembleAndroidTest                    # Compile instrumentation tests
 
 # Static analysis
 ./gradlew detekt                                 # Detekt (~2-5 min)
@@ -65,7 +69,7 @@ Version catalog: `gradle/libs.versions.toml`. Properties: `gradle.properties` (1
 - **Async**: Kotlin Coroutines + Flow
 - **Navigation**: Navigation 3
 - **Serialization**: Moshi (JSON), kotlinx-serialization
-- **Static analysis**: Detekt (config: `config/detekt/detekt.yml`)
+- **Static analysis**: Detekt (config: `config/detekt/detekt.yml`), slack-lint (custom lint checks — denies `java.util.Date` via `DenyListedApi`, denies unconditional `Log` calls in libraries via `LogConditional`)
 
 ### ContentProvider Architecture
 
@@ -80,8 +84,12 @@ The core mechanism uses Android ContentProvider for inter-process communication 
 
 New code should use the new API. The new API enables multi-scope support (e.g. different values per environment).
 
-**Toggles2** (`toggles-sample/.../toggles2/Toggles2.kt`) — experimental client using the new API. Lives in the sample app, not yet published. Uses `resolveToggleValue()` to handle scope-aware value resolution with auto-creation of missing configurations and default values. Intended to eventually replace `toggles-flow`'s `TogglesImpl`. Open question: whether `WrappedObject` (bundles configuration + values + scopes) should be public or internal.
+**Library internal architecture** — both `toggles-flow` and `toggles-prefs` use a 3-layer decomposition:
+- `TogglesProvider` (internal) — data access layer owning all ContentProvider interaction (queries, mutations, observation via `ContentObserver`/`callbackFlow`)
+- `TogglesResolver` (internal) — business logic for scope-aware value resolution, auto-creation of missing configurations/values, and default mismatch detection
+- `TogglesImpl` / `TogglesPreferencesImpl` (public) — thin facades implementing the public `Toggles` / `TogglesPreferences` interfaces
 
+`ToggleState` (in `toggles-core`) bundles `TogglesConfiguration?`, `List<TogglesConfigurationValue>`, and `List<ToggleScope>` — used as the interchange type between layers and exposed in violation handler callbacks (`onMissingToggle`, `onDefaultMismatch`).
 
 **URI endpoints** (defined in `TogglesProviderContract` in `toggles-core`):
 - `configurationUri()` / `configurationUri(id: Long)` / `configurationUri(key: String)` — CRUD for configurations
@@ -113,3 +121,4 @@ AGP (Android Gradle Plugin), Kotlin, Hilt/Dagger, KSP, and triplet-play are tigh
 - **Built-in Kotlin**: AGP 9 bundles Kotlin — convention plugins do not apply `org.jetbrains.kotlin.android`. The `kotlin-gradle-plugin` is still a `compileOnly` dependency in `build-logic/conventions/build.gradle.kts` for access to `KotlinAndroidProjectExtension`.
 - **`CommonExtension` has no type parameters**: Use direct property access (e.g. `commonExtension.compileSdk = 36`, `commonExtension.lint.apply { ... }`) instead of DSL lambda blocks.
 - **`detektMain` unavailable**: AGP 9 built-in Kotlin changes source set registration, breaking `detektMain`. Tracked in [detekt#8320](https://github.com/detekt/detekt/issues/8320). Currently commented out in CI — restore when fixed.
+- **BCV tasks unavailable**: `org.jetbrains.kotlinx.binary-compatibility-validator` (0.18.1) does not register `apiCheck`/`apiDump` tasks with AGP 9. The `.api` files must be maintained manually until BCV adds AGP 9 support. Verify changes with `javap -public` against compiled classes.
