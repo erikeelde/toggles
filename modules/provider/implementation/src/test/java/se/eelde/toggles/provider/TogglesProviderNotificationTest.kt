@@ -26,6 +26,7 @@ import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.TogglesDatabase
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 @Config(application = HiltTestApplication::class, sdk = [Build.VERSION_CODES.P])
@@ -64,7 +65,10 @@ class TogglesProviderNotificationTest {
         // The first query triggers getCallingApplication which creates default + development scopes
         togglesProvider.query(
             TogglesProviderContract.scopeUri(),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { }
 
         val notifiedUris = shadowContentResolver.getNotifiedUris()
@@ -230,7 +234,10 @@ class TogglesProviderNotificationTest {
 
         val queriedToggle = togglesProvider.query(
             TogglesProviderContract.toggleUri("legacyUpdateNotifyKey"),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             cursor.moveToFirst()
             Toggle.fromCursor(cursor)
@@ -327,7 +334,10 @@ class TogglesProviderNotificationTest {
 
         val cursor = togglesProvider.query(
             TogglesProviderContract.scopeUri(),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         )
         cursor.use {
             assertTrue(
@@ -348,7 +358,10 @@ class TogglesProviderNotificationTest {
     private fun triggerInitialSetup() {
         togglesProvider.query(
             TogglesProviderContract.scopeUri(),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { }
     }
 
@@ -367,7 +380,10 @@ class TogglesProviderNotificationTest {
     private fun getDefaultScopeId(): Long {
         togglesProvider.query(
             TogglesProviderContract.scopeUri(),
-            null, null, null, null
+            null,
+            null,
+            null,
+            null
         ).use { cursor ->
             while (cursor.moveToNext()) {
                 val scope = ToggleScope.fromCursor(cursor)
