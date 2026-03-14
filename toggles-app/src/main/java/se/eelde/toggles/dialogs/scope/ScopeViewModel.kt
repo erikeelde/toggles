@@ -71,7 +71,7 @@ class ScopeViewModel @AssistedInject internal constructor(
             PartialViewState.Saving -> previousState
             is PartialViewState.Scopes -> {
                 previousState.copy(
-                    selectedScope = partialViewState.scopes.maxByOrNull { it.timeStamp }!!,
+                    selectedScope = requireNotNull(partialViewState.scopes.maxByOrNull { it.timeStamp }),
                     scopes = partialViewState.scopes
                 )
             }
