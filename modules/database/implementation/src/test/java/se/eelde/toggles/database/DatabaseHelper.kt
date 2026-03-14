@@ -11,7 +11,7 @@ import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
-import java.util.Date
+import java.time.Instant
 
 object DatabaseHelper {
     fun insertPredefinedConfigurationValue(
@@ -154,6 +154,6 @@ object DatabaseHelper {
         val name = cursor.getString(cursor.getColumnIndex(ScopeTable.COL_NAME))
         val timeStamp = cursor.getLong(cursor.getColumnIndex(ScopeTable.COL_SELECTED_TIMESTAMP))
 
-        return TogglesScope(id, 1, name, Date(timeStamp))
+        return TogglesScope(id, 1, name, Instant.ofEpochMilli(timeStamp))
     }
 }
