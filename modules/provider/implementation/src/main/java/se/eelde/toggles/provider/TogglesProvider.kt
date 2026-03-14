@@ -491,7 +491,7 @@ class TogglesProvider : ContentProvider() {
 
     companion object {
 
-        private const val oneSecond = 1000
+        private const val oneSecond = 1000L
 
         @Synchronized
         private fun getDefaultScope(
