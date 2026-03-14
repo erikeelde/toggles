@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.ContentProvider
 import android.content.ContentUris
 import android.content.ContentValues
-import android.content.UriMatcher
 import android.content.pm.ProviderInfo
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -20,7 +19,6 @@ import org.robolectric.Robolectric
 import org.robolectric.android.controller.ContentProviderController
 import org.robolectric.annotation.Config
 import se.eelde.toggles.core.ColumnNames
-import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.prefs.TogglesPreferencesImpl
@@ -36,14 +34,14 @@ internal class TogglesPreferencesReturnsProviderValues {
         FIRST, SECOND
     }
 
-    private lateinit var contentProviderController: ContentProviderController<MockContentProvider>
+    private lateinit var contentProviderController: ContentProviderController<NewApiMockContentProvider>
 
     @Before
     fun setUp() {
         val info =
-            ProviderInfo().apply { authority = TogglesProviderContract.toggleUri().authority!! }
+            ProviderInfo().apply { authority = TogglesProviderContract.configurationUri().authority!! }
         contentProviderController =
-            Robolectric.buildContentProvider(MockContentProvider::class.java).create(info)
+            Robolectric.buildContentProvider(NewApiMockContentProvider::class.java).create(info)
 
         togglesPreferences =
             TogglesPreferencesImpl(ApplicationProvider.getApplicationContext<Application>())
@@ -51,91 +49,59 @@ internal class TogglesPreferencesReturnsProviderValues {
 
     @Test
     fun `return provider enum when available`() {
-        assertEquals(0, contentProviderController.get().toggles.size)
-
         assertEquals(
             TestEnum.FIRST,
-            togglesPreferences.getEnum(
-                key,
-                TestEnum::class.java,
-                TestEnum.FIRST
-            )
+            togglesPreferences.getEnum(key, TestEnum::class.java, TestEnum.FIRST)
         )
         assertEquals(
             TestEnum.FIRST,
-            togglesPreferences.getEnum(
-                key,
-                TestEnum::class.java,
-                TestEnum.SECOND
-            )
+            togglesPreferences.getEnum(key, TestEnum::class.java, TestEnum.SECOND)
         )
     }
 
     @Test
     fun `return provider string when available`() {
-        assertEquals(0, contentProviderController.get().toggles.size)
-
         assertEquals("first", togglesPreferences.getString(key, "first"))
         assertEquals("first", togglesPreferences.getString(key, "second"))
     }
 
     @Test
     fun `return provider boolean when available`() {
-        assertEquals(0, contentProviderController.get().toggles.size)
-
         assertEquals(true, togglesPreferences.getBoolean(key, true))
         assertEquals(true, togglesPreferences.getBoolean(key, false))
     }
 
     @Test
     fun `return provider int when available`() {
-        assertEquals(0, contentProviderController.get().toggles.size)
-
         assertEquals(1, togglesPreferences.getInt(key, 1))
         assertEquals(1, togglesPreferences.getInt(key, 2))
     }
 }
 
-internal class MockContentProvider : ContentProvider() {
-    companion object {
-        private const val CURRENT_CONFIGURATION_ID = 1
-        private const val CURRENT_CONFIGURATION_KEY = 2
-        private const val CURRENT_CONFIGURATIONS = 3
-        private const val PREDEFINED_CONFIGURATION_VALUES = 5
+internal class NewApiMockContentProvider : ContentProvider() {
+    data class StoredConfiguration(val id: Long, val key: String, val type: String)
+    data class StoredValue(val id: Long, val configurationId: Long, val value: String, val scope: Long)
 
-        private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+    private var nextConfigId = 1L
+    private var nextValueId = 1L
+    private val configurations = mutableListOf<StoredConfiguration>()
+    private val configurationValues = mutableListOf<StoredValue>()
 
-        init {
-            uriMatcher.addURI(
-                TogglesProviderContract.toggleUri().authority!!,
-                "currentConfiguration/#",
-                CURRENT_CONFIGURATION_ID
-            )
-            uriMatcher.addURI(
-                TogglesProviderContract.toggleUri().authority!!,
-                "currentConfiguration/*",
-                CURRENT_CONFIGURATION_KEY
-            )
-            uriMatcher.addURI(
-                TogglesProviderContract.toggleUri().authority!!,
-                "currentConfiguration",
-                CURRENT_CONFIGURATIONS
-            )
-            uriMatcher.addURI(
-                TogglesProviderContract.toggleUri().authority!!,
-                "predefinedConfigurationValue",
-                PREDEFINED_CONFIGURATION_VALUES
-            )
+    private fun matchUri(uri: Uri): String {
+        val segments = uri.pathSegments
+        return when {
+            segments.size == 1 && segments[0] == "scope" -> "SCOPES"
+            segments.size == 1 && segments[0] == "configuration" -> "CONFIGURATIONS"
+            segments.size == 2 && segments[0] == "configuration" -> "CONFIGURATION_KEY"
+            segments.size == 3 && segments[0] == "configuration" && segments[2] == "values" -> "CONFIGURATION_VALUES"
+            segments.size == 1 && segments[0] == "predefinedConfigurationValue" -> "PREDEFINED"
+            else -> "UNKNOWN"
         }
     }
 
-    val toggles: MutableMap<String, Toggle> = mutableMapOf()
-    private val toggleValues: MutableList<String> = mutableListOf()
+    override fun onCreate(): Boolean = true
 
-    override fun onCreate(): Boolean {
-        return true
-    }
-
+    @Suppress("ReturnCount")
     override fun query(
         uri: Uri,
         projection: Array<String>?,
@@ -143,53 +109,84 @@ internal class MockContentProvider : ContentProvider() {
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor {
-        when (uriMatcher.match(uri)) {
-            CURRENT_CONFIGURATION_ID -> {
-                throw IllegalArgumentException("toggle exists")
-            }
-            CURRENT_CONFIGURATION_KEY -> {
+        when (matchUri(uri)) {
+            "SCOPES" -> {
                 val cursor = MatrixCursor(
                     arrayOf(
-                        ColumnNames.Toggle.COL_ID,
-                        ColumnNames.Toggle.COL_KEY,
-                        ColumnNames.Toggle.COL_TYPE,
-                        ColumnNames.Toggle.COL_VALUE
+                        ColumnNames.ToggleScope.COL_ID,
+                        ColumnNames.ToggleScope.COL_NAME,
+                        ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP
                     )
                 )
-
-                uri.lastPathSegment?.let { key ->
-                    toggles[key]?.let { toggle ->
-                        cursor.addRow(arrayOf<Any?>(toggle.id, toggle.key, toggle.type, toggle.value))
-                    }
-                }
-
+                cursor.addRow(
+                    arrayOf<Any>(1L, ColumnNames.ToggleScope.DEFAULT_SCOPE, System.currentTimeMillis() - 1000)
+                )
+                cursor.addRow(arrayOf<Any>(2L, "user", System.currentTimeMillis()))
                 return cursor
             }
-            else -> {
-                throw UnsupportedOperationException("Not yet implemented $uri")
+            "CONFIGURATION_KEY" -> {
+                val cursor = MatrixCursor(
+                    arrayOf(
+                        ColumnNames.Configuration.COL_ID,
+                        ColumnNames.Configuration.COL_KEY,
+                        ColumnNames.Configuration.COL_TYPE
+                    )
+                )
+                val key = uri.pathSegments[1]
+                configurations.find { it.key == key }?.let { config ->
+                    cursor.addRow(arrayOf<Any>(config.id, config.key, config.type))
+                }
+                return cursor
             }
+            "CONFIGURATION_VALUES" -> {
+                val cursor = MatrixCursor(
+                    arrayOf(
+                        ColumnNames.ConfigurationValue.COL_ID,
+                        ColumnNames.ConfigurationValue.COL_CONFIG_ID,
+                        ColumnNames.ConfigurationValue.COL_VALUE,
+                        ColumnNames.ConfigurationValue.COL_SCOPE
+                    )
+                )
+                val configId = uri.pathSegments[1].toLong()
+                configurationValues.filter { it.configurationId == configId }.forEach { value ->
+                    cursor.addRow(arrayOf<Any>(value.id, value.configurationId, value.value, value.scope))
+                }
+                return cursor
+            }
+            else -> throw UnsupportedOperationException("Not yet implemented $uri")
         }
     }
 
+    @Suppress("ReturnCount")
     override fun insert(uri: Uri, values: ContentValues?): Uri {
-        val insertId: Long
-        when (uriMatcher.match(uri)) {
-            CURRENT_CONFIGURATIONS -> {
-                val toggle = Toggle.fromContentValues(values!!)
-                require(!toggles.containsKey(toggle.key)) { "toggle exists" }
-                toggles[toggle.key] = toggle
-                insertId = toggles.size.toLong()
-                toggle.id = insertId
+        requireNotNull(values)
+        when (matchUri(uri)) {
+            "CONFIGURATIONS" -> {
+                val id = nextConfigId++
+                val config = StoredConfiguration(
+                    id = id,
+                    key = values.getAsString(ColumnNames.Configuration.COL_KEY),
+                    type = values.getAsString(ColumnNames.Configuration.COL_TYPE)
+                )
+                configurations.add(config)
+                return ContentUris.withAppendedId(uri, id)
             }
-            PREDEFINED_CONFIGURATION_VALUES -> {
-                toggleValues.add(values!!.getAsString(ColumnNames.ToggleValue.COL_VALUE))
-                insertId = toggleValues.size.toLong()
+            "CONFIGURATION_VALUES" -> {
+                val id = nextValueId++
+                val value = StoredValue(
+                    id = id,
+                    configurationId = values.getAsLong(ColumnNames.ConfigurationValue.COL_CONFIG_ID),
+                    value = values.getAsString(ColumnNames.ConfigurationValue.COL_VALUE),
+                    scope = values.getAsLong(ColumnNames.ConfigurationValue.COL_SCOPE)
+                )
+                configurationValues.add(value)
+                return ContentUris.withAppendedId(uri, id)
             }
-            else -> {
-                throw UnsupportedOperationException("Not yet implemented $uri")
+            "PREDEFINED" -> {
+                return ContentUris.withAppendedId(uri, 1L)
             }
+            else -> throw UnsupportedOperationException("Not yet implemented $uri")
         }
-        return ContentUris.withAppendedId(uri, insertId)
     }
 
     override fun update(
@@ -197,10 +194,28 @@ internal class MockContentProvider : ContentProvider() {
         values: ContentValues?,
         selection: String?,
         selectionArgs: Array<String>?
-    ): Int = error("Error")
+    ): Int {
+        requireNotNull(values)
+        when (matchUri(uri)) {
+            "CONFIGURATION_VALUES" -> {
+                val configId = values.getAsLong(ColumnNames.ConfigurationValue.COL_CONFIG_ID)
+                val scope = values.getAsLong(ColumnNames.ConfigurationValue.COL_SCOPE)
+                val newValue = values.getAsString(ColumnNames.ConfigurationValue.COL_VALUE)
+                val index = configurationValues.indexOfFirst {
+                    it.configurationId == configId && it.scope == scope
+                }
+                if (index >= 0) {
+                    configurationValues[index] = configurationValues[index].copy(value = newValue)
+                    return 1
+                }
+                return 0
+            }
+            else -> throw UnsupportedOperationException("Not yet implemented $uri")
+        }
+    }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int =
-        error("Error")
+        error("Not implemented")
 
-    override fun getType(uri: Uri): String = error("Error")
+    override fun getType(uri: Uri): String = error("Not implemented")
 }

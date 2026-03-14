@@ -6,7 +6,7 @@ import android.os.Binder
 interface IPackageManagerWrapper {
     val applicationLabel: String
 
-    val callingApplicationPackageName: String?
+    val callingApplicationPackageName: String
 }
 
 class PackageManagerWrapper(private val packageManager: PackageManager) : IPackageManagerWrapper {
@@ -15,12 +15,14 @@ class PackageManagerWrapper(private val packageManager: PackageManager) : IPacka
         @Throws(PackageManager.NameNotFoundException::class)
         get() {
             val applicationInfo = packageManager.getApplicationInfo(
-                callingApplicationPackageName!!,
+                callingApplicationPackageName,
                 PackageManager.GET_META_DATA
             )
             return applicationInfo.loadLabel(packageManager).toString()
         }
 
-    override val callingApplicationPackageName: String?
-        get() = packageManager.getNameForUid(Binder.getCallingUid())
+    override val callingApplicationPackageName: String
+        get() = requireNotNull(packageManager.getNameForUid(Binder.getCallingUid())) {
+            "Cannot resolve package name for calling UID ${Binder.getCallingUid()}"
+        }
 }

@@ -1,6 +1,7 @@
 package se.eelde.toggles.provider.scope
 
 import android.app.Application
+import android.content.ContentValues
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -18,6 +19,7 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import se.eelde.toggles.core.ToggleScope
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.TogglesDatabase
 import se.eelde.toggles.provider.TogglesProvider
@@ -70,11 +72,66 @@ class TogglesProviderMatcherScopeTest {
         }
     }
 
+    @Test
+    fun testQueryContainsDefaultScope() {
+        togglesProvider.query(
+            TogglesProviderContract.scopeUri(),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            val scopeNames = mutableListOf<String>()
+            while (cursor.moveToNext()) {
+                val scope = ToggleScope.fromCursor(cursor)
+                scopeNames.add(scope.name)
+            }
+            assertTrue(
+                "Expected default scope 'toggles_default' but found: $scopeNames",
+                scopeNames.contains("toggles_default")
+            )
+        }
+    }
+
+    @Test
+    fun testQueryContainsDevelopmentScope() {
+        togglesProvider.query(
+            TogglesProviderContract.scopeUri(),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            val scopeNames = mutableListOf<String>()
+            while (cursor.moveToNext()) {
+                val scope = ToggleScope.fromCursor(cursor)
+                scopeNames.add(scope.name)
+            }
+            assertTrue(
+                "Expected development scope 'Development scope' but found: $scopeNames",
+                scopeNames.contains("Development scope")
+            )
+        }
+    }
+
+    @Test
+    fun testQueryReturnsExactlyTwoDefaultScopes() {
+        togglesProvider.query(
+            TogglesProviderContract.scopeUri(),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertEquals(2, cursor.count)
+        }
+    }
+
     @Test(expected = UnsupportedOperationException::class)
     fun testInsert() {
         togglesProvider.insert(
             TogglesProviderContract.scopeUri(),
-            null
+            ContentValues()
         )
     }
 
@@ -82,7 +139,7 @@ class TogglesProviderMatcherScopeTest {
     fun testUpdate() {
         togglesProvider.update(
             TogglesProviderContract.scopeUri(),
-            null,
+            ContentValues(),
             null,
             null
         )

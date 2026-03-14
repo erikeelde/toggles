@@ -49,11 +49,13 @@ data class TogglesPredefinedConfigurationValue constructor(
             val togglesPredefinedConfigurationValue =
                 TogglesPredefinedConfigurationValue(id = 0, configurationId = 0, value = null)
             if (values.containsKey(PredefinedConfigurationValueTable.COL_ID)) {
-                togglesPredefinedConfigurationValue.id =
-                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!
+                togglesPredefinedConfigurationValue.id = requireNotNull(
+                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)
+                ) { "Missing required field: ${PredefinedConfigurationValueTable.COL_ID}" }
             }
-            togglesPredefinedConfigurationValue.configurationId =
-                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!
+            togglesPredefinedConfigurationValue.configurationId = requireNotNull(
+                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)
+            ) { "Missing required field: ${PredefinedConfigurationValueTable.COL_CONFIG_ID}" }
             togglesPredefinedConfigurationValue.value =
                 values.getAsString(PredefinedConfigurationValueTable.COL_VALUE)
 

@@ -2,50 +2,6 @@
 <issues format="6" by="lint 9.1.0" type="baseline" client="gradle" dependencies="true" name="AGP (9.1.0)" variant="all" version="9.1.0">
 
     <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
-        errorLine2="                                                                              ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="53"
-            column="79"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
-        errorLine2="                                                                              ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="53"
-            column="79"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
-        errorLine2="                                                                                 ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="56"
-            column="82"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
-        errorLine2="                                                                                 ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="56"
-            column="82"/>
-    </issue>
-
-    <issue
         id="DenyListedApi"
         message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
         errorLine1="        return TogglesScope(id, 1, name, Date(timeStamp))"

@@ -1,18 +1,11 @@
 package se.eelde.toggles.provider.configuration
 
 import android.app.Application
-import android.content.Context
-import androidx.room.Room
+import android.content.ContentValues
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
-import dagger.hilt.components.SingletonComponent
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -22,10 +15,8 @@ import org.junit.runner.RunWith
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
-import se.eelde.toggles.database.DatabaseModule
 import se.eelde.toggles.database.TogglesDatabase
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -54,7 +45,7 @@ class TogglesProviderMatcherConfigurationKeyTest {
     fun testInsert() {
         contentResolver.insert(
             TogglesProviderContract.configurationUri("key"),
-            null
+            ContentValues()
         )
     }
 
@@ -62,7 +53,7 @@ class TogglesProviderMatcherConfigurationKeyTest {
     fun testUpdate() {
         contentResolver.update(
             TogglesProviderContract.configurationUri("key"),
-            null,
+            ContentValues(),
             null,
             null
         )

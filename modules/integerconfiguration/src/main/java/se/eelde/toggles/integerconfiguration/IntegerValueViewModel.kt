@@ -77,7 +77,9 @@ class IntegerValueViewModel @AssistedInject internal constructor(
                     try {
                         _state.value = reduce(
                             state.value,
-                            PartialViewState.NewConfigurationValue(it.value!!.toInt())
+                            PartialViewState.NewConfigurationValue(
+                                requireNotNull(it.value) { "ConfigurationValue ${it.id} has null value" }.toInt()
+                            )
                         )
                     } catch (e: NumberFormatException) {
                         // delete the value if we encounter a numberformat exception
@@ -140,6 +142,7 @@ class IntegerValueViewModel @AssistedInject internal constructor(
             configurationDao.touch(configurationId, Date())
 
             application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
+            application.contentResolver.notifyUpdate(TogglesProviderContract.configurationUri(configurationId))
         }
     }
 
@@ -149,9 +152,10 @@ class IntegerValueViewModel @AssistedInject internal constructor(
                 configurationValueDao.delete(it)
 
                 application.contentResolver.notifyUpdate(
-                    TogglesProviderContract.toggleUri(
-                        configurationId
-                    )
+                    TogglesProviderContract.toggleUri(configurationId)
+                )
+                application.contentResolver.notifyUpdate(
+                    TogglesProviderContract.configurationUri(configurationId)
                 )
             }
         }

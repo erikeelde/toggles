@@ -90,9 +90,13 @@ public class TogglesConfigurationValue private constructor(
         public fun fromContentValues(values: ContentValues): TogglesConfigurationValue {
             return TogglesConfigurationValue(
                 id = values.getAsLong(ColumnNames.ConfigurationValue.COL_ID) ?: 0,
-                configurationId = values.getAsLong(ColumnNames.ConfigurationValue.COL_CONFIG_ID),
+                configurationId = requireNotNull(
+                    values.getAsLong(ColumnNames.ConfigurationValue.COL_CONFIG_ID)
+                ) { "Missing required field: ${ColumnNames.ConfigurationValue.COL_CONFIG_ID}" },
                 value = values.getAsString(ColumnNames.ConfigurationValue.COL_VALUE),
-                scope = values.getAsLong(ColumnNames.ConfigurationValue.COL_SCOPE),
+                scope = requireNotNull(
+                    values.getAsLong(ColumnNames.ConfigurationValue.COL_SCOPE)
+                ) { "Missing required field: ${ColumnNames.ConfigurationValue.COL_SCOPE}" },
             )
         }
 

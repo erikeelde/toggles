@@ -94,8 +94,12 @@ public class Toggle private constructor(
         public fun fromContentValues(values: ContentValues): Toggle {
             return Toggle(
                 id = values.getAsLong(ColumnNames.Toggle.COL_ID) ?: 0,
-                type = values.getAsString(ColumnNames.Toggle.COL_TYPE),
-                key = values.getAsString(ColumnNames.Toggle.COL_KEY),
+                type = requireNotNull(values.getAsString(ColumnNames.Toggle.COL_TYPE)) {
+                    "Missing required field: ${ColumnNames.Toggle.COL_TYPE}"
+                },
+                key = requireNotNull(values.getAsString(ColumnNames.Toggle.COL_KEY)) {
+                    "Missing required field: ${ColumnNames.Toggle.COL_KEY}"
+                },
                 value = values.getAsString(ColumnNames.Toggle.COL_VALUE)
             )
         }

@@ -77,7 +77,9 @@ class BooleanValueViewModel @AssistedInject internal constructor(
                     // viewEffects.value = Event(ViewEffect.CheckedChanged(it.value!!.toBoolean()))
                     _state.value = reduce(
                         state.value,
-                        PartialViewState.NewConfigurationValue(it.value!!.toBoolean())
+                        PartialViewState.NewConfigurationValue(
+                            requireNotNull(it.value) { "ConfigurationValue ${it.id} has null value" }.toBoolean()
+                        )
                     )
                 }
             }
@@ -138,9 +140,10 @@ class BooleanValueViewModel @AssistedInject internal constructor(
             configurationDao.touch(configurationId, Date())
 
             application.contentResolver.notifyUpdate(
-                TogglesProviderContract.toggleUri(
-                    configurationId
-                )
+                TogglesProviderContract.toggleUri(configurationId)
+            )
+            application.contentResolver.notifyUpdate(
+                TogglesProviderContract.configurationUri(configurationId)
             )
         }
     }
@@ -151,9 +154,10 @@ class BooleanValueViewModel @AssistedInject internal constructor(
                 configurationValueDao.delete(it)
 
                 application.contentResolver.notifyUpdate(
-                    TogglesProviderContract.toggleUri(
-                        configurationId
-                    )
+                    TogglesProviderContract.toggleUri(configurationId)
+                )
+                application.contentResolver.notifyUpdate(
+                    TogglesProviderContract.configurationUri(configurationId)
                 )
             }
         }

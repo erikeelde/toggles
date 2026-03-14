@@ -1,6 +1,7 @@
 package se.eelde.toggles.provider.configuration
 
 import android.app.Application
+import android.content.ContentValues
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -10,6 +11,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -68,7 +70,7 @@ class TogglesProviderMatcherConfigurationKeyTest {
     fun testInsert() {
         togglesProvider.insert(
             TogglesProviderContract.configurationUri("key"),
-            null
+            ContentValues()
         )
     }
 
@@ -76,7 +78,7 @@ class TogglesProviderMatcherConfigurationKeyTest {
     fun testUpdate() {
         togglesProvider.update(
             TogglesProviderContract.configurationUri("key"),
-            null,
+            ContentValues(),
             null,
             null
         )
@@ -112,5 +114,29 @@ class TogglesProviderMatcherConfigurationKeyTest {
             null
         )
         assertEquals(1, rowsDeleted)
+    }
+
+    @Test
+    fun testQueryNonExistentConfigurationByKeyReturnsEmptyCursor() {
+        togglesProvider.query(
+            TogglesProviderContract.configurationUri("nonExistentKey"),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertFalse(cursor.moveToFirst())
+            assertEquals(0, cursor.count)
+        }
+    }
+
+    @Test
+    fun testDeleteNonExistentConfigurationByKeyReturnsZero() {
+        val rowsDeleted = togglesProvider.delete(
+            TogglesProviderContract.configurationUri("nonExistentKey"),
+            null,
+            null
+        )
+        assertEquals(0, rowsDeleted)
     }
 }

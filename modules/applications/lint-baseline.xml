@@ -2,50 +2,6 @@
 <issues format="6" by="lint 9.1.0" type="baseline" client="gradle" dependencies="true" name="AGP (9.1.0)" variant="all" version="9.1.0">
 
     <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
-        errorLine2="                                                                              ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="53"
-            column="79"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
-        errorLine2="                                                                              ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="53"
-            column="79"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
-        errorLine2="                                                                                 ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="56"
-            column="82"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
-        errorLine2="                                                                                 ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="56"
-            column="82"/>
-    </issue>
-
-    <issue
         id="FullyQualifiedResource"
         message="Use an import alias instead"
         errorLine1="                modifier = Modifier.background(colorResource(id = se.eelde.toggles.composetheme.R.color.toggles_blue)),"

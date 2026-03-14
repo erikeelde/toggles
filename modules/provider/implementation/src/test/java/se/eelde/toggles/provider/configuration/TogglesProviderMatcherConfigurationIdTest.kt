@@ -1,6 +1,7 @@
 package se.eelde.toggles.provider.configuration
 
 import android.app.Application
+import android.content.ContentValues
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -10,6 +11,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -69,7 +71,7 @@ class TogglesProviderMatcherConfigurationIdTest {
     fun testInsert() {
         togglesProvider.insert(
             TogglesProviderContract.configurationUri(0),
-            null
+            ContentValues()
         )
     }
 
@@ -132,5 +134,45 @@ class TogglesProviderMatcherConfigurationIdTest {
             null
         )
         assertEquals(1, rowsDeleted)
+    }
+
+    @Test
+    fun testQueryNonExistentConfigurationByIdReturnsEmptyCursor() {
+        togglesProvider.query(
+            TogglesProviderContract.configurationUri(999L),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertFalse(cursor.moveToFirst())
+            assertEquals(0, cursor.count)
+        }
+    }
+
+    @Test
+    fun testUpdateNonExistentConfigurationByIdReturnsZero() {
+        val updatedConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "nonExistentKey"
+        }
+
+        val rowsUpdated = togglesProvider.update(
+            TogglesProviderContract.configurationUri(999L),
+            updatedConfiguration.toContentValues(),
+            null,
+            null
+        )
+        assertEquals(0, rowsUpdated)
+    }
+
+    @Test
+    fun testDeleteNonExistentConfigurationByIdReturnsZero() {
+        val rowsDeleted = togglesProvider.delete(
+            TogglesProviderContract.configurationUri(999L),
+            null,
+            null
+        )
+        assertEquals(0, rowsDeleted)
     }
 }
