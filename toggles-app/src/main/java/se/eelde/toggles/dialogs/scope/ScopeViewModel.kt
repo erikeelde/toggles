@@ -15,7 +15,7 @@ import se.eelde.toggles.coroutines.IoDispatcher
 import se.eelde.toggles.database.TogglesScope
 import se.eelde.toggles.database.dao.application.TogglesScopeDao
 import se.eelde.toggles.routes.Scope
-import java.util.Date
+import java.time.Instant
 
 internal data class ViewState(
     val title: String? = null,
@@ -80,7 +80,7 @@ class ScopeViewModel @AssistedInject internal constructor(
 
     internal fun selectScope(togglesScope: TogglesScope) {
         viewModelScope.launch {
-            togglesScope.timeStamp = Date()
+            togglesScope.timeStamp = Instant.now()
             scopeDao.update(togglesScope)
         }
     }

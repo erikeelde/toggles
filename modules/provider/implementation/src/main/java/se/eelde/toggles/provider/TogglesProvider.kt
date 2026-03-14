@@ -23,7 +23,7 @@ import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderPredefinedConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderScopeDao
-import java.util.Date
+import java.time.Instant
 
 class TogglesProvider : ContentProvider() {
 
@@ -514,7 +514,7 @@ class TogglesProvider : ContentProvider() {
             val scope = TogglesScope.newScope()
             scope.applicationId = applicationId
             val id = scopeDao.insert(scope)
-            scope.timeStamp = Date(Date().time - oneSecond)
+            scope.timeStamp = Instant.now().minusMillis(oneSecond)
             scope.id = id
             return scope
         }
@@ -525,7 +525,7 @@ class TogglesProvider : ContentProvider() {
         ): TogglesScope {
             val developmentScope = TogglesScope.newScope()
             developmentScope.applicationId = applicationId
-            developmentScope.timeStamp = Date()
+            developmentScope.timeStamp = Instant.now()
             developmentScope.name = TogglesScope.SCOPE_USER
             developmentScope.id = scopeDao.insert(developmentScope)
             return developmentScope

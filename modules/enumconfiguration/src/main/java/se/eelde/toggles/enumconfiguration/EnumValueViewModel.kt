@@ -23,7 +23,7 @@ import se.eelde.toggles.database.dao.application.TogglesPredefinedConfigurationV
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
 import se.eelde.toggles.routes.EnumConfiguration
-import java.util.Date
+import java.time.Instant
 
 data class ViewState(
     val title: String? = null,
@@ -157,7 +157,7 @@ class EnumValueViewModel @AssistedInject internal constructor(
                 togglesConfigurationValue.id =
                     configurationValueDao.insert(togglesConfigurationValue)
             }
-            configurationDao.touch(configurationId, Date())
+            configurationDao.touch(configurationId, Instant.now())
 
             application.contentResolver.notifyUpdate(
                 TogglesProviderContract.toggleUri(configurationId)
