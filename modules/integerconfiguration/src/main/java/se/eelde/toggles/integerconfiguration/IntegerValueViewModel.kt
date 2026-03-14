@@ -140,6 +140,7 @@ class IntegerValueViewModel @AssistedInject internal constructor(
             configurationDao.touch(configurationId, Date())
 
             application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
+            application.contentResolver.notifyUpdate(TogglesProviderContract.configurationUri(configurationId))
         }
     }
 
@@ -149,9 +150,10 @@ class IntegerValueViewModel @AssistedInject internal constructor(
                 configurationValueDao.delete(it)
 
                 application.contentResolver.notifyUpdate(
-                    TogglesProviderContract.toggleUri(
-                        configurationId
-                    )
+                    TogglesProviderContract.toggleUri(configurationId)
+                )
+                application.contentResolver.notifyUpdate(
+                    TogglesProviderContract.configurationUri(configurationId)
                 )
             }
         }

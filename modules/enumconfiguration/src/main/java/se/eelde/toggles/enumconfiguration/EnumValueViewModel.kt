@@ -129,9 +129,10 @@ class EnumValueViewModel @AssistedInject internal constructor(
         _state.value = reduce(_state.value, PartialViewState.Saving)
         updateConfigurationValue(value).join()
         application.contentResolver.notifyUpdate(
-            TogglesProviderContract.toggleUri(
-                configurationId
-            )
+            TogglesProviderContract.toggleUri(configurationId)
+        )
+        application.contentResolver.notifyUpdate(
+            TogglesProviderContract.configurationUri(configurationId)
         )
     }
 
@@ -139,9 +140,10 @@ class EnumValueViewModel @AssistedInject internal constructor(
         _state.value = reduce(_state.value, PartialViewState.Reverting)
         deleteConfigurationValue().join()
         application.contentResolver.notifyInsert(
-            TogglesProviderContract.toggleUri(
-                configurationId
-            )
+            TogglesProviderContract.toggleUri(configurationId)
+        )
+        application.contentResolver.notifyInsert(
+            TogglesProviderContract.configurationUri(configurationId)
         )
     }
 
@@ -158,9 +160,10 @@ class EnumValueViewModel @AssistedInject internal constructor(
             configurationDao.touch(configurationId, Date())
 
             application.contentResolver.notifyUpdate(
-                TogglesProviderContract.toggleUri(
-                    configurationId
-                )
+                TogglesProviderContract.toggleUri(configurationId)
+            )
+            application.contentResolver.notifyUpdate(
+                TogglesProviderContract.configurationUri(configurationId)
             )
         }
     }
@@ -171,9 +174,10 @@ class EnumValueViewModel @AssistedInject internal constructor(
                 configurationValueDao.delete(it)
 
                 application.contentResolver.notifyUpdate(
-                    TogglesProviderContract.toggleUri(
-                        it.configurationId
-                    )
+                    TogglesProviderContract.toggleUri(it.configurationId)
+                )
+                application.contentResolver.notifyUpdate(
+                    TogglesProviderContract.configurationUri(it.configurationId)
                 )
             }
         }

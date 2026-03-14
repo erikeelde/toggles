@@ -138,9 +138,10 @@ class StringValueViewModel
             configurationDao.touch(configurationId, Date())
 
             application.contentResolver.notifyUpdate(
-                TogglesProviderContract.toggleUri(
-                    configurationId
-                )
+                TogglesProviderContract.toggleUri(configurationId)
+            )
+            application.contentResolver.notifyUpdate(
+                TogglesProviderContract.configurationUri(configurationId)
             )
         }
     }
@@ -151,9 +152,10 @@ class StringValueViewModel
                 configurationValueDao.delete(it)
 
                 application.contentResolver.notifyUpdate(
-                    TogglesProviderContract.toggleUri(
-                        configurationId
-                    )
+                    TogglesProviderContract.toggleUri(configurationId)
+                )
+                application.contentResolver.notifyUpdate(
+                    TogglesProviderContract.configurationUri(configurationId)
                 )
             }
         }

@@ -224,6 +224,7 @@ class TogglesProvider : ContentProvider() {
         }
 
         val insertId: Long
+        var crossNotifyUri: Uri? = null
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATIONS -> {
                 val toggle = Toggle.fromContentValues(values!!)
@@ -265,6 +266,7 @@ class TogglesProvider : ContentProvider() {
                 }
 
                 insertId = togglesConfiguration.id
+                crossNotifyUri = TogglesProviderContract.configurationUri(insertId)
             }
 
             UriMatch.PREDEFINED_CONFIGURATION_VALUES -> {
@@ -288,6 +290,7 @@ class TogglesProvider : ContentProvider() {
                     type = togglesConfiguration.type
                 )
                 insertId = configurationDao.insert(databaseConfiguration)
+                crossNotifyUri = TogglesProviderContract.toggleUri(insertId)
             }
 
             UriMatch.CONFIGURATION_VALUE_ID -> {
@@ -300,6 +303,8 @@ class TogglesProvider : ContentProvider() {
                     scope = togglesConfigurationValue.scope
                 )
                 insertId = configurationValueDao.insertSync(databaseConfigurationValue)
+                val configId = uri.pathSegments[uri.pathSegments.size - 2].toLong()
+                crossNotifyUri = TogglesProviderContract.toggleUri(configId)
             }
 
             else -> {
@@ -308,6 +313,7 @@ class TogglesProvider : ContentProvider() {
         }
 
         context!!.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
+        crossNotifyUri?.let { context!!.contentResolver.notifyInsert(it) }
 
         return ContentUris.withAppendedId(uri, insertId)
     }
@@ -334,64 +340,74 @@ class TogglesProvider : ContentProvider() {
             assertValidApiVersion(uri)
         }
 
-        val updatedRows: Int
-        when (togglesUriMatcher.match(uri)) {
-            UriMatch.CURRENT_CONFIGURATION_ID -> {
-                val toggle = Toggle.fromContentValues(values!!)
-                val scope = getSelectedScope(scopeDao, callingApplication.id)
-                val updatedCount = configurationValueDao.updateConfigurationValueSync(
-                    java.lang.Long.parseLong(uri.lastPathSegment!!),
-                    scope.id,
-                    toggle.value!!
-                )
-
-                updatedRows = if (updatedCount > 0) {
-                    updatedCount
-                } else {
-                    val togglesConfigurationValue = TogglesConfigurationValue(
-                        0,
-                        java.lang.Long.parseLong(uri.lastPathSegment!!),
-                        toggle.value,
-                        scope.id
-                    )
-                    val insertSync = configurationValueDao.insertSync(togglesConfigurationValue)
-                    if (insertSync > 0) 1 else 0
-                }
-            }
-
-            UriMatch.CONFIGURATION_ID -> {
-                val fromContentValues = TogglesConfiguration.fromContentValues(values!!)
-                updatedRows = configurationDao.updateConfiguration(
-                    callingApplication = callingApplication.id,
-                    id = uri.lastPathSegment!!.toLong(),
-                    key = fromContentValues.key,
-                    type = fromContentValues.type
-                )
-            }
-
-            UriMatch.CONFIGURATION_VALUE_ID -> {
-                val togglesConfigurationValue =
-                    se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)
-
-                updatedRows = togglesConfigurationValue.value?.let {
-                    configurationValueDao.updateConfigurationValueSync(
-                        configurationId = togglesConfigurationValue.configurationId,
-                        scopeId = togglesConfigurationValue.scope,
-                        value = it
-                    )
-                } ?: throw NullPointerException("Configuration value cannot be null")
-            }
-
-            else -> {
-                throw UnsupportedOperationException("Not yet implemented $uri")
-            }
-        }
+        val (updatedRows, crossNotifyUri) = performUpdate(uri, values, callingApplication)
 
         if (updatedRows > 0) {
             context!!.contentResolver.notifyUpdate(uri)
+            context!!.contentResolver.notifyUpdate(crossNotifyUri)
         }
 
         return updatedRows
+    }
+
+    private fun performUpdate(
+        uri: Uri,
+        values: ContentValues?,
+        callingApplication: TogglesApplication
+    ): Pair<Int, Uri> = when (togglesUriMatcher.match(uri)) {
+        UriMatch.CURRENT_CONFIGURATION_ID -> {
+            val toggle = Toggle.fromContentValues(values!!)
+            val scope = getSelectedScope(scopeDao, callingApplication.id)
+            val configId = java.lang.Long.parseLong(uri.lastPathSegment!!)
+            val updatedCount = configurationValueDao.updateConfigurationValueSync(
+                configId,
+                scope.id,
+                toggle.value!!
+            )
+
+            val updatedRows = if (updatedCount > 0) {
+                updatedCount
+            } else {
+                val togglesConfigurationValue = TogglesConfigurationValue(
+                    0,
+                    configId,
+                    toggle.value,
+                    scope.id
+                )
+                val insertSync = configurationValueDao.insertSync(togglesConfigurationValue)
+                if (insertSync > 0) 1 else 0
+            }
+            updatedRows to TogglesProviderContract.configurationUri(configId)
+        }
+
+        UriMatch.CONFIGURATION_ID -> {
+            val fromContentValues = TogglesConfiguration.fromContentValues(values!!)
+            val id = uri.lastPathSegment!!.toLong()
+            val updatedRows = configurationDao.updateConfiguration(
+                callingApplication = callingApplication.id,
+                id = id,
+                key = fromContentValues.key,
+                type = fromContentValues.type
+            )
+            updatedRows to TogglesProviderContract.toggleUri(id)
+        }
+
+        UriMatch.CONFIGURATION_VALUE_ID -> {
+            val togglesConfigurationValue =
+                se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)
+
+            val updatedRows = togglesConfigurationValue.value?.let {
+                configurationValueDao.updateConfigurationValueSync(
+                    configurationId = togglesConfigurationValue.configurationId,
+                    scopeId = togglesConfigurationValue.scope,
+                    value = it
+                )
+            } ?: throw NullPointerException("Configuration value cannot be null")
+            val configId = uri.pathSegments[uri.pathSegments.size - 2].toLong()
+            updatedRows to TogglesProviderContract.toggleUri(configId)
+        }
+
+        else -> throw UnsupportedOperationException("Not yet implemented $uri")
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
@@ -403,25 +419,29 @@ class TogglesProvider : ContentProvider() {
 
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CONFIGURATION_ID -> {
+                val configId = requireNotNull(uri.lastPathSegment).toLong()
                 val deletedRows =
-                    configurationDao.deleteConfiguration(
-                        callingApplication.id,
-                        uri.lastPathSegment!!.toLong()
-                    )
+                    configurationDao.deleteConfiguration(callingApplication.id, configId)
                 if (deletedRows > 0) {
                     context!!.contentResolver.notifyChange(uri, null)
+                    context!!.contentResolver.notifyChange(
+                        TogglesProviderContract.toggleUri(configId),
+                        null
+                    )
                 }
                 return deletedRows
             }
 
             UriMatch.CONFIGURATION_KEY -> {
+                val key = requireNotNull(uri.lastPathSegment)
                 val deletedRows =
-                    configurationDao.deleteConfiguration(
-                        callingApplication.id,
-                        uri.lastPathSegment!!
-                    )
+                    configurationDao.deleteConfiguration(callingApplication.id, key)
                 if (deletedRows > 0) {
                     context!!.contentResolver.notifyChange(uri, null)
+                    context!!.contentResolver.notifyChange(
+                        TogglesProviderContract.toggleUri(key),
+                        null
+                    )
                 }
                 return deletedRows
             }

@@ -104,6 +104,27 @@ class TogglesProviderNotificationTest {
         )
     }
 
+    @Test
+    fun `insert configuration also notifies on legacy toggle URI`() {
+        triggerInitialSetup()
+        shadowContentResolver.getNotifiedUris().clear()
+
+        val config = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "notifyConfigCrossKey"
+        }
+        togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            config.toContentValues()
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected legacy toggle URI notification after config insert, got: ${notifiedUris.map { it.uri }}",
+            notifiedUris.any { it.uri.toString().contains("/currentConfiguration/") }
+        )
+    }
+
     // endregion
 
     // region Configuration value insert notifications
@@ -127,6 +148,28 @@ class TogglesProviderNotificationTest {
         assertTrue(
             "Expected configuration value URI notification after insert, got: ${notifiedUris.map { it.uri }}",
             notifiedUris.any { it.uri.toString().contains("/values/") }
+        )
+    }
+
+    @Test
+    fun `insert configuration value also notifies on legacy toggle URI`() {
+        val configId = insertConfiguration("notifyValueCrossKey")
+        shadowContentResolver.getNotifiedUris().clear()
+
+        val configValue = TogglesConfigurationValue {
+            configurationId = configId
+            value = "true"
+            scope = getDefaultScopeId()
+        }
+        togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.toContentValues()
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected legacy toggle URI notification after config value insert, got: ${notifiedUris.map { it.uri }}",
+            notifiedUris.any { it.uri.toString().contains("/currentConfiguration/") }
         )
     }
 
@@ -161,6 +204,36 @@ class TogglesProviderNotificationTest {
         assertTrue(
             "Expected configuration value URI notification after update, got: ${notifiedUris.map { it.uri }}",
             notifiedUris.any { it.uri.toString().contains("/values") }
+        )
+    }
+
+    @Test
+    fun `update configuration value also notifies on legacy toggle URI`() {
+        val configId = insertConfiguration("notifyUpdateCrossKey")
+        val defaultScopeId = getDefaultScopeId()
+        val configValue = TogglesConfigurationValue {
+            configurationId = configId
+            value = "true"
+            scope = defaultScopeId
+        }
+        togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.toContentValues()
+        )
+        shadowContentResolver.getNotifiedUris().clear()
+
+        val updatedValue = configValue.copy(value = "false")
+        togglesProvider.update(
+            TogglesProviderContract.configurationValueUri(configId),
+            updatedValue.toContentValues(),
+            null,
+            null
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected legacy toggle URI notification after config value update, got: ${notifiedUris.map { it.uri }}",
+            notifiedUris.any { it.uri.toString().contains("/currentConfiguration/") }
         )
     }
 
@@ -215,6 +288,29 @@ class TogglesProviderNotificationTest {
         )
     }
 
+    @Test
+    fun `insert legacy toggle also notifies on configuration URI`() {
+        triggerInitialSetup()
+        shadowContentResolver.getNotifiedUris().clear()
+
+        val toggle = Toggle {
+            id = 0L
+            type = Toggle.TYPE.BOOLEAN
+            key = "legacyNotifyCrossKey"
+            value = "true"
+        }
+        togglesProvider.insert(
+            TogglesProviderContract.toggleUri(),
+            toggle.toContentValues()
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected configuration URI notification after legacy insert, got: ${notifiedUris.map { it.uri }}",
+            notifiedUris.any { it.uri.toString().contains("/configuration/") }
+        )
+    }
+
     // endregion
 
     // region Legacy toggle update notifications
@@ -265,6 +361,52 @@ class TogglesProviderNotificationTest {
         )
     }
 
+    @Test
+    fun `update legacy toggle also notifies on configuration URI`() {
+        val toggle = Toggle {
+            id = 0L
+            type = Toggle.TYPE.BOOLEAN
+            key = "legacyUpdateCrossNotifyKey"
+            value = "true"
+        }
+        togglesProvider.insert(
+            TogglesProviderContract.toggleUri(),
+            toggle.toContentValues()
+        )
+
+        val queriedToggle = togglesProvider.query(
+            TogglesProviderContract.toggleUri("legacyUpdateCrossNotifyKey"),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            cursor.moveToFirst()
+            Toggle.fromCursor(cursor)
+        }
+
+        shadowContentResolver.getNotifiedUris().clear()
+
+        val updateToggle = Toggle {
+            id = queriedToggle.id
+            type = queriedToggle.type
+            key = queriedToggle.key
+            value = "false"
+        }
+        togglesProvider.update(
+            TogglesProviderContract.toggleUri(queriedToggle.id),
+            updateToggle.toContentValues(),
+            null,
+            null
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected configuration URI notification after legacy update, got: ${notifiedUris.map { it.uri }}",
+            notifiedUris.any { it.uri.toString().contains("/configuration/") }
+        )
+    }
+
     // endregion
 
     // region Delete notifications
@@ -288,6 +430,24 @@ class TogglesProviderNotificationTest {
     }
 
     @Test
+    fun `delete configuration by id also notifies on legacy toggle URI`() {
+        val configId = insertConfiguration("deleteNotifyCrossKey")
+        shadowContentResolver.getNotifiedUris().clear()
+
+        togglesProvider.delete(
+            TogglesProviderContract.configurationUri(configId),
+            null,
+            null
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected legacy toggle URI notification after delete, got: ${notifiedUris.map { it.uri }}",
+            notifiedUris.any { it.uri.toString().contains("/currentConfiguration/") }
+        )
+    }
+
+    @Test
     fun `delete configuration by key notifies`() {
         insertConfiguration("deleteByKeyNotifyKey")
         shadowContentResolver.getNotifiedUris().clear()
@@ -302,6 +462,24 @@ class TogglesProviderNotificationTest {
         assertTrue(
             "Expected configuration URI notification after delete by key, got: ${notifiedUris.map { it.uri }}",
             notifiedUris.any { it.uri.toString().contains("/configuration/") }
+        )
+    }
+
+    @Test
+    fun `delete configuration by key also notifies on legacy toggle URI`() {
+        insertConfiguration("deleteByKeyCrossNotifyKey")
+        shadowContentResolver.getNotifiedUris().clear()
+
+        togglesProvider.delete(
+            TogglesProviderContract.configurationUri("deleteByKeyCrossNotifyKey"),
+            null,
+            null
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected legacy toggle URI notification after delete by key, got: ${notifiedUris.map { it.uri }}",
+            notifiedUris.any { it.uri.toString().contains("/currentConfiguration/") }
         )
     }
 
