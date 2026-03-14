@@ -77,7 +77,9 @@ class StringValueViewModel
                     selectedConfigurationValue = it
                     _state.value = reduce(
                         state.value,
-                        PartialViewState.NewConfigurationValue(it.value!!)
+                        PartialViewState.NewConfigurationValue(
+                            requireNotNull(it.value) { "ConfigurationValue ${it.id} has null value" }
+                        )
                     )
                 }
             }

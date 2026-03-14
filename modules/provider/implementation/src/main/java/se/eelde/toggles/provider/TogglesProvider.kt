@@ -27,6 +27,9 @@ import java.util.Date
 
 class TogglesProvider : ContentProvider() {
 
+    private val requireContext: Context
+        get() = requireNotNull(context) { "ContentProvider context not yet initialized" }
+
     private val applicationDao: ProviderApplicationDao by lazy {
         applicationEntryPoint.provideProviderApplicationDao()
     }
@@ -56,7 +59,7 @@ class TogglesProvider : ContentProvider() {
     }
 
     private val applicationEntryPoint: TogglesProviderEntryPoint by lazy {
-        entryPointBuilder.build(context!!)
+        entryPointBuilder.build(requireContext)
     }
 
     internal interface EntryPointBuilder {
@@ -86,15 +89,17 @@ class TogglesProvider : ContentProvider() {
 
     private fun getCallingApplication(applicationDao: ProviderApplicationDao): TogglesApplication =
         synchronized(this) {
+            val callingPackageName = packageManagerWrapper.callingApplicationPackageName
+
             var togglesApplication: TogglesApplication? =
-                applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)
+                applicationDao.loadByPackageName(callingPackageName)
 
             if (togglesApplication == null) {
                 togglesApplication = TogglesApplication(
                     id = 0,
-                    packageName = packageManagerWrapper.callingApplicationPackageName!!,
+                    packageName = callingPackageName,
                     applicationLabel = packageManagerWrapper.applicationLabel,
-                    shortcutId = packageManagerWrapper.callingApplicationPackageName!!,
+                    shortcutId = callingPackageName,
                 )
 
                 togglesApplication.id = applicationDao.insert(togglesApplication)
@@ -102,7 +107,7 @@ class TogglesProvider : ContentProvider() {
                 createDefaultScope(scopeDao, togglesApplication.id)
                 createDevelopmentScope(scopeDao, togglesApplication.id)
 
-                context?.contentResolver?.notifyInsert(
+                requireContext.contentResolver.notifyInsert(
                     TogglesProviderContract.scopeUri()
                 )
             }
@@ -129,33 +134,28 @@ class TogglesProvider : ContentProvider() {
 
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATION_ID -> {
+                val configId = requireNotNull(uri.lastPathSegment).toLong()
                 val scope = getSelectedScope(scopeDao, callingApplication.id)
-                cursor = configurationDao.getToggle(
-                    java.lang.Long.valueOf(uri.lastPathSegment!!),
-                    scope.id
-                )
+                cursor = configurationDao.getToggle(configId, scope.id)
 
                 if (cursor.count == 0) {
                     cursor.close()
 
                     val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
-                    cursor = configurationDao.getToggle(
-                        java.lang.Long.valueOf(uri.lastPathSegment!!),
-                        defaultScope.id
-                    )
+                    cursor = configurationDao.getToggle(configId, defaultScope.id)
                 }
             }
 
             UriMatch.CURRENT_CONFIGURATION_KEY -> {
+                val key = requireNotNull(uri.lastPathSegment)
                 val scope = getSelectedScope(scopeDao, callingApplication.id)
-                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope.id)
+                cursor = configurationDao.getToggle(key, scope.id)
 
                 if (cursor.count == 0) {
                     cursor.close()
 
                     val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
-                    cursor =
-                        configurationDao.getToggle(uri.lastPathSegment!!, defaultScope.id)
+                    cursor = configurationDao.getToggle(key, defaultScope.id)
                 }
             }
 
@@ -164,17 +164,13 @@ class TogglesProvider : ContentProvider() {
             }
 
             UriMatch.CONFIGURATION_KEY -> {
-                cursor = configurationDao.getConfigurationCursor(
-                    callingApplication.id,
-                    uri.lastPathSegment!!
-                )
+                val key = requireNotNull(uri.lastPathSegment)
+                cursor = configurationDao.getConfigurationCursor(callingApplication.id, key)
             }
 
             UriMatch.CONFIGURATION_ID -> {
-                cursor = configurationDao.getConfigurationCursor(
-                    callingApplication.id,
-                    uri.lastPathSegment!!.toLong()
-                )
+                val configId = requireNotNull(uri.lastPathSegment).toLong()
+                cursor = configurationDao.getConfigurationCursor(callingApplication.id, configId)
             }
 
             UriMatch.CONFIGURATION_VALUE_KEY -> {
@@ -204,15 +200,13 @@ class TogglesProvider : ContentProvider() {
             }
         }
 
-        if (context != null) {
-            cursor.setNotificationUri(context!!.contentResolver, uri)
-        }
+        cursor.setNotificationUri(requireContext.contentResolver, uri)
 
         return cursor
     }
 
     private fun isTogglesApplication(callingApplication: TogglesApplication): Boolean {
-        return callingApplication.packageName == context!!.packageName
+        return callingApplication.packageName == requireContext.packageName
     }
 
     @Suppress("LongMethod")
@@ -223,11 +217,12 @@ class TogglesProvider : ContentProvider() {
             assertValidApiVersion(uri)
         }
 
+        val contentValues = requireNotNull(values) { "ContentValues required for insert" }
         val insertId: Long
         var crossNotifyUri: Uri? = null
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATIONS -> {
-                val toggle = Toggle.fromContentValues(values!!)
+                val toggle = Toggle.fromContentValues(contentValues)
 
                 var togglesConfiguration: se.eelde.toggles.database.TogglesConfiguration? =
                     configurationDao.getTogglesConfiguration(callingApplication.id, toggle.key)
@@ -270,19 +265,19 @@ class TogglesProvider : ContentProvider() {
             }
 
             UriMatch.PREDEFINED_CONFIGURATION_VALUES -> {
-                val fullConfig = TogglesPredefinedConfigurationValue.fromContentValues(values!!)
+                val fullConfig = TogglesPredefinedConfigurationValue.fromContentValues(contentValues)
                 insertId = try {
                     predefinedConfigurationDao.insert(fullConfig)
                 } catch (_: SQLiteConstraintException) {
                     predefinedConfigurationDao.getByConfigurationAndValueId(
                         fullConfig.configurationId,
-                        fullConfig.value!!
+                        requireNotNull(fullConfig.value) { "Predefined configuration value cannot be null" }
                     ).id
                 }
             }
 
             UriMatch.CONFIGURATIONS -> {
-                val togglesConfiguration = TogglesConfiguration.fromContentValues(values!!)
+                val togglesConfiguration = TogglesConfiguration.fromContentValues(contentValues)
                 val databaseConfiguration = se.eelde.toggles.database.TogglesConfiguration(
                     id = togglesConfiguration.id,
                     applicationId = callingApplication.id,
@@ -295,7 +290,7 @@ class TogglesProvider : ContentProvider() {
 
             UriMatch.CONFIGURATION_VALUE_ID -> {
                 val togglesConfigurationValue =
-                    se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)
+                    se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(contentValues)
                 val databaseConfigurationValue = TogglesConfigurationValue(
                     id = togglesConfigurationValue.id,
                     configurationId = togglesConfigurationValue.configurationId,
@@ -312,8 +307,8 @@ class TogglesProvider : ContentProvider() {
             }
         }
 
-        context!!.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
-        crossNotifyUri?.let { context!!.contentResolver.notifyInsert(it) }
+        requireContext.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
+        crossNotifyUri?.let { requireContext.contentResolver.notifyInsert(it) }
 
         return ContentUris.withAppendedId(uri, insertId)
     }
@@ -340,11 +335,12 @@ class TogglesProvider : ContentProvider() {
             assertValidApiVersion(uri)
         }
 
-        val (updatedRows, crossNotifyUri) = performUpdate(uri, values, callingApplication)
+        val contentValues = requireNotNull(values) { "ContentValues required for update" }
+        val (updatedRows, crossNotifyUri) = performUpdate(uri, contentValues, callingApplication)
 
         if (updatedRows > 0) {
-            context!!.contentResolver.notifyUpdate(uri)
-            context!!.contentResolver.notifyUpdate(crossNotifyUri)
+            requireContext.contentResolver.notifyUpdate(uri)
+            requireContext.contentResolver.notifyUpdate(crossNotifyUri)
         }
 
         return updatedRows
@@ -352,17 +348,18 @@ class TogglesProvider : ContentProvider() {
 
     private fun performUpdate(
         uri: Uri,
-        values: ContentValues?,
+        contentValues: ContentValues,
         callingApplication: TogglesApplication
     ): Pair<Int, Uri> = when (togglesUriMatcher.match(uri)) {
         UriMatch.CURRENT_CONFIGURATION_ID -> {
-            val toggle = Toggle.fromContentValues(values!!)
+            val toggle = Toggle.fromContentValues(contentValues)
             val scope = getSelectedScope(scopeDao, callingApplication.id)
-            val configId = java.lang.Long.parseLong(uri.lastPathSegment!!)
+            val configId = requireNotNull(uri.lastPathSegment).toLong()
+            val toggleValue = requireNotNull(toggle.value) { "Toggle value required for update" }
             val updatedCount = configurationValueDao.updateConfigurationValueSync(
                 configId,
                 scope.id,
-                toggle.value!!
+                toggleValue
             )
 
             val updatedRows = if (updatedCount > 0) {
@@ -371,7 +368,7 @@ class TogglesProvider : ContentProvider() {
                 val togglesConfigurationValue = TogglesConfigurationValue(
                     0,
                     configId,
-                    toggle.value,
+                    toggleValue,
                     scope.id
                 )
                 val insertSync = configurationValueDao.insertSync(togglesConfigurationValue)
@@ -381,8 +378,8 @@ class TogglesProvider : ContentProvider() {
         }
 
         UriMatch.CONFIGURATION_ID -> {
-            val fromContentValues = TogglesConfiguration.fromContentValues(values!!)
-            val id = uri.lastPathSegment!!.toLong()
+            val fromContentValues = TogglesConfiguration.fromContentValues(contentValues)
+            val id = requireNotNull(uri.lastPathSegment).toLong()
             val updatedRows = configurationDao.updateConfiguration(
                 callingApplication = callingApplication.id,
                 id = id,
@@ -394,7 +391,7 @@ class TogglesProvider : ContentProvider() {
 
         UriMatch.CONFIGURATION_VALUE_ID -> {
             val togglesConfigurationValue =
-                se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)
+                se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(contentValues)
 
             val updatedRows = togglesConfigurationValue.value?.let {
                 configurationValueDao.updateConfigurationValueSync(
@@ -423,8 +420,8 @@ class TogglesProvider : ContentProvider() {
                 val deletedRows =
                     configurationDao.deleteConfiguration(callingApplication.id, configId)
                 if (deletedRows > 0) {
-                    context!!.contentResolver.notifyChange(uri, null)
-                    context!!.contentResolver.notifyChange(
+                    requireContext.contentResolver.notifyChange(uri, null)
+                    requireContext.contentResolver.notifyChange(
                         TogglesProviderContract.toggleUri(configId),
                         null
                     )
@@ -437,8 +434,8 @@ class TogglesProvider : ContentProvider() {
                 val deletedRows =
                     configurationDao.deleteConfiguration(callingApplication.id, key)
                 if (deletedRows > 0) {
-                    context!!.contentResolver.notifyChange(uri, null)
-                    context!!.contentResolver.notifyChange(
+                    requireContext.contentResolver.notifyChange(uri, null)
+                    requireContext.contentResolver.notifyChange(
                         TogglesProviderContract.toggleUri(key),
                         null
                     )

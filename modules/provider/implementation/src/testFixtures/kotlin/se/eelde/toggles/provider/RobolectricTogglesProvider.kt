@@ -57,7 +57,7 @@ object RobolectricTogglesProvider {
                             override val applicationLabel: String
                                 get() = "Test"
 
-                            override val callingApplicationPackageName: String?
+                            override val callingApplicationPackageName: String
                                 get() = "Test"
                         }
                     }

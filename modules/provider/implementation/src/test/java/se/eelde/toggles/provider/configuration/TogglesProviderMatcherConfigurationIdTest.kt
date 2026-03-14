@@ -1,6 +1,7 @@
 package se.eelde.toggles.provider.configuration
 
 import android.app.Application
+import android.content.ContentValues
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -70,7 +71,7 @@ class TogglesProviderMatcherConfigurationIdTest {
     fun testInsert() {
         togglesProvider.insert(
             TogglesProviderContract.configurationUri(0),
-            null
+            ContentValues()
         )
     }
 

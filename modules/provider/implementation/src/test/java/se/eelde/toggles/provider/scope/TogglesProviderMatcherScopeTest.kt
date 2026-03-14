@@ -1,6 +1,7 @@
 package se.eelde.toggles.provider.scope
 
 import android.app.Application
+import android.content.ContentValues
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -130,7 +131,7 @@ class TogglesProviderMatcherScopeTest {
     fun testInsert() {
         togglesProvider.insert(
             TogglesProviderContract.scopeUri(),
-            null
+            ContentValues()
         )
     }
 
@@ -138,7 +139,7 @@ class TogglesProviderMatcherScopeTest {
     fun testUpdate() {
         togglesProvider.update(
             TogglesProviderContract.scopeUri(),
-            null,
+            ContentValues(),
             null,
             null
         )

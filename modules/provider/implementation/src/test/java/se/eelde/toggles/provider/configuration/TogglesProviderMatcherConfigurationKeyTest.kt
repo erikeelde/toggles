@@ -1,6 +1,7 @@
 package se.eelde.toggles.provider.configuration
 
 import android.app.Application
+import android.content.ContentValues
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -69,7 +70,7 @@ class TogglesProviderMatcherConfigurationKeyTest {
     fun testInsert() {
         togglesProvider.insert(
             TogglesProviderContract.configurationUri("key"),
-            null
+            ContentValues()
         )
     }
 
@@ -77,7 +78,7 @@ class TogglesProviderMatcherConfigurationKeyTest {
     fun testUpdate() {
         togglesProvider.update(
             TogglesProviderContract.configurationUri("key"),
-            null,
+            ContentValues(),
             null,
             null
         )

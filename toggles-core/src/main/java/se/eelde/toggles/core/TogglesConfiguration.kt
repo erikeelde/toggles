@@ -73,8 +73,12 @@ public class TogglesConfiguration private constructor(
         public fun fromContentValues(values: ContentValues): TogglesConfiguration {
             return TogglesConfiguration(
                 id = values.getAsLong(ColumnNames.Configuration.COL_ID) ?: 0,
-                type = values.getAsString(ColumnNames.Configuration.COL_TYPE),
-                key = values.getAsString(ColumnNames.Configuration.COL_KEY),
+                type = requireNotNull(values.getAsString(ColumnNames.Configuration.COL_TYPE)) {
+                    "Missing required field: ${ColumnNames.Configuration.COL_TYPE}"
+                },
+                key = requireNotNull(values.getAsString(ColumnNames.Configuration.COL_KEY)) {
+                    "Missing required field: ${ColumnNames.Configuration.COL_KEY}"
+                },
             )
         }
 

@@ -77,7 +77,9 @@ class BooleanValueViewModel @AssistedInject internal constructor(
                     // viewEffects.value = Event(ViewEffect.CheckedChanged(it.value!!.toBoolean()))
                     _state.value = reduce(
                         state.value,
-                        PartialViewState.NewConfigurationValue(it.value!!.toBoolean())
+                        PartialViewState.NewConfigurationValue(
+                            requireNotNull(it.value) { "ConfigurationValue ${it.id} has null value" }.toBoolean()
+                        )
                     )
                 }
             }
