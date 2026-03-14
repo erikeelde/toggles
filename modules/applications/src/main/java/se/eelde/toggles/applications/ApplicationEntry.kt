@@ -39,6 +39,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import kotlinx.coroutines.launch
+import se.eelde.toggles.composetheme.R as ComposeThemeR
 import se.eelde.toggles.routes.Applications
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,7 +112,7 @@ fun TogglesDrawer(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                modifier = Modifier.background(colorResource(id = se.eelde.toggles.composetheme.R.color.toggles_blue)),
+                modifier = Modifier.background(colorResource(id = ComposeThemeR.color.toggles_blue)),
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "Application icon"
             )
@@ -120,7 +121,7 @@ fun TogglesDrawer(
         NavigationDrawerItem(
             icon = {
                 Icon(
-                    painterResource(id = se.eelde.toggles.composetheme.R.drawable.ic_settings_white_24dp),
+                    painterResource(id = ComposeThemeR.drawable.ic_settings_white_24dp),
                     contentDescription = null
                 )
             },
@@ -136,7 +137,7 @@ fun TogglesDrawer(
         NavigationDrawerItem(
             icon = {
                 Icon(
-                    painterResource(id = se.eelde.toggles.composetheme.R.drawable.ic_oss),
+                    painterResource(id = ComposeThemeR.drawable.ic_oss),
                     contentDescription = null
                 )
             },
