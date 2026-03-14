@@ -37,10 +37,10 @@ internal fun ConfigurationListView(
         LazyColumn {
             uiState.value.configurations.forEach { configuration ->
                 val defaultScope =
-                    getItemForScope(uiState.value.defaultScope, configuration.configurationValues!!)
+                    getItemForScope(uiState.value.defaultScope, requireNotNull(configuration.configurationValues))
                 val selectedScope = getItemForScope(
                     uiState.value.selectedScope,
-                    configuration.configurationValues!!
+                    requireNotNull(configuration.configurationValues)
                 )
                 item {
                     Column(
@@ -62,7 +62,7 @@ internal fun ConfigurationListView(
                         Text(
                             modifier = Modifier,
                             style = MaterialTheme.typography.headlineSmall,
-                            text = configuration.key!!
+                            text = requireNotNull(configuration.key)
                         )
 
                         if (selectedScope != null) {
@@ -131,25 +131,25 @@ fun configurationClicked(
             configuration.type
         ) || TextUtils.equals(Toggle.TYPE.STRING, configuration.type)
     ) {
-        navigateToStringConfiguration(selectedScope!!.id, configuration.id)
+        navigateToStringConfiguration(requireNotNull(selectedScope).id, configuration.id)
     } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(
             Toggle.TYPE.INTEGER,
             configuration.type
         )
     ) {
-        navigateToIntegerConfiguration(selectedScope!!.id, configuration.id)
+        navigateToIntegerConfiguration(requireNotNull(selectedScope).id, configuration.id)
     } else if (TextUtils.equals(
             Boolean::class.java.name,
             configuration.type
         ) || TextUtils.equals(Toggle.TYPE.BOOLEAN, configuration.type)
     ) {
-        navigateToBooleanConfiguration(selectedScope!!.id, configuration.id)
+        navigateToBooleanConfiguration(requireNotNull(selectedScope).id, configuration.id)
     } else if (TextUtils.equals(Enum::class.java.name, configuration.type) || TextUtils.equals(
             Toggle.TYPE.ENUM,
             configuration.type
         )
     ) {
-        navigateToEnumConfiguration(selectedScope!!.id, configuration.id)
+        navigateToEnumConfiguration(requireNotNull(selectedScope).id, configuration.id)
     } else {
 //        Snackbar.make(
 //            binding.animator,
