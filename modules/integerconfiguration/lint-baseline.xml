@@ -4,408 +4,12 @@
     <issue
         id="AvoidUsingNotNullOperator"
         message="Avoid using the `!!` operator"
-        errorLine1="                            PartialViewState.NewConfigurationValue(it.value!!.toInt())"
-        errorLine2="                                                                           ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/integerconfiguration/IntegerValueViewModel.kt"
-            line="80"
-            column="76"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                callingApplicationPackageName!!,"
-        errorLine2="                                             ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/PackageManagerWrapper.kt"
-            line="18"
-            column="46"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    for (enumConstant in type.enumConstants!!) {"
-        errorLine2="                                                           ~~">
+        errorLine1="                type.enumConstants!!.map { it.toString() }"
+        errorLine2="                                  ~~">
         <location
             file="src/main/java/se/eelde/toggles/flow/TogglesImpl.kt"
-            line="108"
-            column="60"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
-        errorLine2="                                                                              ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="53"
-            column="79"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    values.getAsLong(PredefinedConfigurationValueTable.COL_ID)!!"
-        errorLine2="                                                                              ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="53"
-            column="79"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
-        errorLine2="                                                                                 ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="56"
-            column="82"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                values.getAsLong(PredefinedConfigurationValueTable.COL_CONFIG_ID)!!"
-        errorLine2="                                                                                 ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/database/TogglesPredefinedConfigurationValue.kt"
-            line="56"
-            column="82"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="        entryPointBuilder.build(context!!)"
-        errorLine2="                                       ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="58"
-            column="40"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                applicationDao.loadByPackageName(packageManagerWrapper.callingApplicationPackageName!!)"
-        errorLine2="                                                                                                    ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="89"
-            column="101"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    packageName = packageManagerWrapper.callingApplicationPackageName!!,"
-        errorLine2="                                                                                     ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="94"
-            column="86"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    shortcutId = packageManagerWrapper.callingApplicationPackageName!!,"
-        errorLine2="                                                                                    ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="96"
-            column="85"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    java.lang.Long.valueOf(uri.lastPathSegment!!),"
-        errorLine2="                                                              ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="129"
-            column="63"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                        java.lang.Long.valueOf(uri.lastPathSegment!!),"
-        errorLine2="                                                                  ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="138"
-            column="67"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                cursor = configurationDao.getToggle(uri.lastPathSegment!!, scope.id)"
-        errorLine2="                                                                       ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="146"
-            column="72"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                        configurationDao.getToggle(uri.lastPathSegment!!, defaultScope.id)"
-        errorLine2="                                                                      ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="153"
-            column="71"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    uri.lastPathSegment!!"
-        errorLine2="                                       ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="164"
-            column="40"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    uri.lastPathSegment!!.toLong()"
-        errorLine2="                                       ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="171"
-            column="40"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="            cursor.setNotificationUri(context!!.contentResolver, uri)"
-        errorLine2="                                             ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="203"
-            column="46"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="        return callingApplication.packageName == context!!.packageName"
-        errorLine2="                                                        ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="210"
-            column="57"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                val toggle = Toggle.fromContentValues(values!!)"
-        errorLine2="                                                            ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="224"
-            column="61"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                val fullConfig = TogglesPredefinedConfigurationValue.fromContentValues(values!!)"
-        errorLine2="                                                                                             ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="266"
-            column="94"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                        fullConfig.value!!"
-        errorLine2="                                        ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="272"
-            column="41"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                val togglesConfiguration = TogglesConfiguration.fromContentValues(values!!)"
-        errorLine2="                                                                                        ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="278"
-            column="89"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)"
-        errorLine2="                                                                                            ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="290"
-            column="93"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="        context!!.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))"
-        errorLine2="               ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="305"
-            column="16"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                val toggle = Toggle.fromContentValues(values!!)"
-        errorLine2="                                                            ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="335"
-            column="61"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    java.lang.Long.parseLong(uri.lastPathSegment!!),"
-        errorLine2="                                                                ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="338"
-            column="65"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    toggle.value!!"
-        errorLine2="                                ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="340"
-            column="33"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                        java.lang.Long.parseLong(uri.lastPathSegment!!),"
-        errorLine2="                                                                    ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="348"
-            column="69"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                val fromContentValues = TogglesConfiguration.fromContentValues(values!!)"
-        errorLine2="                                                                                     ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="358"
-            column="86"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    id = uri.lastPathSegment!!.toLong(),"
-        errorLine2="                                            ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="361"
-            column="45"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(values!!)"
-        errorLine2="                                                                                            ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="369"
-            column="93"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="            context!!.contentResolver.notifyUpdate(uri)"
-        errorLine2="                   ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="386"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                        uri.lastPathSegment!!.toLong()"
-        errorLine2="                                           ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="404"
-            column="44"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    context!!.contentResolver.notifyChange(uri, null)"
-        errorLine2="                           ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="407"
-            column="28"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                        uri.lastPathSegment!!"
-        errorLine2="                                           ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="416"
-            column="44"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                    context!!.contentResolver.notifyChange(uri, null)"
-        errorLine2="                           ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="419"
-            column="28"/>
+            line="50"
+            column="35"/>
     </issue>
 
     <issue
@@ -415,7 +19,7 @@
         errorLine2="                                                                        ~~">
         <location
             file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
-            line="87"
+            line="89"
             column="73"/>
     </issue>
 
@@ -426,7 +30,7 @@
         errorLine2="                                                                                           ~~">
         <location
             file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
-            line="111"
+            line="113"
             column="92"/>
     </issue>
 
@@ -437,7 +41,7 @@
         errorLine2="                                                                        ~~">
         <location
             file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
-            line="130"
+            line="132"
             column="73"/>
     </issue>
 
@@ -525,7 +129,7 @@
         errorLine2="                                                    ~~~~">
         <location
             file="src/main/java/se/eelde/toggles/integerconfiguration/IntegerValueViewModel.kt"
-            line="140"
+            line="142"
             column="53"/>
     </issue>
 
@@ -646,7 +250,7 @@
         errorLine2="                              ~~~~">
         <location
             file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="495"
+            line="517"
             column="31"/>
     </issue>
 
@@ -657,7 +261,7 @@
         errorLine2="                                   ~~~~">
         <location
             file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="495"
+            line="517"
             column="36"/>
     </issue>
 
@@ -668,7 +272,7 @@
         errorLine2="                                          ~~~~">
         <location
             file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="495"
+            line="517"
             column="43"/>
     </issue>
 
@@ -679,7 +283,7 @@
         errorLine2="                                         ~~~~">
         <location
             file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
-            line="506"
+            line="528"
             column="42"/>
     </issue>
 

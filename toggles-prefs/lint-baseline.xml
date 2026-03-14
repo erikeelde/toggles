@@ -1,92 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="true" name="AGP (8.13.0)" variant="all" version="8.13.0">
+<issues format="6" by="lint 9.1.0" type="baseline" client="gradle" dependencies="true" name="AGP (9.1.0)" variant="all" version="9.1.0">
 
     <issue
         id="AvoidUsingNotNullOperator"
         message="Avoid using the `!!` operator"
-        errorLine1="            for (enumConstant in type.enumConstants!!) {"
-        errorLine2="                                                   ~~">
+        errorLine1="                type.enumConstants!!.map { it.toString() }"
+        errorLine2="                                  ~~">
         <location
             file="src/main/java/se/eelde/toggles/prefs/TogglesPreferencesImpl.kt"
-            line="101"
-            column="52"/>
+            line="52"
+            column="35"/>
     </issue>
 
     <issue
         id="AvoidUsingNotNullOperator"
         message="Avoid using the `!!` operator"
-        errorLine1="            ProviderInfo().apply { authority = TogglesProviderContract.toggleUri().authority!! }"
-        errorLine2="                                                                                            ~~">
+        errorLine1="            ProviderInfo().apply { authority = TogglesProviderContract.configurationUri().authority!! }"
+        errorLine2="                                                                                                   ~~">
         <location
             file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
-            line="44"
-            column="93"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                TogglesProviderContract.toggleUri().authority!!,"
-        errorLine2="                                                             ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
-            line="110"
-            column="62"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                TogglesProviderContract.toggleUri().authority!!,"
-        errorLine2="                                                             ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
-            line="115"
-            column="62"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                TogglesProviderContract.toggleUri().authority!!,"
-        errorLine2="                                                             ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
-            line="120"
-            column="62"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                TogglesProviderContract.toggleUri().authority!!,"
-        errorLine2="                                                             ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
-            line="125"
-            column="62"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                val toggle = Toggle.fromContentValues(values!!)"
-        errorLine2="                                                            ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
-            line="178"
-            column="61"/>
-    </issue>
-
-    <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                toggleValues.add(values!!.getAsString(ColumnNames.ToggleValue.COL_VALUE))"
-        errorLine2="                                       ~~">
-        <location
-            file="src/test/java/se/eelde/toggles/TogglesPreferencesReturnsProviderValues.kt"
-            line="185"
-            column="40"/>
+            line="42"
+            column="100"/>
     </issue>
 
     <issue
