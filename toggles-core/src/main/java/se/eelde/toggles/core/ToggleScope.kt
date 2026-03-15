@@ -2,13 +2,13 @@ package se.eelde.toggles.core
 
 import android.content.ContentValues
 import android.database.Cursor
-import java.time.Instant
+import java.util.Date
 
 @Suppress("LibraryEntitiesShouldNotBePublic")
 public class ToggleScope private constructor(
     public val id: Long = 0,
     public val name: String,
-    public val timeStamp: Instant,
+    public val timeStamp: Date,
 ) {
     public class Builder {
         @set:JvmSynthetic
@@ -18,13 +18,13 @@ public class ToggleScope private constructor(
         public lateinit var name: String
 
         @set:JvmSynthetic
-        public lateinit var timeStamp: Instant
+        public lateinit var timeStamp: Date
 
         public fun setId(id: Long): Builder = apply { this.id = id }
 
         public fun setName(name: String): Builder = apply { this.name = name }
 
-        public fun setTimeStamp(timeStamp: Instant): Builder = apply { this.timeStamp = timeStamp }
+        public fun setTimeStamp(timeStamp: Date): Builder = apply { this.timeStamp = timeStamp }
 
         public fun build(): ToggleScope = ToggleScope(id = id, name = name, timeStamp = timeStamp)
     }
@@ -32,13 +32,13 @@ public class ToggleScope private constructor(
     public fun copy(
         id: Long = this.id,
         name: String = this.name,
-        timeStamp: Instant = this.timeStamp,
+        timeStamp: Date = this.timeStamp,
     ): ToggleScope = ToggleScope(id = id, name = name, timeStamp = timeStamp)
 
     public fun toContentValues(): ContentValues = ContentValues().apply {
         put(ColumnNames.ToggleScope.COL_ID, id)
         put(ColumnNames.ToggleScope.COL_NAME, name)
-        put(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP, timeStamp.toEpochMilli())
+        put(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP, timeStamp.time)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -71,7 +71,7 @@ public class ToggleScope private constructor(
             return ToggleScope(
                 id = contentValues.getAsLong(ColumnNames.ToggleScope.COL_ID),
                 name = contentValues.getAsString(ColumnNames.ToggleScope.COL_NAME),
-                timeStamp = Instant.ofEpochMilli(
+                timeStamp = Date(
                     contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP)
                 )
             )
@@ -82,7 +82,7 @@ public class ToggleScope private constructor(
             return ToggleScope(
                 id = cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_ID),
                 name = cursor.getStringOrThrow(ColumnNames.ToggleScope.COL_NAME),
-                timeStamp = Instant.ofEpochMilli(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))
+                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))
             )
         }
     }
