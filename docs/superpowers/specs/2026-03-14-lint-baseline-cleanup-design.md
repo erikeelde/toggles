@@ -1,4 +1,4 @@
-# Lint Baseline Cleanup
+/ex# Lint Baseline Cleanup
 
 Fix all lint and detekt warnings currently suppressed by baseline files, then remove the baselines.
 

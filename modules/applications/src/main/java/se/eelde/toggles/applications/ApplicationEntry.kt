@@ -39,8 +39,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import kotlinx.coroutines.launch
-import se.eelde.toggles.composetheme.R as ComposeThemeR
 import se.eelde.toggles.routes.Applications
+import se.eelde.toggles.composetheme.R as ComposeThemeR
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun EntryProviderScope<NavKey>.applicationNavigations(

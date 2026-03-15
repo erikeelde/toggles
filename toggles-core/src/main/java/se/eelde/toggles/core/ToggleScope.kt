@@ -71,7 +71,9 @@ public class ToggleScope private constructor(
             return ToggleScope(
                 id = contentValues.getAsLong(ColumnNames.ToggleScope.COL_ID),
                 name = contentValues.getAsString(ColumnNames.ToggleScope.COL_NAME),
-                timeStamp = Instant.ofEpochMilli(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))
+                timeStamp = Instant.ofEpochMilli(
+                    contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP)
+                )
             )
         }
 
