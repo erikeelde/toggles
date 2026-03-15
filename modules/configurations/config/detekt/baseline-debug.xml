@@ -1,11 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" ?>
 <SmellBaseline>
-  <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>UnsafeCallOnNullableType:ConfigurationListView.kt$configuration.configurationValues!!</ID>
-    <ID>UnsafeCallOnNullableType:ConfigurationListView.kt$configuration.key!!</ID>
-    <ID>UnsafeCallOnNullableType:ConfigurationListView.kt$selectedScope!!</ID>
-    <ID>UnsafeCallOnNullableType:ConfigurationViewModel.kt$ConfigurationViewModel$applicationDao.getApplication(applicationId)!!</ID>
-    <ID>UnsafeCallOnNullableType:ConfigurationsEntry.kt$uiState.value.application!!</ID>
-  </CurrentIssues>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues></CurrentIssues>
 </SmellBaseline>

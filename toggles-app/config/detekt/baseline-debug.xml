@@ -1,9 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" ?>
 <SmellBaseline>
-  <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>InjectDispatcher:ApplicationModule.kt$ApplicationModule$IO</ID>
-    <ID>InjectDispatcher:ScopeViewModel.kt$ScopeViewModel$IO</ID>
-    <ID>UnsafeCallOnNullableType:ScopeView.kt$viewState.selectedScope!!</ID>
-  </CurrentIssues>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues></CurrentIssues>
 </SmellBaseline>
