@@ -13,6 +13,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.coroutines.IoDispatcher
 import se.eelde.toggles.database.TogglesConfigurationValue
@@ -23,7 +24,6 @@ import se.eelde.toggles.database.dao.application.TogglesPredefinedConfigurationV
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
 import se.eelde.toggles.routes.EnumConfiguration
-import java.util.Date
 
 data class ViewState(
     val title: String? = null,
@@ -157,7 +157,7 @@ class EnumValueViewModel @AssistedInject internal constructor(
                 togglesConfigurationValue.id =
                     configurationValueDao.insert(togglesConfigurationValue)
             }
-            configurationDao.touch(configurationId, Date())
+            configurationDao.touch(configurationId, Clock.System.now())
 
             application.contentResolver.notifyUpdate(
                 TogglesProviderContract.toggleUri(configurationId)

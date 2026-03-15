@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
 import se.eelde.toggles.coroutines.IoDispatcher
 import se.eelde.toggles.database.TogglesScope
 import se.eelde.toggles.database.dao.application.TogglesScopeDao
 import se.eelde.toggles.routes.Scope
-import java.util.Date
 
 internal data class ViewState(
     val title: String? = null,
@@ -71,7 +71,7 @@ class ScopeViewModel @AssistedInject internal constructor(
             PartialViewState.Saving -> previousState
             is PartialViewState.Scopes -> {
                 previousState.copy(
-                    selectedScope = partialViewState.scopes.maxByOrNull { it.timeStamp }!!,
+                    selectedScope = requireNotNull(partialViewState.scopes.maxByOrNull { it.timeStamp }),
                     scopes = partialViewState.scopes
                 )
             }
@@ -80,7 +80,7 @@ class ScopeViewModel @AssistedInject internal constructor(
 
     internal fun selectScope(togglesScope: TogglesScope) {
         viewModelScope.launch {
-            togglesScope.timeStamp = Date()
+            togglesScope.timeStamp = Clock.System.now()
             scopeDao.update(togglesScope)
         }
     }

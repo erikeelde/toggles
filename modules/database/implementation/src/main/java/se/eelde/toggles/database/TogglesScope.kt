@@ -5,10 +5,11 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import se.eelde.toggles.core.ColumnNames
 import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ScopeTable
-import java.util.Date
 
 @Entity(
     tableName = ScopeTable.TABLE_NAME,
@@ -36,7 +37,7 @@ data class TogglesScope constructor(
     var name: String,
 
     @ColumnInfo(name = ScopeTable.COL_SELECTED_TIMESTAMP)
-    var timeStamp: Date
+    var timeStamp: Instant
 ) {
 
     companion object {
@@ -44,7 +45,7 @@ data class TogglesScope constructor(
         const val SCOPE_DEFAULT = ColumnNames.ToggleScope.DEFAULT_SCOPE
         const val SCOPE_USER = "Development scope"
 
-        fun newScope() = TogglesScope(0, 0, SCOPE_DEFAULT, Date())
+        fun newScope() = TogglesScope(0, 0, SCOPE_DEFAULT, Clock.System.now())
 
         fun isDefaultScope(scope: TogglesScope): Boolean {
             return SCOPE_DEFAULT == scope.name

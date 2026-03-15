@@ -11,6 +11,9 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.minus
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
@@ -23,7 +26,6 @@ import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderPredefinedConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderScopeDao
-import java.util.Date
 
 class TogglesProvider : ContentProvider() {
 
@@ -491,7 +493,7 @@ class TogglesProvider : ContentProvider() {
 
     companion object {
 
-        private const val oneSecond = 1000
+        private const val oneSecond = 1000L
 
         @Synchronized
         private fun getDefaultScope(
@@ -514,7 +516,7 @@ class TogglesProvider : ContentProvider() {
             val scope = TogglesScope.newScope()
             scope.applicationId = applicationId
             val id = scopeDao.insert(scope)
-            scope.timeStamp = Date(Date().time - oneSecond)
+            scope.timeStamp = Clock.System.now().minus(oneSecond, DateTimeUnit.MILLISECOND)
             scope.id = id
             return scope
         }
@@ -525,7 +527,7 @@ class TogglesProvider : ContentProvider() {
         ): TogglesScope {
             val developmentScope = TogglesScope.newScope()
             developmentScope.applicationId = applicationId
-            developmentScope.timeStamp = Date()
+            developmentScope.timeStamp = Clock.System.now()
             developmentScope.name = TogglesScope.SCOPE_USER
             developmentScope.id = scopeDao.insert(developmentScope)
             return developmentScope

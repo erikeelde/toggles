@@ -5,9 +5,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ConfigurationTable
-import java.util.Date
 
 @Entity(
     tableName = ConfigurationTable.TABLE_NAME,
@@ -38,9 +39,9 @@ data class TogglesConfiguration(
     var type: String
 ) {
 
-    var lastUse: Date = Date()
+    var lastUse: Instant = Clock.System.now()
 
     init {
-        this.lastUse = Date()
+        this.lastUse = Clock.System.now()
     }
 }

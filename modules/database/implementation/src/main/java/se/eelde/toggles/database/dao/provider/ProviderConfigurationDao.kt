@@ -6,11 +6,11 @@ import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.datetime.Instant
 import se.eelde.toggles.database.TogglesConfiguration
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.ConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
-import java.util.Date
 
 @Suppress("TooManyFunctions")
 @Dao
@@ -83,7 +83,7 @@ interface ProviderConfigurationDao {
     fun insert(togglesConfiguration: TogglesConfiguration): Long
 
     @Query("UPDATE configuration set lastUse=:date WHERE id= :configurationId")
-    suspend fun touch(configurationId: Long, date: Date)
+    suspend fun touch(configurationId: Long, date: Instant)
 
     @Query(
         "UPDATE configuration SET configurationKey = :key, configurationType = :type WHERE applicationId = :callingApplication AND id= :id"

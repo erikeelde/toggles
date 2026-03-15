@@ -2,17 +2,6 @@
 <issues format="6" by="lint 9.1.0" type="baseline" client="gradle" dependencies="true" name="AGP (9.1.0)" variant="all" version="9.1.0">
 
     <issue
-        id="AvoidUsingNotNullOperator"
-        message="Avoid using the `!!` operator"
-        errorLine1="                type.enumConstants!!.map { it.toString() }"
-        errorLine2="                                  ~~">
-        <location
-            file="src/main/java/se/eelde/toggles/flow/TogglesImpl.kt"
-            line="50"
-            column="35"/>
-    </issue>
-
-    <issue
         id="DenyListedApi"
         message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
         errorLine1="        put(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP, timeStamp.time)"
@@ -37,7 +26,7 @@
     <issue
         id="DenyListedApi"
         message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
-        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine1="                timeStamp = Date("
         errorLine2="                            ~~~~">
         <location
             file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
@@ -48,7 +37,7 @@
     <issue
         id="DenyListedApi"
         message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
-        errorLine1="                timeStamp = Date(contentValues.getAsLong(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine1="                timeStamp = Date("
         errorLine2="                            ~~~~">
         <location
             file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
@@ -63,7 +52,7 @@
         errorLine2="                            ~~~~">
         <location
             file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
-            line="83"
+            line="85"
             column="29"/>
     </issue>
 
@@ -74,7 +63,7 @@
         errorLine2="                            ~~~~">
         <location
             file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
-            line="83"
+            line="85"
             column="29"/>
     </issue>
 

@@ -13,15 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingView(loadingTitle: String) =
-    LoadingView {
+fun LoadingView(loadingTitle: String, modifier: Modifier = Modifier) =
+    LoadingView(modifier = modifier) {
         Text(text = loadingTitle)
     }
 
 @Composable
-fun LoadingView(content: @Composable () -> Unit = {}) {
+fun LoadingView(modifier: Modifier = Modifier, content: @Composable () -> Unit = {}) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
