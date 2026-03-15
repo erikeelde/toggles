@@ -46,7 +46,7 @@ class CheckForProviders {
                 0 // PackageManager.ComponentInfoFlags.of(0)
             )
         assertNotNull(providerInfo)
-        assertEquals(providerInfo!!.authority, "se.eelde.toggles.configprovider")
+        assertEquals(requireNotNull(providerInfo).authority, "se.eelde.toggles.configprovider")
         assertEquals(providerInfo.name, TogglesProvider::class.java.canonicalName)
     }
 }

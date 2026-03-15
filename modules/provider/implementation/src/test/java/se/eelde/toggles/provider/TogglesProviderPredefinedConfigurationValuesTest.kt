@@ -70,7 +70,7 @@ class TogglesProviderPredefinedConfigurationValuesTest {
         val insertToggle = getToggle(insertToggleKey)
         val insertToggleUri = togglesProvider.insert(toggleUri, insertToggle.toContentValues())
 
-        val configId = insertToggleUri.lastPathSegment!!.toLong()
+        val configId = requireNotNull(insertToggleUri.lastPathSegment).toLong()
         val toggleValue = ToggleValue {
             configurationId = configId
             value = "FIRST"

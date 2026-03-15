@@ -19,8 +19,8 @@ import se.eelde.toggles.database.TogglesConfigurationValue
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.provider.notifyUpdate
+import kotlinx.datetime.Clock
 import se.eelde.toggles.routes.IntegerConfiguration
-import java.time.Instant
 
 data class ViewState(
     val title: String? = null,
@@ -139,7 +139,7 @@ class IntegerValueViewModel @AssistedInject internal constructor(
                     TogglesConfigurationValue(0, configurationId, value.toString(), scopeId)
                 togglesConfigurationValue.id = configurationValueDao.insert(togglesConfigurationValue)
             }
-            configurationDao.touch(configurationId, Instant.now())
+            configurationDao.touch(configurationId, Clock.System.now())
 
             application.contentResolver.notifyUpdate(TogglesProviderContract.toggleUri(configurationId))
             application.contentResolver.notifyUpdate(TogglesProviderContract.configurationUri(configurationId))

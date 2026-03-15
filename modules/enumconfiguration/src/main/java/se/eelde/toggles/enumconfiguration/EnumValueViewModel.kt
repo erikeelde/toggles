@@ -22,8 +22,8 @@ import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.database.dao.application.TogglesPredefinedConfigurationValueDao
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
+import kotlinx.datetime.Clock
 import se.eelde.toggles.routes.EnumConfiguration
-import java.time.Instant
 
 data class ViewState(
     val title: String? = null,
@@ -157,7 +157,7 @@ class EnumValueViewModel @AssistedInject internal constructor(
                 togglesConfigurationValue.id =
                     configurationValueDao.insert(togglesConfigurationValue)
             }
-            configurationDao.touch(configurationId, Instant.now())
+            configurationDao.touch(configurationId, Clock.System.now())
 
             application.contentResolver.notifyUpdate(
                 TogglesProviderContract.toggleUri(configurationId)

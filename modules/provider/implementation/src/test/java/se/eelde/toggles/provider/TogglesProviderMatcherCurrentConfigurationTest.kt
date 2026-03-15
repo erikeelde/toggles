@@ -85,7 +85,7 @@ class TogglesProviderMatcherCurrentConfigurationTest {
         assertEquals(insertToggle.type, queryToggle.type)
 
         val toggleUri = TogglesProviderContract.toggleUri(
-            Integer.parseInt(insertToggleUri.lastPathSegment!!).toLong()
+            Integer.parseInt(requireNotNull(insertToggleUri.lastPathSegment)).toLong()
         )
         cursor = togglesProvider.query(toggleUri, null, null, null, null)
         assertNotNull(cursor)
@@ -127,7 +127,7 @@ class TogglesProviderMatcherCurrentConfigurationTest {
             id = providerToggle.id
             type = providerToggle.type
             key = providerToggle.key
-            value = providerToggle.value!! + providerToggle.value!!
+            value = requireNotNull(providerToggle.value) + requireNotNull(providerToggle.value)
         }
 
         val update = togglesProvider.update(
@@ -150,7 +150,7 @@ class TogglesProviderMatcherCurrentConfigurationTest {
         assertTrue(cursor.moveToFirst())
         val updatedToggle = Toggle.fromCursor(cursor)
 
-        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)
+        assertEquals(requireNotNull(insertToggle.value) + requireNotNull(insertToggle.value), updatedToggle.value)
     }
 
     @Test(expected = UnsupportedOperationException::class)
