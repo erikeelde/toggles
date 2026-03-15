@@ -67,11 +67,4 @@
             column="29"/>
     </issue>
 
-    <issue
-        id="ConvertToWebp"
-        message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
-        <location
-            file="src/main/res/mipmap-xxhdpi/ic_launcher_round.png"/>
-    </issue>
-
 </issues>
