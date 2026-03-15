@@ -12,6 +12,7 @@ android {
 }
 dependencies {
     implementation(projects.modules.provider.api)
+    implementation(libs.kotlinx.datetime)
     implementation(projects.modules.database.implementation)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)

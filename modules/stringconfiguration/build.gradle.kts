@@ -11,6 +11,7 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(projects.modules.composeTheme)
+    implementation(libs.kotlinx.datetime)
     implementation(projects.modules.database.implementation)
     implementation(projects.modules.provider.implementation)
     implementation(projects.modules.routes.api)

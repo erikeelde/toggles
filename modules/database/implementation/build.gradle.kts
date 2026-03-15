@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.androidx.room.room.runtime)
     implementation(libs.androidx.room.room.ktx)
     ksp(libs.androidx.room.room.compiler)
+    implementation(libs.kotlinx.datetime)
     implementation(projects.togglesCore)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)

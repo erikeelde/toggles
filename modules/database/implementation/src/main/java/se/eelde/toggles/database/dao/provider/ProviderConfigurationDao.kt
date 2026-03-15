@@ -9,8 +9,8 @@ import androidx.room.Query
 import se.eelde.toggles.database.TogglesConfiguration
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.ConfigurationValueTable
+import kotlinx.datetime.Instant
 import se.eelde.toggles.database.tables.ScopeTable
-import java.time.Instant
 
 @Suppress("TooManyFunctions")
 @Dao

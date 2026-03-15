@@ -46,16 +46,16 @@ class TogglesProviderMatcherCurrentConfigurationTest {
 
         val uri = TogglesProviderContract.toggleUri()
         val insertToggle = getToggle(insertToggleKey)
-        val insertToggleUri = contentResolver.insert(uri, insertToggle.toContentValues())!!
+        val insertToggleUri = requireNotNull(contentResolver.insert(uri, insertToggle.toContentValues()))
         assertNotNull(insertToggleUri)
 
-        var cursor = contentResolver.query(
+        var cursor = requireNotNull(contentResolver.query(
             TogglesProviderContract.toggleUri(insertToggleKey),
             null,
             null,
             null,
             null
-        )!!
+        ))
         assertNotNull(cursor)
         assertEquals(1, cursor.count)
 
@@ -67,9 +67,9 @@ class TogglesProviderMatcherCurrentConfigurationTest {
         assertEquals(insertToggle.type, queryToggle.type)
 
         val toggleUri = TogglesProviderContract.toggleUri(
-            Integer.parseInt(insertToggleUri.lastPathSegment!!).toLong()
+            Integer.parseInt(requireNotNull(insertToggleUri.lastPathSegment)).toLong()
         )
-        cursor = contentResolver.query(toggleUri, null, null, null, null)!!
+        cursor = requireNotNull(contentResolver.query(toggleUri, null, null, null, null))
         assertNotNull(cursor)
         assertEquals(1, cursor.count)
 
@@ -91,13 +91,13 @@ class TogglesProviderMatcherCurrentConfigurationTest {
         val insertToggleUri = contentResolver.insert(uri, insertToggle.toContentValues())
         assertNotNull(insertToggleUri)
 
-        var cursor = contentResolver.query(
+        var cursor = requireNotNull(contentResolver.query(
             TogglesProviderContract.toggleUri(updateToggleKey),
             null,
             null,
             null,
             null
-        )!!
+        ))
         assertNotNull(cursor)
         assertTrue(cursor.moveToFirst())
 
@@ -110,7 +110,7 @@ class TogglesProviderMatcherCurrentConfigurationTest {
             id = providerToggle.id
             type = providerToggle.type
             key = providerToggle.key
-            value = providerToggle.value!! + providerToggle.value!!
+            value = requireNotNull(providerToggle.value) + requireNotNull(providerToggle.value)
         }
 
         val update = contentResolver.update(
@@ -121,19 +121,19 @@ class TogglesProviderMatcherCurrentConfigurationTest {
         )
         assertEquals(1, update)
 
-        cursor = contentResolver.query(
+        cursor = requireNotNull(contentResolver.query(
             TogglesProviderContract.toggleUri(updateToggleKey),
             null,
             null,
             null,
             null
-        )!!
+        ))
         assertNotNull(cursor)
 
         assertTrue(cursor.moveToFirst())
         val updatedToggle = Toggle.fromCursor(cursor)
 
-        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)
+        assertEquals(requireNotNull(insertToggle.value) + requireNotNull(insertToggle.value), updatedToggle.value)
     }
 
     @Test(expected = UnsupportedOperationException::class)

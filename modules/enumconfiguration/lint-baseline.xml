@@ -1,4 +1,268 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="6" by="lint 9.1.0" type="baseline" client="gradle" dependencies="true" name="AGP (9.1.0)" variant="all" version="9.1.0">
 
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!.toLong()),"
+        errorLine2="                                                                        ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="87"
+            column="73"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val configurationUri = TogglesProviderContract.configurationUri(uri.lastPathSegment!!.toLong())"
+        errorLine2="                                                                                           ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="111"
+            column="92"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            TogglesProviderContract.configurationUri(uri.lastPathSegment!!.toLong()),"
+        errorLine2="                                                                        ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/configuration/TogglesProviderMatcherConfigurationIdTest.kt"
+            line="130"
+            column="73"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            Integer.parseInt(insertToggleUri.lastPathSegment!!).toLong()"
+        errorLine2="                                                            ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="88"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                        ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="130"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="            value = providerToggle.value!! + providerToggle.value!!"
+        errorLine2="                                                                 ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="130"
+            column="66"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                       ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="153"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)"
+        errorLine2="                                                              ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderMatcherCurrentConfigurationTest.kt"
+            line="153"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="AvoidUsingNotNullOperator"
+        message="Avoid using the `!!` operator"
+        errorLine1="        val configId = insertToggleUri.lastPathSegment!!.toLong()"
+        errorLine2="                                                      ~~">
+        <location
+            file="src/test/java/se/eelde/toggles/provider/TogglesProviderPredefinedConfigurationValuesTest.kt"
+            line="73"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 23): `java.time.Instant#now`"
+        errorLine1="            configurationDao.touch(configurationId, Instant.now())"
+        errorLine2="                                                            ~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/enumconfiguration/EnumValueViewModel.kt"
+            line="158"
+            column="61"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 23): `java.time.Instant#ofEpochMilli`"
+        errorLine1="        return if (value == null) null else Instant.ofEpochMilli(value)"
+        errorLine2="                                                    ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/RoomInstantConverter.kt"
+            line="9"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 23): `java.time.Instant#toEpochMilli`"
+        errorLine1="        return instant?.toEpochMilli()"
+        errorLine2="                        ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/RoomInstantConverter.kt"
+            line="14"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 23): `java.time.Instant#now`"
+        errorLine1="    var lastUse: Instant = Instant.now()"
+        errorLine2="                                   ~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
+            line="41"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 23): `java.time.Instant#now`"
+        errorLine1="        this.lastUse = Instant.now()"
+        errorLine2="                               ~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesConfiguration.kt"
+            line="44"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 23): `java.time.Instant#minusMillis`"
+        errorLine1="            scope.timeStamp = Instant.now().minusMillis(oneSecond)"
+        errorLine2="                                            ~~~~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="494"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 23): `java.time.Instant#now`"
+        errorLine1="            scope.timeStamp = Instant.now().minusMillis(oneSecond)"
+        errorLine2="                                      ~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="494"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 23): `java.time.Instant#now`"
+        errorLine1="            developmentScope.timeStamp = Instant.now()"
+        errorLine2="                                                 ~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/provider/TogglesProvider.kt"
+            line="505"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 23): `java.time.Instant#now`"
+        errorLine1="        fun newScope() = TogglesScope(0, 0, SCOPE_DEFAULT, Instant.now())"
+        errorLine2="                                                                   ~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/database/TogglesScope.kt"
+            line="47"
+            column="68"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        put(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP, timeStamp.time)"
+        errorLine2="                                                                      ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="41"
+            column="71"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="        result = 31 * result + timeStamp.hashCode()"
+        errorLine2="                                         ~~~~~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="60"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date("
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date("
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="74"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="85"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DenyListedApi"
+        message="Use java.time.Instant or java.time.ZonedDateTime instead. There is no reason to use java.util.Date in Java 8+."
+        errorLine1="                timeStamp = Date(cursor.getLongOrThrow(ColumnNames.ToggleScope.COL_SELECTED_TIMESTAMP))"
+        errorLine2="                            ~~~~">
+        <location
+            file="src/main/java/se/eelde/toggles/core/ToggleScope.kt"
+            line="85"
+            column="29"/>
+    </issue>
+
 </issues>

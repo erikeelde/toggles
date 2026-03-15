@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.Flow
 import se.eelde.toggles.database.TogglesConfiguration
 import se.eelde.toggles.database.TogglesConfigurationWithValues
 import se.eelde.toggles.database.tables.ConfigurationTable
+import kotlinx.datetime.Instant
 import se.eelde.toggles.database.tables.ConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
-import java.time.Instant
 
 @Suppress("TooManyFunctions")
 @Dao
