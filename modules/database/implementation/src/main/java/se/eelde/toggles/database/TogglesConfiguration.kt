@@ -40,8 +40,4 @@ data class TogglesConfiguration(
 ) {
 
     var lastUse: Instant = Clock.System.now()
-
-    init {
-        this.lastUse = Clock.System.now()
-    }
 }
