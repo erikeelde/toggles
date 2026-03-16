@@ -39,7 +39,7 @@ internal class TogglesPreferencesReturnsProviderValues {
     @Before
     fun setUp() {
         val info =
-            ProviderInfo().apply { authority = TogglesProviderContract.configurationUri().authority!! }
+            ProviderInfo().apply { authority = requireNotNull(TogglesProviderContract.configurationUri().authority) }
         contentProviderController =
             Robolectric.buildContentProvider(NewApiMockContentProvider::class.java).create(info)
 

@@ -49,7 +49,7 @@ public class TogglesPreferencesImpl @JvmOverloads constructor(
         ) { configurationId ->
             provider.insertPredefinedValues(
                 configurationId,
-                type.enumConstants!!.map { it.toString() }
+                requireNotNull(type.enumConstants).map { it.toString() }
             )
         }
         return java.lang.Enum.valueOf(type, result)
