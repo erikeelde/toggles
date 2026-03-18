@@ -515,9 +515,8 @@ class TogglesProvider : ContentProvider() {
         ): TogglesScope {
             val scope = TogglesScope.newScope()
             scope.applicationId = applicationId
-            val id = scopeDao.insert(scope)
             scope.timeStamp = Clock.System.now().minus(oneSecond, DateTimeUnit.MILLISECOND)
-            scope.id = id
+            scope.id = scopeDao.insert(scope)
             return scope
         }
 

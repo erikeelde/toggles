@@ -70,12 +70,13 @@ class TogglesProviderMatcherConfigurationIdTest {
             null
         )
 
-        val query = requireNotNull(contentResolver.query(uri, null, null, null, null))
-        assertTrue(query.moveToFirst())
-        val fromCursor = TogglesConfiguration.fromCursor(query)
+        val fromCursor = requireNotNull(contentResolver.query(uri, null, null, null, null)).use { query ->
+            assertTrue(query.moveToFirst())
+            TogglesConfiguration.fromCursor(query)
+        }
 
         assertEquals(1, rowsUpdated)
-        assertEquals(fromCursor.key, updatedConfiguration.key)
+        assertEquals(updatedConfiguration.key, fromCursor.key)
     }
 
     @Test
@@ -92,11 +93,12 @@ class TogglesProviderMatcherConfigurationIdTest {
 
         val configurationUri = TogglesProviderContract.configurationUri(requireNotNull(uri.lastPathSegment))
 
-        val cursor = requireNotNull(contentResolver.query(configurationUri, null, null, null, null))
-        assertTrue(cursor.moveToFirst())
-        TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
-            assertEquals(togglesConfiguration.key, cursorConfiguration.key)
-            assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+        requireNotNull(contentResolver.query(configurationUri, null, null, null, null)).use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
+                assertEquals(togglesConfiguration.key, cursorConfiguration.key)
+                assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+            }
         }
     }
 
