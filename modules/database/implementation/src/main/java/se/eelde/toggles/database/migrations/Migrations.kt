@@ -15,6 +15,7 @@ object Migrations {
     private const val databaseVersion5 = 5
     private const val databaseVersion6 = 6
     private const val databaseVersion7 = 7
+    private const val databaseVersion8 = 8
 
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -303,6 +304,37 @@ object Migrations {
                 db.execSQL(
                     "UPDATE $tableName SET name='toggles_default' WHERE name='$LEGACY_SCOPE_NAME'"
                 )
+            }
+        }
+    }
+
+    val MIGRATION_7_8: Migration = object : Migration(databaseVersion7, databaseVersion8) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            run {
+                val tableName = "configurationValue"
+                val tableNameTemp = tableName + "_temp"
+
+                // Rebuild table with tightened unique constraint: (configurationId, scope) instead
+                // of (configurationId, value, scope). One value per toggle per scope.
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `$tableNameTemp` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configurationId` INTEGER NOT NULL, `value` TEXT, `scope` INTEGER NOT NULL, FOREIGN KEY(`configurationId`) REFERENCES `configuration`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+                )
+                db.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS `index_configurationValue_temp_configurationId_scope` ON `$tableNameTemp` (`configurationId`, `scope`)"
+                )
+
+                // Keep only the most-recent row per (configurationId, scope) pair.
+                db.execSQL(
+                    "INSERT INTO $tableNameTemp SELECT id, configurationId, value, scope FROM $tableName WHERE id IN (SELECT MAX(id) FROM $tableName GROUP BY configurationId, scope)"
+                )
+                db.execSQL("DROP TABLE $tableName")
+
+                db.execSQL("DROP INDEX `index_configurationValue_temp_configurationId_scope`")
+                db.execSQL(
+                    "CREATE UNIQUE INDEX `index_configurationValue_configurationId_scope` ON `$tableNameTemp` (`configurationId`, `scope`)"
+                )
+
+                db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
             }
         }
     }

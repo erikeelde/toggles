@@ -18,6 +18,7 @@ import se.eelde.toggles.database.migrations.Migrations.MIGRATION_3_4
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_4_5
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_5_6
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_6_7
+import se.eelde.toggles.database.migrations.Migrations.MIGRATION_7_8
 import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 
@@ -230,6 +231,48 @@ class MigrationTests {
 
         val scope = DatabaseHelper.getScope(upgradedDatabase, scopeId)
         assertEquals(TogglesScope.SCOPE_DEFAULT, scope.name)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test7to8() {
+        testHelper.createDatabase(TEST_DB_NAME, 7)
+        testHelper.runMigrationsAndValidate(TEST_DB_NAME, 8, true, MIGRATION_7_8)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test7to8WithDuplicates() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 7)
+
+        val applicationId = DatabaseHelper.insertApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.application",
+            "se.eelde.toggles.application",
+        )
+        val configurationId = DatabaseHelper.insertConfiguration(
+            originalDb,
+            applicationId,
+            "MyBoolean",
+            Toggle.TYPE.BOOLEAN,
+            0,
+        )
+        val scopeId = DatabaseHelper.insertScope(originalDb, applicationId, TogglesScope.SCOPE_DEFAULT)
+
+        // Insert two rows for same (configurationId, scope) with different values — allowed by v7
+        DatabaseHelper.insertConfigurationValue(originalDb, configurationId, "false", scopeId)
+        DatabaseHelper.insertConfigurationValue(originalDb, configurationId, "true", scopeId)
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 8, true, MIGRATION_7_8)
+
+        // After migration only one row should exist per (configurationId, scope)
+        val values = DatabaseHelper.getConfigurationValuesByConfigurationIdAndScope(
+            migratedDb, configurationId, scopeId
+        )
+        assertEquals(1, values.size)
+        // The most-recent (highest id) row is kept
+        assertEquals("true", values[0].value)
     }
 
     companion object {
