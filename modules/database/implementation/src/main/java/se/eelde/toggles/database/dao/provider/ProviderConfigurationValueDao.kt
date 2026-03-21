@@ -19,6 +19,13 @@ interface ProviderConfigurationValueDao {
     )
     fun updateConfigurationValueSync(configurationId: Long, scopeId: Long, value: String): Int
 
+    @Query(
+        "SELECT " + ConfigurationValueTable.COL_ID + " FROM " + ConfigurationValueTable.TABLE_NAME +
+            " WHERE " + ConfigurationValueTable.COL_CONFIG_ID + " = (:configurationId)" +
+            " AND " + ConfigurationValueTable.COL_SCOPE + " = (:scopeId)"
+    )
+    fun getIdByConfigurationIdAndScope(configurationId: Long, scopeId: Long): Long?
+
     @Insert
     fun insertSync(togglesConfigurationValue: TogglesConfigurationValue): Long
 
