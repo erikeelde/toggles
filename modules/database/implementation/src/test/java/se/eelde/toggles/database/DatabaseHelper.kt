@@ -162,10 +162,10 @@ object DatabaseHelper {
         configurationId: Long,
         scope: Long,
     ): List<TogglesConfigurationValue> {
-        val cursor = db.query(
-            "SELECT * FROM ${ConfigurationValueTable.TABLE_NAME} WHERE ${ConfigurationValueTable.COL_CONFIG_ID} = ? AND ${ConfigurationValueTable.COL_SCOPE} = ?",
-            arrayOf<Any>(configurationId, scope)
-        )
+        val query = "SELECT * FROM ${ConfigurationValueTable.TABLE_NAME} " +
+            "WHERE ${ConfigurationValueTable.COL_CONFIG_ID} = ? " +
+            "AND ${ConfigurationValueTable.COL_SCOPE} = ?"
+        val cursor = db.query(query, arrayOf<Any>(configurationId, scope))
         val result = mutableListOf<TogglesConfigurationValue>()
         while (cursor.moveToNext()) {
             val id = cursor.getLong(cursor.getColumnIndexOrThrow(ConfigurationValueTable.COL_ID))
