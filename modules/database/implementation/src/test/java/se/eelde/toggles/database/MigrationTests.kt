@@ -268,7 +268,9 @@ class MigrationTests {
 
         // After migration only one row should exist per (configurationId, scope)
         val values = DatabaseHelper.getConfigurationValuesByConfigurationIdAndScope(
-            migratedDb, configurationId, scopeId
+            migratedDb,
+            configurationId,
+            scopeId
         )
         assertEquals(1, values.size)
         // The most-recent (highest id) row is kept
