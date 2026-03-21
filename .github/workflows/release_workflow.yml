@@ -45,6 +45,10 @@ jobs:
         if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-app:publishReleaseBundle
 
+      - name: Build toggles application
+        if: github.repository == 'erikeelde/toggles'
+        run: ./gradlew :toggles-app:assembleRelease
+
       - name: Build sample application
         if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-sample:assembleRelease
