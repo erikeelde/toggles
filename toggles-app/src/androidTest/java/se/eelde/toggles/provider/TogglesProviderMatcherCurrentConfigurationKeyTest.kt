@@ -43,26 +43,28 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
         val insertToggleUri = contentResolver.insert(uri, insertToggle.toContentValues())
         assertNotNull(insertToggleUri)
 
-        var cursor = contentResolver.query(
+        val providerToggle = requireNotNull(contentResolver.query(
             TogglesProviderContract.toggleUri(updateToggleKey),
             null,
             null,
             null,
             null
-        )!!
-        assertNotNull(cursor)
-        assertTrue(cursor.moveToFirst())
+        )).use { cursor ->
+            assertNotNull(cursor)
+            assertTrue(cursor.moveToFirst())
 
-        val providerToggle = Toggle.fromCursor(cursor)
-        assertEquals(insertToggle.key, providerToggle.key)
-        assertEquals(insertToggle.value, providerToggle.value)
-        assertEquals(insertToggle.type, providerToggle.type)
+            val providerToggle = Toggle.fromCursor(cursor)
+            assertEquals(insertToggle.key, providerToggle.key)
+            assertEquals(insertToggle.value, providerToggle.value)
+            assertEquals(insertToggle.type, providerToggle.type)
+            providerToggle
+        }
 
         val updateToggle = Toggle {
             id = providerToggle.id
             type = providerToggle.type
             key = providerToggle.key
-            value = providerToggle.value!! + providerToggle.value!!
+            value = requireNotNull(providerToggle.value) + requireNotNull(providerToggle.value)
         }
 
         val update = contentResolver.update(
@@ -73,19 +75,20 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
         )
         assertEquals(1, update)
 
-        cursor = contentResolver.query(
+        requireNotNull(contentResolver.query(
             TogglesProviderContract.toggleUri(updateToggleKey),
             null,
             null,
             null,
             null
-        )!!
-        assertNotNull(cursor)
+        )).use { cursor ->
+            assertNotNull(cursor)
 
-        assertTrue(cursor.moveToFirst())
-        val updatedToggle = Toggle.fromCursor(cursor)
+            assertTrue(cursor.moveToFirst())
+            val updatedToggle = Toggle.fromCursor(cursor)
 
-        assertEquals(insertToggle.value!! + insertToggle.value!!, updatedToggle.value)
+            assertEquals(requireNotNull(insertToggle.value) + requireNotNull(insertToggle.value), updatedToggle.value)
+        }
     }
 
     @Test

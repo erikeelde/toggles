@@ -55,27 +55,28 @@ class TogglesProviderMatcherConfigurationIdTest {
             type = Toggle.TYPE.BOOLEAN
             key = "${this@TogglesProviderMatcherConfigurationIdTest::class.simpleName}UpdateKey"
         }
-        val uri = contentResolver.insert(
+        val uri = requireNotNull(contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
-        )!!
+        ))
 
         val updatedConfiguration =
             togglesConfiguration.copy(key = "newKey", type = Toggle.TYPE.STRING)
 
         val rowsUpdated = contentResolver.update(
-            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),
+            TogglesProviderContract.configurationUri(requireNotNull(uri.lastPathSegment)),
             updatedConfiguration.toContentValues(),
             null,
             null
         )
 
-        val query = contentResolver.query(uri, null, null, null, null)!!
-        assertTrue(query.moveToFirst())
-        val fromCursor = TogglesConfiguration.fromCursor(query)
+        val fromCursor = requireNotNull(contentResolver.query(uri, null, null, null, null)).use { query ->
+            assertTrue(query.moveToFirst())
+            TogglesConfiguration.fromCursor(query)
+        }
 
         assertEquals(1, rowsUpdated)
-        assertEquals(fromCursor.key, updatedConfiguration.key)
+        assertEquals(updatedConfiguration.key, fromCursor.key)
     }
 
     @Test
@@ -85,33 +86,34 @@ class TogglesProviderMatcherConfigurationIdTest {
             key = "${this@TogglesProviderMatcherConfigurationIdTest::class.simpleName}QueryKey"
         }
 
-        val uri = contentResolver.insert(
+        val uri = requireNotNull(contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
-        )!!
+        ))
 
-        val configurationUri = TogglesProviderContract.configurationUri(uri.lastPathSegment!!)
+        val configurationUri = TogglesProviderContract.configurationUri(requireNotNull(uri.lastPathSegment))
 
-        val cursor = contentResolver.query(configurationUri, null, null, null, null)!!
-        assertTrue(cursor.moveToFirst())
-        TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
-            assertEquals(togglesConfiguration.key, cursorConfiguration.key)
-            assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+        requireNotNull(contentResolver.query(configurationUri, null, null, null, null)).use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
+                assertEquals(togglesConfiguration.key, cursorConfiguration.key)
+                assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+            }
         }
     }
 
     @Test
     fun testDelete() {
-        val uri = contentResolver.insert(
+        val uri = requireNotNull(contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             TogglesConfiguration {
                 type = Toggle.TYPE.BOOLEAN
                 key = "${this@TogglesProviderMatcherConfigurationIdTest::class.simpleName}DeleteKey"
             }.toContentValues(),
-        )!!
+        ))
 
         val rowsDeleted = contentResolver.delete(
-            TogglesProviderContract.configurationUri(uri.lastPathSegment!!),
+            TogglesProviderContract.configurationUri(requireNotNull(uri.lastPathSegment)),
             null,
             null
         )

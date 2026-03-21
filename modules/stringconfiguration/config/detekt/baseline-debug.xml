@@ -1,10 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" ?>
 <SmellBaseline>
-  <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>InjectDispatcher:StringValueViewModel.kt$StringValueViewModel$IO</ID>
-    <ID>UnsafeCallOnNullableType:StringValueViewModel.kt$StringValueViewModel$it.value!!</ID>
-    <ID>UseOrEmpty:StringValueView.kt$viewState.stringValue ?: ""</ID>
-    <ID>UseOrEmpty:StringValueView.kt$viewState.title ?: ""</ID>
-  </CurrentIssues>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues></CurrentIssues>
 </SmellBaseline>

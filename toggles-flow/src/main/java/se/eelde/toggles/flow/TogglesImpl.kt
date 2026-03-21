@@ -47,7 +47,7 @@ public class TogglesImpl @JvmOverloads constructor(
         resolveFlow(key, Toggle.TYPE.ENUM, defaultValue.toString()) { configurationId ->
             provider.insertPredefinedValues(
                 configurationId,
-                type.enumConstants!!.map { it.toString() }
+                requireNotNull(type.enumConstants).map { it.toString() }
             )
         }.map { java.lang.Enum.valueOf(type, it) }
 

@@ -24,7 +24,7 @@ import se.eelde.toggles.database.dao.provider.ProviderScopeDao
     ],
     version = 7
 )
-@TypeConverters(RoomDateConverter::class)
+@TypeConverters(RoomInstantConverter::class)
 abstract class TogglesDatabase : RoomDatabase() {
 
     abstract fun togglesApplicationDao(): TogglesApplicationDao

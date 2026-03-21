@@ -135,9 +135,9 @@ internal fun ScopeValueView(
                     dismiss = { showAddScopeView.value = false }
                 )
             }
-            if (showDeleteScopeView.value) {
+            if (showDeleteScopeView.value && viewState.selectedScope != null) {
                 DeleteScopeView(
-                    scope = viewState.selectedScope!!,
+                    scope = viewState.selectedScope,
                     deleteScope = { scope: TogglesScope ->
                         deleteScope(scope)
                         showDeleteScopeView.value = false

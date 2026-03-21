@@ -1,8 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" ?>
 <SmellBaseline>
-  <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>InjectDispatcher:EnumValueViewModel.kt$EnumValueViewModel$IO</ID>
-    <ID>UseOrEmpty:EnumValueView.kt$state.title ?: ""</ID>
-  </CurrentIssues>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues></CurrentIssues>
 </SmellBaseline>

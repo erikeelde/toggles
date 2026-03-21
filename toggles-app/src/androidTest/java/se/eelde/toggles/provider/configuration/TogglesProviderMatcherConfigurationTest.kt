@@ -59,10 +59,10 @@ class TogglesProviderMatcherConfigurationTest {
             key = "${this@TogglesProviderMatcherConfigurationTest::class.simpleName}Insertkey"
         }
 
-        val uri = contentResolver.insert(
+        val uri = requireNotNull(contentResolver.insert(
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
-        )!!
+        ))
 
         assertEquals("content", uri.scheme)
         assertEquals("se.eelde.toggles.configprovider", uri.host)
@@ -83,13 +83,13 @@ class TogglesProviderMatcherConfigurationTest {
             togglesConfiguration.toContentValues(),
         )
 
-        contentResolver.query(
+        requireNotNull(contentResolver.query(
             TogglesProviderContract.configurationUri(),
             null,
             null,
             null,
             null
-        )!!.use { cursor ->
+        )).use { cursor ->
             val configurations =
                 cursor.mapRows { cursor -> TogglesConfiguration.fromCursor(cursor) }
 

@@ -15,15 +15,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ErrorView(errorString: String) =
-    ErrorView {
+fun ErrorView(errorString: String, modifier: Modifier = Modifier) =
+    ErrorView(modifier = modifier) {
         androidx.compose.material3.Text(text = errorString)
     }
 
 @Composable
-fun ErrorView(content: @Composable () -> Unit) {
+fun ErrorView(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

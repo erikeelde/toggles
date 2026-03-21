@@ -75,7 +75,7 @@ class ConfigurationViewModel @AssistedInject internal constructor(
 
         viewModelScope.launch {
             combine(
-                flowOf(applicationDao.getApplication(applicationId)!!),
+                flowOf(requireNotNull(applicationDao.getApplication(applicationId))),
                 scopeDao.getSelectedScopeFlow(applicationId = applicationId),
                 scopeDao.getDefaultScopeFlow(applicationId = applicationId),
             ) { application, selectedScope, defaultScope ->

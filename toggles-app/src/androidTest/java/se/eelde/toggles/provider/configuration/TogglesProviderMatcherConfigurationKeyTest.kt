@@ -77,11 +77,12 @@ class TogglesProviderMatcherConfigurationKeyTest {
 
         val configurationUri = TogglesProviderContract.configurationUri(togglesConfiguration.key)
 
-        val cursor = contentResolver.query(configurationUri, null, null, null, null)!!
-        assertTrue(cursor.moveToFirst())
-        TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
-            assertEquals(togglesConfiguration.key, cursorConfiguration.key)
-            assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+        requireNotNull(contentResolver.query(configurationUri, null, null, null, null)).use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            TogglesConfiguration.fromCursor(cursor).also { cursorConfiguration ->
+                assertEquals(togglesConfiguration.key, cursorConfiguration.key)
+                assertEquals(togglesConfiguration.type, cursorConfiguration.type)
+            }
         }
     }
 

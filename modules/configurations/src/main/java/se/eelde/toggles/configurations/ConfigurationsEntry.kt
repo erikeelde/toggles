@@ -113,7 +113,7 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
                         ) {
                             DropdownMenuItem(
                                 text = { Text("Start application") },
-                                onClick = { viewModel.restartApplication(uiState.value.application!!) },
+                                onClick = { viewModel.restartApplication(requireNotNull(uiState.value.application)) },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Outlined.Cyclone,
@@ -130,7 +130,7 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
                                             Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                                             Uri.fromParts(
                                                 "package",
-                                                uiState.value.application!!.packageName,
+                                                requireNotNull(uiState.value.application).packageName,
                                                 null
                                             )
                                         )
@@ -145,7 +145,7 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
                             )
                             DropdownMenuItem(
                                 text = { Text("Scopes") },
-                                onClick = { navigateToScopeView(uiState.value.application!!.id) },
+                                onClick = { navigateToScopeView(requireNotNull(uiState.value.application).id) },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Outlined.List,
@@ -155,7 +155,7 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
                             )
                             DropdownMenuItem(
                                 text = { Text("Delete") },
-                                onClick = { viewModel.deleteApplication(uiState.value.application!!) },
+                                onClick = { viewModel.deleteApplication(requireNotNull(uiState.value.application)) },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Outlined.Delete,

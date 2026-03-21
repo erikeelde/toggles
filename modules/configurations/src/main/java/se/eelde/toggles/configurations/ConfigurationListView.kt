@@ -37,10 +37,10 @@ internal fun ConfigurationListView(
         LazyColumn {
             uiState.value.configurations.forEach { configuration ->
                 val defaultScope =
-                    getItemForScope(uiState.value.defaultScope, configuration.configurationValues!!)
+                    getItemForScope(uiState.value.defaultScope, requireNotNull(configuration.configurationValues))
                 val selectedScope = getItemForScope(
                     uiState.value.selectedScope,
-                    configuration.configurationValues!!
+                    requireNotNull(configuration.configurationValues)
                 )
                 item {
                     Column(
@@ -62,7 +62,7 @@ internal fun ConfigurationListView(
                         Text(
                             modifier = Modifier,
                             style = MaterialTheme.typography.headlineSmall,
-                            text = configuration.key!!
+                            text = requireNotNull(configuration.key)
                         )
 
                         if (selectedScope != null) {
@@ -121,40 +121,33 @@ fun configurationClicked(
     configuration: TogglesConfigurationWithValues,
     selectedScope: TogglesScope?
 ) {
-//    if (viewModel.selectedScopeLiveData.value == null) {
-//        Snackbar.make(binding.animator, "No selected scope found", Snackbar.LENGTH_LONG).show()
-//        return
-//    }
+    if (selectedScope == null) {
+        return
+    }
 
     if (TextUtils.equals(
             String::class.java.name,
             configuration.type
         ) || TextUtils.equals(Toggle.TYPE.STRING, configuration.type)
     ) {
-        navigateToStringConfiguration(selectedScope!!.id, configuration.id)
+        navigateToStringConfiguration(selectedScope.id, configuration.id)
     } else if (TextUtils.equals(Int::class.java.name, configuration.type) || TextUtils.equals(
             Toggle.TYPE.INTEGER,
             configuration.type
         )
     ) {
-        navigateToIntegerConfiguration(selectedScope!!.id, configuration.id)
+        navigateToIntegerConfiguration(selectedScope.id, configuration.id)
     } else if (TextUtils.equals(
             Boolean::class.java.name,
             configuration.type
         ) || TextUtils.equals(Toggle.TYPE.BOOLEAN, configuration.type)
     ) {
-        navigateToBooleanConfiguration(selectedScope!!.id, configuration.id)
+        navigateToBooleanConfiguration(selectedScope.id, configuration.id)
     } else if (TextUtils.equals(Enum::class.java.name, configuration.type) || TextUtils.equals(
             Toggle.TYPE.ENUM,
             configuration.type
         )
     ) {
-        navigateToEnumConfiguration(selectedScope!!.id, configuration.id)
-    } else {
-//        Snackbar.make(
-//            binding.animator,
-//            "Not sure what to do with type: " + configuration.type!!,
-//            Snackbar.LENGTH_LONG
-//        ).show()
+        navigateToEnumConfiguration(selectedScope.id, configuration.id)
     }
 }
