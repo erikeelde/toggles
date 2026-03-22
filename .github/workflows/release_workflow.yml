@@ -43,13 +43,14 @@ jobs:
 
       - name: Publish application
         if: github.repository == 'erikeelde/toggles'
-        run: ./gradlew :toggles-app:publishReleaseBundle
+        run: ./gradlew :toggles-app:publishReleaseBundle :toggles-app:assembleRelease
 
       - name: Build sample application
         if: github.repository == 'erikeelde/toggles'
         run: ./gradlew :toggles-sample:assembleRelease
 
       - name: Upload binaries
+        if: github.repository == 'erikeelde/toggles'
         uses: actions/upload-artifact@v7
         with:
           name: Apks
@@ -57,6 +58,7 @@ jobs:
           retention-days: 14
 
       - name: Upload Release Asset
+        if: github.repository == 'erikeelde/toggles'
         uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
