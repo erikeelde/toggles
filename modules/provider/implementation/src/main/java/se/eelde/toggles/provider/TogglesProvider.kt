@@ -299,7 +299,15 @@ class TogglesProvider : ContentProvider() {
                     value = togglesConfigurationValue.value,
                     scope = togglesConfigurationValue.scope
                 )
-                insertId = configurationValueDao.insertSync(databaseConfigurationValue)
+                @Suppress("SwallowedException")
+                insertId = try {
+                    configurationValueDao.insertSync(databaseConfigurationValue)
+                } catch (e: SQLiteConstraintException) {
+                    configurationValueDao.getIdByConfigurationIdAndScope(
+                        databaseConfigurationValue.configurationId,
+                        databaseConfigurationValue.scope
+                    ) ?: -1L
+                }
                 val configId = uri.pathSegments[uri.pathSegments.size - 2].toLong()
                 crossNotifyUri = TogglesProviderContract.toggleUri(configId)
             }

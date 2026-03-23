@@ -10,6 +10,7 @@ import kotlinx.datetime.Instant
 import org.junit.Assert.assertNotNull
 import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ConfigurationTable
+import se.eelde.toggles.database.tables.ConfigurationValueTable
 import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
 
@@ -141,6 +142,40 @@ object DatabaseHelper {
             CONFLICT_FAIL,
             configurationValues
         )
+    }
+
+    fun insertConfigurationValue(
+        db: SupportSQLiteDatabase,
+        configurationId: Long,
+        value: String?,
+        scope: Long,
+    ): Long {
+        val values = ContentValues()
+        values.put(ConfigurationValueTable.COL_CONFIG_ID, configurationId)
+        values.put(ConfigurationValueTable.COL_VALUE, value)
+        values.put(ConfigurationValueTable.COL_SCOPE, scope)
+        return db.insert(ConfigurationValueTable.TABLE_NAME, CONFLICT_FAIL, values)
+    }
+
+    fun getConfigurationValuesByConfigurationIdAndScope(
+        db: SupportSQLiteDatabase,
+        configurationId: Long,
+        scope: Long,
+    ): List<TogglesConfigurationValue> {
+        val query = "SELECT * FROM ${ConfigurationValueTable.TABLE_NAME} " +
+            "WHERE ${ConfigurationValueTable.COL_CONFIG_ID} = ? " +
+            "AND ${ConfigurationValueTable.COL_SCOPE} = ?"
+        val cursor = db.query(query, arrayOf<Any>(configurationId, scope))
+        val result = mutableListOf<TogglesConfigurationValue>()
+        while (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(ConfigurationValueTable.COL_ID))
+            val confId = cursor.getLong(cursor.getColumnIndexOrThrow(ConfigurationValueTable.COL_CONFIG_ID))
+            val v = cursor.getString(cursor.getColumnIndexOrThrow(ConfigurationValueTable.COL_VALUE))
+            val s = cursor.getLong(cursor.getColumnIndexOrThrow(ConfigurationValueTable.COL_SCOPE))
+            result.add(TogglesConfigurationValue(id, confId, v, s))
+        }
+        cursor.close()
+        return result.toList()
     }
 
     fun getScope(db: SupportSQLiteDatabase, scopeId: Long): TogglesScope {
