@@ -2,6 +2,7 @@ package se.eelde.toggles.provider
 
 import android.content.Context
 import androidx.core.graphics.drawable.toDrawable
+import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineDispatcher
 import org.robolectric.Robolectric
 import org.robolectric.Shadows.shadowOf
@@ -64,6 +65,8 @@ object RobolectricTogglesProvider {
 
                     override fun provideTogglesUriMatcher(): TogglesUriMatcher =
                         TogglesUriMatcher("se.eelde.toggles.configprovider")
+
+                    override fun provideClock(): Clock = Clock.System
                 }
             }
         }

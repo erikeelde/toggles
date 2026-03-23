@@ -9,7 +9,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -23,11 +22,12 @@ import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.ToggleValue
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.TogglesDatabase
+import se.eelde.toggles.provider.di.ToggleTestApplication_Application
 import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@Config(application = HiltTestApplication::class, sdk = [Build.VERSION_CODES.P])
+@Config(application = ToggleTestApplication_Application::class, sdk = [Build.VERSION_CODES.P])
 class TogglesProviderPredefinedConfigurationValuesTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

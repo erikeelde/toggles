@@ -8,7 +8,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -22,11 +21,12 @@ import org.robolectric.annotation.Config
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesProviderContract
 import se.eelde.toggles.database.TogglesDatabase
+import se.eelde.toggles.provider.di.ToggleTestApplication_Application
 import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-@Config(application = HiltTestApplication::class, sdk = [Build.VERSION_CODES.P])
+@Config(application = ToggleTestApplication_Application::class, sdk = [Build.VERSION_CODES.P])
 class TogglesProviderMatcherCurrentConfigurationKeyTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

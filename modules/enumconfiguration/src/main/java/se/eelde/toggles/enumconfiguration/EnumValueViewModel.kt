@@ -47,6 +47,7 @@ internal sealed class PartialViewState {
 }
 
 @HiltViewModel(assistedFactory = EnumValueViewModel.Factory::class)
+@Suppress("LongParameterList")
 class EnumValueViewModel @AssistedInject internal constructor(
     private val application: Application,
     private val configurationDao: TogglesConfigurationDao,
