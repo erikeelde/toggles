@@ -9,5 +9,6 @@ interface ConfigurationTable {
         const val COL_APP_ID = "applicationId"
         const val COL_KEY = ColumnNames.Configuration.COL_KEY
         const val COL_TYPE = ColumnNames.Configuration.COL_TYPE
+        const val COL_LAST_USE = "lastUse"
     }
 }

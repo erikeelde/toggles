@@ -5,10 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ConfigurationTable
+import kotlin.time.Instant
 
 @Entity(
     tableName = ConfigurationTable.TABLE_NAME,
@@ -36,8 +35,8 @@ data class TogglesConfiguration(
     var key: String?,
 
     @field:ColumnInfo(name = ConfigurationTable.COL_TYPE)
-    var type: String
-) {
+    var type: String,
 
-    var lastUse: Instant = Clock.System.now()
-}
+    @field:ColumnInfo(name = ConfigurationTable.COL_LAST_USE)
+    var lastUse: Instant
+)

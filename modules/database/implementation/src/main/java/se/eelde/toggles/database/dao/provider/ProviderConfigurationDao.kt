@@ -6,11 +6,11 @@ import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import kotlinx.datetime.Instant
 import se.eelde.toggles.database.TogglesConfiguration
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.ConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
+import kotlin.time.Instant
 
 @Suppress("TooManyFunctions")
 @Dao

@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
 import se.eelde.toggles.coroutines.IoDispatcher
 import se.eelde.toggles.database.TogglesScope
 import se.eelde.toggles.database.dao.application.TogglesScopeDao
 import se.eelde.toggles.routes.Scope
+import kotlin.time.Clock
 
 internal data class ViewState(
     val title: String? = null,
@@ -38,7 +38,8 @@ class ScopeViewModel @AssistedInject internal constructor(
     private val scopeDao: TogglesScopeDao,
     @Assisted scope: Scope,
     @IoDispatcher
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val clock: Clock,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -81,14 +82,14 @@ class ScopeViewModel @AssistedInject internal constructor(
 
     internal fun selectScope(togglesScope: TogglesScope) {
         viewModelScope.launch {
-            togglesScope.timeStamp = Clock.System.now()
+            togglesScope.timeStamp = clock.now()
             scopeDao.update(togglesScope)
         }
     }
 
     internal fun createScope(scopeName: String) {
         viewModelScope.launch {
-            val togglesScope = TogglesScope.newScope()
+            val togglesScope = TogglesScope.newScope(clock)
             togglesScope.name = scopeName
             togglesScope.applicationId = applicationId
             withContext(ioDispatcher) {
