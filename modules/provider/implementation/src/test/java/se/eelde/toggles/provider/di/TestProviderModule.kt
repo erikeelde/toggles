@@ -10,6 +10,7 @@ import se.eelde.toggles.provider.IPackageManagerWrapper
 import se.eelde.toggles.provider.PackageManagerWrapper
 import se.eelde.toggles.provider.TogglesUriMatcher
 import javax.inject.Singleton
+import kotlin.time.Clock
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -21,4 +22,7 @@ object TestProviderModule {
     @Provides
     fun providePackageManagerWrapper(@ApplicationContext context: Context): IPackageManagerWrapper =
         PackageManagerWrapper(context.packageManager)
+
+    @Provides
+    fun provideClock(): Clock = Clock.System
 }

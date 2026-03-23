@@ -1,7 +1,7 @@
 package se.eelde.toggles.database
 
 import androidx.room.TypeConverter
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 class RoomInstantConverter {
     @TypeConverter

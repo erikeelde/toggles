@@ -6,13 +6,13 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase.CONFLICT_FAIL
 import androidx.sqlite.db.SupportSQLiteDatabase
-import kotlinx.datetime.Instant
 import org.junit.Assert.assertNotNull
 import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.ConfigurationValueTable
 import se.eelde.toggles.database.tables.PredefinedConfigurationValueTable
 import se.eelde.toggles.database.tables.ScopeTable
+import kotlin.time.Instant
 
 object DatabaseHelper {
     fun insertPredefinedConfigurationValue(

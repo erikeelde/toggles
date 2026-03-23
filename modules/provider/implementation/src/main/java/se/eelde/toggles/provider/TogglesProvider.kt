@@ -11,7 +11,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
 import se.eelde.toggles.core.Toggle
@@ -26,6 +25,7 @@ import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderPredefinedConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderScopeDao
+import kotlin.time.Clock
 
 class TogglesProvider : ContentProvider() {
 
@@ -60,6 +60,10 @@ class TogglesProvider : ContentProvider() {
         applicationEntryPoint.provideTogglesUriMatcher()
     }
 
+    private val clock: Clock by lazy {
+        applicationEntryPoint.provideClock()
+    }
+
     private val applicationEntryPoint: TogglesProviderEntryPoint by lazy {
         entryPointBuilder.build(requireContext)
     }
@@ -87,6 +91,7 @@ class TogglesProvider : ContentProvider() {
         fun providePredefinedConfigurationValueDao(): ProviderPredefinedConfigurationValueDao
         fun providePackageManagerWrapper(): IPackageManagerWrapper
         fun provideTogglesUriMatcher(): TogglesUriMatcher
+        fun provideClock(): Clock
     }
 
     private fun getCallingApplication(applicationDao: ProviderApplicationDao): TogglesApplication =
@@ -106,8 +111,8 @@ class TogglesProvider : ContentProvider() {
 
                 togglesApplication.id = applicationDao.insert(togglesApplication)
 
-                createDefaultScope(scopeDao, togglesApplication.id)
-                createDevelopmentScope(scopeDao, togglesApplication.id)
+                createDefaultScope(scopeDao, togglesApplication.id, clock)
+                createDevelopmentScope(scopeDao, togglesApplication.id, clock)
 
                 requireContext.contentResolver.notifyInsert(
                     TogglesProviderContract.scopeUri()
@@ -235,7 +240,8 @@ class TogglesProvider : ContentProvider() {
                             id = 0,
                             applicationId = callingApplication.id,
                             key = toggle.key,
-                            type = toggle.type
+                            type = toggle.type,
+                            lastUse = clock.now(),
                         )
 
                     togglesConfiguration.id = configurationDao.insert(togglesConfiguration)
@@ -284,7 +290,8 @@ class TogglesProvider : ContentProvider() {
                     id = togglesConfiguration.id,
                     applicationId = callingApplication.id,
                     key = togglesConfiguration.key,
-                    type = togglesConfiguration.type
+                    type = togglesConfiguration.type,
+                    lastUse = clock.now(),
                 )
                 insertId = configurationDao.insert(databaseConfiguration)
                 crossNotifyUri = TogglesProviderContract.toggleUri(insertId)
@@ -519,22 +526,24 @@ class TogglesProvider : ContentProvider() {
 
         private fun createDefaultScope(
             scopeDao: ProviderScopeDao,
-            applicationId: Long
+            applicationId: Long,
+            clock: Clock,
         ): TogglesScope {
-            val scope = TogglesScope.newScope()
+            val scope = TogglesScope.newScope(clock)
             scope.applicationId = applicationId
-            scope.timeStamp = Clock.System.now().minus(oneSecond, DateTimeUnit.MILLISECOND)
+            scope.timeStamp = clock.now().minus(oneSecond, DateTimeUnit.MILLISECOND)
             scope.id = scopeDao.insert(scope)
             return scope
         }
 
         private fun createDevelopmentScope(
             scopeDao: ProviderScopeDao,
-            applicationId: Long
+            applicationId: Long,
+            clock: Clock,
         ): TogglesScope {
-            val developmentScope = TogglesScope.newScope()
+            val developmentScope = TogglesScope.newScope(clock)
             developmentScope.applicationId = applicationId
-            developmentScope.timeStamp = Clock.System.now()
+            developmentScope.timeStamp = clock.now()
             developmentScope.name = TogglesScope.SCOPE_USER
             developmentScope.id = scopeDao.insert(developmentScope)
             return developmentScope
