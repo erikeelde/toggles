@@ -49,11 +49,32 @@ for prefix in "${prefixes[@]}"; do
     # Convert prefix to uppercase for property names
     prefix_upper=$(echo "$prefix" | tr '[:lower:]' '[:upper:]')
 
-    # Set the library version
-    if [[ $release_mode == true ]]; then
-        library_version="0.1.0"
+    # Derive library version from lib/* tags
+    lib_tag=$(git describe --tags --match "lib/*" --abbrev=0 2>/dev/null || echo "lib/0.0.0")
+    lib_describe=$(git describe --tags --match "lib/*" 2>/dev/null || echo "lib/0.0.0-0-g0000000")
+    library_version="${lib_tag#lib/}"
+
+    # Split library version into parts
+    IFS='.' read -r -a lib_version_parts <<< "$library_version"
+    lib_major="${lib_version_parts[0]}"
+    lib_minor="${lib_version_parts[1]}"
+    lib_patch="${lib_version_parts[2]}"
+
+    # Determine commit distance from last lib tag
+    if [[ "$lib_describe" == "$lib_tag" ]]; then
+        lib_commit_distance=0
     else
-        library_version="0.1.0-SNAPSHOT"
+        lib_commit_distance=$(echo "$lib_describe" | sed -E 's/^lib\/[0-9]+\.[0-9]+\.[0-9]+-([0-9]+)-g.*/\1/')
+    fi
+
+    if [[ $release_mode == true ]]; then
+        : # Use version as-is from tag
+    elif [[ $lib_commit_distance -gt 0 ]]; then
+        # Ahead of last release — bump patch for snapshot
+        lib_patch=$((lib_patch + 1))
+        library_version="${lib_major}.${lib_minor}.${lib_patch}-SNAPSHOT"
+    else
+        library_version="${library_version}-SNAPSHOT"
     fi
 
     # Print the result

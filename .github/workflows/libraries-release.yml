@@ -1,10 +1,12 @@
 name: Libraries release
 
 on:
-  workflow_dispatch:
+  release:
+    types: [ published ]
 
 jobs:
   build:
+    if: startsWith(github.event.release.tag_name, 'lib/')
     runs-on: ubuntu-latest
 
     steps:
