@@ -51,20 +51,21 @@ for prefix in "${prefixes[@]}"; do
 
     # Derive library version from lib/* tags
     lib_tag=$(git describe --tags --match "lib/*" --abbrev=0 2>/dev/null || echo "lib/0.0.0")
-    lib_describe=$(git describe --tags --match "lib/*" 2>/dev/null || echo "lib/0.0.0-0-g0000000")
     library_version="${lib_tag#lib/}"
 
-    # Split library version into parts
+    # Split library version into parts (save/restore IFS to avoid affecting the rest of the script)
+    old_ifs="$IFS"
     IFS='.' read -r -a lib_version_parts <<< "$library_version"
+    IFS="$old_ifs"
     lib_major="${lib_version_parts[0]}"
     lib_minor="${lib_version_parts[1]}"
     lib_patch="${lib_version_parts[2]}"
 
     # Determine commit distance from last lib tag
-    if [[ "$lib_describe" == "$lib_tag" ]]; then
+    if [[ "$lib_tag" == "lib/0.0.0" ]]; then
         lib_commit_distance=0
     else
-        lib_commit_distance=$(echo "$lib_describe" | sed -E 's/^lib\/[0-9]+\.[0-9]+\.[0-9]+-([0-9]+)-g.*/\1/')
+        lib_commit_distance=$(git rev-list --count "${lib_tag}"..HEAD)
     fi
 
     if [[ $release_mode == true ]]; then
