@@ -19,6 +19,41 @@ if [[ $1 == "--release" ]]; then
     release_mode=true
 fi
 
+# Derive library version from lib/* tags (done once, outside the app version loop)
+lib_tag=$(git describe --tags --match "lib/*" --abbrev=0 2>/dev/null || echo "lib/0.0.0")
+library_version="${lib_tag#lib/}"
+
+# Validate library version is strict semver (x.y.z)
+if [[ ! "$library_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "Error: lib tag '$lib_tag' is not valid semver (expected lib/x.y.z)" >&2
+    exit 1
+fi
+
+# Split library version into parts
+old_ifs="$IFS"
+IFS='.' read -r -a lib_version_parts <<< "$library_version"
+IFS="$old_ifs"
+lib_major="${lib_version_parts[0]}"
+lib_minor="${lib_version_parts[1]}"
+lib_patch="${lib_version_parts[2]}"
+
+# Determine commit distance from last lib tag
+if [[ "$lib_tag" == "lib/0.0.0" ]]; then
+    lib_commit_distance=0
+else
+    lib_commit_distance=$(git rev-list --count "${lib_tag}"..HEAD)
+fi
+
+if [[ $release_mode == true ]]; then
+    : # Use version as-is from tag
+elif [[ $lib_commit_distance -gt 0 ]]; then
+    # Ahead of last release — bump patch for snapshot
+    lib_patch=$((lib_patch + 1))
+    library_version="${lib_major}.${lib_minor}.${lib_patch}-SNAPSHOT"
+else
+    library_version="${library_version}-SNAPSHOT"
+fi
+
 # Loop over the prefixes
 for prefix in "${prefixes[@]}"; do
 
@@ -48,35 +83,6 @@ for prefix in "${prefixes[@]}"; do
 
     # Convert prefix to uppercase for property names
     prefix_upper=$(echo "$prefix" | tr '[:lower:]' '[:upper:]')
-
-    # Derive library version from lib/* tags
-    lib_tag=$(git describe --tags --match "lib/*" --abbrev=0 2>/dev/null || echo "lib/0.0.0")
-    library_version="${lib_tag#lib/}"
-
-    # Split library version into parts (save/restore IFS to avoid affecting the rest of the script)
-    old_ifs="$IFS"
-    IFS='.' read -r -a lib_version_parts <<< "$library_version"
-    IFS="$old_ifs"
-    lib_major="${lib_version_parts[0]}"
-    lib_minor="${lib_version_parts[1]}"
-    lib_patch="${lib_version_parts[2]}"
-
-    # Determine commit distance from last lib tag
-    if [[ "$lib_tag" == "lib/0.0.0" ]]; then
-        lib_commit_distance=0
-    else
-        lib_commit_distance=$(git rev-list --count "${lib_tag}"..HEAD)
-    fi
-
-    if [[ $release_mode == true ]]; then
-        : # Use version as-is from tag
-    elif [[ $lib_commit_distance -gt 0 ]]; then
-        # Ahead of last release — bump patch for snapshot
-        lib_patch=$((lib_patch + 1))
-        library_version="${lib_major}.${lib_minor}.${lib_patch}-SNAPSHOT"
-    else
-        library_version="${library_version}-SNAPSHOT"
-    fi
 
     # Print the result
     printf "%s_VERSION=%s\n" "$prefix_upper" "$version"
