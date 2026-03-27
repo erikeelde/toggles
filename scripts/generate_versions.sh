@@ -51,7 +51,14 @@ else
 fi
 
 if [[ $release_mode == true ]]; then
-    : # Use version as-is from tag
+    if [[ $lib_tag_found == false ]]; then
+        echo "Error: --release requires a lib/* tag but none was found" >&2
+        exit 1
+    fi
+    if [[ $lib_commit_distance -ne 0 ]]; then
+        echo "Error: --release but HEAD is $lib_commit_distance commit(s) ahead of $lib_tag — tag HEAD first" >&2
+        exit 1
+    fi
 elif [[ $lib_commit_distance -gt 0 ]]; then
     # Ahead of last release — bump patch for snapshot
     lib_patch=$((lib_patch + 1))
