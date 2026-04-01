@@ -35,6 +35,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             extensions.configure<KotlinAndroidProjectExtension> {
                 compilerOptions {
                     apiVersion.set(KotlinVersion.KOTLIN_2_1)
+                    languageVersion.set(KotlinVersion.KOTLIN_2_1)
                 }
             }
 
