@@ -6,6 +6,8 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import se.eelde.toggles.conventions.configurations.configureKotlinAndroid
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
@@ -27,6 +29,12 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                         withSourcesJar()
                         withJavadocJar()
                     }
+                }
+            }
+
+            extensions.configure<KotlinAndroidProjectExtension> {
+                compilerOptions {
+                    apiVersion.set(KotlinVersion.KOTLIN_2_1)
                 }
             }
 
