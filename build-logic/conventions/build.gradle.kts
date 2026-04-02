@@ -20,6 +20,7 @@ dependencies {
     compileOnly(libs.com.vanniktech.gradle.maven.publish.plugin)
     compileOnly(libs.org.jetbrains.kotlinx.binary.compatibility.validator)
     compileOnly(libs.org.jetbrains.dokka.dokka.gradle.plugin)
+    implementation(libs.tapmoc.gradle.plugin)
     lintChecks(libs.androidx.lint.gradle)
 }
 

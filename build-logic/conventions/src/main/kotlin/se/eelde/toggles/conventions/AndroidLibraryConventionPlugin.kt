@@ -6,9 +6,8 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import se.eelde.toggles.conventions.configurations.configureKotlinAndroid
+import tapmoc.configureKotlinCompatibility
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -32,11 +31,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 }
             }
 
-            extensions.configure<KotlinAndroidProjectExtension> {
-                compilerOptions {
-                    languageVersion.set(KotlinVersion.KOTLIN_2_1)
-                }
-            }
+            configureKotlinCompatibility(getVersionByName("kotlinCompatibility"))
 
             tasks.withType(Test::class.java) {
                 failOnNoDiscoveredTests.set(false)
@@ -44,3 +39,10 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         }
     }
 }
+
+private fun Project.getVersionByName(name: String): String =
+    extensions.getByType(org.gradle.api.artifacts.VersionCatalogsExtension::class.java)
+        .named("libs")
+        .findVersion(name)
+        .get()
+        .requiredVersion
