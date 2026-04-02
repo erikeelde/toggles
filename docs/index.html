@@ -215,8 +215,7 @@
     <header>
         <div class="container">
             <h1>Toggles</h1>
-            <p class="subtitle">Feature Switching for Android Development</p>
-            <p style="margin-bottom: 40px;">Persistent feature flags that survive app reinstalls and clean data operations</p>
+            <p class="subtitle">Persistent feature flags for Android that survive app reinstalls and clean data operations</p>
             
             <div class="cta-buttons">
                 <a href="https://github.com/erikeelde/toggles" class="btn btn-primary">
@@ -259,7 +258,7 @@
             
             <div class="code-block">
 <pre><code>// Add to your build.gradle
-implementation("se.eelde.toggles:toggles-flow:0.0.3")
+implementation("se.eelde.toggles:toggles-flow:0.1.2")
 
 // Use in your Activity/Fragment
 import se.eelde.toggles.flow.Toggles
@@ -292,14 +291,14 @@ lifecycleScope.launch {
                     <h3>🌊 Toggles-Flow</h3>
                     <p>Reactive toggle management using Kotlin Flow. Perfect for modern Android development.</p>
                     <div class="code-block">
-<pre><code>implementation("se.eelde.toggles:toggles-flow:0.0.3")</code></pre>
+<pre><code>implementation("se.eelde.toggles:toggles-flow:0.1.2")</code></pre>
                     </div>
                 </div>
                 <div class="card">
                     <h3>🔧 Toggles-Prefs</h3>
                     <p>Simple one-shot API similar to SharedPreferences for basic toggle fetching.</p>
                     <div class="code-block">
-<pre><code>implementation("se.eelde.toggles:toggles-prefs:0.0.2")</code></pre>
+<pre><code>implementation("se.eelde.toggles:toggles-prefs:0.1.2")</code></pre>
                     </div>
                 </div>
             </div>
@@ -327,36 +326,13 @@ toggles.toggle("log_level", LogLevel::class.java, LogLevel.INFO)</code></pre>
 
     <section class="section">
         <div class="container">
-            <h2>Join the Community</h2>
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-number">⭐</div>
-                    <div class="stat-label">Star the Project</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">🍴</div>
-                    <div class="stat-label">Fork & Contribute</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">🐛</div>
-                    <div class="stat-label">Report Issues</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">💡</div>
-                    <div class="stat-label">Share Ideas</div>
-                </div>
-            </div>
-            
-            <div class="cta-buttons">
-                <a href="https://github.com/erikeelde/toggles/issues/new" class="btn btn-primary">
-                    🐛 Report Issue
-                </a>
-                <a href="https://github.com/erikeelde/toggles/fork" class="btn btn-secondary">
-                    🛠️ Contribute
-                </a>
-                <a href="https://github.com/erikeelde/toggles/discussions" class="btn btn-secondary">
-                    💬 Discussions
-                </a>
+            <h2>Release Builds</h2>
+            <p style="text-align: center; margin-bottom: 40px;">Use no-op variants for release builds &mdash; same API, zero overhead, no Toggles app dependency</p>
+            <div class="code-block">
+<pre><code>dependencies {
+    debugImplementation("se.eelde.toggles:toggles-flow:0.1.2")
+    releaseImplementation("se.eelde.toggles:toggles-flow-noop:0.1.2")
+}</code></pre>
             </div>
         </div>
     </section>
@@ -370,8 +346,7 @@ toggles.toggle("log_level", LogLevel::class.java, LogLevel.INFO)</code></pre>
                 <a href="https://github.com/erikeelde/toggles/issues">Issues</a>
                 <a href="https://play.google.com/store/apps/details?id=se.eelde.toggles">Android App</a>
             </div>
-            <p>&copy; 2024 Toggles Project. Open source under Apache 2.0 license.</p>
-            <p style="margin-top: 10px; opacity: 0.7;">Made with ❤️ for Android developers</p>
+            <p>&copy; 2026 Toggles Project. Open source under Apache 2.0 license.</p>
         </div>
     </footer>
 </body>
