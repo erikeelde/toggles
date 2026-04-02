@@ -44,7 +44,7 @@ org-jetbrains-kotlinx-binary-compatibility-validator = "0.18.1"
 pagingCommon = "3.4.2"
 pagingCompose = "3.4.2"
 pagingTesting = "3.4.2"
-kotlinCompatibility = "2.1.21"
+kotlinCompatibility = "2.0.21"
 se-eelde-toggles = "0.0.3"
 tapmoc = "0.4.1"
 
