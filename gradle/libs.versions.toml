@@ -44,7 +44,9 @@ org-jetbrains-kotlinx-binary-compatibility-validator = "0.18.1"
 pagingCommon = "3.4.2"
 pagingCompose = "3.4.2"
 pagingTesting = "3.4.2"
+kotlinCompatibility = "2.1.21"
 se-eelde-toggles = "0.0.3"
+tapmoc = "0.4.1"
 
 [libraries]
 android-tools-common = { module = "com.android.tools:common", version.ref = "androidTools" }
@@ -160,6 +162,7 @@ org-jetbrains-kotlinx-kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx
 org-jetbrains-kotlinx-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 org-jetbrains-kotlinx-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationCore" }
 org-robolectric = "org.robolectric:robolectric:4.16.1"
+tapmoc-gradle-plugin = { module = "com.gradleup.tapmoc:com.gradleup.tapmoc.gradle.plugin", version.ref = "tapmoc" }
 se-eelde-toggles-toggles-core = { module = "se.eelde.toggles:toggles-core", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-prefs = { module = "se.eelde.toggles:toggles-prefs", version.ref = "se-eelde-toggles" }
