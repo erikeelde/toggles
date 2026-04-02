@@ -11,7 +11,7 @@ The **toggles-flow** library provides a reactive approach to feature toggles usi
 Add the toggles-flow library to your project:
 
 ```gradle
-implementation("se.eelde.toggles:toggles-flow:0.0.3")
+implementation("se.eelde.toggles:toggles-flow:0.1.2")
 ```
 
 ### Basic Usage
@@ -58,7 +58,7 @@ class MyActivity : AppCompatActivity() {
 Install the companion app to manage your feature toggles:
 
 - Download from [Google Play Store](https://play.google.com/store/apps/details?id=se.eelde.toggles)
-- View source code on [GitHub](https://github.com/eelde/toggles)
+- View source code on [GitHub](https://github.com/erikeelde/toggles)
 
 The app stores your settings behind a content provider, ensuring configurations persist across app reinstalls and clean data operations.
 
@@ -103,7 +103,7 @@ class FeatureViewModel @Inject constructor(
 For simple one-time toggle fetching without reactive updates. Similar API to Android's SharedPreferences.
 
 ```gradle
-implementation("se.eelde.toggles:toggles-prefs:0.0.2")
+implementation("se.eelde.toggles:toggles-prefs:0.1.2")
 ```
 
 ```kotlin
@@ -121,7 +121,7 @@ val isEnabled = togglesPrefs.getBoolean("feature_toggle_key", false)
 Low-level library for communicating with the toggles application via content provider. Generally not needed unless you're implementing custom toggle management.
 
 ```gradle
-implementation("se.eelde.toggles:toggles-core:0.0.3")
+implementation("se.eelde.toggles:toggles-core:0.1.2")
 ```
 
 ## Build Variant Configuration
@@ -141,8 +141,8 @@ To enable feature toggles in debug builds while automatically disabling them in 
 
 ```gradle
 dependencies {
-    debugImplementation("se.eelde.toggles:toggles-flow:0.0.3")
-    releaseImplementation("se.eelde.toggles:toggles-flow-noop:0.0.3")
+    debugImplementation("se.eelde.toggles:toggles-flow:0.1.2")
+    releaseImplementation("se.eelde.toggles:toggles-flow-noop:0.1.2")
 }
 ```
 
@@ -150,8 +150,8 @@ dependencies {
 
 ```gradle
 dependencies {
-    debugImplementation("se.eelde.toggles:toggles-prefs:0.0.2")
-    releaseImplementation("se.eelde.toggles:toggles-prefs-noop:0.0.2")
+    debugImplementation("se.eelde.toggles:toggles-prefs:0.1.2")
+    releaseImplementation("se.eelde.toggles:toggles-prefs-noop:0.1.2")
 }
 ```
 
@@ -228,7 +228,7 @@ If you encounter any issues or have questions, please open an issue on GitHub.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/eelde/toggles.git
+   git clone https://github.com/erikeelde/toggles.git
    cd toggles
    ```
 
@@ -249,7 +249,7 @@ If you encounter any issues or have questions, please open an issue on GitHub.
 
 ### Requirements
 
-- Android Studio Arctic Fox or newer
-- JDK 17 or higher
-- Android SDK API 21+ (for using the libraries)
-- Android SDK API 35 (for building the sample app)
+- Android Studio latest stable
+- JDK 21 or higher
+- Android SDK API 23+ (for using the libraries)
+- Android SDK API 36 (for building the sample app)
