@@ -112,9 +112,15 @@ GitHub Actions in `.github/workflows/`:
 
 CI uses `warningsAsErrors=true` (`.github/ci-gradle.properties`).
 
+## Kotlin Compatibility
+
+Published libraries use [tapmoc](https://github.com/GradleUp/tapmoc) (`configureKotlinCompatibility`) in `AndroidLibraryConventionPlugin` to lock metadata version and `kotlin-stdlib` to the version specified by `kotlinCompatibility` in `libs.versions.toml`. This ensures consumers on older Kotlin versions can use the libraries. The `kotlinCompatibility` entry has a `@keep` annotation so `versionCatalogUpdate` doesn't remove it (it's referenced programmatically via `findVersion()`, not by a library/plugin declaration).
+
 ## Dependency Upgrade Notes
 
 AGP (Android Gradle Plugin), Kotlin, Hilt/Dagger, KSP, and triplet-play are tightly coupled and must be upgraded together. When running `versionCatalogUpdate`, review the diff carefully and keep these versions in sync.
+
+Dependencies outside the version catalog that need manual updates: `com.gradle.develocity` and `org.gradle.toolchains.foojay-resolver-convention` in both `settings.gradle.kts` and `build-logic/settings.gradle.kts`, plus GitHub Actions versions in `.github/workflows/` and `.github/actions/`.
 
 ### AGP 9 Convention Plugin Notes
 
