@@ -4,7 +4,7 @@ description: "Setup gradle to run in a workflow - generally called from another 
 inputs:
   cache-cleanup:
     required: false
-    default: "true"
+    default: "on-success"
     description: "Removing unused files from Gradle User Home before saving to cache"
 
 runs:
