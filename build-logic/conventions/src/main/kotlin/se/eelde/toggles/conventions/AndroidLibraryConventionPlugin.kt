@@ -6,6 +6,7 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import se.eelde.toggles.conventions.configurations.configureKotlinAndroid
 import se.eelde.toggles.conventions.configurations.libs
 import tapmoc.configureKotlinCompatibility
@@ -33,6 +34,12 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
 
             configureKotlinCompatibility(libs.findVersion("kotlinCompatibility").get().requiredVersion)
+
+            extensions.configure<KotlinAndroidProjectExtension> {
+                compilerOptions {
+                    freeCompilerArgs.add("-Xsuppress-warning=LANGUAGE_VERSION_DEPRECATION")
+                }
+            }
 
             tasks.withType(Test::class.java) {
                 failOnNoDiscoveredTests.set(false)
