@@ -8,6 +8,7 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import se.eelde.toggles.conventions.configurations.configureKotlinAndroid
 import se.eelde.toggles.conventions.configurations.libs
+import tapmoc.configureJavaCompatibility
 import tapmoc.configureKotlinCompatibility
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
@@ -32,6 +33,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 }
             }
 
+            configureJavaCompatibility(8)
             configureKotlinCompatibility(libs.findVersion("kotlinCompatibility").get().requiredVersion)
 
             tasks.withType(Test::class.java) {
