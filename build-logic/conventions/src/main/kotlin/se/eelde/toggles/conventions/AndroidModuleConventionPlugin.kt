@@ -17,6 +17,7 @@ class AndroidModuleConventionPlugin : Plugin<Project> {
             apply(plugin = "com.android.library")
             apply(plugin = "toggles.android.lint")
             apply(plugin = "toggles.detekt.common")
+            apply(plugin = "toggles.dagp")
 
             extensions.configure<LibraryExtension> {
                 @Suppress("UnstableApiUsage")

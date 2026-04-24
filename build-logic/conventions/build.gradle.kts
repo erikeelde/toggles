@@ -50,6 +50,10 @@ gradlePlugin {
             id = libs.plugins.toggles.android.lint.get().pluginId
             implementationClass = "se.eelde.toggles.conventions.AndroidLintConventionPlugin"
         }
+        register("dagp") {
+            id = libs.plugins.toggles.dagp.get().pluginId
+            implementationClass = "se.eelde.toggles.conventions.DagpConventionPlugin"
+        }
         register("detektCommon") {
             id = libs.plugins.toggles.detekt.common.get().pluginId
             implementationClass = "se.eelde.toggles.conventions.DetektConventionPlugin"
