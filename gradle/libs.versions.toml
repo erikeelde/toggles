@@ -172,7 +172,7 @@ tapmoc-gradle-plugin = { module = "com.gradleup.tapmoc:com.gradleup.tapmoc.gradl
 android-application = { id = "com.android.application", version.ref = "agp" }
 com-android-library = { id = "com.android.library", version.ref = "agp" }
 com-android-lint = { id = "com.android.lint", version.ref = "agp" }
-com-autonomousapps-dependency-analysis = "com.autonomousapps.dependency-analysis:3.6.1"
+com-autonomousapps-dependency-analysis = "com.autonomousapps.dependency-analysis:3.9.0"
 com-github-triplet-play = "com.github.triplet.play:4.0.0"
 com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "com-google-dagger" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
@@ -192,6 +192,7 @@ toggles-android-compose-module = { id = "toggles.android.compose.module" }
 toggles-android-library = { id = "toggles.android.library" }
 toggles-android-lint = { id = "toggles.android.lint" }
 toggles-android-module = { id = "toggles.android.module" }
+toggles-dagp = { id = "toggles.dagp" }
 toggles-detekt-common = { id = "toggles.detekt.common" }
 toggles-detekt-library = { id = "toggles.detekt.library" }
 toggles-hilt = { id = "toggles.hilt" }

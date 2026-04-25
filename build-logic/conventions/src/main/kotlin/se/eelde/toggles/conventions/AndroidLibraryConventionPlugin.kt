@@ -17,6 +17,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             apply(plugin = "com.android.library")
             apply(plugin = "toggles.android.lint")
             apply(plugin = "toggles.detekt.library")
+            apply(plugin = "toggles.dagp")
             apply(plugin = "org.jetbrains.dokka")
             apply(plugin = "com.vanniktech.maven.publish")
             apply(plugin = "org.jetbrains.kotlinx.binary-compatibility-validator")

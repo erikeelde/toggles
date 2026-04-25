@@ -17,6 +17,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             apply(plugin = "com.android.application")
             apply(plugin = "toggles.android.lint")
             apply(plugin = "toggles.detekt.common")
+            apply(plugin = "toggles.dagp")
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
