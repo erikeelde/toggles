@@ -19,7 +19,7 @@ dependencies {
     implementation(projects.modules.routes.api)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.hilt.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.material3)
     debugImplementation(libs.androidx.compose.ui.ui.tooling)
