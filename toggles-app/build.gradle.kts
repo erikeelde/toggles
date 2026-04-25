@@ -129,7 +129,7 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.hilt.hilt.navigation.compose)
-    implementation(libs.androidx.startup.startup.runtime)
+    runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(projects.modules.routes.api)
     ksp(libs.com.google.dagger.hilt.android.compiler)
 

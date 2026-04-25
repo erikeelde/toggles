@@ -19,7 +19,7 @@ dependencies {
     implementation(projects.togglesCore)
     implementation(projects.togglesFlow)
     implementation(projects.modules.coroutines.api)
-    implementation(libs.androidx.startup.startup.runtime)
+    runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
 

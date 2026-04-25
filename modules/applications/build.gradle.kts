@@ -23,7 +23,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     debugImplementation(libs.androidx.compose.ui.ui.tooling)
     implementation(libs.androidx.compose.ui.ui.tooling.preview)
-    implementation(libs.androidx.startup.startup.runtime)
+    runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
 }
