@@ -27,8 +27,8 @@ class AndroidModuleConventionPlugin : Plugin<Project> {
                 configureGradleManagedDevices(this)
 
                 dependencies {
-                    "testImplementation"(libs.findLibrary("androidx-test-runner").get())
-                    "androidTestImplementation"(libs.findLibrary("androidx-test-runner").get())
+                    "testRuntimeOnly"(libs.findLibrary("androidx-test-runner").get())
+                    "androidTestRuntimeOnly"(libs.findLibrary("androidx-test-runner").get())
                 }
             }
 

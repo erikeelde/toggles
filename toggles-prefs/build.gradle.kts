@@ -22,7 +22,7 @@ dependencies {
     testImplementation(libs.androidx.test.core.ktx)
     testImplementation(libs.androidx.test.ext.truth)
     testImplementation(libs.androidx.test.rules)
-    testImplementation(libs.androidx.test.runner)
+    testRuntimeOnly(libs.androidx.test.runner)
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.org.robolectric)
 
