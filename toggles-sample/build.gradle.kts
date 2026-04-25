@@ -78,8 +78,7 @@ dependencies {
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 
-    debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
+    debugRuntimeOnly(libs.com.squareup.leakcanary.leakcanary.android)
 
-    androidTestImplementation(libs.androidx.test.core.ktx)
     androidTestImplementation(libs.androidx.test.ext.junit)
 }

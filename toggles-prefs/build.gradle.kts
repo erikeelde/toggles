@@ -19,9 +19,6 @@ dependencies {
 
     testImplementation(libs.junit)
 
-    testImplementation(libs.androidx.test.core.ktx)
-    testImplementation(libs.androidx.test.ext.truth)
-    testImplementation(libs.androidx.test.rules)
     testRuntimeOnly(libs.androidx.test.runner)
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.org.robolectric)

@@ -38,7 +38,4 @@ dependencies {
     implementation(libs.com.squareup.okio)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.espresso.core)
 }
