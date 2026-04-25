@@ -9,10 +9,13 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import se.eelde.toggles.core.ToggleState
 import se.eelde.toggles.database.FakeTogglesDatabase
 import se.eelde.toggles.database.TogglesDatabase
 import se.eelde.toggles.provider.RobolectricTogglesProvider
@@ -55,5 +58,28 @@ internal class FlowTest {
             advanceUntilIdle()
             assert(this == "the test configuration value")
         }
+    }
+
+    @Test
+    fun `hasOverride returns false for key with no overriding scope value`() = runTest {
+        val toggles = TogglesImpl(context)
+        val result = toggles.hasOverride("no-override-key").first()
+        @OptIn(ExperimentalCoroutinesApi::class)
+        advanceUntilIdle()
+        assertFalse(result)
+    }
+
+    @Test
+    fun `hasOverride passes ToggleState to custom comparator`() = runTest {
+        var capturedState: ToggleState? = null
+        val capturingComparator = ScopeComparator { state ->
+            capturedState = state
+            false
+        }
+        val toggles = TogglesImpl(context)
+        toggles.hasOverride("some-key", capturingComparator).first()
+        @OptIn(ExperimentalCoroutinesApi::class)
+        advanceUntilIdle()
+        assertNotNull(capturedState)
     }
 }

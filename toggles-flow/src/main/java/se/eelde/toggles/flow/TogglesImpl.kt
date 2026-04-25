@@ -51,6 +51,9 @@ public class TogglesImpl @JvmOverloads constructor(
             )
         }.map { java.lang.Enum.valueOf(type, it) }
 
+    override fun hasOverride(key: String, comparator: ScopeComparator): Flow<Boolean> =
+        provider.observeToggleState(key).map { comparator.hasOverride(it) }
+
     private fun resolveFlow(
         key: String,
         type: String,
