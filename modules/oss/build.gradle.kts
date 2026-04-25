@@ -32,7 +32,7 @@ dependencies {
     ksp(libs.com.google.dagger.hilt.compiler)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.hilt.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel.compose)
 
     implementation(libs.com.squareup.moshi)
     implementation(libs.com.squareup.okio)

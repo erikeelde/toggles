@@ -63,7 +63,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.hilt.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel.compose)
     implementation(libs.co.touchlab.kermit)
     implementation(libs.org.jetbrains.kotlinx.kotlinx.serialization.json)
     implementation(libs.org.jetbrains.kotlinx.kotlinx.collections.immutable)
