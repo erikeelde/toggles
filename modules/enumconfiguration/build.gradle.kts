@@ -21,7 +21,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.material.icons.extended)
     debugImplementation(libs.androidx.compose.ui.ui.tooling)
-    implementation(libs.androidx.startup.startup.runtime)
+    runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     implementation(projects.togglesCore)
     ksp(libs.com.google.dagger.hilt.compiler)
