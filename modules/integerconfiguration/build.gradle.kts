@@ -10,18 +10,12 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
-    implementation(projects.modules.composeTheme)
-    implementation(libs.kotlinx.datetime)
     implementation(projects.modules.database.implementation)
     implementation(projects.modules.provider.implementation)
     implementation(projects.modules.routes.api)
-    implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(projects.modules.coroutines.api)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.hilt.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.material3)
