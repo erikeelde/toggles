@@ -15,7 +15,6 @@ android {
 dependencies {
     implementation(projects.togglesCore)
 
-    implementation(libs.androidx.annotation)
 
     testImplementation(libs.junit)
 

@@ -20,7 +20,6 @@ dependencies {
 
     implementation(libs.androidx.compose.material.material.icons.extended)
 
-    implementation(libs.androidx.compose.animation)
 
     implementation(libs.androidx.compose.ui.ui.tooling)
     implementation(libs.androidx.compose.ui.ui.tooling.preview)
@@ -29,12 +28,8 @@ dependencies {
 
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
-    implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel.compose)
 
-    implementation(libs.com.squareup.moshi)
-    implementation(libs.com.squareup.okio)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.ui.graphics)

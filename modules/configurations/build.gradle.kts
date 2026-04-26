@@ -16,7 +16,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(projects.modules.routes.api)
     implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.material3)
