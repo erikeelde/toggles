@@ -133,13 +133,9 @@ dependencies {
     implementation(projects.modules.routes.api)
     ksp(libs.com.google.dagger.hilt.android.compiler)
 
-    implementation(libs.androidx.lifecycle.lifecycle.common.java8)
 
     implementation(libs.com.google.dagger)
 
-    implementation(libs.androidx.lifecycle.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
-    implementation(libs.androidx.room.room.ktx)
 
     implementation(projects.togglesCore)
     implementation(projects.togglesFlow)
@@ -152,6 +148,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core.ktx)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.room.room.runtime)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
     androidTestImplementation(libs.androidx.arch.core.core.testing)
