@@ -12,6 +12,9 @@ import android.os.Build.VERSION_CODES.O
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,7 +22,9 @@ import org.robolectric.Robolectric
 import org.robolectric.android.controller.ContentProviderController
 import org.robolectric.annotation.Config
 import se.eelde.toggles.core.ColumnNames
+import se.eelde.toggles.core.ToggleState
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.prefs.ScopeComparator
 import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.prefs.TogglesPreferencesImpl
 
@@ -75,6 +80,25 @@ internal class TogglesPreferencesReturnsProviderValues {
     fun `return provider int when available`() {
         assertEquals(1, togglesPreferences.getInt(key, 1))
         assertEquals(1, togglesPreferences.getInt(key, 2))
+    }
+
+    @Test
+    fun `hasOverride returns false when no value stored for non-default scope`() {
+        // Mock returns 2 scopes: default (id=1) and "user" (id=2, higher timestamp).
+        // No value is stored for scope 2, so hasOverride must return false.
+        assertFalse(togglesPreferences.hasOverride("unknown-key"))
+    }
+
+    @Test
+    fun `hasOverride passes ToggleState to custom comparator`() {
+        var capturedState: ToggleState? = null
+        val capturingComparator = ScopeComparator { state ->
+            capturedState = state
+            false
+        }
+        togglesPreferences.hasOverride("myKey", capturingComparator)
+        assertNotNull(capturedState)
+        assertNull(capturedState!!.configuration) // unknown key → no configuration registered
     }
 }
 
