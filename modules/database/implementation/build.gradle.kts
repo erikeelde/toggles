@@ -45,4 +45,5 @@ dependencies {
     testImplementation(libs.androidx.room.room.testing)
 
     testFixturesImplementation(libs.androidx.room.room.runtime)
+    api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
 }

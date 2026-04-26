@@ -38,6 +38,8 @@ dependencies {
 
     testImplementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
+    api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
 }
 
 val versionFile = File("versions.properties")

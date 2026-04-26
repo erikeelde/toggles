@@ -159,4 +159,14 @@ dependencies {
     kspAndroidTest(libs.com.google.dagger.hilt.android.compiler)
 
     testFixturesImplementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.compose.ui.ui.text)
+    androidTestImplementation(libs.com.google.dagger.hilt.core)
+    androidTestImplementation(libs.javax.inject)
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    androidTestImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
 }

@@ -81,4 +81,14 @@ dependencies {
     debugRuntimeOnly(libs.com.squareup.leakcanary.leakcanary.android)
 
     androidTestImplementation(libs.androidx.test.ext.junit)
+    implementation(libs.androidx.activity.activity.compose)
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.ui.ui.text)
+    implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
+    implementation(libs.com.google.dagger)
+    implementation(libs.com.google.dagger.hilt.core)
+    implementation(libs.javax.inject)
+    androidTestImplementation(libs.junit)
+    implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
 }

@@ -38,4 +38,10 @@ dependencies {
     testFixturesImplementation(projects.modules.database.implementation)
     testFixturesImplementation(libs.androidx.room.room.ktx)
     testFixturesImplementation(projects.togglesFlow)
+    implementation(libs.androidx.annotation)
+    testImplementation(libs.com.google.dagger)
+    testImplementation(libs.com.google.dagger.hilt.core)
+    testImplementation(libs.javax.inject)
+    testFixturesApi(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
 }

@@ -22,4 +22,9 @@ dependencies {
     runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
+    implementation(libs.androidx.compose.foundation.foundation.layout)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.compose.ui.ui.text)
+    implementation(libs.androidx.compose.ui)
 }

@@ -18,4 +18,8 @@ dependencies {
     ksp(libs.com.google.dagger.hilt.compiler)
 
     androidTestImplementation(libs.androidx.test.ext.junit)
+    api(libs.com.google.dagger)
+    implementation(libs.com.google.dagger.hilt.core)
+    api(libs.javax.inject)
+    androidTestImplementation(libs.junit)
 }
