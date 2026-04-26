@@ -23,6 +23,9 @@ dependencies {
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.org.robolectric)
 
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.org.robolectric.annotations)
+    testImplementation(libs.org.robolectric.shadows.framework)
 }
 
 val versionFile = File("versions.properties")

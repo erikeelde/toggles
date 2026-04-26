@@ -10,4 +10,5 @@ android {
 dependencies {
     implementation(libs.org.jetbrains.kotlinx.kotlinx.serialization.json)
     api(libs.androidx.navigation3.runtime)
+    api(libs.kotlinx.serialization.core)
 }

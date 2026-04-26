@@ -27,4 +27,5 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.compose.ui.ui.text)
     implementation(libs.androidx.compose.ui)
+    runtimeOnly(libs.com.google.dagger.dagger.lint.aar)
 }

@@ -46,11 +46,13 @@ org-jetbrains-kotlinx-binary-compatibility-validator = "0.18.1"
 pagingCommon = "3.4.2"
 pagingCompose = "3.4.2"
 pagingTesting = "3.4.2"
+robolectric = "4.16.1"
 se-eelde-toggles = "0.1.2"
 tapmoc = "0.4.1"
 
 [libraries]
 android-tools-common = { module = "com.android.tools:common", version.ref = "androidTools" }
+androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
 androidx-activity-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-annotation = "androidx.annotation:annotation:1.9.1"
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
@@ -63,21 +65,28 @@ androidx-compose-material-icons-core = { module = "androidx.compose.material:mat
 androidx-compose-material-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
+androidx-compose-runtime-runtime-saveable = { module = "androidx.compose.runtime:runtime-saveable" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-ui-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-ui-test = { module = "androidx.compose.ui:ui-test" }
 androidx-compose-ui-ui-text = { module = "androidx.compose.ui:ui-text" }
+androidx-compose-ui-ui-unit = { module = "androidx.compose.ui:ui-unit" }
 androidx-compose-ui-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-core-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 androidx-core-core-splashscreen = "androidx.core:core-splashscreen:1.2.0"
+androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "fragmentKtx" }
 androidx-fragment-compose = { module = "androidx.fragment:fragment-compose", version.ref = "fragmentKtx" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-hilt-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 androidx-hilt-hilt-lifecycle-viewmodel-compose = { module = "androidx.hilt:hilt-lifecycle-viewmodel-compose", version.ref = "androidx-hilt" }
 androidx-hilt-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-hilt" }
+androidx-lifecycle-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
@@ -98,12 +107,15 @@ androidx-paging-compose = { module = "androidx.paging:paging-compose", version.r
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingCompose" }
 androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "pagingTesting" }
 androidx-recyclerview = "androidx.recyclerview:recyclerview:1.4.0"
+androidx-room-room-common = { module = "androidx.room:room-common", version.ref = "androidx-room" }
 androidx-room-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 androidx-room-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-room-room-testing = { module = "androidx.room:room-testing", version.ref = "androidx-room" }
 androidx-startup-startup-runtime = "androidx.startup:startup-runtime:1.2.0"
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
 androidx-test-core-ktx = { module = "androidx.test:core-ktx", version.ref = "androidx-test" }
+androidx-test-monitor = { module = "androidx.test:monitor", version.ref = "androidx-test" }
 androidx-test-espresso-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-test-ext-truth = "androidx.test.ext:truth:1.7.0"
@@ -124,6 +136,7 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose"
 com-android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 com-google-dagger = { module = "com.google.dagger:dagger", version.ref = "com-google-dagger" }
 com-google-dagger-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "com-google-dagger" }
+com-google-dagger-dagger-lint-aar = { module = "com.google.dagger:dagger-lint-aar", version.ref = "com-google-dagger" }
 com-google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "com-google-dagger" }
 com-google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "com-google-dagger" }
 com-google-dagger-hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "com-google-dagger" }
@@ -164,7 +177,9 @@ org-jetbrains-kotlinx-kotlinx-coroutines-core = { module = "org.jetbrains.kotlin
 org-jetbrains-kotlinx-kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "org-jetbrains-kotlinx" }
 org-jetbrains-kotlinx-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 org-jetbrains-kotlinx-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationCore" }
-org-robolectric = "org.robolectric:robolectric:4.16.1"
+org-robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+org-robolectric-annotations = { module = "org.robolectric:annotations", version.ref = "robolectric" }
+org-robolectric-shadows-framework = { module = "org.robolectric:shadows-framework", version.ref = "robolectric" }
 se-eelde-toggles-toggles-core = { module = "se.eelde.toggles:toggles-core", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-flow = { module = "se.eelde.toggles:toggles-flow", version.ref = "se-eelde-toggles" }
 se-eelde-toggles-toggles-prefs = { module = "se.eelde.toggles:toggles-prefs", version.ref = "se-eelde-toggles" }

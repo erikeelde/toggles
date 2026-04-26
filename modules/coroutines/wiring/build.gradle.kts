@@ -15,4 +15,5 @@ dependencies {
     implementation(libs.com.google.dagger.hilt.core)
     runtimeOnly(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
     api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    runtimeOnly(libs.com.google.dagger.dagger.lint.aar)
 }

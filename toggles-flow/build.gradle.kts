@@ -40,6 +40,9 @@ dependencies {
     testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
     api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
     testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.org.robolectric.annotations)
+    testImplementation(libs.org.robolectric.shadows.framework)
 }
 
 val versionFile = File("versions.properties")
