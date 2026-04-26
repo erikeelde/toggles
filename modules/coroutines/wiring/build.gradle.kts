@@ -9,7 +9,6 @@ android {
 
 dependencies {
     implementation(projects.modules.coroutines.api)
-    implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
     api(libs.com.google.dagger)
     implementation(libs.com.google.dagger.hilt.core)

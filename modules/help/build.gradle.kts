@@ -10,8 +10,6 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
-    implementation(projects.modules.composeTheme)
-    implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
@@ -20,7 +18,6 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.core)
     debugImplementation(libs.androidx.compose.ui.ui.tooling)
     runtimeOnly(libs.androidx.startup.startup.runtime)
-    implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
     implementation(libs.androidx.compose.foundation.foundation.layout)
     implementation(libs.androidx.compose.foundation)

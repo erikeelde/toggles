@@ -11,7 +11,6 @@ android {
 dependencies {
     ksp(libs.com.squareup.moshi.moshi.kotlin.codegen)
 
-    implementation(libs.androidx.lifecycle.lifecycle.viewmodel.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui)
@@ -36,7 +35,6 @@ dependencies {
 
     implementation(libs.com.squareup.moshi)
     implementation(libs.com.squareup.okio)
-    implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.ui.graphics)

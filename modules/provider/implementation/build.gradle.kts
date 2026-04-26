@@ -11,14 +11,10 @@ android {
     }
 }
 dependencies {
-    implementation(projects.modules.provider.api)
     implementation(libs.kotlinx.datetime)
     implementation(projects.modules.database.implementation)
-    implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(projects.togglesCore)
-    implementation(projects.togglesFlow)
-    implementation(projects.modules.coroutines.api)
     runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
@@ -36,7 +32,6 @@ dependencies {
     testFixturesImplementation(libs.org.robolectric)
     testFixturesImplementation(libs.androidx.core.core.ktx)
     testFixturesImplementation(projects.modules.database.implementation)
-    testFixturesImplementation(libs.androidx.room.room.ktx)
     testFixturesImplementation(projects.togglesFlow)
     implementation(libs.androidx.annotation)
     testImplementation(libs.com.google.dagger)
@@ -50,4 +45,7 @@ dependencies {
     testImplementation(libs.org.robolectric.annotations)
     testFixturesImplementation(libs.org.robolectric.shadows.framework)
     testImplementation(libs.org.robolectric.shadows.framework)
+}
+dependencies {
+    testFixturesImplementation(libs.androidx.room.room.runtime)
 }

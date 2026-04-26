@@ -10,10 +10,8 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
-    implementation(projects.modules.composeTheme)
     implementation(projects.modules.database.implementation)
     implementation(projects.togglesCore)
-    implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.appcompat)
     implementation(projects.modules.routes.api)
