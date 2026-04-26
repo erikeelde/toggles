@@ -32,9 +32,7 @@ ksp {
 dependencies {
     implementation(libs.androidx.room.room.runtime)
     ksp(libs.androidx.room.room.compiler)
-    implementation(libs.kotlinx.datetime)
     implementation(projects.togglesCore)
-    implementation(libs.androidx.appcompat)
 
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.org.robolectric)

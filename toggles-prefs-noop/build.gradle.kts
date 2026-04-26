@@ -14,7 +14,6 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.annotation)
 }
 
 val versionFile = File("versions.properties")

@@ -95,7 +95,6 @@ android {
 
 dependencies {
     implementation(projects.modules.composeTheme)
-    implementation(libs.kotlinx.datetime)
     implementation(projects.modules.database.implementation)
     implementation(projects.modules.provider.implementation)
     implementation(projects.modules.applications)
