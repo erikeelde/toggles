@@ -15,6 +15,10 @@ public abstract interface class se/eelde/toggles/prefs/TogglesPreferences {
 	public abstract fun hasOverride (Ljava/lang/String;Lse/eelde/toggles/prefs/ScopeComparator;)Z
 }
 
+public final class se/eelde/toggles/prefs/TogglesPreferences$DefaultImpls {
+	public static fun hasOverride$default (Lse/eelde/toggles/prefs/TogglesPreferences;Ljava/lang/String;Lse/eelde/toggles/prefs/ScopeComparator;ILjava/lang/Object;)Z
+}
+
 public final class se/eelde/toggles/prefs/TogglesPreferencesImpl : se/eelde/toggles/prefs/TogglesPreferences {
 	public fun <init> (Landroid/content/Context;)V
 	public fun <init> (Landroid/content/Context;Z)V

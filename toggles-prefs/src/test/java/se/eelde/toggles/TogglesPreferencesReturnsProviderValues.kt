@@ -84,8 +84,7 @@ internal class TogglesPreferencesReturnsProviderValues {
 
     @Test
     fun `hasOverride returns false when no value stored for non-default scope`() {
-        // Mock returns 2 scopes: default (id=1) and "user" (id=2, higher timestamp).
-        // No value is stored for scope 2, so hasOverride must return false.
+        // Unknown key → no configuration registered → configurationValues empty → false
         assertFalse(togglesPreferences.hasOverride("unknown-key"))
     }
 
