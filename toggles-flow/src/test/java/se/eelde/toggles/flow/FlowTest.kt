@@ -4,13 +4,12 @@ import android.app.Application
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,8 +44,6 @@ internal class FlowTest {
     fun test() = runTest {
         val toggles = TogglesImpl(context)
         toggles.toggle("test item", "my value").first().apply {
-            @OptIn(ExperimentalCoroutinesApi::class)
-            advanceUntilIdle()
             assert(this == "my value")
         }
 
@@ -54,8 +51,6 @@ internal class FlowTest {
             .updateConfigurationValue(1, 1, "the test configuration value")
 
         toggles.toggle("test item", "my value").first().apply {
-            @OptIn(ExperimentalCoroutinesApi::class)
-            advanceUntilIdle()
             assert(this == "the test configuration value")
         }
     }
@@ -64,8 +59,6 @@ internal class FlowTest {
     fun `hasOverride returns false for key with no overriding scope value`() = runTest {
         val toggles = TogglesImpl(context)
         val result = toggles.hasOverride("no-override-key").first()
-        @OptIn(ExperimentalCoroutinesApi::class)
-        advanceUntilIdle()
         assertFalse(result)
     }
 
@@ -78,8 +71,7 @@ internal class FlowTest {
         }
         val toggles = TogglesImpl(context)
         toggles.hasOverride("some-key", capturingComparator).first()
-        @OptIn(ExperimentalCoroutinesApi::class)
-        advanceUntilIdle()
         assertNotNull(capturedState)
+        assertNull(capturedState!!.configuration) // unknown key → no configuration
     }
 }
