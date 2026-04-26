@@ -36,4 +36,5 @@ dependencies {
     implementation(libs.com.google.dagger.hilt.core)
     implementation(libs.javax.inject)
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    implementation(libs.androidx.compose.ui.ui.unit)
 }

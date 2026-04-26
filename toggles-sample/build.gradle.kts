@@ -91,4 +91,13 @@ dependencies {
     implementation(libs.javax.inject)
     androidTestImplementation(libs.junit)
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.compose.runtime.runtime.saveable)
+    implementation(libs.androidx.compose.ui.ui.unit)
+    implementation(libs.androidx.fragment)
+    implementation(libs.androidx.lifecycle.lifecycle.common)
+    implementation(libs.androidx.lifecycle.lifecycle.viewmodel.savedstate)
+    implementation(libs.androidx.lifecycle.lifecycle.viewmodel)
+    androidTestImplementation(libs.androidx.test.core)
+    implementation(libs.kotlinx.serialization.core)
 }

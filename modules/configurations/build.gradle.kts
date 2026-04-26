@@ -39,4 +39,9 @@ dependencies {
     implementation(libs.com.google.dagger.hilt.core)
     api(libs.javax.inject)
     api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.compose.runtime.runtime.saveable)
+    implementation(libs.androidx.compose.ui.ui.unit)
+    implementation(libs.androidx.lifecycle.lifecycle.common)
+    api(libs.androidx.lifecycle.lifecycle.viewmodel.savedstate)
 }

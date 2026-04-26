@@ -17,4 +17,5 @@ dependencies {
     api(libs.com.google.dagger)
     implementation(libs.com.google.dagger.hilt.core)
     androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.core)
 }
