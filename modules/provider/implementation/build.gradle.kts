@@ -24,13 +24,8 @@ dependencies {
     ksp(libs.com.google.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
-    testImplementation(libs.androidx.test.core.ktx)
-    testImplementation(libs.androidx.test.ext.truth)
-    testImplementation(libs.androidx.test.rules)
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.org.robolectric)
-    testImplementation(libs.androidx.test.espresso.espresso.core)
-    testImplementation(libs.androidx.arch.core.core.testing)
     testImplementation(libs.com.google.dagger.hilt.android.testing)
     testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
     testImplementation(libs.app.cash.turbine)
@@ -41,7 +36,6 @@ dependencies {
     testFixturesImplementation(libs.org.robolectric)
     testFixturesImplementation(libs.androidx.core.core.ktx)
     testFixturesImplementation(projects.modules.database.implementation)
-    testFixturesImplementation(libs.androidx.room.room.runtime)
     testFixturesImplementation(libs.androidx.room.room.ktx)
     testFixturesImplementation(projects.togglesFlow)
 }

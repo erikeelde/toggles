@@ -43,7 +43,6 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.androidx.room.room.testing)
-    testImplementation(libs.androidx.test.espresso.espresso.core)
 
     testFixturesImplementation(libs.androidx.room.room.runtime)
 }

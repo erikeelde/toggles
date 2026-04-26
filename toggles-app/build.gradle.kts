@@ -147,7 +147,7 @@ dependencies {
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 
-    debugImplementation(libs.com.squareup.leakcanary.leakcanary.android)
+    debugRuntimeOnly(libs.com.squareup.leakcanary.leakcanary.android)
 
     androidTestImplementation(libs.androidx.test.core.ktx)
     androidTestImplementation(libs.androidx.test.ext.junit)
@@ -156,7 +156,6 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
     androidTestImplementation(libs.androidx.arch.core.core.testing)
     androidTestImplementation(libs.com.google.dagger.hilt.android.testing)
-    androidTestImplementation(libs.app.cash.turbine)
     kspAndroidTest(libs.com.google.dagger.hilt.android.compiler)
 
     testFixturesImplementation(libs.org.jetbrains.kotlin.kotlin.stdlib)
