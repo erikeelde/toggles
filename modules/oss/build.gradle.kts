@@ -38,4 +38,11 @@ dependencies {
     implementation(libs.com.squareup.okio)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
+    api(libs.com.google.dagger)
+    implementation(libs.com.google.dagger.hilt.core)
+    api(libs.javax.inject)
+    api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
 }
