@@ -71,6 +71,12 @@ Version catalog: `gradle/libs.versions.toml`. Properties: `gradle.properties` (1
 - **Serialization**: Moshi (JSON), kotlinx-serialization
 - **Static analysis**: Detekt (config: `config/detekt/detekt.yml`), slack-lint (custom lint checks — denies `java.util.Date` via `DenyListedApi`, denies unconditional `Log` calls in libraries via `LogConditional`)
 
+### Module Responsibilities
+
+**`toggles-core`** is strictly the ContentProvider contract module — it defines URI construction, column name constants, and the data types used to communicate with the ContentProvider (`Toggle`, `ToggleValue`, `TogglesConfiguration`, `TogglesConfigurationValue`, `ToggleScope`, `ToggleState`). It is not a shared-utilities module. Do not add business logic, API abstractions, or helper types here unless they are directly required for ContentProvider communication.
+
+Shared logic that does not belong in `toggles-core` goes in the library module that needs it (`toggles-flow`, `toggles-prefs`). Duplication between those two modules is preferable to polluting `toggles-core`.
+
 ### ContentProvider Architecture
 
 The core mechanism uses Android ContentProvider for inter-process communication between the Toggles app (provider) and consuming apps (clients). The `modules/provider/` module implements the provider side; `toggles-core/` implements the client side.

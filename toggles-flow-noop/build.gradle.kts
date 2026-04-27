@@ -13,10 +13,19 @@ android {
 }
 
 dependencies {
+    implementation(projects.togglesCore)
 
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     runtimeOnly(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
     api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
+
+    testImplementation(libs.junit)
+    testRuntimeOnly(libs.androidx.test.runner)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.org.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
+    testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
 }
 
 val versionFile = File("versions.properties")
