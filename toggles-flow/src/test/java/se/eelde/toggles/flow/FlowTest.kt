@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
@@ -71,7 +70,7 @@ internal class FlowTest {
         }
         val toggles = TogglesImpl(context)
         toggles.hasOverride("some-key", capturingComparator).first()
-        assertNotNull(capturedState)
-        assertNull(capturedState!!.configuration) // unknown key → no configuration
+        val state = requireNotNull(capturedState)
+        assertNull(state.configuration) // unknown key → no configuration
     }
 }

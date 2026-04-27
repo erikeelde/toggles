@@ -13,7 +13,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
@@ -96,8 +95,8 @@ internal class TogglesPreferencesReturnsProviderValues {
             false
         }
         togglesPreferences.hasOverride("myKey", capturingComparator)
-        assertNotNull(capturedState)
-        assertNull(capturedState!!.configuration) // unknown key → no configuration registered
+        val state = requireNotNull(capturedState)
+        assertNull(state.configuration) // unknown key → no configuration registered
     }
 }
 
