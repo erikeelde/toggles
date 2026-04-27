@@ -13,6 +13,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.togglesCore)
 
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
     runtimeOnly(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)

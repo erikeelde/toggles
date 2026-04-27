@@ -13,7 +13,7 @@ android {
 }
 
 dependencies {
-
+    implementation(projects.togglesCore)
 }
 
 val versionFile = File("versions.properties")
