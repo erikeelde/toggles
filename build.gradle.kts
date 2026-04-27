@@ -37,6 +37,53 @@ develocity {
     }
 }
 
+dependencyAnalysis {
+    issues {
+        // Robolectric is referenced from test source via @Config and Shadows.shadowOf
+        // (compile-time use), so DAGP's testImplementation -> testRuntimeOnly
+        // demotion would break compilation.
+        project(":modules:database:implementation") {
+            onIncorrectConfiguration {
+                exclude("org.robolectric:robolectric")
+            }
+            onRuntimeOnly {
+                exclude("org.robolectric:robolectric")
+            }
+        }
+        project(":toggles-flow") {
+            onIncorrectConfiguration {
+                exclude("org.robolectric:robolectric")
+            }
+            onRuntimeOnly {
+                exclude("org.robolectric:robolectric")
+            }
+        }
+
+        // hilt-android is applied by the toggles.hilt convention plugin and is
+        // required by the dagger.hilt.android Gradle plugin even when DAGP can't
+        // see direct usage in the wiring modules (they only use @Module / @InstallIn
+        // from hilt-core but the Hilt Android plugin still needs hilt-android present).
+        project(":modules:coroutines:wiring") {
+            onUnusedDependencies {
+                exclude("com.google.dagger:hilt-android")
+            }
+        }
+        // The wiring modules expose Hilt @Provides on their public API surface, so
+        // DAGP suggests api. The convention plugin uses implementation since most
+        // consumers (including the apps) only need it for runtime DI wiring.
+        project(":modules:database:wiring") {
+            onIncorrectConfiguration {
+                exclude("com.google.dagger:hilt-android")
+            }
+        }
+        project(":modules:provider:wiring") {
+            onIncorrectConfiguration {
+                exclude("com.google.dagger:hilt-android")
+            }
+        }
+    }
+}
+
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
