@@ -10,9 +10,9 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
-    implementation(projects.modules.database.implementation)
+    api(projects.modules.database.implementation)
     implementation(projects.modules.provider.implementation)
-    implementation(projects.modules.routes.api)
+    api(projects.modules.routes.api)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(projects.modules.coroutines.api)
     implementation(libs.androidx.appcompat)

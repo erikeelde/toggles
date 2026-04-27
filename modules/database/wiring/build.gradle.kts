@@ -8,11 +8,11 @@ android {
 }
 
 dependencies {
-    implementation(projects.modules.database.implementation)
+    api(projects.modules.database.implementation)
 
     implementation(libs.androidx.room.room.runtime)
 
-    implementation(libs.com.google.dagger.hilt.android)
+    api(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
 
     androidTestImplementation(libs.androidx.test.ext.junit)

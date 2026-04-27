@@ -7,9 +7,9 @@ android {
     namespace = "se.eelde.toggles.provider.wiring"
 }
 dependencies {
-    implementation(projects.modules.provider.implementation)
+    api(projects.modules.provider.implementation)
 
-    implementation(libs.com.google.dagger.hilt.android)
+    api(libs.com.google.dagger.hilt.android)
     ksp(libs.com.google.dagger.hilt.compiler)
 
     androidTestImplementation(libs.androidx.test.ext.junit)
