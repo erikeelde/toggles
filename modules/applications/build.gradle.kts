@@ -11,7 +11,7 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(projects.modules.composeTheme)
-    implementation(projects.modules.database.implementation)
+    api(projects.modules.database.implementation)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(projects.modules.routes.api)

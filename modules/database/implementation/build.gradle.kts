@@ -44,4 +44,8 @@ dependencies {
     api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
     implementation(libs.androidx.room.room.common)
     testImplementation(libs.androidx.test.monitor)
+    implementation(libs.androidx.collection)
+    testImplementation(libs.androidx.sqlite.sqlite.framework)
+    implementation(libs.androidx.sqlite)
+    testImplementation(libs.androidx.sqlite)
 }

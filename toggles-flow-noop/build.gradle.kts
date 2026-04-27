@@ -15,7 +15,7 @@ android {
 dependencies {
 
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
-    implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
+    runtimeOnly(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
     api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
 }
 

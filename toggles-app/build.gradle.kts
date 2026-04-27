@@ -136,11 +136,11 @@ dependencies {
     implementation(libs.com.google.dagger)
 
 
-    implementation(projects.togglesCore)
+    androidTestImplementation(projects.togglesCore)
     implementation(projects.togglesFlow)
 
     implementation(platform(libs.org.jetbrains.kotlinx.kotlinx.coroutines.bom))
-    implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
+    runtimeOnly(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
 
     debugRuntimeOnly(libs.com.squareup.leakcanary.leakcanary.android)
 

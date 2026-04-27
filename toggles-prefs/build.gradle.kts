@@ -13,7 +13,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.togglesCore)
+    api(projects.togglesCore)
 
 
     testImplementation(libs.junit)
