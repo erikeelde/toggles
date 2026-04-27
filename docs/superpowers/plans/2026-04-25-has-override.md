@@ -220,8 +220,6 @@ Add these two test methods to the existing `FlowTest` class in `toggles-flow/src
 fun `hasOverride returns false for key with no overriding scope value`() = runTest {
     val toggles = TogglesImpl(context)
     val result = toggles.hasOverride("no-override-key").first()
-    @OptIn(ExperimentalCoroutinesApi::class)
-    advanceUntilIdle()
     assertFalse(result)
 }
 
@@ -234,8 +232,6 @@ fun `hasOverride passes ToggleState to custom comparator`() = runTest {
     }
     val toggles = TogglesImpl(context)
     toggles.hasOverride("some-key", capturingComparator).first()
-    @OptIn(ExperimentalCoroutinesApi::class)
-    advanceUntilIdle()
     assertNotNull(capturedState)
 }
 ```

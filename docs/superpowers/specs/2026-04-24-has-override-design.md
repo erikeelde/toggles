@@ -27,7 +27,7 @@ A `fun interface` so callers can pass a lambda for custom behavior. Takes a `Tog
 ```kotlin
 object DefaultScopeComparator : ScopeComparator {
     override fun hasOverride(state: ToggleState): Boolean {
-        val defaultScope = state.scopes.firstOrNull { it.name == ToggleScope.DEFAULT_SCOPE }
+        val defaultScope = state.scopes.firstOrNull { it.name == ColumnNames.ToggleScope.DEFAULT_SCOPE }
         val selectedScope = state.scopes.maxByOrNull { it.timeStamp }
         if (defaultScope == null || selectedScope == null) return false
         if (defaultScope.id == selectedScope.id) return false
@@ -56,7 +56,7 @@ fun hasOverride(key: String, comparator: ScopeComparator = DefaultScopeComparato
 
 ```kotlin
 override fun hasOverride(key: String, comparator: ScopeComparator): Flow<Boolean> =
-    provider.getToggleState(key).map { comparator.hasOverride(it) }
+    provider.observeToggleState(key).map { comparator.hasOverride(it) }
 ```
 
 Reactive — emits whenever the underlying `ToggleState` changes (scope switches, value edits).
