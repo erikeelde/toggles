@@ -9,6 +9,8 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import se.eelde.toggles.database.TogglesConfigurationValue as DbConfigurationValue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -59,6 +61,20 @@ internal class FlowTest {
         val toggles = TogglesImpl(context)
         val result = toggles.hasOverride("no-override-key").first()
         assertFalse(result)
+    }
+
+    @Test
+    fun `hasOverride returns true when non-default scope has a value`() = runTest {
+        val toggles = TogglesImpl(context)
+        // Creates config (id=1), default scope (id=1), development scope (id=2, higher
+        // timestamp = selected), and a value for the default scope only.
+        toggles.toggle("override-key", "false").first()
+
+        // Insert a value for the non-default (development) scope — now an override exists.
+        database.togglesConfigurationValueDao()
+            .insertSync(DbConfigurationValue(id = 0L, configurationId = 1L, value = "true", scope = 2L))
+
+        assertTrue(toggles.hasOverride("override-key").first())
     }
 
     @Test

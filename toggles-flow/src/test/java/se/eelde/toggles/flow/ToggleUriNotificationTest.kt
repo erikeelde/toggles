@@ -12,7 +12,9 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import se.eelde.toggles.database.TogglesConfigurationValue as DbConfigurationValue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -123,6 +125,35 @@ internal class ToggleUriNotificationTest {
                 scopeUriObservers.isNotEmpty()
             )
 
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `hasOverride emits true after non-default scope value is inserted`() = runTest(testDispatcher) {
+        val toggles = TogglesImpl(context, ioDispatcher = testDispatcher)
+
+        // Bootstrap: create config (id=1), default scope (id=1), development scope (id=2,
+        // higher timestamp = selected), and a value for the default scope only.
+        toggles.toggle("reactive-key", "false").test {
+            advanceUntilIdle()
+            awaitItem()
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        toggles.hasOverride("reactive-key").test {
+            advanceUntilIdle()
+            assertFalse(awaitItem()) // initial: false — no value for the selected (non-default) scope
+
+            // Insert a value for the non-default (development) scope, then notify observers.
+            database.togglesConfigurationValueDao()
+                .insertSync(DbConfigurationValue(id = 0L, configurationId = 1L, value = "true", scope = 2L))
+            context.contentResolver.notifyChange(TogglesProviderContract.configurationUri(), null)
+            shadowOf(Looper.getMainLooper()).idle()
+            advanceUntilIdle()
+
+            assertTrue(awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }

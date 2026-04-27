@@ -14,6 +14,12 @@ android {
 
 dependencies {
     implementation(projects.togglesCore)
+
+    testImplementation(libs.junit)
+    testRuntimeOnly(libs.androidx.test.runner)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.org.robolectric)
+    testImplementation(libs.androidx.test.core)
 }
 
 val versionFile = File("versions.properties")

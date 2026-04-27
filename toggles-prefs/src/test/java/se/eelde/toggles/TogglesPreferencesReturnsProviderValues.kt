@@ -14,6 +14,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -79,6 +80,30 @@ internal class TogglesPreferencesReturnsProviderValues {
     fun `return provider int when available`() {
         assertEquals(1, togglesPreferences.getInt(key, 1))
         assertEquals(1, togglesPreferences.getInt(key, 2))
+    }
+
+    @Test
+    fun `hasOverride returns true when non-default scope has a value`() {
+        // The mock provider returns two scopes: DEFAULT_SCOPE (id=1, older) and "user" (id=2, newer).
+        // Pre-insert a configuration and a value for scope 2 (user = selected scope).
+        val context = ApplicationProvider.getApplicationContext<Application>()
+        val configValues = ContentValues().apply {
+            put(ColumnNames.Configuration.COL_KEY, "override-key")
+            put(ColumnNames.Configuration.COL_TYPE, "BOOLEAN")
+        }
+        val configUri = requireNotNull(
+            context.contentResolver.insert(TogglesProviderContract.configurationUri(), configValues)
+        )
+        val configId = requireNotNull(configUri.lastPathSegment?.toLong())
+
+        val valueValues = ContentValues().apply {
+            put(ColumnNames.ConfigurationValue.COL_CONFIG_ID, configId)
+            put(ColumnNames.ConfigurationValue.COL_VALUE, "true")
+            put(ColumnNames.ConfigurationValue.COL_SCOPE, 2L)
+        }
+        context.contentResolver.insert(TogglesProviderContract.configurationValueUri(configId), valueValues)
+
+        assertTrue(togglesPreferences.hasOverride("override-key"))
     }
 
     @Test
