@@ -114,6 +114,25 @@ class TogglesProviderMatcherConfigurationTest {
         }
     }
 
+    @Test
+    fun testInsertDuplicateKeyReturnsSameId() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "duplicateKey"
+        }
+
+        val uri1 = togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            togglesConfiguration.toContentValues(),
+        )
+        val uri2 = togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            togglesConfiguration.toContentValues(),
+        )
+
+        assertEquals(uri1.toString(), uri2.toString())
+    }
+
     @Test(expected = UnsupportedOperationException::class)
     fun testDelete() {
         togglesProvider.delete(

@@ -293,7 +293,15 @@ class TogglesProvider : ContentProvider() {
                     type = togglesConfiguration.type,
                     lastUse = clock.now(),
                 )
-                insertId = configurationDao.insert(databaseConfiguration)
+                @Suppress("SwallowedException")
+                insertId = try {
+                    configurationDao.insert(databaseConfiguration)
+                } catch (e: SQLiteConstraintException) {
+                    configurationDao.getTogglesConfiguration(
+                        callingApplication.id,
+                        togglesConfiguration.key
+                    )?.id ?: -1L
+                }
                 crossNotifyUri = TogglesProviderContract.toggleUri(insertId)
             }
 
