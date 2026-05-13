@@ -6,4 +6,8 @@ public interface TogglesPreferences {
     public fun getInt(key: String, defaultValue: Int): Int
     public fun getString(key: String, defaultValue: String): String
     public fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defaultValue: T): T
+    public fun hasOverride(
+        key: String,
+        comparator: ScopeComparator = DefaultScopeComparator
+    ): Boolean
 }

@@ -12,4 +12,6 @@ public class TogglesPreferencesImpl(@Suppress("UNUSED_PARAMETER") context: Conte
     override fun getString(key: String, defValue: String): String = defValue
 
     override fun <T : Enum<T>> getEnum(key: String, type: Class<T>, defValue: T): T = defValue
+
+    override fun hasOverride(key: String, comparator: ScopeComparator): Boolean = false
 }
