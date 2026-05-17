@@ -3,6 +3,12 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 pluginManagement {
     repositories {
+        maven {
+            url = uri("https://artifacts.premex.se/api/maven/premex/pulse/")
+            content {
+                includeGroupByRegex("dev\\.premex\\.pulse.*")
+            }
+        }
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -16,15 +22,7 @@ pluginManagement {
 }
 
 plugins {
-    id("com.gradle.develocity") version "4.4.0"
     id("org.gradle.toolchains.foojay-resolver-convention") version ("1.0.0")
-}
-
-develocity {
-    buildScan {
-        termsOfUseUrl.set("https://gradle.com/help/legal-terms-of-use")
-        termsOfUseAgree.set("yes")
-    }
 }
 
 buildCache {
