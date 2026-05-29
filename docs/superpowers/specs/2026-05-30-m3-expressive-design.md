@@ -86,10 +86,34 @@ Current state (user already bumped): Compose BOM `2026.05.01`, `material3Adaptiv
 - `BooleanValueView`: replace the `Switch` + Revert/Save `Row` with a `ToggleButtonGroup`
   for the on/off choice and a `ButtonGroup` for the Revert/Save actions.
 - Integer / String / Enum value editors: wrap their Revert/Save actions in `ButtonGroup`
-  for consistency. Use `ToggleButtonGroup` for the Enum option list only if the option
-  count is small; otherwise leave the existing presentation (YAGNI).
+  for consistency.
 - Leave `SearchBar`, `TopAppBar`, and `DropdownMenu` as-is unless the pane refactor forces
   changes.
+
+#### Enum editor — toggle-gated proper list (dogfooding)
+
+Enum option lists can be long with long labels, so `ToggleButtonGroup` is not appropriate.
+The Enum editor gets a proper scrollable selectable list (e.g. `LazyColumn` of selectable
+list items / radio-style rows), suited to arbitrary option counts and label lengths.
+
+The new list presentation is gated behind a boolean feature toggle so the behavior can be
+flipped at runtime to compare against the existing presentation:
+
+- Toggle key: a boolean flag (e.g. `expressive_enum_list`), default `false`.
+- When `false` (default): the existing Enum editor presentation.
+- When `true`: the new scrollable selectable list.
+- The toggle gates **only** the Enum editor — not the other value editors.
+
+Dogfooding wiring (infrastructure already exists, this is its first consumer):
+- `Toggles` (from `toggles-flow`) is already provided via Hilt in
+  `toggles-app/.../di/ApplicationModule.kt` (`TogglesImpl`). Inject it into
+  `EnumValueViewModel` and read `toggle("expressive_enum_list", false): Flow<Boolean>`,
+  exposing the result in the view state.
+- `toggles-flow` auto-creates the configuration on first read, so the flag auto-registers
+  under the `se.eelde.toggles` application. To flip it: open Toggles → `se.eelde.toggles`
+  application → toggle `expressive_enum_list` → reopen an enum config to see the change.
+- The flag is read reactively (it is a `Flow`), so the editor responds without an app
+  restart once the flow re-emits.
 
 ### 6. Testing & verification
 
