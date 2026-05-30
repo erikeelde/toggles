@@ -1,15 +1,15 @@
 package se.eelde.toggles.integerconfiguration
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -110,7 +110,8 @@ internal fun IntegerValueView(
                     } catch (_: NumberFormatException) { }
                 },
             )
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+            ButtonGroup(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
                 Button(modifier = Modifier.padding(8.dp), onClick = {
                     scope.launch {
                         revert()
@@ -119,7 +120,6 @@ internal fun IntegerValueView(
                 }) {
                     Text("Revert")
                 }
-
                 Button(modifier = Modifier.padding(8.dp), onClick = {
                     scope.launch {
                         save()
