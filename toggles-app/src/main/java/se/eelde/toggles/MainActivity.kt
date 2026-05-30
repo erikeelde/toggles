@@ -16,6 +16,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
 import androidx.compose.material3.adaptive.navigationsuite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
@@ -93,30 +96,34 @@ private fun TogglesApp() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Suppress("LongMethod")
 @Composable
 fun Navigation(
     backStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
 ) {
+    val listDetailStrategy = rememberListDetailSceneStrategy<NavKey>()
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
+        sceneStrategies = listOf(listDetailStrategy),
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
         entryProvider = entryProvider {
-            entry<BooleanConfiguration> { booleanConfiguration ->
+            entry<BooleanConfiguration>(
+                metadata = ListDetailSceneStrategy.detailPane()
+            ) { booleanConfiguration ->
                 BooleanValueView(
                     booleanConfiguration = booleanConfiguration,
                     back = { backStack.removeLastOrNull() }
                 )
             }
 
-            entry<Scope> { scope ->
+            entry<Scope>(metadata = ListDetailSceneStrategy.detailPane()) { scope ->
                 ScopeValueView(
                     viewModel = hiltViewModel<ScopeViewModel, ScopeViewModel.Factory>(
                         creationCallback = { factory ->
@@ -125,7 +132,9 @@ fun Navigation(
                     )
                 ) { backStack.removeLastOrNull() }
             }
-            entry<IntegerConfiguration> { integerConfiguration ->
+            entry<IntegerConfiguration>(
+                metadata = ListDetailSceneStrategy.detailPane()
+            ) { integerConfiguration ->
                 IntegerValueView(
                     viewModel = hiltViewModel<IntegerValueViewModel, IntegerValueViewModel.Factory>(
                         creationCallback = { factory ->
@@ -134,10 +143,14 @@ fun Navigation(
                     ),
                 ) { backStack.removeLastOrNull() }
             }
-            entry<StringConfiguration> { stringConfiguration ->
+            entry<StringConfiguration>(
+                metadata = ListDetailSceneStrategy.detailPane()
+            ) { stringConfiguration ->
                 StringValueView(stringConfiguration) { backStack.removeLastOrNull() }
             }
-            entry<EnumConfiguration> { enumConfiguration ->
+            entry<EnumConfiguration>(
+                metadata = ListDetailSceneStrategy.detailPane()
+            ) { enumConfiguration ->
                 EnumValueView(
                     viewModel = hiltViewModel<EnumValueViewModel, EnumValueViewModel.Factory>(
                         creationCallback = { factory ->

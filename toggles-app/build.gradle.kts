@@ -128,6 +128,8 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.material3.adaptive.navigation3)
+    implementation(libs.androidx.material3.adaptive)
     implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel.compose)
     runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(projects.modules.routes.api)

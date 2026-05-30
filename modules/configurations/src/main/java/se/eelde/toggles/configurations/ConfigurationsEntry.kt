@@ -24,6 +24,8 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +39,7 @@ import androidx.navigation3.runtime.NavKey
 import se.eelde.toggles.routes.Configurations
 
 @Suppress("LongMethod", "LongParameterList")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 fun EntryProviderScope<NavKey>.configurationsNavigations(
     navigateToBooleanConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
     navigateToIntegerConfiguration: (scopeId: Long, configurationId: Long) -> Unit,
@@ -46,7 +48,9 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
     navigateToScopeView: (Long) -> Unit,
     back: () -> Unit,
 ) {
-    entry<Configurations> { configurations ->
+    entry<Configurations>(
+        metadata = ListDetailSceneStrategy.listPane()
+    ) { configurations ->
         val viewModel: ConfigurationViewModel =
             hiltViewModel<ConfigurationViewModel, ConfigurationViewModel.Factory>(
                 creationCallback = { factory -> factory.create(applicationId = configurations.applicationId) }
