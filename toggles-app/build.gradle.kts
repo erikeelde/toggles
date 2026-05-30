@@ -94,6 +94,15 @@ android {
 }
 
 dependencies {
+    constraints {
+        // profileinstaller:1.4.0 depends on concurrent-futures:1.1.0 but androidx.test:core:1.7.0
+        // requires 1.2.0; force the minimum up so consistent-resolution doesn't block the test
+        // configuration.
+        implementation("androidx.concurrent:concurrent-futures") {
+            version { require("1.2.0") }
+        }
+    }
+
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.database.implementation)
     implementation(projects.modules.provider.implementation)
