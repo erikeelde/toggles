@@ -1,26 +1,25 @@
 package se.eelde.toggles.booleanconfiguration
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -92,33 +91,32 @@ fun BooleanValueView(
                     text = viewState.title.orEmpty()
                 )
 
-                Switch(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(End),
-                    checked = viewState.checked ?: false,
-                    onCheckedChange = {
-                        checkedChanged(it)
-                    }
-                )
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    Button(modifier = Modifier.padding(8.dp), onClick = {
+                @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+                ButtonGroup(modifier = Modifier.padding(8.dp)) {
+                    ToggleButton(
+                        checked = viewState.checked == false,
+                        onCheckedChange = { checkedChanged(false) },
+                    ) { Text("Off") }
+                    ToggleButton(
+                        checked = viewState.checked == true,
+                        onCheckedChange = { checkedChanged(true) },
+                    ) { Text("On") }
+                }
+
+                @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+                ButtonGroup(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                    Button(onClick = {
                         scope.launch {
                             revert()
                             popBackStack()
                         }
-                    }) {
-                        Text("Revert")
-                    }
-
-                    Button(modifier = Modifier.padding(8.dp), onClick = {
+                    }) { Text("Revert") }
+                    Button(onClick = {
                         scope.launch {
                             save()
                             popBackStack()
                         }
-                    }) {
-                        Text("Save")
-                    }
+                    }) { Text("Save") }
                 }
             }
         }
