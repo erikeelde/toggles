@@ -118,6 +118,7 @@ dependencies {
     implementation(libs.androidx.core.core.splashscreen)
     implementation(libs.androidx.compose.foundation.foundation.layout)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.compose.material.material.icons.extended)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.animation)
