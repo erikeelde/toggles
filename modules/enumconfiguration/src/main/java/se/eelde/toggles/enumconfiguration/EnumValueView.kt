@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -95,7 +96,9 @@ internal fun EnumValueView(
                             },
                             headlineContent = { Text(text = togglesPredefinedConfigurationValue.value.toString()) },
                             leadingContent = {
-                                if (selected) {
+                                if (state.expressiveList) {
+                                    RadioButton(selected = selected, onClick = null)
+                                } else if (selected) {
                                     Icon(
                                         imageVector = Icons.Filled.Link,
                                         contentDescription = null

@@ -24,6 +24,7 @@ dependencies {
     runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     implementation(projects.togglesCore)
+    implementation(projects.togglesFlow)
     ksp(libs.com.google.dagger.hilt.compiler)
     implementation(libs.androidx.compose.foundation.foundation.layout)
     implementation(libs.androidx.compose.foundation)
@@ -38,4 +39,6 @@ dependencies {
     api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
     implementation(libs.androidx.compose.ui.ui.unit)
     implementation(libs.androidx.lifecycle.lifecycle.common)
+    testImplementation(libs.junit)
+    testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
 }
