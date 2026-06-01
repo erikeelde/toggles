@@ -187,4 +187,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     implementation(libs.com.google.dagger.hilt.core)
     implementation(libs.javax.inject)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
 }
