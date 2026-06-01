@@ -23,9 +23,7 @@ import androidx.compose.material3.adaptive.navigationsuite.ExperimentalMaterial3
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -77,18 +75,31 @@ private enum class TopLevelDestination(
 @Composable
 private fun TogglesApp() {
     val backStack = rememberNavBackStack(Applications)
-    var selected by remember { mutableStateOf(TopLevelDestination.APPLICATIONS) }
+
+    // Derive the highlighted destination from the back stack so it stays correct after Back
+    // navigation, rather than tracking selection as separate state.
+    val selectedDestination = backStack
+        .lastOrNull { key -> TopLevelDestination.entries.any { it.route == key } }
+        ?.let { key -> TopLevelDestination.entries.first { it.route == key } }
+        ?: TopLevelDestination.APPLICATIONS
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
             TopLevelDestination.entries.forEach { destination ->
                 item(
-                    selected = selected == destination,
+                    selected = selectedDestination == destination,
                     onClick = {
-                        selected = destination
-                        backStack.add(destination.route)
+                        val existingIndex = backStack.indexOfLast { it == destination.route }
+                        if (existingIndex >= 0) {
+                            // Already present: pop back to it instead of appending a duplicate.
+                            while (backStack.size > existingIndex + 1) {
+                                backStack.removeAt(backStack.lastIndex)
+                            }
+                        } else {
+                            backStack.add(destination.route)
+                        }
                     },
-                    icon = { Icon(destination.icon, contentDescription = destination.label) },
+                    icon = { Icon(destination.icon, contentDescription = null) },
                     label = { Text(destination.label) },
                 )
             }
