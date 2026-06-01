@@ -86,7 +86,7 @@ fun EnumValueView(
 }
 
 @Composable
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "DEPRECATION")
 internal fun EnumValueView(
     state: ViewState,
     setEnumValue: suspend (String) -> Unit,

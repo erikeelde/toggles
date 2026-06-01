@@ -76,7 +76,7 @@ fun StringValueView(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-@Suppress("LongParameterList", "LongMethod")
+@Suppress("LongParameterList", "LongMethod", "DEPRECATION")
 internal fun StringValueView(
     viewState: ViewState,
     setStringValue: (String) -> Unit,

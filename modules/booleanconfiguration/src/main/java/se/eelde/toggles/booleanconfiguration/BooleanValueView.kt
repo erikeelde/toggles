@@ -31,13 +31,13 @@ import se.eelde.toggles.routes.BooleanConfiguration
 @Composable
 fun BooleanValueView(
     booleanConfiguration: BooleanConfiguration,
+    asDialog: Boolean,
     viewModel: BooleanValueViewModel =
         hiltViewModel<BooleanValueViewModel, BooleanValueViewModel.Factory>(
             creationCallback = { factory ->
                 factory.create(booleanConfiguration)
             }
         ),
-    asDialog: Boolean,
     back: () -> Unit,
 ) {
     val viewState by viewModel.state.collectAsStateWithLifecycle()
@@ -56,7 +56,7 @@ fun BooleanValueView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Suppress("LongParameterList", "LongMethod")
+@Suppress("LongParameterList", "LongMethod", "DEPRECATION")
 fun BooleanValueView(
     viewState: ViewState,
     save: () -> Unit,

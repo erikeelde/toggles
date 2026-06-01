@@ -105,7 +105,7 @@ fun IntegerValueView(
 }
 
 @Composable
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "DEPRECATION")
 internal fun IntegerValueView(
     uiState: ViewState,
     popBackStack: () -> Unit,

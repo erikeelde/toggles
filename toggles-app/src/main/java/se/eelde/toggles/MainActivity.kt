@@ -104,8 +104,8 @@ private fun TogglesApp() {
 fun Navigation(
     backStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
+    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
-    val mainViewModel: MainViewModel = hiltViewModel()
     val editorAsDialog by mainViewModel.editorAsDialog.collectAsStateWithLifecycle(initialValue = true)
     val leafMetadata: Map<String, Any> =
         if (editorAsDialog) DialogSceneStrategy.dialog() else ListDetailSceneStrategy.extraPane()
