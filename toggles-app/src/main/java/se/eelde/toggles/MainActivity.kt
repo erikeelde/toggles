@@ -22,7 +22,6 @@ import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneSt
 import androidx.compose.material3.adaptive.navigationsuite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -106,7 +106,7 @@ fun Navigation(
     modifier: Modifier = Modifier,
 ) {
     val mainViewModel: MainViewModel = hiltViewModel()
-    val editorAsDialog by mainViewModel.editorAsDialog.collectAsState(initial = true)
+    val editorAsDialog by mainViewModel.editorAsDialog.collectAsStateWithLifecycle(initialValue = true)
     val leafMetadata: Map<String, Any> =
         if (editorAsDialog) DialogSceneStrategy.dialog() else ListDetailSceneStrategy.extraPane()
 
