@@ -13,6 +13,7 @@ import org.junit.runner.RunWith
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
+@Suppress("DEPRECATION")
 class ExampleInstrumentationTest2 {
 
     @get:Rule
