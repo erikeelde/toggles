@@ -1,4 +1,4 @@
-package se.eelde.toggles.dialogs.scope
+package se.eelde.toggles.scopeconfiguration
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,61 +30,82 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import se.eelde.toggles.R
+import se.eelde.toggles.composetheme.ToggleEditorDialog
 import se.eelde.toggles.database.TogglesScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScopeValueView(
     viewModel: ScopeViewModel,
+    asDialog: Boolean,
     modifier: Modifier = Modifier,
     back: () -> Unit
 ) {
     val uiState = viewModel.state.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Scopes") },
-                navigationIcon =
-                {
-                    IconButton(onClick = { back() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
+    val navigationIcon: @Composable () -> Unit = {
+        IconButton(onClick = { back() }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null
             )
-        },
-    ) { paddingValues ->
-        ScopeValueView(
-            viewState = uiState.value,
-            selectScope = { scope -> viewModel.selectScope(scope) },
-            deleteScope = { scope -> viewModel.removeScope(scope) },
-            createScope = { viewModel.createScope(it) },
-            modifier = modifier.padding(paddingValues)
-        )
+        }
+    }
+
+    if (asDialog) {
+        ToggleEditorDialog(
+            title = "Scopes",
+            navigationIcon = navigationIcon,
+            modifier = modifier,
+        ) {
+            ScopeValueView(
+                viewState = uiState.value,
+                selectScope = { scope -> viewModel.selectScope(scope) },
+                deleteScope = { scope -> viewModel.removeScope(scope) },
+                createScope = { viewModel.createScope(it) },
+                asDialog = true,
+            )
+        }
+    } else {
+        Scaffold(
+            modifier = modifier,
+            topBar = {
+                TopAppBar(
+                    title = { Text("Scopes") },
+                    navigationIcon = navigationIcon,
+                )
+            },
+        ) { paddingValues ->
+            ScopeValueView(
+                viewState = uiState.value,
+                selectScope = { scope -> viewModel.selectScope(scope) },
+                deleteScope = { scope -> viewModel.removeScope(scope) },
+                createScope = { viewModel.createScope(it) },
+                asDialog = false,
+                modifier = Modifier.padding(paddingValues)
+            )
+        }
     }
 }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "LongParameterList")
 @Composable
 internal fun ScopeValueView(
     viewState: ViewState,
     selectScope: (scope: TogglesScope) -> Unit,
     deleteScope: (scope: TogglesScope) -> Unit,
     createScope: (scopeName: String) -> Unit,
+    asDialog: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Surface(modifier = modifier.fillMaxSize()) {
+    Surface(modifier = if (asDialog) modifier else modifier.fillMaxSize()) {
         Column {
             Text(
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.bodyLarge,
                 text = stringResource(id = R.string.scope_information)
             )
-            LazyColumn {
+            LazyColumn(modifier = Modifier.weight(1f, fill = !asDialog)) {
                 viewState.scopes.forEach { scope ->
                     item {
                         val selected = scope.id == viewState.selectedScope?.id

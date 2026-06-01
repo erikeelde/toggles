@@ -44,8 +44,6 @@ import se.eelde.toggles.applications.applicationNavigations
 import se.eelde.toggles.booleanconfiguration.BooleanValueView
 import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.configurations.configurationsNavigations
-import se.eelde.toggles.dialogs.scope.ScopeValueView
-import se.eelde.toggles.dialogs.scope.ScopeViewModel
 import se.eelde.toggles.enumconfiguration.EnumValueView
 import se.eelde.toggles.enumconfiguration.EnumValueViewModel
 import se.eelde.toggles.help.HelpView
@@ -61,6 +59,8 @@ import se.eelde.toggles.routes.IntegerConfiguration
 import se.eelde.toggles.routes.Oss
 import se.eelde.toggles.routes.Scope
 import se.eelde.toggles.routes.StringConfiguration
+import se.eelde.toggles.scopeconfiguration.ScopeValueView
+import se.eelde.toggles.scopeconfiguration.ScopeViewModel
 import se.eelde.toggles.stringconfiguration.StringValueView
 
 private enum class TopLevelDestination(
@@ -138,7 +138,8 @@ fun Navigation(
                         creationCallback = { factory ->
                             factory.create(scope)
                         }
-                    )
+                    ),
+                    asDialog = editorAsDialog,
                 ) { backStack.removeLastOrNull() }
             }
             entry<IntegerConfiguration>(

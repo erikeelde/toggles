@@ -113,6 +113,7 @@ dependencies {
     implementation(projects.modules.booleanconfiguration)
     implementation(projects.modules.integerconfiguration)
     implementation(projects.modules.stringconfiguration)
+    implementation(projects.modules.scopeconfiguration)
     implementation(projects.modules.enumconfiguration)
     implementation(projects.modules.coroutines.wiring)
     implementation(projects.modules.coroutines.api)

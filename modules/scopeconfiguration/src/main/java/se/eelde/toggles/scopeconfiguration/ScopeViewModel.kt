@@ -1,4 +1,4 @@
-package se.eelde.toggles.dialogs.scope
+package se.eelde.toggles.scopeconfiguration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
