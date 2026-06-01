@@ -11,7 +11,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -65,7 +64,7 @@ fun BooleanValueView(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Boolean configuration") },
+                title = { Text(viewState.title.orEmpty()) },
                 navigationIcon =
                 {
                     IconButton(onClick = { popBackStack() }) {
@@ -85,12 +84,6 @@ fun BooleanValueView(
                 .padding(16.dp)
         ) {
             Column {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.headlineMedium,
-                    text = viewState.title.orEmpty()
-                )
-
                 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
                 ButtonGroup(modifier = Modifier.padding(8.dp)) {
                     ToggleButton(
