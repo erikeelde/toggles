@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import se.eelde.toggles.composetheme.ToggleEditorDialog
 
 @Preview
 @Composable
@@ -48,34 +49,58 @@ internal fun IntegerValueViewPreview() {
 @Composable
 fun IntegerValueView(
     viewModel: IntegerValueViewModel,
+    asDialog: Boolean,
     modifier: Modifier = Modifier,
     back: () -> Unit,
 ) {
     val viewState by viewModel.state.collectAsStateWithLifecycle()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(viewState.title.orEmpty()) },
-                navigationIcon =
-                {
-                    IconButton(onClick = { back() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
+
+    val navigationIcon: @Composable () -> Unit = {
+        IconButton(onClick = { back() }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null
             )
-        },
-    ) { paddingValues ->
+        }
+    }
+
+    val body: @Composable () -> Unit = {
         IntegerValueView(
             uiState = viewState,
             popBackStack = { back() },
             revert = { viewModel.revertClick() },
             save = { viewModel.saveClick() },
             setIntegerValue = { viewModel.setIntegerValue(it) },
-            modifier = modifier.padding(paddingValues),
         )
+    }
+
+    if (asDialog) {
+        ToggleEditorDialog(
+            title = viewState.title.orEmpty(),
+            navigationIcon = navigationIcon,
+            modifier = modifier,
+        ) {
+            body()
+        }
+    } else {
+        Scaffold(
+            modifier = modifier,
+            topBar = {
+                TopAppBar(
+                    title = { Text(viewState.title.orEmpty()) },
+                    navigationIcon = navigationIcon,
+                )
+            },
+        ) { paddingValues ->
+            IntegerValueView(
+                uiState = viewState,
+                popBackStack = { back() },
+                revert = { viewModel.revertClick() },
+                save = { viewModel.saveClick() },
+                setIntegerValue = { viewModel.setIntegerValue(it) },
+                modifier = Modifier.padding(paddingValues),
+            )
+        }
     }
 }
 

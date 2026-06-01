@@ -1,6 +1,7 @@
 package se.eelde.toggles.booleanconfiguration
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import se.eelde.toggles.composetheme.ToggleEditorDialog
 import se.eelde.toggles.routes.BooleanConfiguration
 
 @Composable
@@ -35,6 +37,7 @@ fun BooleanValueView(
                 factory.create(booleanConfiguration)
             }
         ),
+    asDialog: Boolean,
     back: () -> Unit,
 ) {
     val viewState by viewModel.state.collectAsStateWithLifecycle()
@@ -47,6 +50,7 @@ fun BooleanValueView(
         revert = { scope.launch { viewModel.revertClick() } },
         checkedChanged = { viewModel.checkedChanged(it) },
         popBackStack = back,
+        asDialog = asDialog,
     )
 }
 
@@ -59,58 +63,73 @@ fun BooleanValueView(
     revert: () -> Unit,
     checkedChanged: (Boolean) -> Unit,
     popBackStack: () -> Unit,
+    asDialog: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(viewState.title.orEmpty()) },
-                navigationIcon =
-                {
-                    IconButton(onClick = { popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        },
-    ) { paddingValues ->
-        val scope = rememberCoroutineScope()
-        Surface(
-            modifier = modifier
-                .padding(paddingValues)
-                .padding(16.dp)
-        ) {
-            Column {
-                @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-                ButtonGroup(modifier = Modifier.padding(8.dp)) {
-                    ToggleButton(
-                        checked = viewState.checked == false,
-                        onCheckedChange = { checkedChanged(false) },
-                    ) { Text("Off") }
-                    ToggleButton(
-                        checked = viewState.checked == true,
-                        onCheckedChange = { checkedChanged(true) },
-                    ) { Text("On") }
-                }
+    val scope = rememberCoroutineScope()
 
-                @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-                ButtonGroup(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                    Button(onClick = {
-                        scope.launch {
-                            revert()
-                            popBackStack()
-                        }
-                    }) { Text("Revert") }
-                    Button(onClick = {
-                        scope.launch {
-                            save()
-                            popBackStack()
-                        }
-                    }) { Text("Save") }
+    val navigationIcon: @Composable () -> Unit = {
+        IconButton(onClick = { popBackStack() }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null
+            )
+        }
+    }
+
+    val body: @Composable ColumnScope.() -> Unit = {
+        @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+        ButtonGroup(modifier = Modifier.padding(8.dp)) {
+            ToggleButton(
+                checked = viewState.checked == false,
+                onCheckedChange = { checkedChanged(false) },
+            ) { Text("Off") }
+            ToggleButton(
+                checked = viewState.checked == true,
+                onCheckedChange = { checkedChanged(true) },
+            ) { Text("On") }
+        }
+
+        @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+        ButtonGroup(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+            Button(onClick = {
+                scope.launch {
+                    revert()
+                    popBackStack()
                 }
+            }) { Text("Revert") }
+            Button(onClick = {
+                scope.launch {
+                    save()
+                    popBackStack()
+                }
+            }) { Text("Save") }
+        }
+    }
+
+    if (asDialog) {
+        ToggleEditorDialog(
+            title = viewState.title.orEmpty(),
+            navigationIcon = navigationIcon,
+            modifier = modifier,
+            content = body,
+        )
+    } else {
+        Scaffold(
+            modifier = modifier,
+            topBar = {
+                TopAppBar(
+                    title = { Text(viewState.title.orEmpty()) },
+                    navigationIcon = navigationIcon,
+                )
+            },
+        ) { paddingValues ->
+            Surface(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .padding(16.dp)
+            ) {
+                Column { body() }
             }
         }
     }

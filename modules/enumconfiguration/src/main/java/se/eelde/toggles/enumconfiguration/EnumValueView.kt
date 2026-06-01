@@ -28,54 +28,78 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import se.eelde.toggles.composetheme.ToggleEditorDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EnumValueView(
+    asDialog: Boolean,
     modifier: Modifier = Modifier,
     viewModel: EnumValueViewModel = hiltViewModel(),
     back: () -> Unit,
 ) {
     val viewState by viewModel.state.collectAsStateWithLifecycle()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(viewState.title.orEmpty()) },
-                navigationIcon =
-                {
-                    IconButton(onClick = { back() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                }
+
+    val navigationIcon: @Composable () -> Unit = {
+        IconButton(onClick = { back() }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null
             )
-        },
-    ) { paddingValues ->
-        EnumValueView(
-            state = viewState,
-            setEnumValue = { viewModel.saveClick(it) },
-            revert = { viewModel.revertClick() },
-            popBackStack = { back() },
-            modifier = modifier.padding(paddingValues)
-        )
+        }
+    }
+
+    if (asDialog) {
+        ToggleEditorDialog(
+            title = viewState.title.orEmpty(),
+            navigationIcon = navigationIcon,
+            modifier = modifier,
+        ) {
+            EnumValueView(
+                state = viewState,
+                setEnumValue = { viewModel.saveClick(it) },
+                revert = { viewModel.revertClick() },
+                popBackStack = { back() },
+                asDialog = true,
+            )
+        }
+    } else {
+        Scaffold(
+            modifier = modifier,
+            topBar = {
+                TopAppBar(
+                    title = { Text(viewState.title.orEmpty()) },
+                    navigationIcon = navigationIcon,
+                )
+            },
+        ) { paddingValues ->
+            EnumValueView(
+                state = viewState,
+                setEnumValue = { viewModel.saveClick(it) },
+                revert = { viewModel.revertClick() },
+                popBackStack = { back() },
+                asDialog = false,
+                modifier = Modifier.padding(paddingValues)
+            )
+        }
     }
 }
 
 @Composable
+@Suppress("LongParameterList")
 internal fun EnumValueView(
     state: ViewState,
     setEnumValue: suspend (String) -> Unit,
     revert: suspend () -> Unit,
     popBackStack: () -> Unit,
+    asDialog: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
 
     Surface(modifier = modifier.padding(16.dp)) {
         Column {
-            LazyColumn {
+            LazyColumn(modifier = Modifier.weight(1f, fill = !asDialog)) {
                 state.configurationValues.forEach { togglesPredefinedConfigurationValue ->
                     item {
                         val selected =

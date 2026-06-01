@@ -127,6 +127,7 @@ fun Navigation(
             ) { booleanConfiguration ->
                 BooleanValueView(
                     booleanConfiguration = booleanConfiguration,
+                    asDialog = editorAsDialog,
                     back = { backStack.removeLastOrNull() }
                 )
             }
@@ -149,17 +150,22 @@ fun Navigation(
                             factory.create(integerConfiguration)
                         }
                     ),
+                    asDialog = editorAsDialog,
                 ) { backStack.removeLastOrNull() }
             }
             entry<StringConfiguration>(
                 metadata = leafMetadata
             ) { stringConfiguration ->
-                StringValueView(stringConfiguration) { backStack.removeLastOrNull() }
+                StringValueView(
+                    stringConfiguration = stringConfiguration,
+                    asDialog = editorAsDialog,
+                ) { backStack.removeLastOrNull() }
             }
             entry<EnumConfiguration>(
                 metadata = leafMetadata
             ) { enumConfiguration ->
                 EnumValueView(
+                    asDialog = editorAsDialog,
                     viewModel = hiltViewModel<EnumValueViewModel, EnumValueViewModel.Factory>(
                         creationCallback = { factory ->
                             factory.create(enumConfiguration)

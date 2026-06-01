@@ -24,6 +24,7 @@ dependencies {
     runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     implementation(projects.togglesCore)
+    implementation(projects.modules.composeTheme)
     implementation(projects.togglesFlow)
     ksp(libs.com.google.dagger.hilt.compiler)
     implementation(libs.androidx.compose.foundation.foundation.layout)
