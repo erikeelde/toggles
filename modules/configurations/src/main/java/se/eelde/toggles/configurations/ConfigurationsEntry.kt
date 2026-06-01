@@ -49,7 +49,7 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
     back: () -> Unit,
 ) {
     entry<Configurations>(
-        metadata = ListDetailSceneStrategy.listPane()
+        metadata = ListDetailSceneStrategy.detailPane()
     ) { configurations ->
         val viewModel: ConfigurationViewModel =
             hiltViewModel<ConfigurationViewModel, ConfigurationViewModel.Factory>(
