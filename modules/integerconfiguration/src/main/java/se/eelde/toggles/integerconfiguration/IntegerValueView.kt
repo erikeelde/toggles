@@ -77,7 +77,6 @@ fun IntegerValueView(
     if (asDialog) {
         ToggleEditorDialog(
             title = viewState.title.orEmpty(),
-            navigationIcon = navigationIcon,
             modifier = modifier,
         ) {
             body()

@@ -52,7 +52,6 @@ fun EnumValueView(
     if (asDialog) {
         ToggleEditorDialog(
             title = viewState.title.orEmpty(),
-            navigationIcon = navigationIcon,
             modifier = modifier,
         ) {
             EnumValueView(

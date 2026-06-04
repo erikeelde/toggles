@@ -55,7 +55,6 @@ fun ScopeValueView(
     if (asDialog) {
         ToggleEditorDialog(
             title = "Scopes",
-            navigationIcon = navigationIcon,
             modifier = modifier,
         ) {
             ScopeValueView(

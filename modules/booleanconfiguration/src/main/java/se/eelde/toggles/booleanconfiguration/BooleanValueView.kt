@@ -110,7 +110,6 @@ fun BooleanValueView(
     if (asDialog) {
         ToggleEditorDialog(
             title = viewState.title.orEmpty(),
-            navigationIcon = navigationIcon,
             modifier = modifier,
             content = body,
         )

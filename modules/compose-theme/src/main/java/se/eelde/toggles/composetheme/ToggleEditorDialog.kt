@@ -22,12 +22,14 @@ import androidx.compose.ui.unit.dp
  * clamped to a sensible [min, max] range: short editors (e.g. boolean) stay compact without
  * looking awkwardly tiny, while taller editors (e.g. a list) cap out and scroll their content
  * internally. The non-dialog presentation keeps using a Scaffold and is unaffected.
+ *
+ * Per Material guidance a dialog is dismissed, not navigated up from, so there is no up/back
+ * navigation icon — it is dismissed via its own actions, the scrim, or system back.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToggleEditorDialog(
     title: String,
-    navigationIcon: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -41,7 +43,6 @@ fun ToggleEditorDialog(
         Column(modifier = Modifier.fillMaxWidth()) {
             TopAppBar(
                 title = { Text(title) },
-                navigationIcon = navigationIcon,
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
             )
             content()
