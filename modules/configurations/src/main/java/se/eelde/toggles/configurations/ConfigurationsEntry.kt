@@ -78,9 +78,8 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
 
         val scope = rememberCoroutineScope()
         val searchBarState = rememberSearchBarState()
-        // The ViewModel's queryString (persisted in SavedStateHandle) remains the source of
-        // truth for the DB filter; seed the field from it and push edits back via snapshotFlow.
-        val textFieldState = rememberTextFieldState(viewModel.getQuery().value)
+        val initialQuery by viewModel.getQuery().collectAsStateWithLifecycle()
+        val textFieldState = rememberTextFieldState(initialQuery)
 
         LaunchedEffect(textFieldState) {
             snapshotFlow { textFieldState.text.toString() }
