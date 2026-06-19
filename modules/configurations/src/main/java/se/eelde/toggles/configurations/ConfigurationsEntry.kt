@@ -80,7 +80,7 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
 
         val listDetailScope = LocalListDetailSceneScope.current
         val showNavigationIcon = listDetailScope == null ||
-            listDetailScope.scaffoldTransitionScope.targetState.secondary == PaneAdaptedValue.Hidden
+            listDetailScope.scaffoldTransitionScope.scaffoldStateTransition.targetState.secondary == PaneAdaptedValue.Hidden
 
         val scope = rememberCoroutineScope()
         val searchBarState = rememberSearchBarState()

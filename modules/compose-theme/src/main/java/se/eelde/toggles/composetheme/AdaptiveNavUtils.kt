@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 fun rememberShowNavigationIconInDetailPane(): Boolean {
     val scope = LocalListDetailSceneScope.current ?: return true
-    return scope.scaffoldTransitionScope.targetState.secondary == PaneAdaptedValue.Hidden
+    return scope.scaffoldTransitionScope.scaffoldStateTransition.targetState.secondary == PaneAdaptedValue.Hidden
 }
 
 /**
@@ -24,5 +24,5 @@ fun rememberShowNavigationIconInDetailPane(): Boolean {
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 fun rememberShowNavigationIconInExtraPane(): Boolean {
     val scope = LocalListDetailSceneScope.current ?: return true
-    return scope.scaffoldTransitionScope.targetState.primary == PaneAdaptedValue.Hidden
+    return scope.scaffoldTransitionScope.scaffoldStateTransition.targetState.primary == PaneAdaptedValue.Hidden
 }
