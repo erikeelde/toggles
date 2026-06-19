@@ -3,6 +3,7 @@ package se.eelde.toggles.flow
 import android.content.ContentResolver
 import android.content.Context
 import android.database.ContentObserver
+import android.database.Cursor
 import android.net.Uri
 import android.os.Handler
 import kotlinx.coroutines.CoroutineDispatcher
@@ -155,9 +156,21 @@ internal class TogglesProvider(
 
     // region Private query helpers
 
+    /**
+     * Queries the Toggles provider, treating a thrown [RuntimeException] the same as a null
+     * cursor (no data). The provider lives in a separate app that may be unavailable, mid-upgrade,
+     * or — under instrumentation tests — have its Hilt component torn down between tests. A
+     * consuming app must degrade to defaults in those cases rather than crash.
+     */
+    private fun safeQuery(uri: Uri): Cursor? = try {
+        contentResolver.query(uri, null, null, null, null)
+    } catch (_: RuntimeException) {
+        null
+    }
+
     private fun queryScopes(): List<ToggleScope> {
         val scopes = mutableListOf<ToggleScope>()
-        val cursor = contentResolver.query(scopeUri(), null, null, null, null)
+        val cursor = safeQuery(scopeUri())
         if (cursor == null) {
             return emptyList()
         }
@@ -173,7 +186,7 @@ internal class TogglesProvider(
 
     @Suppress("ReturnCount")
     private fun queryConfiguration(key: String): TogglesConfiguration? {
-        val cursor = contentResolver.query(configurationUri(key), null, null, null, null)
+        val cursor = safeQuery(configurationUri(key))
             ?: return null
         cursor.use {
             if (it.count == 0) return null
@@ -185,9 +198,7 @@ internal class TogglesProvider(
 
     private fun queryConfigurationValues(configId: Long): List<TogglesConfigurationValue> {
         val values = mutableListOf<TogglesConfigurationValue>()
-        val cursor = contentResolver.query(
-            configurationValueUri(configId), null, null, null, null
-        ) ?: return emptyList()
+        val cursor = safeQuery(configurationValueUri(configId)) ?: return emptyList()
         cursor.use {
             if (it.moveToFirst()) {
                 do {
