@@ -28,8 +28,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import se.eelde.toggles.composetheme.ToggleEditorDialog
-import se.eelde.toggles.composetheme.rememberShowNavigationIconInExtraPane
 import se.eelde.toggles.composetheme.TogglesTheme
+import se.eelde.toggles.composetheme.rememberShowNavigationIconInExtraPane
 import se.eelde.toggles.routes.StringConfiguration
 
 @Preview

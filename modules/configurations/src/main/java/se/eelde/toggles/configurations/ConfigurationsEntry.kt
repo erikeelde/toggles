@@ -30,11 +30,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.compose.material3.adaptive.navigation3.LocalListDetailSceneScope
+import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -78,9 +78,12 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
         val launcher =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
 
+        // Only show the back arrow when the list pane is hidden (single-pane mode). When both
+        // panes are visible there is nothing to navigate back to, so the icon is suppressed.
         val listDetailScope = LocalListDetailSceneScope.current
-        val showNavigationIcon = listDetailScope == null ||
-            listDetailScope.scaffoldTransitionScope.scaffoldStateTransition.targetState.secondary == PaneAdaptedValue.Hidden
+        val listPaneValue = listDetailScope
+            ?.scaffoldTransitionScope?.scaffoldStateTransition?.targetState?.secondary
+        val showNavigationIcon = listPaneValue == null || listPaneValue == PaneAdaptedValue.Hidden
 
         val scope = rememberCoroutineScope()
         val searchBarState = rememberSearchBarState()
@@ -128,8 +131,8 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
                 AppBarWithSearch(
                     state = searchBarState,
                     inputField = inputField,
-                    navigationIcon = if (showNavigationIcon) {
-                        {
+                    navigationIcon = {
+                        if (showNavigationIcon) {
                             IconButton(onClick = { back() }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -137,7 +140,7 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
                                 )
                             }
                         }
-                    } else null,
+                    },
                     actions = {
                         var showMenu by rememberSaveable { mutableStateOf(false) }
 
