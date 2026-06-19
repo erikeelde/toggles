@@ -28,6 +28,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import se.eelde.toggles.composetheme.ToggleEditorDialog
+import se.eelde.toggles.composetheme.rememberShowNavigationIconInExtraPane
 import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.routes.StringConfiguration
 
@@ -87,15 +88,7 @@ internal fun StringValueView(
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
-
-    val navigationIcon: @Composable () -> Unit = {
-        IconButton(onClick = { popBackStack() }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null
-            )
-        }
-    }
+    val showNavigationIcon = rememberShowNavigationIconInExtraPane()
 
     val body: @Composable ColumnScope.() -> Unit = {
         OutlinedTextField(
@@ -139,7 +132,16 @@ internal fun StringValueView(
             topBar = {
                 TopAppBar(
                     title = { Text(viewState.title.orEmpty()) },
-                    navigationIcon = navigationIcon,
+                    navigationIcon = {
+                        if (showNavigationIcon) {
+                            IconButton(onClick = { popBackStack() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    },
                 )
             },
         ) { paddingValues ->

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import se.eelde.toggles.composetheme.ToggleEditorDialog
+import se.eelde.toggles.composetheme.rememberShowNavigationIconInExtraPane
 import se.eelde.toggles.database.TogglesScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,15 +43,7 @@ fun ScopeValueView(
     back: () -> Unit
 ) {
     val uiState = viewModel.state.collectAsStateWithLifecycle()
-
-    val navigationIcon: @Composable () -> Unit = {
-        IconButton(onClick = { back() }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null
-            )
-        }
-    }
+    val showNavigationIcon = rememberShowNavigationIconInExtraPane()
 
     if (asDialog) {
         ToggleEditorDialog(
@@ -71,7 +64,16 @@ fun ScopeValueView(
             topBar = {
                 TopAppBar(
                     title = { Text("Scopes") },
-                    navigationIcon = navigationIcon,
+                    navigationIcon = {
+                        if (showNavigationIcon) {
+                            IconButton(onClick = { back() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    },
                 )
             },
         ) { paddingValues ->

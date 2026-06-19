@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import se.eelde.toggles.composetheme.ToggleEditorDialog
+import se.eelde.toggles.composetheme.rememberShowNavigationIconInExtraPane
 
 @Preview
 @Composable
@@ -54,15 +55,7 @@ fun IntegerValueView(
     back: () -> Unit,
 ) {
     val viewState by viewModel.state.collectAsStateWithLifecycle()
-
-    val navigationIcon: @Composable () -> Unit = {
-        IconButton(onClick = { back() }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null
-            )
-        }
-    }
+    val showNavigationIcon = rememberShowNavigationIconInExtraPane()
 
     val body: @Composable () -> Unit = {
         IntegerValueView(
@@ -87,7 +80,16 @@ fun IntegerValueView(
             topBar = {
                 TopAppBar(
                     title = { Text(viewState.title.orEmpty()) },
-                    navigationIcon = navigationIcon,
+                    navigationIcon = {
+                        if (showNavigationIcon) {
+                            IconButton(onClick = { back() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    },
                 )
             },
         ) { paddingValues ->

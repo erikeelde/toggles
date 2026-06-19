@@ -16,4 +16,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.compose.ui.ui.text)
     implementation(libs.androidx.compose.ui.ui.unit)
+    implementation(libs.androidx.material3.adaptive.layout)
+    implementation(libs.androidx.material3.adaptive.navigation3)
 }

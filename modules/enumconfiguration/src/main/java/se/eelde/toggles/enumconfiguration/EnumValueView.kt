@@ -29,6 +29,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import se.eelde.toggles.composetheme.ToggleEditorDialog
+import se.eelde.toggles.composetheme.rememberShowNavigationIconInExtraPane
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,15 +40,7 @@ fun EnumValueView(
     back: () -> Unit,
 ) {
     val viewState by viewModel.state.collectAsStateWithLifecycle()
-
-    val navigationIcon: @Composable () -> Unit = {
-        IconButton(onClick = { back() }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null
-            )
-        }
-    }
+    val showNavigationIcon = rememberShowNavigationIconInExtraPane()
 
     if (asDialog) {
         ToggleEditorDialog(
@@ -68,7 +61,16 @@ fun EnumValueView(
             topBar = {
                 TopAppBar(
                     title = { Text(viewState.title.orEmpty()) },
-                    navigationIcon = navigationIcon,
+                    navigationIcon = {
+                        if (showNavigationIcon) {
+                            IconButton(onClick = { back() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    },
                 )
             },
         ) { paddingValues ->
