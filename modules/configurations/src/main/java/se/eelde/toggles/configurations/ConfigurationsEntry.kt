@@ -32,7 +32,9 @@ import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.LocalListDetailSceneScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -75,6 +77,10 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
 
         val launcher =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
+
+        val listDetailScope = LocalListDetailSceneScope.current
+        val showNavigationIcon = listDetailScope == null ||
+            listDetailScope.scaffoldTransitionScope.targetState.secondary == PaneAdaptedValue.Hidden
 
         val scope = rememberCoroutineScope()
         val searchBarState = rememberSearchBarState()
@@ -122,14 +128,16 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
                 AppBarWithSearch(
                     state = searchBarState,
                     inputField = inputField,
-                    navigationIcon = {
-                        IconButton(onClick = { back() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null
-                            )
+                    navigationIcon = if (showNavigationIcon) {
+                        {
+                            IconButton(onClick = { back() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
                         }
-                    },
+                    } else null,
                     actions = {
                         var showMenu by rememberSaveable { mutableStateOf(false) }
 
