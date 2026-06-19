@@ -94,33 +94,42 @@ class TogglesProvider : ContentProvider() {
         fun provideClock(): Clock
     }
 
-    private fun getCallingApplication(applicationDao: ProviderApplicationDao): TogglesApplication =
-        synchronized(this) {
-            val callingPackageName = packageManagerWrapper.callingApplicationPackageName
+    // Guards only the rare first-touch initialisation (create application row + its scopes) so that
+    // it happens exactly once per calling app. Steady-state reads acquire no lock — see
+    // getCallingApplication().
+    private val initLock = Any()
 
-            var togglesApplication: TogglesApplication? =
-                applicationDao.loadByPackageName(callingPackageName)
+    private fun getCallingApplication(applicationDao: ProviderApplicationDao): TogglesApplication {
+        val callingPackageName = packageManagerWrapper.callingApplicationPackageName
 
-            if (togglesApplication == null) {
-                togglesApplication = TogglesApplication(
-                    id = 0,
-                    packageName = callingPackageName,
-                    applicationLabel = packageManagerWrapper.applicationLabel,
-                    shortcutId = callingPackageName,
-                )
+        // Fast path: the calling app is already registered. No lock needed for a read.
+        applicationDao.loadByPackageName(callingPackageName)?.let { return it }
 
-                togglesApplication.id = applicationDao.insert(togglesApplication)
+        // Slow path: first time we've seen this calling app. Serialise creation so concurrent
+        // first-touch callers don't insert duplicate applications/scopes.
+        return synchronized(initLock) {
+            // Re-check: another thread may have created it while we waited for the lock.
+            applicationDao.loadByPackageName(callingPackageName)?.let { return@synchronized it }
 
-                createDefaultScope(scopeDao, togglesApplication.id, clock)
-                createDevelopmentScope(scopeDao, togglesApplication.id, clock)
+            val togglesApplication = TogglesApplication(
+                id = 0,
+                packageName = callingPackageName,
+                applicationLabel = packageManagerWrapper.applicationLabel,
+                shortcutId = callingPackageName,
+            )
 
-                requireContext.contentResolver.notifyInsert(
-                    TogglesProviderContract.scopeUri()
-                )
-            }
+            togglesApplication.id = applicationDao.insert(togglesApplication)
 
-            return togglesApplication
+            createDefaultScope(scopeDao, togglesApplication.id, clock)
+            createDevelopmentScope(scopeDao, togglesApplication.id, clock)
+
+            requireContext.contentResolver.notifyInsert(
+                TogglesProviderContract.scopeUri()
+            )
+
+            togglesApplication
         }
+    }
 
     override fun onCreate() = true
 
@@ -515,14 +524,12 @@ class TogglesProvider : ContentProvider() {
 
         private const val oneSecond = 1000L
 
-        @Synchronized
         private fun getDefaultScope(
             scopeDao: ProviderScopeDao,
             applicationId: Long
         ): TogglesScope = scopeDao.getDefaultScope(applicationId)
             ?: error("No default scope for application $applicationId")
 
-        @Synchronized
         private fun getSelectedScope(
             scopeDao: ProviderScopeDao,
             applicationId: Long
@@ -554,7 +561,6 @@ class TogglesProvider : ContentProvider() {
             return developmentScope
         }
 
-        @Synchronized
         private fun assertValidApiVersion(uri: Uri) {
             when (getApiVersion(uri)) {
                 API_1 -> {
