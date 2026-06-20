@@ -7,28 +7,41 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
+import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigationsuite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import dagger.hilt.android.AndroidEntryPoint
 import se.eelde.toggles.applications.applicationNavigations
 import se.eelde.toggles.booleanconfiguration.BooleanValueView
 import se.eelde.toggles.composetheme.TogglesTheme
 import se.eelde.toggles.configurations.configurationsNavigations
-import se.eelde.toggles.dialogs.scope.ScopeValueView
-import se.eelde.toggles.dialogs.scope.ScopeViewModel
 import se.eelde.toggles.enumconfiguration.EnumValueView
 import se.eelde.toggles.enumconfiguration.EnumValueViewModel
 import se.eelde.toggles.help.HelpView
@@ -44,55 +57,127 @@ import se.eelde.toggles.routes.IntegerConfiguration
 import se.eelde.toggles.routes.Oss
 import se.eelde.toggles.routes.Scope
 import se.eelde.toggles.routes.StringConfiguration
+import se.eelde.toggles.scopeconfiguration.ScopeValueView
+import se.eelde.toggles.scopeconfiguration.ScopeViewModel
 import se.eelde.toggles.stringconfiguration.StringValueView
 
-@OptIn(ExperimentalMaterial3Api::class)
+private enum class TopLevelDestination(
+    val label: String,
+    val icon: ImageVector,
+    val route: NavKey,
+) {
+    APPLICATIONS("Applications", Icons.Filled.Apps, Applications),
+    OSS("Licenses", Icons.Filled.Info, Oss),
+    HELP("Help", Icons.AutoMirrored.Filled.HelpOutline, Help),
+}
+
+@OptIn(ExperimentalMaterial3AdaptiveNavigationSuiteApi::class)
+@Composable
+private fun TogglesApp() {
+    val backStack = rememberNavBackStack(Applications)
+
+    // Derive the highlighted destination from the back stack so it stays correct after Back
+    // navigation, rather than tracking selection as separate state.
+    val selectedDestination = backStack
+        .lastOrNull { key -> TopLevelDestination.entries.any { it.route == key } }
+        ?.let { key -> TopLevelDestination.entries.first { it.route == key } }
+        ?: TopLevelDestination.APPLICATIONS
+
+    NavigationSuiteScaffold(
+        navigationSuiteItems = {
+            TopLevelDestination.entries.forEach { destination ->
+                item(
+                    selected = selectedDestination == destination,
+                    onClick = {
+                        val existingIndex = backStack.indexOfLast { it == destination.route }
+                        if (existingIndex >= 0) {
+                            // Already present: pop back to it instead of appending a duplicate.
+                            while (backStack.size > existingIndex + 1) {
+                                backStack.removeAt(backStack.lastIndex)
+                            }
+                        } else {
+                            backStack.add(destination.route)
+                        }
+                    },
+                    icon = { Icon(destination.icon, contentDescription = null) },
+                    label = { Text(destination.label) },
+                )
+            }
+        }
+    ) {
+        Navigation(backStack = backStack)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Suppress("LongMethod")
 @Composable
 fun Navigation(
+    backStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
+    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
-    val backStack = rememberNavBackStack(Applications)
+    val editorAsDialog by mainViewModel.editorAsDialog.collectAsStateWithLifecycle(initialValue = true)
+    val leafMetadata: Map<String, Any> =
+        if (editorAsDialog) DialogSceneStrategy.dialog() else ListDetailSceneStrategy.extraPane()
 
+    val dialogStrategy = remember { DialogSceneStrategy<NavKey>() }
+    val listDetailStrategy = rememberListDetailSceneStrategy<NavKey>()
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
+        sceneStrategies = listOf(dialogStrategy, listDetailStrategy),
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
         entryProvider = entryProvider {
-            entry<BooleanConfiguration> { booleanConfiguration ->
+            entry<BooleanConfiguration>(
+                metadata = leafMetadata
+            ) { booleanConfiguration ->
                 BooleanValueView(
                     booleanConfiguration = booleanConfiguration,
+                    asDialog = editorAsDialog,
                     back = { backStack.removeLastOrNull() }
                 )
             }
 
-            entry<Scope> { scope ->
+            entry<Scope>(metadata = leafMetadata) { scope ->
                 ScopeValueView(
                     viewModel = hiltViewModel<ScopeViewModel, ScopeViewModel.Factory>(
                         creationCallback = { factory ->
                             factory.create(scope)
                         }
-                    )
+                    ),
+                    asDialog = editorAsDialog,
                 ) { backStack.removeLastOrNull() }
             }
-            entry<IntegerConfiguration> { integerConfiguration ->
+            entry<IntegerConfiguration>(
+                metadata = leafMetadata
+            ) { integerConfiguration ->
                 IntegerValueView(
                     viewModel = hiltViewModel<IntegerValueViewModel, IntegerValueViewModel.Factory>(
                         creationCallback = { factory ->
                             factory.create(integerConfiguration)
                         }
                     ),
+                    asDialog = editorAsDialog,
                 ) { backStack.removeLastOrNull() }
             }
-            entry<StringConfiguration> { stringConfiguration ->
-                StringValueView(stringConfiguration) { backStack.removeLastOrNull() }
+            entry<StringConfiguration>(
+                metadata = leafMetadata
+            ) { stringConfiguration ->
+                StringValueView(
+                    stringConfiguration = stringConfiguration,
+                    asDialog = editorAsDialog,
+                ) { backStack.removeLastOrNull() }
             }
-            entry<EnumConfiguration> { enumConfiguration ->
+            entry<EnumConfiguration>(
+                metadata = leafMetadata
+            ) { enumConfiguration ->
                 EnumValueView(
+                    asDialog = editorAsDialog,
                     viewModel = hiltViewModel<EnumValueViewModel, EnumValueViewModel.Factory>(
                         creationCallback = { factory ->
                             factory.create(enumConfiguration)
@@ -128,9 +213,6 @@ fun Navigation(
                 navigateToConfigurations = { applicationId ->
                     backStack.add(Configurations(applicationId))
                 },
-                navigateToApplications = { backStack.add(Applications) },
-                navigateToOss = { backStack.add(Oss) },
-                navigateToHelp = { backStack.add(Help) },
             )
 
             configurationsNavigations(
@@ -170,7 +252,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TogglesTheme {
-                Navigation()
+                TogglesApp()
             }
         }
     }

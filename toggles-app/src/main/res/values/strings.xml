@@ -20,6 +20,4 @@
     <string name="loading_bubble">Loading bubble</string>
     <string name="add">Add</string>
     <string name="delete">Delete</string>
-    <string name="scope_information">Scopes allow us to define a set of configurations that we can switch between quickly. Your selected scope is indicated by a link.</string>
-    <string name="scope_add_information">Add a new scope</string>
 </resources>

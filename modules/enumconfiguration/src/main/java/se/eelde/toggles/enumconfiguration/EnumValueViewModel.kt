@@ -20,6 +20,7 @@ import se.eelde.toggles.database.TogglesPredefinedConfigurationValue
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
 import se.eelde.toggles.database.dao.application.TogglesPredefinedConfigurationValueDao
+import se.eelde.toggles.flow.Toggles
 import se.eelde.toggles.provider.notifyInsert
 import se.eelde.toggles.provider.notifyUpdate
 import se.eelde.toggles.routes.EnumConfiguration
@@ -30,7 +31,8 @@ data class ViewState(
     val selectedConfigurationValue: TogglesConfigurationValue? = null,
     val configurationValues: List<TogglesPredefinedConfigurationValue> = listOf(),
     val saving: Boolean = false,
-    val reverting: Boolean = false
+    val reverting: Boolean = false,
+    val expressiveList: Boolean = false,
 )
 
 internal sealed class PartialViewState {
@@ -44,6 +46,7 @@ internal sealed class PartialViewState {
 
     data object Saving : PartialViewState()
     data object Reverting : PartialViewState()
+    data class ExpressiveList(val enabled: Boolean) : PartialViewState()
 }
 
 @HiltViewModel(assistedFactory = EnumValueViewModel.Factory::class)
@@ -56,6 +59,7 @@ class EnumValueViewModel @AssistedInject internal constructor(
     @IoDispatcher
     private val ioDispatcher: CoroutineDispatcher,
     private val clock: Clock,
+    private val toggles: Toggles,
     @Assisted enumConfiguration: EnumConfiguration,
 ) : ViewModel() {
 
@@ -77,6 +81,12 @@ class EnumValueViewModel @AssistedInject internal constructor(
     private var selectedConfigurationValue: TogglesConfigurationValue? = null
 
     init {
+        viewModelScope.launch {
+            toggles.toggle("expressive_enum_list", false).collect {
+                _state.value = reduce(_state.value, PartialViewState.ExpressiveList(it))
+            }
+        }
+
         viewModelScope.launch {
             predefinedConfigurationValueDao.getByConfigurationId(configurationId).collect {
                 _state.value = reduce(_state.value, PartialViewState.ConfigurationValues(it))
@@ -123,6 +133,10 @@ class EnumValueViewModel @AssistedInject internal constructor(
 
             is PartialViewState.SelectedConfigurationValue -> {
                 previousState.copy(selectedConfigurationValue = partialViewState.selectedConfigurationValue)
+            }
+
+            is PartialViewState.ExpressiveList -> {
+                previousState.copy(expressiveList = partialViewState.enabled)
             }
         }
     }

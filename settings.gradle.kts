@@ -69,6 +69,7 @@ include(
     ":modules:help",
     ":modules:routes:api",
     ":modules:stringconfiguration",
+    ":modules:scopeconfiguration",
     ":modules:booleanconfiguration",
     ":modules:integerconfiguration",
     ":modules:enumconfiguration",

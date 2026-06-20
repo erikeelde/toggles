@@ -94,6 +94,15 @@ android {
 }
 
 dependencies {
+    constraints {
+        // profileinstaller:1.4.0 depends on concurrent-futures:1.1.0 but androidx.test:core:1.7.0
+        // requires 1.2.0; force the minimum up so consistent-resolution doesn't block the test
+        // configuration.
+        implementation("androidx.concurrent:concurrent-futures") {
+            version { require("1.2.0") }
+        }
+    }
+
     implementation(projects.modules.composeTheme)
     implementation(projects.modules.database.implementation)
     implementation(projects.modules.provider.implementation)
@@ -104,6 +113,7 @@ dependencies {
     implementation(projects.modules.booleanconfiguration)
     implementation(projects.modules.integerconfiguration)
     implementation(projects.modules.stringconfiguration)
+    implementation(projects.modules.scopeconfiguration)
     implementation(projects.modules.enumconfiguration)
     implementation(projects.modules.coroutines.wiring)
     implementation(projects.modules.coroutines.api)
@@ -118,6 +128,7 @@ dependencies {
     implementation(libs.androidx.core.core.splashscreen)
     implementation(libs.androidx.compose.foundation.foundation.layout)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.compose.material.material.icons.extended)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.animation)
@@ -127,6 +138,8 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.material3.adaptive.navigation3)
+    implementation(libs.androidx.material3.adaptive)
     implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel.compose)
     runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(projects.modules.routes.api)
@@ -175,4 +188,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     implementation(libs.com.google.dagger.hilt.core)
     implementation(libs.javax.inject)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.test)
 }

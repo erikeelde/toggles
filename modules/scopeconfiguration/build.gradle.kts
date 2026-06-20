@@ -5,17 +5,20 @@ plugins {
 }
 
 android {
-    namespace = "se.eelde.toggles.integerconfiguration"
+    namespace = "se.eelde.toggles.scopeconfiguration"
 }
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
+    implementation(projects.modules.composeTheme)
     api(projects.modules.database.implementation)
     implementation(projects.modules.provider.implementation)
     api(projects.modules.routes.api)
-    implementation(libs.androidx.compose.material.icons.core)
-    implementation(projects.modules.coroutines.api)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.material.icons.extended)
+    implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel.compose)
+    implementation(projects.modules.coroutines.api)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.compose)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.material3)
@@ -24,13 +27,13 @@ dependencies {
     runtimeOnly(libs.androidx.startup.startup.runtime)
     implementation(libs.com.google.dagger.hilt.android)
     implementation(projects.togglesCore)
-    implementation(projects.modules.composeTheme)
     ksp(libs.com.google.dagger.hilt.compiler)
     implementation(libs.androidx.compose.foundation.foundation.layout)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.compose.ui.ui.text)
     implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.lifecycle.lifecycle.viewmodel.compose)
     api(libs.com.google.dagger)
     implementation(libs.com.google.dagger.hilt.core)
     api(libs.javax.inject)

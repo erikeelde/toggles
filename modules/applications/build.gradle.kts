@@ -17,6 +17,7 @@ dependencies {
     implementation(projects.modules.routes.api)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.material3.adaptive.navigation3)
     implementation(libs.androidx.hilt.hilt.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.material3)

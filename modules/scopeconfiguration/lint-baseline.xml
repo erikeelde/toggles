@@ -67,48 +67,4 @@
             column="29"/>
     </issue>
 
-    <issue
-        id="SimilarGradleDependency"
-        message="There are multiple dependencies androidx.compose.material3:material3 but with different version"
-        errorLine1="androidx-compose-material3 = { module = &quot;androidx.compose.material3:material3&quot;, version.ref = &quot;androidx-compose-material3&quot; }"
-        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../gradle/libs.versions.toml"
-            line="73"
-            column="31"/>
-    </issue>
-
-    <issue
-        id="SimilarGradleDependency"
-        message="There are multiple dependencies androidx.compose.material3:material3 but with different version"
-        errorLine1="androidx-material3 = { module = &quot;androidx.compose.material3:material3&quot;, version.ref = &quot;androidx-compose-material3&quot; }"
-        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../gradle/libs.versions.toml"
-            line="104"
-            column="23"/>
-    </issue>
-
-    <issue
-        id="PermissionNamingConvention"
-        message="`${togglesPermission} does not follow recommended naming convention`"
-        errorLine1="        android:name=&quot;${togglesPermission}&quot;"
-        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="6"
-            column="23"/>
-    </issue>
-
-    <issue
-        id="NotShrinkingResources"
-        message="If enabling minification, also set isShrinkResources = true"
-        errorLine1="            isMinifyEnabled = true"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="build.gradle.kts"
-            line="84"
-            column="13"/>
-    </issue>
-
 </issues>

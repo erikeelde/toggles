@@ -10,6 +10,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.database.migrations.Migrations.LEGACY_SCOPE_NAME
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_1_2
@@ -23,6 +24,7 @@ import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
+@Config(sdk = [36]) // Robolectric 4.16.x supports up to SDK 36; pin to avoid SDK-mismatch errors
 class MigrationTests {
     // Unable to migrate to unitTest due to https://github.com/robolectric/robolectric/issues/2065
 

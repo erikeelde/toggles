@@ -3,7 +3,6 @@ package se.eelde.toggles.configurations
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.text.TextUtils
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -97,7 +96,7 @@ class ConfigurationViewModel @AssistedInject internal constructor(
 
         viewModelScope.launch {
             queryString.flatMapLatest { queryString ->
-                if (TextUtils.isEmpty(queryString)) {
+                if (queryString.isEmpty()) {
                     configurationDao.getApplicationConfigurations(applicationId)
                 } else {
                     configurationDao.getApplicationConfigurations(applicationId, "%$queryString%")

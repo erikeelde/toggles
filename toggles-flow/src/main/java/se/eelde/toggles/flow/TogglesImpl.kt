@@ -4,6 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.ToggleState
@@ -11,7 +12,7 @@ import se.eelde.toggles.core.ToggleState
 @Suppress("LibraryEntitiesShouldNotBePublic")
 public class TogglesImpl @JvmOverloads constructor(
     context: Context,
-    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     addDefaultAutomatically: Boolean = true,
     updateDefaultAutomatically: Boolean = false,
     onMissingToggle: ((key: String, defaultValue: String, toggleState: ToggleState) -> Unit)? = null,
@@ -61,4 +62,5 @@ public class TogglesImpl @JvmOverloads constructor(
             .map { toggleState ->
                 resolver.resolve(toggleState, key, type, defaultValue, onFirstCreate)
             }
+            .flowOn(ioDispatcher)
 }

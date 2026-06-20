@@ -32,7 +32,7 @@ internal fun Project.configureKotlinAndroid(
     commonExtension: CommonExtension,
     enableExplicitApi: Boolean = false,
 ) {
-    commonExtension.compileSdk = 36
+    commonExtension.compileSdk = 37
     commonExtension.defaultConfig.minSdk = 23
 
     configureKotlin<KotlinAndroidProjectExtension>(enableExplicitApi)
