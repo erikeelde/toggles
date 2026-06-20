@@ -15,6 +15,7 @@ buildscript {
 }
 
 plugins {
+    id("dev.premex.pulse") version "0.3.4"
     alias(libs.plugins.nl.littlerobots.version.catalog.update)
     alias(libs.plugins.com.github.triplet.play) apply false
     alias(libs.plugins.com.google.devtools.ksp) apply false
@@ -30,11 +31,9 @@ plugins {
     alias(libs.plugins.com.google.dagger.hilt.android) apply false
 }
 
-develocity {
-    buildScan {
-        termsOfUseUrl.set("https://gradle.com/help/legal-terms-of-use")
-        termsOfUseAgree.set("yes")
-    }
+pulse {
+    serverUrl.set("https://pulse.premex.se")
+    organization.set("eelde")
 }
 
 dependencyAnalysis {
