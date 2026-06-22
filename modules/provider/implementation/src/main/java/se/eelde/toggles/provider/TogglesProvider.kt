@@ -194,6 +194,10 @@ class TogglesProvider : ContentProvider() {
                 )
             }
 
+            UriMatch.CONFIGURATION_VALUES -> {
+                cursor = configurationDao.getConfigurationValueCursor(callingApplication.id)
+            }
+
             UriMatch.SCOPES -> {
                 // getDefaultScope() ensures the default scope is created.
                 getDefaultScope(scopeDao, callingApplication.id)
@@ -504,6 +508,7 @@ class TogglesProvider : ContentProvider() {
 
             UriMatch.CONFIGURATION_VALUE_ID -> "vnd.android.cursor.dir/vnd.$packageName.configurationValue"
             UriMatch.CONFIGURATION_VALUE_KEY -> "vnd.android.cursor.dir/vnd.$packageName.configurationValue"
+            UriMatch.CONFIGURATION_VALUES -> "vnd.android.cursor.dir/vnd.$packageName.configurationValue"
             UriMatch.SCOPES ->
                 "vnd.android.cursor.dir/vnd.$packageName.scope"
 
