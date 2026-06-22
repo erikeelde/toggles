@@ -46,3 +46,7 @@ versions.properties
 
 # Worktrees
 .worktrees/
+
+# Superpowers brainstorming specs and implementation plans — kept local, not checked in
+docs/superpowers/specs/
+docs/superpowers/plans/
