@@ -2,6 +2,7 @@ package se.eelde.toggles.core
 
 import android.net.Uri
 
+@Suppress("TooManyFunctions")
 public object TogglesProviderContract {
     private const val TOGGLES_AUTHORITY = "se.eelde.toggles.configprovider"
     private const val TOGGLES_API_VERSION_QUERY_PARAM = "API_VERSION"
@@ -15,6 +16,8 @@ public object TogglesProviderContract {
         Uri.parse("content://$TOGGLES_AUTHORITY/predefinedConfigurationValue")
     private val baseScopeUri: Uri =
         Uri.parse("content://$TOGGLES_AUTHORITY/scope")
+    private val allConfigurationValuesUri: Uri =
+        Uri.parse("content://$TOGGLES_AUTHORITY/configurationValues")
 
     @JvmStatic
     public fun toggleUri(id: Long): Uri {
@@ -92,6 +95,14 @@ public object TogglesProviderContract {
             .buildUpon()
             .appendPath(id.toString())
             .appendPath("values")
+            .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
+            .build()
+    }
+
+    @JvmStatic
+    public fun configurationValuesUri(): Uri {
+        return allConfigurationValuesUri
+            .buildUpon()
             .appendQueryParameter(TOGGLES_API_VERSION_QUERY_PARAM, TOGGLES_API_VERSION.toString())
             .build()
     }

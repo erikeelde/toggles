@@ -112,12 +112,20 @@ WHERE configuration.applicationId = :callingApplication AND configurationId = :c
     fun getConfigurationValueCursor(callingApplication: Long, configurationId: Long): Cursor
 
     @Query(
-        """SELECT configurationValue.* FROM configuration 
-INNER JOIN configurationValue ON configuration.id = configurationValue.configurationId  
+        """SELECT configurationValue.* FROM configuration
+INNER JOIN configurationValue ON configuration.id = configurationValue.configurationId
 WHERE configuration.applicationId = :callingApplication AND configurationKey = :configurationKey
 """
     )
     fun getConfigurationValueCursor(callingApplication: Long, configurationKey: String): Cursor
+
+    @Query(
+        """SELECT configurationValue.* FROM configuration
+INNER JOIN configurationValue ON configuration.id = configurationValue.configurationId
+WHERE configuration.applicationId = :callingApplication
+"""
+    )
+    fun getConfigurationValueCursor(callingApplication: Long): Cursor
 
     @Query(
         "SELECT * FROM scope WHERE applicationId = :callingApplication"
