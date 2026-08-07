@@ -28,6 +28,7 @@ internal class AgentScopeDeleter(
     private val agentDao: AgentDao,
     private val agentMutationDao: AgentMutationDao,
     private val changeNotifier: AgentChangeNotifier,
+    private val controlNotifier: AgentControlNotifier,
 ) {
 
     // Each early return is a distinct validation gate, same rationale as
@@ -77,6 +78,7 @@ internal class AgentScopeDeleter(
         agentMutationDao.deleteScopeValues(scopeId)
         agentMutationDao.deleteScope(scopeId)
         changeNotifier.notifyScopesChanged()
+        controlNotifier.notifyFirstMutation(application.packageName, application.applicationLabel)
 
         return agentJson.encodeToString(
             AgentMutationResponse(

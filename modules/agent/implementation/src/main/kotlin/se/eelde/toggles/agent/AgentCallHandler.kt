@@ -55,9 +55,9 @@ class AgentCallHandler(
     private val applicationProvisioner =
         AgentApplicationProvisioner(agentDao, agentMutationDao, packageManager, clock)
     private val configurationValueDeleter =
-        AgentConfigurationValueDeleter(agentDao, agentMutationDao, changeNotifier)
+        AgentConfigurationValueDeleter(agentDao, agentMutationDao, changeNotifier, controlNotifier)
     private val scopeDeleter =
-        AgentScopeDeleter(agentDao, agentMutationDao, changeNotifier)
+        AgentScopeDeleter(agentDao, agentMutationDao, changeNotifier, controlNotifier)
 
     @Suppress("TooGenericExceptionCaught") // must never throw across the binder; see class kdoc
     fun handle(method: String, extras: Bundle?): String = try {

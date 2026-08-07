@@ -19,6 +19,7 @@ internal class AgentConfigurationValueDeleter(
     private val agentDao: AgentDao,
     private val agentMutationDao: AgentMutationDao,
     private val changeNotifier: AgentChangeNotifier,
+    private val controlNotifier: AgentControlNotifier,
 ) {
 
     /** What a configuration resolves to, and which scope's row produced it (if any). */
@@ -64,10 +65,12 @@ internal class AgentConfigurationValueDeleter(
         // Deleting an absent override is idempotent: an agent retrying a delete must not see a
         // failure just because a previous attempt (or another agent) already removed it. Only
         // notify when a row was actually removed, matching BooleanValueViewModel.deleteConfigurationValue,
-        // which only notifies when selectedConfigurationValue was non-null.
+        // which only notifies when selectedConfigurationValue was non-null. The control notifier
+        // follows the same rule: a no-op delete changed nothing, so there is nothing to disclose.
         val deletedRows = agentMutationDao.deleteConfigurationValue(configurationId, scopeId)
         if (deletedRows > 0) {
             changeNotifier.notifyConfigurationChanged(configurationId)
+            controlNotifier.notifyFirstMutation(application.packageName, application.applicationLabel)
         }
 
         val resolution = resolveEffectiveValue(application.id, configurationId)

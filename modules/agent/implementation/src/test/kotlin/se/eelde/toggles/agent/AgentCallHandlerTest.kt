@@ -918,6 +918,64 @@ class AgentCallHandlerTest {
     }
 
     @Test
+    fun `deleting a configuration notifies the control notifier`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+
+        deleteConfiguration(configId)
+
+        assertEquals(listOf("com.example.app" to "Example"), controlNotifier.notified)
+    }
+
+    @Test
+    fun `deleting a scope notifies the control notifier`() {
+        val appId = insertApplication("com.example.app", "Example")
+        insertScope(appId, "toggles_default", epochMillis = 0)
+        val extraScopeId = insertScope(appId, "extra scope", epochMillis = 10_000)
+
+        deleteScope(packageName = "com.example.app", scopeId = extraScopeId)
+
+        assertEquals(listOf("com.example.app" to "Example"), controlNotifier.notified)
+    }
+
+    @Test
+    fun `removing an override notifies the control notifier`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default")
+        val devScopeId = insertScope(appId, "Development scope")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, defaultScopeId, "true")
+        insertValue(configId, devScopeId, "false")
+
+        deleteConfigurationValue(configId, devScopeId)
+
+        assertEquals(listOf("com.example.app" to "Example"), controlNotifier.notified)
+    }
+
+    @Test
+    fun `removing a non-existent override does not notify the control notifier`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default")
+        val devScopeId = insertScope(appId, "Development scope")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, defaultScopeId, "true")
+
+        deleteConfigurationValue(configId, devScopeId)
+
+        assertTrue(controlNotifier.notified.isEmpty())
+    }
+
+    @Test
+    fun `deleting the default scope is rejected and does not notify the control notifier`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default", epochMillis = 0)
+
+        deleteScope(packageName = "com.example.app", scopeId = defaultScopeId)
+
+        assertTrue(controlNotifier.notified.isEmpty())
+    }
+
+    @Test
     fun `delivering the disable broadcast disables agent control and a subsequent mutation is rejected`() {
         val appId = insertApplication("com.example.app", "Example")
         val scopeId = insertScope(appId, "toggles_default")
