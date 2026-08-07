@@ -72,6 +72,10 @@ android {
 
         buildConfigField("String", "CONFIG_AUTHORITY", "\"$togglesAuthority\"")
 
+        val togglesAgentAuthority = "se.eelde.toggles.agentprovider"
+        manifestPlaceholders["togglesAgentAuthority"] = togglesAgentAuthority
+        buildConfigField("String", "AGENT_AUTHORITY", "\"$togglesAgentAuthority\"")
+
         testInstrumentationRunner = "se.eelde.toggles.CustomTestRunner"
     }
     packaging {
@@ -119,6 +123,8 @@ dependencies {
     implementation(projects.modules.coroutines.api)
     implementation(projects.modules.provider.wiring)
     implementation(projects.modules.database.wiring)
+    implementation(projects.modules.agent.implementation)
+    implementation(projects.modules.agent.wiring)
 
     implementation(libs.androidx.compose.ui.ui.tooling)
     implementation(platform(libs.androidx.compose.bom))
