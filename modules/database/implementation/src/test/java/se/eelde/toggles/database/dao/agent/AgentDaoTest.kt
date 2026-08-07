@@ -131,6 +131,15 @@ class AgentDaoTest {
     }
 
     @Test
+    fun `getApplicationById returns the matching application and null for an unknown id`() {
+        val appA = insertApplication("com.example.a", "A")
+        insertApplication("com.example.b", "B")
+
+        assertEquals("A", agentDao.getApplicationById(appA)?.applicationLabel)
+        assertNull(agentDao.getApplicationById(999L))
+    }
+
+    @Test
     fun `getConfigurations returns only the requested application's configurations, ordered by key`() {
         val appA = insertApplication("com.example.a", "A")
         val appB = insertApplication("com.example.b", "B")

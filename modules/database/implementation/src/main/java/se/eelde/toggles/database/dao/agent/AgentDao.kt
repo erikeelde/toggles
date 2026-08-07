@@ -26,6 +26,11 @@ interface AgentDao {
     )
     fun getApplicationByPackageName(packageName: String): TogglesApplication?
 
+    @Query(
+        "SELECT * FROM " + ApplicationTable.TABLE_NAME + " WHERE " + ApplicationTable.COL_ID + " = (:applicationId)"
+    )
+    fun getApplicationById(applicationId: Long): TogglesApplication?
+
     @Query("SELECT * FROM configuration WHERE applicationId = (:applicationId) ORDER BY configurationKey ASC")
     fun getConfigurations(applicationId: Long): List<TogglesConfiguration>
 

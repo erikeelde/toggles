@@ -11,6 +11,7 @@ enum class AgentErrorCode(val wireValue: String) {
     NOT_AUTHORIZED("not_authorized"),
     AGENT_CONTROL_DISABLED("agent_control_disabled"),
     UNKNOWN_PACKAGE("unknown_package"),
+    UNKNOWN_ID("unknown_id"),
     UNKNOWN_ENDPOINT("unknown_endpoint"),
     INVALID_ARGUMENT("invalid_argument"),
     INTERNAL_ERROR("internal_error"),

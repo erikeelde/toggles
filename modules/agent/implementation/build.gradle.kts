@@ -16,6 +16,8 @@ dependencies {
     api(projects.modules.database.implementation)
     // provider/api only — the agent module is a peer of TogglesProvider, not a consumer of it.
     api(projects.modules.provider.api)
+    // TogglesProviderContract, for the URIs AgentChangeNotifier notifies on.
+    implementation(projects.togglesCore)
     implementation(libs.org.jetbrains.kotlinx.kotlinx.serialization.json)
     implementation(libs.androidx.annotation)
     implementation(libs.com.google.dagger.hilt.android)

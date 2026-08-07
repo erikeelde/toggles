@@ -53,4 +53,11 @@ interface AgentMutationDao {
 
     @Query("UPDATE application SET agentControlEnabled = (:enabled) WHERE packageName = (:packageName)")
     fun setAgentControlEnabled(packageName: String, enabled: Boolean): Int
+
+    // Synchronous, matching every other query in this DAO: AgentCallHandler.handle runs
+    // synchronously on the binder thread, same as TogglesAgentProvider.call. The UI-facing
+    // equivalent, ProviderConfigurationDao.touch, is a suspend function and would need a
+    // runBlocking bridge here for no benefit.
+    @Query("UPDATE configuration SET lastUse = (:date) WHERE id = (:configurationId)")
+    fun touch(configurationId: Long, date: Instant): Int
 }

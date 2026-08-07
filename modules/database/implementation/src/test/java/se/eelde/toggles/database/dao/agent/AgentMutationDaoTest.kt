@@ -222,6 +222,19 @@ class AgentMutationDaoTest {
     }
 
     @Test
+    fun `touch updates lastUse and leaves other configurations untouched`() {
+        val appA = insertApplication("com.example.a", "A")
+        val configA = insertConfiguration(appA, "featureA")
+        val configB = insertConfiguration(appA, "featureB")
+
+        val updated = agentMutationDao.touch(configA, Instant.fromEpochMilliseconds(5_000))
+
+        assertEquals(1, updated)
+        assertEquals(Instant.fromEpochMilliseconds(5_000), agentMutationDao.getConfiguration(configA)?.lastUse)
+        assertEquals(Instant.fromEpochMilliseconds(0), agentMutationDao.getConfiguration(configB)?.lastUse)
+    }
+
+    @Test
     fun `getConfiguration and getScope return the row by id, and null for an unknown id`() {
         val appA = insertApplication("com.example.a", "A")
         val configA = insertConfiguration(appA, "featureA")
