@@ -11,14 +11,24 @@ interface IPackageManagerWrapper {
 
 class PackageManagerWrapper(private val packageManager: PackageManager) : IPackageManagerWrapper {
 
+    /**
+     * The calling application's user-visible label, or its package name when the label cannot be
+     * resolved.
+     *
+     * Resolution fails for callers that are not installed packages — adb/shell arrives as the
+     * shared user "android.uid.shell:2000" — and for packages hidden by Android 11+ package
+     * visibility filtering. The label is cosmetic, so it must never fail a provider call.
+     */
     override val applicationLabel: String
-        @Throws(PackageManager.NameNotFoundException::class)
         get() {
-            val applicationInfo = packageManager.getApplicationInfo(
-                callingApplicationPackageName,
-                PackageManager.GET_META_DATA
-            )
-            return applicationInfo.loadLabel(packageManager).toString()
+            val packageName = callingApplicationPackageName
+            return try {
+                packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+                    .loadLabel(packageManager)
+                    .toString()
+            } catch (_: PackageManager.NameNotFoundException) {
+                packageName
+            }
         }
 
     override val callingApplicationPackageName: String
