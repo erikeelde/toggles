@@ -20,6 +20,7 @@ import se.eelde.toggles.database.migrations.Migrations.MIGRATION_4_5
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_5_6
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_6_7
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_7_8
+import se.eelde.toggles.database.migrations.Migrations.MIGRATION_8_9
 import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 
@@ -277,6 +278,37 @@ class MigrationTests {
         assertEquals(1, values.size)
         // The most-recent (highest id) row is kept
         assertEquals("true", values[0].value)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test8to9() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 8)
+        originalDb.close()
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 9, true, MIGRATION_8_9)
+
+        migratedDb.query("SELECT agentControlEnabled FROM application").use { cursor ->
+            assertEquals(0, cursor.count)
+        }
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test8to9DefaultsExistingApplicationsToEnabled() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 8)
+        originalDb.execSQL(
+            "INSERT INTO application (shortcutId, packageName, applicationLabel) " +
+                "VALUES ('com.example.app', 'com.example.app', 'Example')"
+        )
+        originalDb.close()
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 9, true, MIGRATION_8_9)
+
+        migratedDb.query("SELECT agentControlEnabled FROM application").use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            assertEquals(1, cursor.getInt(0))
+        }
     }
 
     companion object {

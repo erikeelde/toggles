@@ -16,6 +16,7 @@ object Migrations {
     private const val databaseVersion6 = 6
     private const val databaseVersion7 = 7
     private const val databaseVersion8 = 8
+    private const val databaseVersion9 = 9
 
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -336,6 +337,14 @@ object Migrations {
 
                 db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
             }
+        }
+    }
+
+    val MIGRATION_8_9: Migration = object : Migration(databaseVersion8, databaseVersion9) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "ALTER TABLE application ADD COLUMN agentControlEnabled INTEGER NOT NULL DEFAULT 1"
+            )
         }
     }
 }
