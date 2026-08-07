@@ -1,5 +1,6 @@
 package se.eelde.toggles.agent
 
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import se.eelde.toggles.database.TogglesApplication
 import se.eelde.toggles.database.TogglesConfiguration
@@ -8,12 +9,17 @@ import se.eelde.toggles.database.TogglesScope
 import se.eelde.toggles.database.dao.agent.AgentDao
 import se.eelde.toggles.database.dao.agent.AgentMutationDao
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 
 private const val KEY_CONFIGURATION_ID = "configurationId"
 private const val KEY_SCOPE_ID = "scopeId"
 private const val KEY_VALUE = "value"
+private const val KEY_PACKAGE = "package"
+private const val KEY_NAME = "name"
 
 private const val METHOD_SET_CONFIGURATION_VALUE = "setConfigurationValue"
+private const val METHOD_CREATE_SCOPE = "createScope"
+private const val METHOD_SELECT_SCOPE = "selectScope"
 
 /**
  * Serves every agent mutation endpoint (`adb shell content call ...`) as a JSON string.
@@ -32,6 +38,8 @@ class AgentCallHandler(
     fun handle(method: String, extras: Bundle?): String = try {
         when (method) {
             METHOD_SET_CONFIGURATION_VALUE -> setConfigurationValue(extras)
+            METHOD_CREATE_SCOPE -> createScope(extras)
+            METHOD_SELECT_SCOPE -> selectScope(extras)
             else -> AgentError.json(
                 AgentErrorCode.UNKNOWN_ENDPOINT,
                 "no such method: $method. Read /describe for the available endpoints."
@@ -115,6 +123,112 @@ class AgentCallHandler(
                 )
             )
         }
+    }
+
+    // Each early return is a distinct validation gate, same rationale as setConfigurationValue.
+    @Suppress("ReturnCount")
+    private fun createScope(extras: Bundle?): String {
+        val packageName = extras.stringExtra(KEY_PACKAGE) ?: return missingArgument(KEY_PACKAGE)
+        val name = extras.stringExtra(KEY_NAME) ?: return missingArgument(KEY_NAME)
+
+        val application = agentDao.getApplicationByPackageName(packageName)
+            ?: return AgentError.json(
+                AgentErrorCode.UNKNOWN_PACKAGE,
+                "Toggles has no record of $packageName. Read /apps for the known packages."
+            )
+
+        if (!application.agentControlEnabled) {
+            return AgentError.json(
+                AgentErrorCode.AGENT_CONTROL_DISABLED,
+                "agent control is disabled for $packageName. Enable it in the Toggles app."
+            )
+        }
+
+        // A newly created scope must never become the selected one merely by being newer than
+        // the currently selected scope's timestamp — creating a scope and selecting it are
+        // deliberately separate operations (an agent that wants both makes two calls). Anchoring
+        // the new scope's timestamp one second behind the application's current newest scope
+        // (or "now" when it has none yet) keeps creation from ever perturbing the selection.
+        val timestamp = agentDao.getScopes(application.id).maxOfOrNull { it.timeStamp }
+            ?.minus(1.seconds)
+            ?: clock.now()
+
+        val scopeId = try {
+            agentMutationDao.insertScope(
+                TogglesScope(id = 0, applicationId = application.id, name = name, timeStamp = timestamp)
+            )
+        } catch (_: SQLiteConstraintException) {
+            return AgentError.json(
+                AgentErrorCode.INVALID_ARGUMENT,
+                "$packageName already has a scope named \"$name\"; scope names must be unique " +
+                    "per application."
+            )
+        }
+
+        return agentJson.encodeToString(
+            AgentMutationResponse(
+                method = METHOD_CREATE_SCOPE,
+                summary = "created scope \"$name\" for $packageName",
+                applicationPackage = packageName,
+                configurationId = null,
+                configurationKey = null,
+                scopeId = scopeId,
+                scopeName = name,
+                value = null
+            )
+        )
+    }
+
+    // Each early return is a distinct validation gate, same rationale as setConfigurationValue.
+    @Suppress("ReturnCount")
+    private fun selectScope(extras: Bundle?): String {
+        val packageName = extras.stringExtra(KEY_PACKAGE) ?: return missingArgument(KEY_PACKAGE)
+        val scopeId = extras.longExtra(KEY_SCOPE_ID) ?: return missingArgument(KEY_SCOPE_ID)
+
+        val application = agentDao.getApplicationByPackageName(packageName)
+            ?: return AgentError.json(
+                AgentErrorCode.UNKNOWN_PACKAGE,
+                "Toggles has no record of $packageName. Read /apps for the known packages."
+            )
+
+        if (!application.agentControlEnabled) {
+            return AgentError.json(
+                AgentErrorCode.AGENT_CONTROL_DISABLED,
+                "agent control is disabled for $packageName. Enable it in the Toggles app."
+            )
+        }
+
+        val scope = agentMutationDao.getScope(scopeId)
+            ?: return unknownId("no scope with id $scopeId")
+
+        if (scope.applicationId != application.id) {
+            return AgentError.json(
+                AgentErrorCode.INVALID_ARGUMENT,
+                "scope $scopeId belongs to a different application than $packageName; " +
+                    "cross-application scope selection is not allowed."
+            )
+        }
+
+        agentMutationDao.touchScope(scopeId, clock.now())
+        // Selection changes what every configuration in the application resolves to.
+        // notifyScopesChanged() alone is sufficient to reach a running toggles-flow client:
+        // observeToggleState registers the same observer on scopeUri() (in addition to
+        // configurationUri() and toggleUri()), and that observer re-resolves the full toggle
+        // state on any change regardless of which URI fired.
+        changeNotifier.notifyScopesChanged()
+
+        return agentJson.encodeToString(
+            AgentMutationResponse(
+                method = METHOD_SELECT_SCOPE,
+                summary = "selected scope \"${scope.name}\" for $packageName",
+                applicationPackage = packageName,
+                configurationId = null,
+                configurationKey = null,
+                scopeId = scope.id,
+                scopeName = scope.name,
+                value = null
+            )
+        )
     }
 
     private fun successResponse(

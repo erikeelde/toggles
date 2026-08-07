@@ -258,6 +258,170 @@ class AgentCallHandlerTest {
         assertEquals("blue", effectiveValue("com.example.app"))
     }
 
+    // --- createScope ---
+
+    @Test
+    fun `creating a scope creates it for the application and returns its id`() {
+        insertApplication("com.example.app", "Example")
+
+        val response = createScope(packageName = "com.example.app", name = "new scope")
+
+        val decoded = decode(response)
+        assertEquals("createScope", decoded.method)
+        val scopeId = requireNotNull(decoded.scopeId)
+        assertEquals("new scope", database.agentMutationDao().getScope(scopeId)?.name)
+    }
+
+    @Test
+    fun `a duplicate scope name for the same application returns invalid_argument`() {
+        val appId = insertApplication("com.example.app", "Example")
+        insertScope(appId, "Development scope")
+
+        val response = createScope(packageName = "com.example.app", name = "Development scope")
+
+        assertEquals("invalid_argument", errorCode(response))
+    }
+
+    @Test
+    fun `creating a scope for an unknown package returns unknown_package`() {
+        val response = createScope(packageName = "com.example.missing", name = "new scope")
+
+        assertEquals("unknown_package", errorCode(response))
+    }
+
+    @Test
+    fun `creating a scope for a disabled application returns agent_control_disabled`() {
+        val appId = insertApplication("com.example.app", "Example")
+        database.openHelper.writableDatabase.execSQL(
+            "UPDATE application SET agentControlEnabled = 0 WHERE id = $appId"
+        )
+
+        val response = createScope(packageName = "com.example.app", name = "new scope")
+
+        assertEquals("agent_control_disabled", errorCode(response))
+    }
+
+    @Test
+    fun `creating a scope does not select it`() {
+        val appId = insertApplication("com.example.app", "Example")
+        insertScope(appId, "toggles_default", epochMillis = 0)
+        // Clearly newer than the default scope but clearly older than the fixed clock (99_000) used
+        // for creation timestamps below, so there is no ambiguity about which scope is selected
+        // before or after createScope runs.
+        val devScopeId = insertScope(appId, "Development scope", epochMillis = 10_000)
+
+        val response = createScope(packageName = "com.example.app", name = "new scope")
+
+        assertEquals("createScope", decode(response).method)
+        assertEquals(devScopeId, selectedScopeId("com.example.app"))
+    }
+
+    @Test
+    fun `createScope's response summary names the application and the scope`() {
+        insertApplication("com.example.app", "Example")
+
+        val response = createScope(packageName = "com.example.app", name = "new scope")
+
+        val summary = decode(response).summary
+        assertTrue(
+            "expected the package in the summary, got: $summary",
+            summary.contains("com.example.app")
+        )
+        assertTrue(
+            "expected the scope name in the summary, got: $summary",
+            summary.contains("new scope")
+        )
+    }
+
+    // --- selectScope ---
+
+    @Test
+    fun `selecting a scope makes it the selected one`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default", epochMillis = 0)
+        // Older than the fixed clock (99_000) used by touchScope, so selecting defaultScopeId is
+        // unambiguously a change.
+        insertScope(appId, "Development scope", epochMillis = 10_000)
+
+        val response = selectScope(packageName = "com.example.app", scopeId = defaultScopeId)
+
+        assertEquals("selectScope", decode(response).method)
+        assertEquals(defaultScopeId, selectedScopeId("com.example.app"))
+    }
+
+    @Test
+    fun `selecting a scope changes effectiveValue for a configuration with different values per scope`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default", epochMillis = 0)
+        // Seeded strictly between the default scope's timestamp and the fixed clock's 99_000, so
+        // it is unambiguously selected before the call and unambiguously superseded after it — a
+        // single touchScope call (using the one fixed clock value) is enough to prove the switch
+        // without needing two touches that could tie.
+        val devScopeId = insertScope(appId, "Development scope", epochMillis = 10_000)
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, defaultScopeId, "false")
+        insertValue(configId, devScopeId, "true")
+
+        assertEquals("true", effectiveValue("com.example.app"))
+
+        selectScope(packageName = "com.example.app", scopeId = defaultScopeId)
+
+        assertEquals("false", effectiveValue("com.example.app"))
+    }
+
+    @Test
+    fun `selecting a scope from a different application returns invalid_argument and changes nothing`() {
+        val appA = insertApplication("com.example.a", "A")
+        val appB = insertApplication("com.example.b", "B")
+        insertScope(appA, "toggles_default", epochMillis = 0)
+        val devA = insertScope(appA, "Development scope", epochMillis = 10_000)
+        val scopeB = insertScope(appB, "toggles_default", epochMillis = 0)
+
+        val response = selectScope(packageName = "com.example.a", scopeId = scopeB)
+
+        assertEquals("invalid_argument", errorCode(response))
+        assertEquals(devA, selectedScopeId("com.example.a"))
+    }
+
+    @Test
+    fun `selecting a scope notifies the notifier that scopes changed`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default", epochMillis = 0)
+
+        selectScope(packageName = "com.example.app", scopeId = defaultScopeId)
+
+        assertEquals(1, notifier.scopesNotified)
+    }
+
+    @Test
+    fun `selecting an unknown scopeId returns unknown_id`() {
+        insertApplication("com.example.app", "Example")
+
+        val response = selectScope(packageName = "com.example.app", scopeId = 999L)
+
+        assertEquals("unknown_id", errorCode(response))
+    }
+
+    @Test
+    fun `selecting a scope for an unknown package returns unknown_package`() {
+        val response = selectScope(packageName = "com.example.missing", scopeId = 1L)
+
+        assertEquals("unknown_package", errorCode(response))
+    }
+
+    @Test
+    fun `selecting a scope for a disabled application returns agent_control_disabled`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default", epochMillis = 0)
+        database.openHelper.writableDatabase.execSQL(
+            "UPDATE application SET agentControlEnabled = 0 WHERE id = $appId"
+        )
+
+        val response = selectScope(packageName = "com.example.app", scopeId = scopeId)
+
+        assertEquals("agent_control_disabled", errorCode(response))
+    }
+
     private class RecordingChangeNotifier : AgentChangeNotifier {
         val configurationsNotified = mutableListOf<Long>()
         var scopesNotified = 0
@@ -281,16 +445,39 @@ class AgentCallHandlerTest {
             }
         )
 
-    private fun effectiveValue(packageName: String): String? {
+    private fun createScope(packageName: String, name: String): String =
+        handler.handle(
+            "createScope",
+            Bundle().apply {
+                putString("package", packageName)
+                putString("name", name)
+            }
+        )
+
+    private fun selectScope(packageName: String, scopeId: Long): String =
+        handler.handle(
+            "selectScope",
+            Bundle().apply {
+                putString("package", packageName)
+                putLong("scopeId", scopeId)
+            }
+        )
+
+    private fun applicationDetail(packageName: String): AgentApplicationDetail {
         val readHandler = AgentReadHandler(
             agentDao = database.agentDao(),
             uriMatcher = AgentUriMatcher(AgentDescription.AGENT_AUTHORITY),
             appVersionName = "1.2.3"
         )
         val uri = android.net.Uri.parse("content://${AgentDescription.AGENT_AUTHORITY}/apps/$packageName")
-        val detail: AgentApplicationDetail = json.decodeFromString(readHandler.handle(uri))
-        return detail.configurations.single().effectiveValue
+        return json.decodeFromString(readHandler.handle(uri))
     }
+
+    private fun effectiveValue(packageName: String): String? =
+        applicationDetail(packageName).configurations.single().effectiveValue
+
+    private fun selectedScopeId(packageName: String): Long? =
+        applicationDetail(packageName).scopes.firstOrNull { it.selected }?.id
 
     private fun decode(payload: String): AgentMutationResponse = json.decodeFromString(payload)
 
@@ -310,13 +497,13 @@ class AgentCallHandlerTest {
             )
         )
 
-    private fun insertScope(applicationId: Long, name: String): Long =
+    private fun insertScope(applicationId: Long, name: String, epochMillis: Long = 0): Long =
         database.providerScopeDao().insert(
             TogglesScope(
                 id = 0,
                 applicationId = applicationId,
                 name = name,
-                timeStamp = Instant.fromEpochMilliseconds(0)
+                timeStamp = Instant.fromEpochMilliseconds(epochMillis)
             )
         )
 
