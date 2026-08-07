@@ -103,7 +103,7 @@ class AgentReadHandler(
     }
 
     private fun chainFor(scopes: List<TogglesScope>, selectedScope: TogglesScope?): ScopeChain? {
-        val defaultScope = scopes.firstOrNull { it.name == DEFAULT_SCOPE_NAME }
+        val defaultScope = scopes.firstOrNull { it.name == TogglesScope.SCOPE_DEFAULT }
         return if (selectedScope != null && defaultScope != null) {
             ScopeChain(selectedScopeId = selectedScope.id, defaultScopeId = defaultScope.id)
         } else {
@@ -146,10 +146,6 @@ class AgentReadHandler(
         id = id,
         name = name,
         selected = id == selectedScope?.id,
-        default = name == DEFAULT_SCOPE_NAME
+        default = name == TogglesScope.SCOPE_DEFAULT
     )
-
-    private companion object {
-        const val DEFAULT_SCOPE_NAME = "toggles_default"
-    }
 }
