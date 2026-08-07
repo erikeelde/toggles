@@ -10,6 +10,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import se.eelde.toggles.agent.implementation.R
+import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -40,7 +41,13 @@ class SystemAgentControlNotifier(
     // process restart is fine (arguably desirable — it re-surfaces the disclosure rather than
     // letting "already told them once, years ago" go stale), and this doesn't need the migration
     // and cleanup story a persisted "already notified" flag would.
-    private val alreadyNotified = ConcurrentHashMap.newKeySet<String>()
+    //
+    // Collections.newSetFromMap rather than ConcurrentHashMap.newKeySet(): the latter is API 24+
+    // and this module's minSdk is 23, so it would throw NoSuchMethodError on older devices. Lint
+    // caught this; no unit test could, because Robolectric runs on a full JVM where the method
+    // exists regardless of the declared minSdk.
+    private val alreadyNotified: MutableSet<String> =
+        Collections.newSetFromMap(ConcurrentHashMap<String, Boolean>())
 
     // Posting a notification is disclosure, not part of the mutation's contract: whatever goes
     // wrong here (POST_NOTIFICATIONS denied, no NotificationManager, anything else) must never be
