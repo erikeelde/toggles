@@ -8,10 +8,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import se.eelde.toggles.agent.AgentChangeNotifier
+import se.eelde.toggles.agent.AgentControlNotifier
 import se.eelde.toggles.agent.AgentDescription
 import se.eelde.toggles.agent.AgentUriMatcher
 import se.eelde.toggles.agent.CallerAuthorization
 import se.eelde.toggles.agent.ContentResolverAgentChangeNotifier
+import se.eelde.toggles.agent.SystemAgentControlNotifier
 import se.eelde.toggles.database.TogglesDatabase
 import se.eelde.toggles.database.dao.agent.AgentDao
 import se.eelde.toggles.database.dao.agent.AgentMutationDao
@@ -38,6 +40,11 @@ object TestAgentModule {
     @Provides
     fun provideAgentChangeNotifier(@ApplicationContext context: Context): AgentChangeNotifier =
         ContentResolverAgentChangeNotifier(context.contentResolver)
+
+    @Singleton
+    @Provides
+    fun provideAgentControlNotifier(@ApplicationContext context: Context): AgentControlNotifier =
+        SystemAgentControlNotifier(context)
 
     @Provides
     fun provideClock(): Clock = Clock.System

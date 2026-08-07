@@ -1,6 +1,8 @@
 package se.eelde.toggles.agent
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.os.Build
@@ -24,9 +26,16 @@ import se.eelde.toggles.database.TogglesConfigurationValue
 import se.eelde.toggles.database.TogglesDatabase
 import se.eelde.toggles.database.TogglesPredefinedConfigurationValue
 import se.eelde.toggles.database.TogglesScope
+import se.eelde.toggles.database.dao.agent.AgentMutationDao
+import java.util.concurrent.Executor
 import kotlin.time.Clock
 import kotlin.time.Instant
 
+// One exhaustive test class covering every AgentCallHandler endpoint (including the agent control
+// notification wiring added alongside the mutation endpoints themselves) reads better as a single
+// file organized by endpoint than split across files that would each need their own database and
+// handler setup.
+@Suppress("LargeClass")
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.P])
 class AgentCallHandlerTest {
@@ -36,6 +45,7 @@ class AgentCallHandlerTest {
     private lateinit var database: TogglesDatabase
     private lateinit var handler: AgentCallHandler
     private lateinit var notifier: RecordingChangeNotifier
+    private lateinit var controlNotifier: RecordingControlNotifier
 
     private val fixedClock = object : Clock {
         override fun now(): Instant = Instant.fromEpochMilliseconds(99_000)
@@ -48,11 +58,13 @@ class AgentCallHandlerTest {
             TogglesDatabase::class.java
         ).allowMainThreadQueries().build()
         notifier = RecordingChangeNotifier()
+        controlNotifier = RecordingControlNotifier()
         val context = ApplicationProvider.getApplicationContext<Application>()
         handler = AgentCallHandler(
             agentDao = database.agentDao(),
             agentMutationDao = database.agentMutationDao(),
             changeNotifier = notifier,
+            controlNotifier = controlNotifier,
             clock = fixedClock,
             packageManager = context.packageManager
         )
@@ -589,6 +601,119 @@ class AgentCallHandlerTest {
         assertTrue(notifier.configurationsNotified.isEmpty())
     }
 
+    // --- agent control notifications (B10) ---
+
+    @Test
+    fun `a successful mutation notifies the control notifier naming the package and its label`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+
+        call(configurationId = configId, scopeId = scopeId, value = "true")
+
+        assertEquals(listOf("com.example.app" to "Example"), controlNotifier.notified)
+    }
+
+    @Test
+    fun `a rejected mutation does not notify the control notifier`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, scopeId, "false")
+
+        call(configurationId = configId, scopeId = scopeId, value = "not-a-boolean")
+
+        assertTrue(controlNotifier.notified.isEmpty())
+    }
+
+    @Test
+    fun `a mutation for a disabled application does not notify the control notifier`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        database.openHelper.writableDatabase.execSQL(
+            "UPDATE application SET agentControlEnabled = 0 WHERE id = $appId"
+        )
+
+        call(configurationId = configId, scopeId = scopeId, value = "true")
+
+        assertTrue(controlNotifier.notified.isEmpty())
+    }
+
+    @Test
+    fun `delivering the disable broadcast disables agent control and a subsequent mutation is rejected`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+
+        val context = ApplicationProvider.getApplicationContext<Application>()
+        val receiver = AgentControlDisableReceiver()
+        receiver.entryPointBuilder = object : AgentControlDisableReceiver.EntryPointBuilder {
+            override fun build(context: Context) =
+                object : AgentControlDisableReceiver.AgentControlDisableReceiverEntryPoint {
+                    override fun provideAgentMutationDao(): AgentMutationDao = database.agentMutationDao()
+                }
+        }
+        // Runs the "background" work inline so the DAO call has completed by the time onReceive
+        // returns, rather than racing a real background thread from the test.
+        receiver.executor = Executor { it.run() }
+
+        receiver.onReceive(
+            context,
+            Intent(AgentControlDisableReceiver.ACTION_DISABLE_AGENT_CONTROL).apply {
+                putExtra(AgentControlDisableReceiver.EXTRA_PACKAGE_NAME, "com.example.app")
+            }
+        )
+
+        val response = call(configurationId = configId, scopeId = scopeId, value = "true")
+
+        assertEquals("agent_control_disabled", errorCode(response))
+        assertEquals(false, database.agentDao().getApplicationById(appId)?.agentControlEnabled)
+    }
+
+    @Test
+    fun `a mutation still succeeds and the value still changes when posting the notification fails`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, scopeId, "false")
+
+        // A Context whose NotificationManager access always blows up — simulating, among other
+        // things, POST_NOTIFICATIONS having been denied — wired into the REAL notifier so this
+        // proves SystemAgentControlNotifier's own defensiveness, not just that a test fake stayed
+        // quiet.
+        val brokenContext = object : android.content.ContextWrapper(
+            ApplicationProvider.getApplicationContext()
+        ) {
+            override fun getSystemService(name: String): Any? {
+                if (name == Context.NOTIFICATION_SERVICE) {
+                    throw SecurityException("notifications not permitted")
+                }
+                return super.getSystemService(name)
+            }
+        }
+        val handlerWithRealNotifier = AgentCallHandler(
+            agentDao = database.agentDao(),
+            agentMutationDao = database.agentMutationDao(),
+            changeNotifier = notifier,
+            controlNotifier = SystemAgentControlNotifier(brokenContext),
+            clock = fixedClock,
+            packageManager = ApplicationProvider.getApplicationContext<Application>().packageManager
+        )
+
+        val response = handlerWithRealNotifier.handle(
+            "setConfigurationValue",
+            Bundle().apply {
+                putLong("configurationId", configId)
+                putLong("scopeId", scopeId)
+                putString("value", "true")
+            }
+        )
+
+        assertEquals("setConfigurationValue", decode(response).method)
+        assertEquals("true", effectiveValue("com.example.app"))
+    }
+
     private class RecordingChangeNotifier : AgentChangeNotifier {
         val configurationsNotified = mutableListOf<Long>()
         var scopesNotified = 0
@@ -599,6 +724,14 @@ class AgentCallHandlerTest {
 
         override fun notifyScopesChanged() {
             scopesNotified++
+        }
+    }
+
+    private class RecordingControlNotifier : AgentControlNotifier {
+        val notified = mutableListOf<Pair<String, String>>()
+
+        override fun notifyFirstMutation(packageName: String, applicationLabel: String) {
+            notified += packageName to applicationLabel
         }
     }
 

@@ -47,6 +47,10 @@
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
+
+        <receiver
+            android:name=".agent.AgentControlDisableReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>

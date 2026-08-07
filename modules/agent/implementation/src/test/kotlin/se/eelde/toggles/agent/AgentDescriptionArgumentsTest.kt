@@ -55,6 +55,9 @@ class AgentDescriptionArgumentsTest {
                 override fun notifyConfigurationChanged(configurationId: Long) = Unit
                 override fun notifyScopesChanged() = Unit
             },
+            controlNotifier = object : AgentControlNotifier {
+                override fun notifyFirstMutation(packageName: String, applicationLabel: String) = Unit
+            },
             clock = fixedClock,
             packageManager = context.packageManager
         )

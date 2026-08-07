@@ -52,6 +52,7 @@ class TogglesAgentProvider : ContentProvider() {
         fun provideAgentUriMatcher(): AgentUriMatcher
         fun provideCallerAuthorization(): CallerAuthorization
         fun provideAgentChangeNotifier(): AgentChangeNotifier
+        fun provideAgentControlNotifier(): AgentControlNotifier
         fun provideClock(): Clock
         fun providePackageManager(): PackageManager
     }
@@ -69,6 +70,7 @@ class TogglesAgentProvider : ContentProvider() {
             agentDao = entryPoint.provideAgentDao(),
             agentMutationDao = entryPoint.provideAgentMutationDao(),
             changeNotifier = entryPoint.provideAgentChangeNotifier(),
+            controlNotifier = entryPoint.provideAgentControlNotifier(),
             clock = entryPoint.provideClock(),
             packageManager = entryPoint.providePackageManager()
         )

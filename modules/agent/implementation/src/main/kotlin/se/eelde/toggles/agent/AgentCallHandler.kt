@@ -45,6 +45,7 @@ class AgentCallHandler(
     private val agentDao: AgentDao,
     private val agentMutationDao: AgentMutationDao,
     private val changeNotifier: AgentChangeNotifier,
+    private val controlNotifier: AgentControlNotifier,
     private val clock: Clock,
     packageManager: PackageManager,
 ) {
@@ -125,6 +126,7 @@ class AgentCallHandler(
         upsertConfigurationValue(configurationId, scopeId, value)
         agentMutationDao.touch(configurationId, clock.now())
         changeNotifier.notifyConfigurationChanged(configurationId)
+        controlNotifier.notifyFirstMutation(application.packageName, application.applicationLabel)
 
         return agentJson.encodeToString(
             successResponse(application, configuration, scope, value)
@@ -189,6 +191,8 @@ class AgentCallHandler(
             )
         }
 
+        controlNotifier.notifyFirstMutation(application.packageName, application.applicationLabel)
+
         return agentJson.encodeToString(
             AgentMutationResponse(
                 method = AgentCallContract.METHOD_CREATE_SCOPE,
@@ -242,6 +246,7 @@ class AgentCallHandler(
         // configurationUri() and toggleUri()), and that observer re-resolves the full toggle
         // state on any change regardless of which URI fired.
         changeNotifier.notifyScopesChanged()
+        controlNotifier.notifyFirstMutation(application.packageName, application.applicationLabel)
 
         return agentJson.encodeToString(
             AgentMutationResponse(
@@ -310,6 +315,8 @@ class AgentCallHandler(
             )
         }
 
+        controlNotifier.notifyFirstMutation(application.packageName, application.applicationLabel)
+
         return agentJson.encodeToString(
             AgentMutationResponse(
                 method = AgentCallContract.METHOD_CREATE_CONFIGURATION,
@@ -351,6 +358,7 @@ class AgentCallHandler(
         // for this configuration along with it.
         agentMutationDao.deleteConfiguration(configurationId)
         changeNotifier.notifyConfigurationChanged(configurationId)
+        controlNotifier.notifyFirstMutation(application.packageName, application.applicationLabel)
 
         return agentJson.encodeToString(
             AgentMutationResponse(

@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import se.eelde.toggles.database.TogglesDatabase
 import se.eelde.toggles.database.dao.agent.AgentDao
 import se.eelde.toggles.database.dao.agent.AgentMutationDao
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -30,6 +31,13 @@ object AgentModule {
     @Provides
     fun provideAgentChangeNotifier(@ApplicationContext context: Context): AgentChangeNotifier =
         ContentResolverAgentChangeNotifier(context.contentResolver)
+
+    // Singleton: the "already notified this process" set it holds must be shared by every caller,
+    // not reset per injection.
+    @Singleton
+    @Provides
+    fun provideAgentControlNotifier(@ApplicationContext context: Context): AgentControlNotifier =
+        SystemAgentControlNotifier(context)
 
     @Provides
     fun providePackageManager(@ApplicationContext context: Context): PackageManager =
