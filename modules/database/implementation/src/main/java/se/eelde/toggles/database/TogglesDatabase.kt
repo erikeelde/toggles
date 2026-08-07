@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import se.eelde.toggles.database.dao.agent.AgentDao
+import se.eelde.toggles.database.dao.agent.AgentMutationDao
 import se.eelde.toggles.database.dao.application.TogglesApplicationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
@@ -45,4 +46,5 @@ abstract class TogglesDatabase : RoomDatabase() {
     abstract fun providerScopeDao(): ProviderScopeDao
 
     abstract fun agentDao(): AgentDao
+    abstract fun agentMutationDao(): AgentMutationDao
 }
