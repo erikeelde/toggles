@@ -13,7 +13,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import se.eelde.toggles.database.TogglesApplication
+import se.eelde.toggles.database.TogglesConfiguration
+import se.eelde.toggles.database.TogglesConfigurationValue
 import se.eelde.toggles.database.TogglesDatabase
+import se.eelde.toggles.database.TogglesPredefinedConfigurationValue
+import se.eelde.toggles.database.TogglesScope
+import kotlin.time.Instant
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.P])
@@ -43,6 +48,46 @@ class AgentDaoTest {
                 shortcutId = packageName,
                 packageName = packageName,
                 applicationLabel = label
+            )
+        )
+
+    private fun insertScope(applicationId: Long, name: String): Long =
+        database.providerScopeDao().insert(
+            TogglesScope(
+                id = 0,
+                applicationId = applicationId,
+                name = name,
+                timeStamp = Instant.fromEpochMilliseconds(0)
+            )
+        )
+
+    private fun insertConfiguration(applicationId: Long, key: String): Long =
+        database.providerConfigurationDao().insert(
+            TogglesConfiguration(
+                id = 0,
+                applicationId = applicationId,
+                key = key,
+                type = "boolean",
+                lastUse = Instant.fromEpochMilliseconds(0)
+            )
+        )
+
+    private fun insertConfigurationValue(configurationId: Long, scopeId: Long, value: String?): Long =
+        database.providerConfigurationValueDao().insertSync(
+            TogglesConfigurationValue(
+                id = 0,
+                configurationId = configurationId,
+                value = value,
+                scope = scopeId
+            )
+        )
+
+    private fun insertPredefinedConfigurationValue(configurationId: Long, value: String): Long =
+        database.providerPredefinedConfigurationValueDao().insert(
+            TogglesPredefinedConfigurationValue(
+                id = 0,
+                configurationId = configurationId,
+                value = value
             )
         )
 
@@ -83,5 +128,97 @@ class AgentDaoTest {
 
         assertEquals("B", agentDao.getApplicationByPackageName("com.example.b")?.applicationLabel)
         assertEquals(2, agentDao.getApplications().size)
+    }
+
+    @Test
+    fun `getConfigurations returns only the requested application's configurations, ordered by key`() {
+        val appA = insertApplication("com.example.a", "A")
+        val appB = insertApplication("com.example.b", "B")
+        insertConfiguration(appA, "zebra")
+        insertConfiguration(appA, "apple")
+        insertConfiguration(appB, "middle")
+
+        val configurations = agentDao.getConfigurations(appA)
+
+        assertEquals(listOf("apple", "zebra"), configurations.map { it.key })
+    }
+
+    @Test
+    fun `getConfigurations is empty for an application with no configurations`() {
+        val appA = insertApplication("com.example.a", "A")
+        insertApplication("com.example.b", "B").also { insertConfiguration(it, "middle") }
+
+        assertTrue(agentDao.getConfigurations(appA).isEmpty())
+    }
+
+    @Test
+    fun `getScopes returns only the requested application's scopes`() {
+        val appA = insertApplication("com.example.a", "A")
+        val appB = insertApplication("com.example.b", "B")
+        insertScope(appA, "alpha")
+        insertScope(appA, "beta")
+        insertScope(appB, "gamma")
+
+        val scopes = agentDao.getScopes(appA)
+
+        assertEquals(setOf("alpha", "beta"), scopes.map { it.name }.toSet())
+        assertEquals(2, scopes.size)
+    }
+
+    @Test
+    fun `getConfigurationValues returns only the requested application's values`() {
+        val appA = insertApplication("com.example.a", "A")
+        val appB = insertApplication("com.example.b", "B")
+        val configA = insertConfiguration(appA, "featureA")
+        val configB = insertConfiguration(appB, "featureB")
+        val scopeA = insertScope(appA, "default")
+        val scopeB = insertScope(appB, "default")
+        insertConfigurationValue(configA, scopeA, "valueA")
+        insertConfigurationValue(configB, scopeB, "valueB")
+
+        val values = agentDao.getConfigurationValues(appA)
+
+        assertEquals(1, values.size)
+        assertEquals("valueA", values[0].value)
+        assertTrue(values.none { it.value == "valueB" })
+    }
+
+    @Test
+    fun `getConfigurationValues is empty when configurations exist but have no value rows`() {
+        val appA = insertApplication("com.example.a", "A")
+        insertConfiguration(appA, "featureA")
+
+        assertTrue(agentDao.getConfigurationValues(appA).isEmpty())
+    }
+
+    @Test
+    fun `getConfigurationValues returns all scoped values for a configuration`() {
+        val appA = insertApplication("com.example.a", "A")
+        val configA = insertConfiguration(appA, "featureA")
+        val defaultScope = insertScope(appA, "default")
+        val devScope = insertScope(appA, "development")
+        insertConfigurationValue(configA, defaultScope, "defaultValue")
+        insertConfigurationValue(configA, devScope, "devValue")
+
+        val values = agentDao.getConfigurationValues(appA)
+
+        assertEquals(setOf("defaultValue", "devValue"), values.map { it.value }.toSet())
+        assertEquals(2, values.size)
+    }
+
+    @Test
+    fun `getPredefinedConfigurationValues returns only the requested application's values`() {
+        val appA = insertApplication("com.example.a", "A")
+        val appB = insertApplication("com.example.b", "B")
+        val configA = insertConfiguration(appA, "featureA")
+        val configB = insertConfiguration(appB, "featureB")
+        insertPredefinedConfigurationValue(configA, "predefinedA")
+        insertPredefinedConfigurationValue(configB, "predefinedB")
+
+        val values = agentDao.getPredefinedConfigurationValues(appA)
+
+        assertEquals(1, values.size)
+        assertEquals("predefinedA", values[0].value)
+        assertTrue(values.none { it.value == "predefinedB" })
     }
 }
