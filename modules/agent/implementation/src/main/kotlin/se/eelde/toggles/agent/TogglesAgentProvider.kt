@@ -14,6 +14,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import se.eelde.toggles.database.dao.agent.AgentDao
 import java.io.FileOutputStream
+import java.io.IOException
 
 /**
  * The adb-facing surface. Exported so that shell can reach it; restricted to shell and root by
@@ -81,8 +82,15 @@ class TogglesAgentProvider : ContentProvider() {
         // openPipeHelper writes on a background thread, so a large payload blocks that thread
         // rather than the binder call.
         return openPipeHelper(uri, MIME_TYPE, null, json) { output, _, _, _, payload ->
-            FileOutputStream(output.fileDescriptor).use { stream ->
-                stream.write(payload.orEmpty().toByteArray())
+            try {
+                FileOutputStream(output.fileDescriptor).use { stream ->
+                    stream.write(payload.orEmpty().toByteArray())
+                }
+            } catch (_: IOException) {
+                // The reader closed the pipe before we finished writing — e.g. piping through
+                // `head` or a parser that stops early. There is nothing useful to do but stop.
+                // Letting this escape would surface as a fatal RuntimeException on the AsyncTask
+                // worker thread and take down the Toggles process.
             }
         }
     }
