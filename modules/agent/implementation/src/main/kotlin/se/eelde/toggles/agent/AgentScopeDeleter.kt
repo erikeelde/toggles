@@ -8,18 +8,15 @@ import se.eelde.toggles.database.dao.agent.AgentMutationDao
 /**
  * Implements `deleteScope`.
  *
- * Two constraints the schema does not enforce, both required here:
+ * A constraint the schema does not enforce, required here:
  *
- * A. `configurationValue.scope` has no foreign key to `scope` (see the exported schema), so
- *    deleting a scope row never cascades to its value rows. Left alone, those rows are orphaned
- *    forever: still returned by [AgentDao.getConfigurationValues] (it joins through
- *    `configuration`, not `scope`), surfaced with a null scope name, and never participating in
- *    resolution again. This class deletes them explicitly via [AgentMutationDao.deleteScopeValues]
- *    before deleting the scope itself.
+ * [AgentReadHandler]'s scope-chain resolution (see [scopeChainFor]) returns null when an
+ * application has no scope named [TogglesScope.SCOPE_DEFAULT], which silently nulls out every
+ * `effectiveValue` for that application. The default scope can therefore never be deleted here.
  *
- * B. [AgentReadHandler]'s scope-chain resolution (see [scopeChainFor]) returns null when an
- *    application has no scope named [TogglesScope.SCOPE_DEFAULT], which silently nulls out every
- *    `effectiveValue` for that application. The default scope can therefore never be deleted here.
+ * `configurationValue.scope` has a foreign key to `scope(id) ON DELETE CASCADE` (added in
+ * `MIGRATION_9_10`), so deleting a scope row cascades to its value rows automatically — no
+ * explicit cleanup is needed here.
  *
  * Split out of [AgentCallHandler] for the same TooManyFunctions reason as
  * [AgentApplicationProvisioner] and [AgentConfigurationValueDeleter].
@@ -75,7 +72,6 @@ internal class AgentScopeDeleter(
 
         val wasSelected = agentDao.getScopes(application.id).maxByOrNull { it.timeStamp }?.id == scope.id
 
-        agentMutationDao.deleteScopeValues(scopeId)
         agentMutationDao.deleteScope(scopeId)
         changeNotifier.notifyScopesChanged()
         controlNotifier.notifyFirstMutation(application.packageName, application.applicationLabel)

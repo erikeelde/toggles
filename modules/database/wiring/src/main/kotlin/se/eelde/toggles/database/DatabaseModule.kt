@@ -51,6 +51,7 @@ object DatabaseModule {
             .addMigrations(Migrations.MIGRATION_6_7)
             .addMigrations(Migrations.MIGRATION_7_8)
             .addMigrations(Migrations.MIGRATION_8_9)
+            .addMigrations(Migrations.MIGRATION_9_10)
             .build()
 
         // OPTIONAL CLEANUP: Only delete after confirming migration worked.

@@ -782,6 +782,9 @@ class AgentCallHandlerTest {
 
     @Test
     fun `deleting a scope leaves no orphaned configurationValue rows referencing it`() {
+        // Protects configurationValue.scope's FK to scope(id) ON DELETE CASCADE (MIGRATION_9_10):
+        // AgentScopeDeleter no longer cleans these rows up explicitly, so this now exercises the
+        // database-enforced cascade rather than application code.
         val appId = insertApplication("com.example.app", "Example")
         insertScope(appId, "toggles_default", epochMillis = 0)
         val extraScopeId = insertScope(appId, "extra scope", epochMillis = 10_000)

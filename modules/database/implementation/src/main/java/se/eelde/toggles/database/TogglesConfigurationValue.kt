@@ -7,6 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import se.eelde.toggles.database.tables.ConfigurationTable
 import se.eelde.toggles.database.tables.ConfigurationValueTable
+import se.eelde.toggles.database.tables.ScopeTable
 
 @Entity(
     tableName = ConfigurationValueTable.TABLE_NAME,
@@ -17,6 +18,9 @@ import se.eelde.toggles.database.tables.ConfigurationValueTable
                 ConfigurationValueTable.COL_SCOPE
             ),
             unique = true
+        ),
+        Index(
+            value = arrayOf(ConfigurationValueTable.COL_SCOPE)
         )
     ],
     foreignKeys = [
@@ -26,6 +30,14 @@ import se.eelde.toggles.database.tables.ConfigurationValueTable
                 ConfigurationTable.COL_ID
             ),
             childColumns = arrayOf(ConfigurationValueTable.COL_CONFIG_ID),
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = TogglesScope::class,
+            parentColumns = arrayOf(
+                ScopeTable.COL_ID
+            ),
+            childColumns = arrayOf(ConfigurationValueTable.COL_SCOPE),
             onDelete = ForeignKey.CASCADE
         )
     ]

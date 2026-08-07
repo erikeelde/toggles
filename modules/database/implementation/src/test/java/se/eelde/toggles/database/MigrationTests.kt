@@ -21,6 +21,7 @@ import se.eelde.toggles.database.migrations.Migrations.MIGRATION_5_6
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_6_7
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_7_8
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_8_9
+import se.eelde.toggles.database.migrations.Migrations.MIGRATION_9_10
 import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 
@@ -308,6 +309,130 @@ class MigrationTests {
         migratedDb.query("SELECT agentControlEnabled FROM application").use { cursor ->
             assertTrue(cursor.moveToFirst())
             assertEquals(1, cursor.getInt(0))
+        }
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test9to10() {
+        testHelper.createDatabase(TEST_DB_NAME, 9)
+        testHelper.runMigrationsAndValidate(TEST_DB_NAME, 10, true, MIGRATION_9_10)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test9to10ValueRowWithExistingScopeSurvives() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 9)
+
+        val applicationId = DatabaseHelper.insertApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.application",
+            "se.eelde.toggles.application",
+        )
+        val configurationId = DatabaseHelper.insertConfiguration(
+            originalDb,
+            applicationId,
+            "MyBoolean",
+            Toggle.TYPE.BOOLEAN,
+            0,
+        )
+        val scopeId = DatabaseHelper.insertScope(originalDb, applicationId, TogglesScope.SCOPE_DEFAULT)
+        DatabaseHelper.insertConfigurationValue(originalDb, configurationId, "true", scopeId)
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 10, true, MIGRATION_9_10)
+
+        val values = DatabaseHelper.getConfigurationValuesByConfigurationIdAndScope(
+            migratedDb,
+            configurationId,
+            scopeId
+        )
+        assertEquals(1, values.size)
+        assertEquals("true", values[0].value)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test9to10RemovesPreExistingOrphanedValueRows() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 9)
+
+        val applicationId = DatabaseHelper.insertApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.application",
+            "se.eelde.toggles.application",
+        )
+        val configurationId = DatabaseHelper.insertConfiguration(
+            originalDb,
+            applicationId,
+            "MyBoolean",
+            Toggle.TYPE.BOOLEAN,
+            0,
+        )
+        // No FK exists at v9, so a value row can reference a scope id that never existed —
+        // this is the pre-existing orphan the migration must drop.
+        val orphanScopeId = 999_999L
+        DatabaseHelper.insertConfigurationValue(originalDb, configurationId, "true", orphanScopeId)
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 10, true, MIGRATION_9_10)
+
+        val values = DatabaseHelper.getConfigurationValuesByConfigurationIdAndScope(
+            migratedDb,
+            configurationId,
+            orphanScopeId
+        )
+        assertEquals(0, values.size)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test9to10DeletingScopeCascadesToItsValueRows() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 9)
+
+        val applicationId = DatabaseHelper.insertApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.application",
+            "se.eelde.toggles.application",
+        )
+        val configurationId = DatabaseHelper.insertConfiguration(
+            originalDb,
+            applicationId,
+            "MyBoolean",
+            Toggle.TYPE.BOOLEAN,
+            0,
+        )
+        val scopeId = DatabaseHelper.insertScope(originalDb, applicationId, TogglesScope.SCOPE_DEFAULT)
+        DatabaseHelper.insertConfigurationValue(originalDb, configurationId, "true", scopeId)
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 10, true, MIGRATION_9_10)
+
+        // The raw framework database opened by MigrationTestHelper does not go through Room's
+        // onConfigure, which is what normally enables this pragma — enable it explicitly to
+        // exercise the FK's ON DELETE CASCADE clause added by MIGRATION_9_10.
+        migratedDb.execSQL("PRAGMA foreign_keys=ON")
+        migratedDb.execSQL("DELETE FROM scope WHERE id = ?", arrayOf<Any>(scopeId))
+
+        val values = DatabaseHelper.getConfigurationValuesByConfigurationIdAndScope(
+            migratedDb,
+            configurationId,
+            scopeId
+        )
+        assertEquals(0, values.size)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test9to10UniqueIndexOnConfigurationIdAndScopeStillExists() {
+        testHelper.createDatabase(TEST_DB_NAME, 9)
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 10, true, MIGRATION_9_10)
+
+        migratedDb.query(
+            "SELECT name FROM sqlite_master WHERE type = 'index' " +
+                "AND name = 'index_configurationValue_configurationId_scope'"
+        ).use { cursor ->
+            assertEquals(1, cursor.count)
         }
     }
 

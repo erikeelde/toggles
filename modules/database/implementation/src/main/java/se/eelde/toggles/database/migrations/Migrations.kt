@@ -17,6 +17,7 @@ object Migrations {
     private const val databaseVersion7 = 7
     private const val databaseVersion8 = 8
     private const val databaseVersion9 = 9
+    private const val databaseVersion10 = 10
 
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -345,6 +346,49 @@ object Migrations {
             db.execSQL(
                 "ALTER TABLE application ADD COLUMN agentControlEnabled INTEGER NOT NULL DEFAULT 1"
             )
+        }
+    }
+
+    val MIGRATION_9_10: Migration = object : Migration(databaseVersion9, databaseVersion10) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            run {
+                val tableName = "configurationValue"
+                val tableNameTemp = tableName + "_temp"
+
+                // Rebuild table to add a foreign key from scope -> scope(id) ON DELETE CASCADE, so
+                // deleting a scope now also deletes its configurationValue rows instead of leaving
+                // them orphaned. Pre-existing orphans (rows whose scope no longer exists — possible
+                // at v9 since no FK enforced this) are filtered out of the copy: they are unreachable
+                // by resolution (TogglesProvider / the agent API only ever consult an application's
+                // selected and default scopes, both of which are live rows), so dropping them cannot
+                // change any observed value.
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `$tableNameTemp` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configurationId` INTEGER NOT NULL, `value` TEXT, `scope` INTEGER NOT NULL, FOREIGN KEY(`configurationId`) REFERENCES `configuration`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`scope`) REFERENCES `scope`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+                )
+                db.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS `index_configurationValue_temp_configurationId_scope` ON `$tableNameTemp` (`configurationId`, `scope`)"
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_configurationValue_temp_scope` ON `$tableNameTemp` (`scope`)"
+                )
+
+                db.execSQL(
+                    "INSERT INTO $tableNameTemp SELECT id, configurationId, value, scope FROM $tableName WHERE scope IN (SELECT id FROM scope)"
+                )
+                db.execSQL("DROP TABLE $tableName")
+
+                db.execSQL("DROP INDEX `index_configurationValue_temp_configurationId_scope`")
+                db.execSQL(
+                    "CREATE UNIQUE INDEX `index_configurationValue_configurationId_scope` ON `$tableNameTemp` (`configurationId`, `scope`)"
+                )
+
+                db.execSQL("DROP INDEX `index_configurationValue_temp_scope`")
+                db.execSQL(
+                    "CREATE INDEX `index_configurationValue_scope` ON `$tableNameTemp` (`scope`)"
+                )
+
+                db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
+            }
         }
     }
 }

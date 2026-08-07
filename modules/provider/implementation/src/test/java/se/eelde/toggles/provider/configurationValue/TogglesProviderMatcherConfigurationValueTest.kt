@@ -85,6 +85,7 @@ class TogglesProviderMatcherConfigurationValueTest {
         val configValue = TogglesConfigurationValue {
             configurationId = configId
             value = "true"
+            scope = getDefaultScopeId()
         }
         togglesProvider.insert(
             TogglesProviderContract.configurationValueUri(configId),
@@ -121,6 +122,7 @@ class TogglesProviderMatcherConfigurationValueTest {
         val configValue = TogglesConfigurationValue {
             configurationId = configId
             value = "true"
+            scope = getDefaultScopeId()
         }
         togglesProvider.insert(
             TogglesProviderContract.configurationValueUri(configId),
@@ -182,6 +184,7 @@ class TogglesProviderMatcherConfigurationValueTest {
         val configValue = TogglesConfigurationValue {
             configurationId = configId
             value = "true"
+            scope = getDefaultScopeId()
         }
         togglesProvider.insert(
             TogglesProviderContract.configurationValueUri(configId),
