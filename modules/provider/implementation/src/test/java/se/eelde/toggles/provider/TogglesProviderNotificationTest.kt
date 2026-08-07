@@ -173,6 +173,81 @@ class TogglesProviderNotificationTest {
         )
     }
 
+    @Test
+    fun `fresh configuration value insert notifies`() {
+        val configId = insertConfiguration("freshInsertNotifyKey")
+        shadowContentResolver.getNotifiedUris().clear()
+
+        val configValue = TogglesConfigurationValue {
+            configurationId = configId
+            value = "true"
+            scope = getDefaultScopeId()
+        }
+        togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.toContentValues()
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected at least one notification after a fresh insert, got none",
+            notifiedUris.isNotEmpty()
+        )
+    }
+
+    @Test
+    fun `duplicate configuration value insert does not notify`() {
+        val configId = insertConfiguration("duplicateInsertNoNotifyKey")
+        val defaultScopeId = getDefaultScopeId()
+        val configValue = TogglesConfigurationValue {
+            configurationId = configId
+            value = "true"
+            scope = defaultScopeId
+        }
+        togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.toContentValues()
+        )
+        shadowContentResolver.getNotifiedUris().clear()
+
+        // Same (configurationId, scope) pair again: nothing is written, so nothing should be
+        // notified.
+        togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.copy(value = "irrelevant").toContentValues()
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected no notifications for a duplicate insert that wrote nothing, got: " +
+                notifiedUris.map { it.uri },
+            notifiedUris.isEmpty()
+        )
+    }
+
+    @Test
+    fun `failed configuration value insert with nonexistent scope does not notify`() {
+        val configId = insertConfiguration("failedInsertNoNotifyKey")
+        shadowContentResolver.getNotifiedUris().clear()
+
+        val configValue = TogglesConfigurationValue {
+            configurationId = configId
+            value = "true"
+            scope = 999L
+        }
+        togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.toContentValues()
+        )
+
+        val notifiedUris = shadowContentResolver.getNotifiedUris()
+        assertTrue(
+            "Expected no notifications for a failed insert that wrote nothing, got: " +
+                notifiedUris.map { it.uri },
+            notifiedUris.isEmpty()
+        )
+    }
+
     // endregion
 
     // region Configuration value update notifications

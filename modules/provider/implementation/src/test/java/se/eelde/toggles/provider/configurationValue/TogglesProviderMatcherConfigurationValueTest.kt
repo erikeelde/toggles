@@ -192,6 +192,52 @@ class TogglesProviderMatcherConfigurationValueTest {
     }
 
     @Test
+    fun testInsertDuplicateReturnsExistingRowWithoutCreatingSecondRow() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "duplicateInsertKey"
+        }
+
+        val configUri = togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            togglesConfiguration.toContentValues(),
+        )
+        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val defaultScopeId = getDefaultScopeId()
+
+        val configValue = TogglesConfigurationValue {
+            configurationId = configId
+            value = "true"
+            scope = defaultScopeId
+        }
+        val firstUri = togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.toContentValues(),
+        )
+        val firstId = requireNotNull(firstUri.lastPathSegment).toLong()
+
+        // Same (configurationId, scope) pair again: insertSync throws on the unique constraint,
+        // and the fallback lookup must resolve to the row that already exists.
+        val secondUri = togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.copy(value = "irrelevant").toContentValues(),
+        )
+        val secondId = requireNotNull(secondUri.lastPathSegment).toLong()
+
+        assertEquals("duplicate insert must return the existing row's id", firstId, secondId)
+
+        togglesProvider.query(
+            TogglesProviderContract.configurationValueUri(configId),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertEquals("duplicate insert must not create a second row", 1, cursor.count)
+        }
+    }
+
+    @Test
     fun testUpdate() {
         val togglesConfiguration = TogglesConfiguration {
             type = Toggle.TYPE.BOOLEAN

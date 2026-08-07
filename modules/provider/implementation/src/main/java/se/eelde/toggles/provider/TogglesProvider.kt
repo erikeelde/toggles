@@ -244,6 +244,7 @@ class TogglesProvider : ContentProvider() {
         val contentValues = requireNotNull(values) { "ContentValues required for insert" }
         val insertId: Long
         var crossNotifyUri: Uri? = null
+        var notify = true
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATIONS -> {
                 val toggle = Toggle.fromContentValues(contentValues)
@@ -328,10 +329,14 @@ class TogglesProvider : ContentProvider() {
                     value = togglesConfigurationValue.value,
                     scope = togglesConfigurationValue.scope
                 )
+                // A constraint violation here means the (configurationId, scope) pair already has
+                // a row: an upsert that wrote nothing, so observers should not be woken. The
+                // lookup recovers the existing row's id so callers still get a valid URI back.
                 @Suppress("SwallowedException")
                 insertId = try {
                     configurationValueDao.insertSync(databaseConfigurationValue)
                 } catch (e: SQLiteConstraintException) {
+                    notify = false
                     configurationValueDao.getIdByConfigurationIdAndScope(
                         databaseConfigurationValue.configurationId,
                         databaseConfigurationValue.scope
@@ -346,8 +351,10 @@ class TogglesProvider : ContentProvider() {
             }
         }
 
-        requireContext.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
-        crossNotifyUri?.let { requireContext.contentResolver.notifyInsert(it) }
+        if (notify) {
+            requireContext.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
+            crossNotifyUri?.let { requireContext.contentResolver.notifyInsert(it) }
+        }
 
         return ContentUris.withAppendedId(uri, insertId)
     }
