@@ -26,6 +26,7 @@ internal object AgentCallContract {
     const val METHOD_CREATE_CONFIGURATION = "createConfiguration"
     const val METHOD_DELETE_CONFIGURATION = "deleteConfiguration"
     const val METHOD_DELETE_CONFIGURATION_VALUE = "deleteConfigurationValue"
+    const val METHOD_DELETE_SCOPE = "deleteScope"
 
     const val KEY_CONFIGURATION_ID = "configurationId"
     const val KEY_SCOPE_ID = "scopeId"
@@ -55,6 +56,8 @@ class AgentCallHandler(
         AgentApplicationProvisioner(agentDao, agentMutationDao, packageManager, clock)
     private val configurationValueDeleter =
         AgentConfigurationValueDeleter(agentDao, agentMutationDao, changeNotifier)
+    private val scopeDeleter =
+        AgentScopeDeleter(agentDao, agentMutationDao, changeNotifier)
 
     @Suppress("TooGenericExceptionCaught") // must never throw across the binder; see class kdoc
     fun handle(method: String, extras: Bundle?): String = try {
@@ -65,6 +68,7 @@ class AgentCallHandler(
             AgentCallContract.METHOD_CREATE_CONFIGURATION -> createConfiguration(extras)
             AgentCallContract.METHOD_DELETE_CONFIGURATION -> deleteConfiguration(extras)
             AgentCallContract.METHOD_DELETE_CONFIGURATION_VALUE -> configurationValueDeleter.handle(extras)
+            AgentCallContract.METHOD_DELETE_SCOPE -> scopeDeleter.handle(extras)
             else -> AgentError.json(
                 AgentErrorCode.UNKNOWN_ENDPOINT,
                 "no such method: $method. Read /describe for the available endpoints."

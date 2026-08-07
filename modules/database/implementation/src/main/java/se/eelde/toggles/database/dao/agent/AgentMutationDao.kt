@@ -42,6 +42,17 @@ interface AgentMutationDao {
     @Query("DELETE FROM configurationValue WHERE configurationId = (:configurationId) AND scope = (:scopeId)")
     fun deleteConfigurationValue(configurationId: Long, scopeId: Long): Int
 
+    // configurationValue.scope has no foreign key to scope (see the exported schema), so deleting a
+    // scope never cascades to its value rows on its own — this is the explicit cleanup callers (see
+    // AgentScopeDeleter) must run themselves before deleteScope, or those rows are orphaned forever:
+    // still returned by AgentDao.getConfigurationValues (it joins through configuration, not scope),
+    // surfaced with a null scope name, and never participating in resolution again.
+    @Query("DELETE FROM configurationValue WHERE scope = (:scopeId)")
+    fun deleteScopeValues(scopeId: Long): Int
+
+    @Query("DELETE FROM scope WHERE id = (:scopeId)")
+    fun deleteScope(scopeId: Long): Int
+
     @Insert
     fun insertScope(scope: TogglesScope): Long
 

@@ -279,4 +279,56 @@ class AgentMutationDaoTest {
         assertEquals(0, deleted)
     }
 
+    @Test
+    fun `deleteScopeValues removes every value row for that scope and returns the count`() {
+        val appA = insertApplication("com.example.a", "A")
+        val configA = insertConfiguration(appA, "featureA")
+        val configB = insertConfiguration(appA, "featureB")
+        val scopeA = insertScope(appA, "default")
+        val scopeB = insertScope(appA, "other")
+        agentMutationDao.insertConfigurationValue(
+            TogglesConfigurationValue(id = 0, configurationId = configA, value = "true", scope = scopeB)
+        )
+        agentMutationDao.insertConfigurationValue(
+            TogglesConfigurationValue(id = 0, configurationId = configB, value = "false", scope = scopeB)
+        )
+        agentMutationDao.insertConfigurationValue(
+            TogglesConfigurationValue(id = 0, configurationId = configA, value = "true", scope = scopeA)
+        )
+
+        val deleted = agentMutationDao.deleteScopeValues(scopeB)
+
+        assertEquals(2, deleted)
+        val remaining = agentDao.getConfigurationValues(appA)
+        assertEquals(1, remaining.size)
+        assertEquals(scopeA, remaining[0].scope)
+    }
+
+    @Test
+    fun `deleteScope removes the scope row and returns 1`() {
+        val appA = insertApplication("com.example.a", "A")
+        val scopeA = insertScope(appA, "other")
+
+        val deleted = agentMutationDao.deleteScope(scopeA)
+
+        assertEquals(1, deleted)
+        assertNull(agentMutationDao.getScope(scopeA))
+    }
+
+    @Test
+    fun `deleteScope does not cascade-delete configurationValue rows since there is no foreign key`() {
+        val appA = insertApplication("com.example.a", "A")
+        val configA = insertConfiguration(appA, "featureA")
+        val scopeA = insertScope(appA, "other")
+        agentMutationDao.insertConfigurationValue(
+            TogglesConfigurationValue(id = 0, configurationId = configA, value = "true", scope = scopeA)
+        )
+
+        agentMutationDao.deleteScope(scopeA)
+
+        // Orphaned on purpose to prove the schema has no FK from configurationValue.scope to
+        // scope.id — deleteScope's caller (AgentScopeDeleter) is responsible for cleaning these up
+        // explicitly via deleteScopeValues, which this test does NOT call.
+        assertEquals(1, agentDao.getConfigurationValues(appA).size)
+    }
 }

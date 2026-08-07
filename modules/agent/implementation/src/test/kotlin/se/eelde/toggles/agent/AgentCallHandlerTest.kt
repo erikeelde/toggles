@@ -757,6 +757,127 @@ class AgentCallHandlerTest {
         assertNull(effectiveValue("com.example.app"))
     }
 
+    // --- deleteScope ---
+
+    @Test
+    fun `deleting a non-selected, non-default scope removes it and its value rows, leaving other scopes untouched`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default", epochMillis = 0)
+        val devScopeId = insertScope(appId, "Development scope", epochMillis = 10_000)
+        val extraScopeId = insertScope(appId, "extra scope", epochMillis = 20_000)
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, defaultScopeId, "false")
+        insertValue(configId, devScopeId, "true")
+        insertValue(configId, extraScopeId, "true")
+
+        val response = deleteScope(packageName = "com.example.app", scopeId = extraScopeId)
+
+        assertEquals("deleteScope", decode(response).method)
+        assertNull(database.agentMutationDao().getScope(extraScopeId))
+        val remainingValues = database.agentDao().getConfigurationValues(appId)
+        assertEquals(2, remainingValues.size)
+        assertEquals("false", remainingValues.single { it.scope == defaultScopeId }.value)
+        assertEquals("true", remainingValues.single { it.scope == devScopeId }.value)
+    }
+
+    @Test
+    fun `deleting a scope leaves no orphaned configurationValue rows referencing it`() {
+        val appId = insertApplication("com.example.app", "Example")
+        insertScope(appId, "toggles_default", epochMillis = 0)
+        val extraScopeId = insertScope(appId, "extra scope", epochMillis = 10_000)
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, extraScopeId, "true")
+
+        deleteScope(packageName = "com.example.app", scopeId = extraScopeId)
+
+        assertTrue(database.agentDao().getConfigurationValues(appId).none { it.scope == extraScopeId })
+    }
+
+    @Test
+    fun `deleting the default scope is rejected and the scope still exists`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default", epochMillis = 0)
+
+        val response = deleteScope(packageName = "com.example.app", scopeId = defaultScopeId)
+
+        assertEquals("invalid_argument", errorCode(response))
+        assertEquals(defaultScopeId, database.agentMutationDao().getScope(defaultScopeId)?.id)
+    }
+
+    @Test
+    fun `deleting the selected scope moves selection to the next most recent scope and the summary says which`() {
+        val appId = insertApplication("com.example.app", "Example")
+        insertScope(appId, "toggles_default", epochMillis = 0)
+        val devScopeId = insertScope(appId, "Development scope", epochMillis = 10_000)
+        val newestScopeId = insertScope(appId, "newest scope", epochMillis = 20_000)
+        assertEquals(newestScopeId, selectedScopeId("com.example.app"))
+
+        val response = deleteScope(packageName = "com.example.app", scopeId = newestScopeId)
+
+        val decoded = decode(response)
+        assertEquals("deleteScope", decoded.method)
+        assertTrue(
+            "expected the summary to name the newly selected scope, got: ${decoded.summary}",
+            decoded.summary.contains("Development scope")
+        )
+        assertEquals(devScopeId, selectedScopeId("com.example.app"))
+    }
+
+    @Test
+    fun `deleting a scope from a different application returns invalid_argument and deletes nothing`() {
+        val appA = insertApplication("com.example.a", "A")
+        val appB = insertApplication("com.example.b", "B")
+        insertScope(appA, "toggles_default", epochMillis = 0)
+        val scopeB = insertScope(appB, "toggles_default", epochMillis = 0)
+
+        val response = deleteScope(packageName = "com.example.a", scopeId = scopeB)
+
+        assertEquals("invalid_argument", errorCode(response))
+        assertEquals(scopeB, database.agentMutationDao().getScope(scopeB)?.id)
+    }
+
+    @Test
+    fun `deleting an unknown scope returns unknown_id`() {
+        insertApplication("com.example.app", "Example")
+
+        val response = deleteScope(packageName = "com.example.app", scopeId = 999L)
+
+        assertEquals("unknown_id", errorCode(response))
+    }
+
+    @Test
+    fun `deleting a scope for an unknown package returns unknown_package`() {
+        val response = deleteScope(packageName = "com.example.missing", scopeId = 1L)
+
+        assertEquals("unknown_package", errorCode(response))
+    }
+
+    @Test
+    fun `deleting a scope for a disabled application returns agent_control_disabled and deletes nothing`() {
+        val appId = insertApplication("com.example.app", "Example")
+        insertScope(appId, "toggles_default", epochMillis = 0)
+        val extraScopeId = insertScope(appId, "extra scope", epochMillis = 10_000)
+        database.openHelper.writableDatabase.execSQL(
+            "UPDATE application SET agentControlEnabled = 0 WHERE id = $appId"
+        )
+
+        val response = deleteScope(packageName = "com.example.app", scopeId = extraScopeId)
+
+        assertEquals("agent_control_disabled", errorCode(response))
+        assertEquals(extraScopeId, database.agentMutationDao().getScope(extraScopeId)?.id)
+    }
+
+    @Test
+    fun `deleting a scope notifies the notifier that scopes changed`() {
+        val appId = insertApplication("com.example.app", "Example")
+        insertScope(appId, "toggles_default", epochMillis = 0)
+        val extraScopeId = insertScope(appId, "extra scope", epochMillis = 10_000)
+
+        deleteScope(packageName = "com.example.app", scopeId = extraScopeId)
+
+        assertEquals(1, notifier.scopesNotified)
+    }
+
     // --- agent control notifications (B10) ---
 
     @Test
@@ -942,6 +1063,15 @@ class AgentCallHandlerTest {
             "deleteConfigurationValue",
             Bundle().apply {
                 putLong("configurationId", configurationId)
+                putLong("scopeId", scopeId)
+            }
+        )
+
+    private fun deleteScope(packageName: String, scopeId: Long): String =
+        handler.handle(
+            "deleteScope",
+            Bundle().apply {
+                putString("package", packageName)
                 putLong("scopeId", scopeId)
             }
         )
