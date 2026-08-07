@@ -119,6 +119,32 @@ class TogglesAgentProviderTest {
     }
 
     @Test
+    fun `an unauthorized caller cannot use call`() {
+        ShadowBinder.setCallingUid(APP_UID)
+
+        val result = provider.call("anything", null, null)
+        val payload = requireNotNull(result.getString(TogglesAgentProvider.RESULT_KEY))
+
+        assertEquals(
+            "not_authorized",
+            json.decodeFromString<AgentErrorEnvelope>(payload).error.code
+        )
+    }
+
+    @Test
+    fun `the system uid cannot use call`() {
+        ShadowBinder.setCallingUid(SYSTEM_UID)
+
+        val result = provider.call("anything", null, null)
+        val payload = requireNotNull(result.getString(TogglesAgentProvider.RESULT_KEY))
+
+        assertEquals(
+            "not_authorized",
+            json.decodeFromString<AgentErrorEnvelope>(payload).error.code
+        )
+    }
+
+    @Test
     fun `the mutating content provider methods are inert`() {
         ShadowBinder.setCallingUid(SHELL_UID)
 
@@ -164,5 +190,6 @@ class TogglesAgentProviderTest {
     private companion object {
         const val SHELL_UID = 2000
         const val APP_UID = 10247
+        const val SYSTEM_UID = 1000
     }
 }

@@ -118,15 +118,22 @@ class TogglesAgentProvider : ContentProvider() {
 
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle =
         Bundle().apply {
-            // Mutations arrive here in a later plan. Until then every method is unknown.
-            putString(
-                RESULT_KEY,
-                AgentError.json(
-                    AgentErrorCode.UNKNOWN_ENDPOINT,
-                    "no such method: $method. Read /describe for the available endpoints."
-                )
+            putString(RESULT_KEY, callResult(method))
+        }
+
+    private fun callResult(method: String): String {
+        if (!entryPoint.provideCallerAuthorization().isAuthorizedCaller()) {
+            return AgentError.json(
+                AgentErrorCode.NOT_AUTHORIZED,
+                "the toggles agent API is only callable from adb (uid 2000) or root (uid 0)"
             )
         }
+        // Mutations arrive here in a later plan. Until then every method is unknown.
+        return AgentError.json(
+            AgentErrorCode.UNKNOWN_ENDPOINT,
+            "no such method: $method. Read /describe for the available endpoints."
+        )
+    }
 
     companion object {
         const val MIME_TYPE = "application/json"
