@@ -22,6 +22,7 @@ import se.eelde.toggles.database.migrations.Migrations.MIGRATION_6_7
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_7_8
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_8_9
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_9_10
+import se.eelde.toggles.database.migrations.Migrations.MIGRATION_10_11
 import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 
@@ -434,6 +435,147 @@ class MigrationTests {
         ).use { cursor ->
             assertEquals(1, cursor.count)
         }
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test10to11() {
+        testHelper.createDatabase(TEST_DB_NAME, 10)
+        testHelper.runMigrationsAndValidate(TEST_DB_NAME, 11, true, MIGRATION_10_11)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    @Suppress("LongMethod")
+    fun test10to11DropsUnreachableConfigurations() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 10)
+
+        val applicationId = DatabaseHelper.insertApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.application",
+            "se.eelde.toggles.application",
+        )
+        val scopeId =
+            DatabaseHelper.insertScope(originalDb, applicationId, TogglesScope.SCOPE_DEFAULT)
+
+        val reachableId = DatabaseHelper.insertConfiguration(
+            originalDb,
+            applicationId,
+            "MyBoolean",
+            Toggle.TYPE.BOOLEAN,
+            0,
+        )
+        // A key that is null, empty or whitespace-only cannot be looked up by any client.
+        val unreachableIds = listOf(null, "", "   ").map { key ->
+            DatabaseHelper.insertConfigurationWithNullableKey(
+                originalDb,
+                applicationId,
+                key,
+                Toggle.TYPE.BOOLEAN,
+                0,
+            )
+        }
+
+        (unreachableIds + reachableId).forEach { configurationId ->
+            DatabaseHelper.insertConfigurationValue(originalDb, configurationId, "true", scopeId)
+            DatabaseHelper.insertPredefinedConfigurationValue(originalDb, configurationId, "true")
+        }
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 11, true, MIGRATION_10_11)
+
+        assertEquals(listOf(reachableId), DatabaseHelper.getConfigurationIds(migratedDb))
+
+        // The reachable configuration keeps both of its children.
+        assertEquals(
+            1,
+            DatabaseHelper.getConfigurationValueIdsByConfigurationId(migratedDb, reachableId).size
+        )
+        assertEquals(
+            1,
+            DatabaseHelper.getPredefinedConfigurationValueByConfigurationId(
+                migratedDb,
+                reachableId
+            ).size
+        )
+
+        // The unreachable ones leave no orphaned children behind.
+        unreachableIds.forEach { configurationId ->
+            assertEquals(
+                emptyList<Long>(),
+                DatabaseHelper.getConfigurationValueIdsByConfigurationId(migratedDb, configurationId)
+            )
+            assertEquals(
+                emptyList<TogglesPredefinedConfigurationValue>(),
+                DatabaseHelper.getPredefinedConfigurationValueByConfigurationId(
+                    migratedDb,
+                    configurationId
+                )
+            )
+        }
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test10to11KeepsKeysWithSurroundingWhitespace() {
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 10)
+
+        val applicationId = DatabaseHelper.insertApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.application",
+            "se.eelde.toggles.application",
+        )
+        val configurationId = DatabaseHelper.insertConfiguration(
+            originalDb,
+            applicationId,
+            " my_key ",
+            Toggle.TYPE.STRING,
+            0,
+        )
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 11, true, MIGRATION_10_11)
+
+        assertEquals(listOf(configurationId), DatabaseHelper.getConfigurationIds(migratedDb))
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun test10to11ConfigurationValueSurvivesConfigurationTableRebuild() {
+        // The migration rebuilds `configuration` (create temp, INSERT...SELECT, DROP TABLE,
+        // rename) to tighten configurationKey to NOT NULL. `configurationValue` has a foreign
+        // key configurationId -> configuration(id) ON DELETE CASCADE, so if foreign key
+        // enforcement were active during the migration, SQLite's implicit delete on DROP TABLE
+        // could cascade and destroy every configuration value row. This test proves a live
+        // configuration's value row survives the rebuild intact.
+        val originalDb = testHelper.createDatabase(TEST_DB_NAME, 10)
+
+        val applicationId = DatabaseHelper.insertApplication(
+            originalDb,
+            "TestApplication",
+            "se.eelde.toggles.application",
+            "se.eelde.toggles.application",
+        )
+        val scopeId =
+            DatabaseHelper.insertScope(originalDb, applicationId, TogglesScope.SCOPE_DEFAULT)
+        val configurationId = DatabaseHelper.insertConfiguration(
+            originalDb,
+            applicationId,
+            "MyBoolean",
+            Toggle.TYPE.BOOLEAN,
+            0,
+        )
+        DatabaseHelper.insertConfigurationValue(originalDb, configurationId, "true", scopeId)
+
+        val migratedDb = testHelper.runMigrationsAndValidate(TEST_DB_NAME, 11, true, MIGRATION_10_11)
+
+        val values = DatabaseHelper.getConfigurationValuesByConfigurationIdAndScope(
+            migratedDb,
+            configurationId,
+            scopeId
+        )
+        assertEquals(1, values.size)
+        assertEquals("true", values[0].value)
     }
 
     companion object {

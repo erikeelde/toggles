@@ -62,7 +62,7 @@ internal fun ConfigurationListView(
                         Text(
                             modifier = Modifier,
                             style = MaterialTheme.typography.headlineSmall,
-                            text = requireNotNull(configuration.key)
+                            text = configuration.key
                         )
 
                         if (selectedScope != null) {

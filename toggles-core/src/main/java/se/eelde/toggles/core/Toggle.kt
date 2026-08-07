@@ -30,11 +30,21 @@ public class Toggle private constructor(
         public fun setType(@ToggleType type: String): Builder =
             apply { this.type = type }
 
+        /**
+         * Sets the key identifying this toggle. Required: [build] throws
+         * [IllegalArgumentException] for a blank key, because toggles are stored under a unique
+         * (application, key) identity and unnamed toggles would collide with one another.
+         */
         public fun setKey(key: String): Builder = apply { this.key = key }
         public fun setValue(value: String?): Builder = apply { this.value = value }
 
         public fun build(): Toggle =
-            Toggle(id = id, type = type, key = key, value = value)
+            Toggle(
+                id = id,
+                type = type,
+                key = requireValidKey(key, ColumnNames.Toggle.COL_KEY),
+                value = value
+            )
     }
 
     public fun copy(
@@ -43,7 +53,12 @@ public class Toggle private constructor(
         key: String = this.key,
         value: String? = this.value
     ): Toggle =
-        Toggle(id = id, type = type, key = key, value = value)
+        Toggle(
+            id = id,
+            type = type,
+            key = requireValidKey(key, ColumnNames.Toggle.COL_KEY),
+            value = value
+        )
 
     public fun toContentValues(): ContentValues = ContentValues().apply {
         put(ColumnNames.Toggle.COL_ID, id)
@@ -97,9 +112,10 @@ public class Toggle private constructor(
                 type = requireNotNull(values.getAsString(ColumnNames.Toggle.COL_TYPE)) {
                     "Missing required field: ${ColumnNames.Toggle.COL_TYPE}"
                 },
-                key = requireNotNull(values.getAsString(ColumnNames.Toggle.COL_KEY)) {
-                    "Missing required field: ${ColumnNames.Toggle.COL_KEY}"
-                },
+                key = requireValidKey(
+                    values.getAsString(ColumnNames.Toggle.COL_KEY),
+                    ColumnNames.Toggle.COL_KEY
+                ),
                 value = values.getAsString(ColumnNames.Toggle.COL_VALUE)
             )
         }

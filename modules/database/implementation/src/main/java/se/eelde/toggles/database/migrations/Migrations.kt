@@ -18,6 +18,16 @@ object Migrations {
     private const val databaseVersion8 = 8
     private const val databaseVersion9 = 9
     private const val databaseVersion10 = 10
+    private const val databaseVersion11 = 11
+
+    /**
+     * A configuration key is the sole identifier of a toggle, so a row whose key is null - or
+     * blank, which the unique `(applicationId, configurationKey)` index treats as a single shared
+     * identity - is unreachable by any client. The trim set mirrors Kotlin's `isNotBlank()`;
+     * SQLite's bare `TRIM()` strips only spaces.
+     */
+    private const val UNREACHABLE_KEY =
+        "configurationKey IS NULL OR TRIM(configurationKey, ' ' || char(9) || char(10) || char(13)) = ''"
 
     val MIGRATION_1_2: Migration = object : Migration(databaseVersion1, databaseVersion2) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -385,6 +395,44 @@ object Migrations {
                 db.execSQL("DROP INDEX `index_configurationValue_temp_scope`")
                 db.execSQL(
                     "CREATE INDEX `index_configurationValue_scope` ON `$tableNameTemp` (`scope`)"
+                )
+
+                db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
+            }
+        }
+    }
+
+    val MIGRATION_10_11: Migration = object : Migration(databaseVersion10, databaseVersion11) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            run {
+                // Drop children of unreachable configurations explicitly. Both child tables
+                // declare ON DELETE CASCADE, but Room issues `PRAGMA foreign_keys = ON` in
+                // onOpen - after onUpgrade - so foreign keys are not enforced during a migration.
+                db.execSQL(
+                    "DELETE FROM configurationValue WHERE configurationId IN (SELECT id FROM configuration WHERE $UNREACHABLE_KEY)"
+                )
+                db.execSQL(
+                    "DELETE FROM predefinedConfigurationValue WHERE configurationId IN (SELECT id FROM configuration WHERE $UNREACHABLE_KEY)"
+                )
+            }
+            run {
+                val tableName = "configuration"
+                val tableNameTemp = tableName + "_temp"
+
+                // Rebuild the table with configurationKey tightened to NOT NULL.
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `$tableNameTemp` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `applicationId` INTEGER NOT NULL, `configurationKey` TEXT NOT NULL, `configurationType` TEXT NOT NULL, `lastUse` INTEGER NOT NULL, FOREIGN KEY(`applicationId`) REFERENCES `application`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+                )
+                db.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS `index_configuration_temp_applicationId_configurationKey` ON `$tableNameTemp` (`applicationId`, `configurationKey`)"
+                )
+
+                db.execSQL("INSERT INTO $tableNameTemp SELECT * FROM $tableName WHERE NOT ($UNREACHABLE_KEY)")
+                db.execSQL("DROP TABLE $tableName")
+
+                db.execSQL("DROP INDEX `index_configuration_temp_applicationId_configurationKey`")
+                db.execSQL(
+                    "CREATE UNIQUE INDEX `index_configuration_applicationId_configurationKey` ON `$tableNameTemp` (`applicationId`, `configurationKey`)"
                 )
 
                 db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")

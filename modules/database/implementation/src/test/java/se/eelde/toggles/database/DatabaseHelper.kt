@@ -84,6 +84,53 @@ object DatabaseHelper {
         return db.insert(ConfigurationTable.TABLE_NAME, CONFLICT_FAIL, configurationValues)
     }
 
+    /**
+     * Inserts a configuration whose key may be null, which schema versions up to 8 allowed.
+     * Used to seed rows that [se.eelde.toggles.database.migrations.Migrations.MIGRATION_8_9]
+     * is expected to drop.
+     */
+    fun insertConfigurationWithNullableKey(
+        db: SupportSQLiteDatabase,
+        applicationId: Long,
+        key: String?,
+        type: String,
+        lastUse: Long
+    ): Long {
+        val configurationValues = ContentValues()
+        configurationValues.put(ConfigurationTable.COL_APP_ID, applicationId)
+        configurationValues.put(ConfigurationTable.COL_KEY, key)
+        configurationValues.put(ConfigurationTable.COL_TYPE, type)
+        configurationValues.put("lastUse", lastUse)
+        return db.insert(ConfigurationTable.TABLE_NAME, CONFLICT_FAIL, configurationValues)
+    }
+
+    fun getConfigurationIds(db: SupportSQLiteDatabase): List<Long> {
+        val cursor = db.query("SELECT ${ConfigurationTable.COL_ID} FROM ${ConfigurationTable.TABLE_NAME}")
+        val ids = mutableListOf<Long>()
+        while (cursor.moveToNext()) {
+            ids.add(cursor.getLong(0))
+        }
+        cursor.close()
+        return ids.toList()
+    }
+
+    fun getConfigurationValueIdsByConfigurationId(
+        db: SupportSQLiteDatabase,
+        configurationId: Long
+    ): List<Long> {
+        val cursor = db.query(
+            "SELECT ${ConfigurationValueTable.COL_ID} FROM ${ConfigurationValueTable.TABLE_NAME} " +
+                "WHERE ${ConfigurationValueTable.COL_CONFIG_ID} = ?",
+            arrayOf<Any>(configurationId)
+        )
+        val ids = mutableListOf<Long>()
+        while (cursor.moveToNext()) {
+            ids.add(cursor.getLong(0))
+        }
+        cursor.close()
+        return ids.toList()
+    }
+
     fun getConfigurationByKey(db: SupportSQLiteDatabase, key: String): Cursor {
         val query = db.query(
             "SELECT * FROM " + ConfigurationTable.TABLE_NAME + " WHERE " + ConfigurationTable.COL_KEY + "=?",
