@@ -98,8 +98,10 @@ object AgentDescription {
             setConfigurationValue(),
             createConfiguration(),
             deleteConfiguration(),
+            deleteConfigurationValue(),
             createScope(),
-            selectScope()
+            selectScope(),
+            deleteScope()
         )
 
         private fun callExample(method: String, vararg extras: Pair<String, String>): String {
@@ -202,6 +204,37 @@ object AgentDescription {
             )
         )
 
+        private fun deleteConfigurationValue() = AgentMethod(
+            method = AgentCallContract.METHOD_DELETE_CONFIGURATION_VALUE,
+            arguments = listOf(
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_CONFIGURATION_ID,
+                    type = TYPE_LONG,
+                    required = true,
+                    description = "The configuration's id, from /apps/{package}."
+                ),
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_SCOPE_ID,
+                    type = TYPE_LONG,
+                    required = true,
+                    description = "The scope whose override to remove, from /apps/{package}."
+                )
+            ),
+            returns = "An AgentMutationResponse whose value field is the configuration's " +
+                "effectiveValue after the removal. This removes the override row so resolution " +
+                "falls back to the next scope in the chain — it is not the same as setting the " +
+                "value to match the default: an override that happens to equal the default still " +
+                "shadows it, so a later change to the default would not propagate, whereas a " +
+                "removed override does propagate. Removing an override that does not exist is a " +
+                "successful no-op — the response says nothing was removed and reports the " +
+                "current effectiveValue unchanged; it is not an error.",
+            example = callExample(
+                AgentCallContract.METHOD_DELETE_CONFIGURATION_VALUE,
+                "${AgentCallContract.KEY_CONFIGURATION_ID}:l" to "47",
+                "${AgentCallContract.KEY_SCOPE_ID}:l" to "3"
+            )
+        )
+
         private fun createScope() = AgentMethod(
             method = AgentCallContract.METHOD_CREATE_SCOPE,
             arguments = listOf(
@@ -247,6 +280,37 @@ object AgentDescription {
             returns = "An AgentMutationResponse confirming which scope is now selected.",
             example = callExample(
                 AgentCallContract.METHOD_SELECT_SCOPE,
+                "${AgentCallContract.KEY_PACKAGE}:s" to "com.example.app",
+                "${AgentCallContract.KEY_SCOPE_ID}:l" to "3"
+            )
+        )
+
+        private fun deleteScope() = AgentMethod(
+            method = AgentCallContract.METHOD_DELETE_SCOPE,
+            arguments = listOf(
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_PACKAGE,
+                    type = TYPE_STRING,
+                    required = true,
+                    description = "The application's package name."
+                ),
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_SCOPE_ID,
+                    type = TYPE_LONG,
+                    required = true,
+                    description = "The scope to delete, from /apps/{package}. Its values in " +
+                        "every scope-specific row are deleted along with it."
+                )
+            ),
+            returns = "An AgentMutationResponse confirming what was deleted. The default scope " +
+                "can never be deleted — deleting it would leave every configuration in the " +
+                "application with no resolvable value, so that call is rejected with " +
+                "invalid_argument instead. Deleting the currently selected scope is allowed; " +
+                "selection then silently moves to the next most recent scope, and the summary " +
+                "names which one — relay it, since it changes what every toggle in the " +
+                "application resolves to.",
+            example = callExample(
+                AgentCallContract.METHOD_DELETE_SCOPE,
                 "${AgentCallContract.KEY_PACKAGE}:s" to "com.example.app",
                 "${AgentCallContract.KEY_SCOPE_ID}:l" to "3"
             )

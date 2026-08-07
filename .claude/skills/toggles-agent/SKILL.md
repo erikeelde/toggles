@@ -61,7 +61,7 @@ Getting the type letter wrong is the most common mistake; the API reports it as 
 rather than failing silently.
 
 Read `/describe`'s `methods` array for the full list and exact arguments. Available: set a value,
-create and select scopes, create and delete configurations.
+remove an override, create and select scopes, delete a scope, and create and delete configurations.
 
 **Changes reach a running app immediately** — no restart needed. Verified end to end.
 
@@ -118,6 +118,13 @@ sees by scanning `values` yourself.
   `summary` — treat that as "check your spelling", since a typo creates a real application entry.
   It is recoverable: open that app in the Toggles UI and use Delete in the overflow menu.
 - **Creating a scope does not select it.** Those are two separate calls, deliberately.
+- **Removing an override is not the same as setting the value to match the default.** An override
+  that happens to equal the default still shadows it, so a later change to the default will not
+  propagate. Use `deleteConfigurationValue` when the intent is "make this fall back", not
+  `setConfigurationValue` with the default's current value.
+- **The default scope cannot be deleted.**
+- **Deleting the selected scope silently changes what every toggle in that app resolves to.** The
+  response reports which scope became selected — relay it.
 - **The user can switch you off per application.** If a call returns `agent_control_disabled`, that
   is a deliberate choice made in the Toggles app — say so rather than trying to work around it.
 - The first mutation for an application posts a notification so the user can see agent activity.

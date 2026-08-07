@@ -91,8 +91,10 @@ class AgentDescriptionTest {
                 "setConfigurationValue",
                 "createConfiguration",
                 "deleteConfiguration",
+                "deleteConfigurationValue",
                 "createScope",
-                "selectScope"
+                "selectScope",
+                "deleteScope"
             ),
             describe().methods.map { it.method }
         )
