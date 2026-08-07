@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Shadows.shadowOf
@@ -37,5 +38,25 @@ class PackageManagerWrapperTest {
         val wrapper = PackageManagerWrapper(context.packageManager)
 
         assertEquals("android.uid.shell:2000", wrapper.callingApplicationPackageName)
+    }
+
+    @Test
+    fun `applicationLabel resolves the real label for an installed package`() {
+        val context = ApplicationProvider.getApplicationContext<Application>()
+        val packageName = context.packageName
+        // Binder.getCallingUid() defaults to the test process's own uid, which Robolectric
+        // already registers as the test package's uid — no setNameForUid/setCallingUid needed.
+
+        // Give the test package an explicit label so this test can tell a genuinely resolved
+        // label apart from the package-name fallback — Robolectric's default label may otherwise
+        // equal the package name, which would make the assertion vacuous.
+        val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
+        packageInfo.applicationInfo?.nonLocalizedLabel = "Real Application Label"
+        shadowOf(context.packageManager).installPackage(packageInfo)
+
+        val wrapper = PackageManagerWrapper(context.packageManager)
+
+        assertEquals("Real Application Label", wrapper.applicationLabel)
+        assertNotEquals(packageName, wrapper.applicationLabel)
     }
 }
