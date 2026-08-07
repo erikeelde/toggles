@@ -202,7 +202,8 @@ class AgentCallHandler(
                 configurationKey = null,
                 scopeId = scopeId,
                 scopeName = name,
-                value = null
+                value = null,
+                packageVerified = null
             )
         )
     }
@@ -257,14 +258,16 @@ class AgentCallHandler(
                 configurationKey = null,
                 scopeId = scope.id,
                 scopeName = scope.name,
-                value = null
+                value = null,
+                packageVerified = null
             )
         )
     }
 
     // Each early return is a distinct validation gate, same rationale as setConfigurationValue.
     // Type is validated before touching PackageManager or the database so an invalid type never
-    // has the side effect of creating an application row for an installed-but-unknown package.
+    // has the side effect of creating an application row for a package name that turns out to be
+    // rejected anyway.
     @Suppress("ReturnCount")
     private fun createConfiguration(extras: Bundle?): String {
         val packageName = extras.stringExtra(AgentCallContract.KEY_PACKAGE)
@@ -282,13 +285,10 @@ class AgentCallHandler(
             )
         }
 
-        val application = applicationProvisioner.resolveOrCreate(packageName)
-            ?: return AgentError.json(
-                AgentErrorCode.INVALID_ARGUMENT,
-                "$packageName is not installed on this device and Toggles has no record of it; " +
-                    "a configuration can only be pre-created for a package that is actually " +
-                    "installed."
-            )
+        // Always resolves — see AgentApplicationProvisioner's kdoc for why an unresolvable
+        // package is no longer a failure, only a note in the response below.
+        val resolution = applicationProvisioner.resolveOrCreate(packageName)
+        val application = resolution.application
 
         if (!application.agentControlEnabled) {
             return AgentError.json(
@@ -320,13 +320,15 @@ class AgentCallHandler(
         return agentJson.encodeToString(
             AgentMutationResponse(
                 method = AgentCallContract.METHOD_CREATE_CONFIGURATION,
-                summary = "created configuration \"$key\" ($type) for $packageName",
+                summary = "created configuration \"$key\" ($type) for $packageName" +
+                    unverifiedPackageNote(packageName, resolution.packageVerified),
                 applicationPackage = packageName,
                 configurationId = configurationId,
                 configurationKey = key,
                 scopeId = null,
                 scopeName = null,
-                value = null
+                value = null,
+                packageVerified = resolution.packageVerified
             )
         )
     }
@@ -370,7 +372,8 @@ class AgentCallHandler(
                 configurationKey = configuration.key,
                 scopeId = null,
                 scopeName = null,
-                value = null
+                value = null,
+                packageVerified = null
             )
         )
     }
@@ -388,7 +391,8 @@ class AgentCallHandler(
         configurationKey = configuration.key,
         scopeId = scope.id,
         scopeName = scope.name,
-        value = value
+        value = value,
+        packageVerified = null
     )
 
     private fun missingArgument(key: String): String = AgentError.json(
@@ -412,3 +416,16 @@ private fun Bundle?.longExtra(key: String): Long? = this?.get(key) as? Long
 
 @Suppress("DEPRECATION")
 private fun Bundle?.stringExtra(key: String): String? = this?.get(key) as? String
+
+// Only createConfiguration can provision a new, possibly-unverifiable application row, so this
+// note is appended to that endpoint's summary alone; every other AgentMutationResponse leaves
+// packageVerified null and carries no such text. Top-level for the same TooManyFunctions reason
+// as longExtra/stringExtra above — it doesn't touch AgentCallHandler's state either.
+private fun unverifiedPackageNote(packageName: String, packageVerified: Boolean?): String =
+    if (packageVerified == false) {
+        " (note: $packageName could not be confirmed as installed on this device — possibly a " +
+            "typo, possibly Android's package visibility filtering hiding a real package; " +
+            "double check the name)"
+    } else {
+        ""
+    }

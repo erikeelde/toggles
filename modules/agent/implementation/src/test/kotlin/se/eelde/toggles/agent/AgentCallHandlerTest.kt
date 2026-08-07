@@ -473,20 +473,69 @@ class AgentCallHandlerTest {
 
         val decoded = decode(response)
         assertEquals("createConfiguration", decoded.method)
+        assertEquals(true, decoded.packageVerified)
         val detail = applicationDetail("com.example.neverseen")
         assertEquals("feature_x", detail.configurations.single().key)
     }
 
+    // Robolectric's ShadowPackageManager does not implement Android 11+ package visibility
+    // filtering, so this and the test below cannot reproduce the real-device failure that
+    // motivated allowing this: on a real device, getApplicationInfo throws
+    // NameNotFoundException for any package that has never interacted with Toggles, which is
+    // exactly the set of packages createConfiguration exists to pre-create for. See
+    // AgentApplicationProvisioner's kdoc. Verified manually via `adb shell content call` against
+    // a genuinely-installed-but-never-seen package — see the task's on-device verification.
     @Test
-    fun `creating a configuration for a package that is not installed returns invalid_argument and creates nothing`() {
+    fun `creating a configuration for a package PackageManager cannot resolve still creates it, flagged unverified`() {
         val response = createConfiguration(
             packageName = "com.example.notinstalled",
             key = "feature_x",
             type = "boolean"
         )
 
-        assertEquals("invalid_argument", errorCode(response))
-        assertTrue(database.agentDao().getApplications().isEmpty())
+        val decoded = decode(response)
+        assertEquals("createConfiguration", decoded.method)
+        assertEquals(false, decoded.packageVerified)
+        assertEquals(
+            "feature_x",
+            applicationDetail("com.example.notinstalled").configurations.single().key
+        )
+    }
+
+    @Test
+    fun `packageVerified distinguishes an unresolvable package from a resolvable one`() {
+        installPackage("com.example.neverseen", "Never Seen")
+
+        val resolvable = createConfiguration(
+            packageName = "com.example.neverseen",
+            key = "feature_x",
+            type = "boolean"
+        )
+        val unresolvable = createConfiguration(
+            packageName = "com.example.notinstalled",
+            key = "feature_x",
+            type = "boolean"
+        )
+
+        assertEquals(true, decode(resolvable).packageVerified)
+        assertEquals(false, decode(unresolvable).packageVerified)
+        assertTrue(
+            "expected a note about the unresolved package, got: ${decode(unresolvable).summary}",
+            decode(unresolvable).summary.contains("could not be confirmed")
+        )
+    }
+
+    @Test
+    fun `creating a configuration for an already-known application leaves packageVerified null`() {
+        insertApplication("com.example.app", "Example")
+
+        val response = createConfiguration(
+            packageName = "com.example.app",
+            key = "feature_x",
+            type = "boolean"
+        )
+
+        assertNull(decode(response).packageVerified)
     }
 
     @Test

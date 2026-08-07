@@ -149,10 +149,14 @@ object AgentDescription {
                     name = AgentCallContract.KEY_PACKAGE,
                     type = TYPE_STRING,
                     required = true,
-                    description = "The application's package name. If Toggles has never seen it " +
-                        "but the package is installed on the device, the application (with its " +
-                        "default and development scopes) is created on demand; otherwise this " +
-                        "call fails with invalid_argument."
+                    description = "The application's package name. If Toggles has never seen it, " +
+                        "the application (with its default and development scopes) is created " +
+                        "on demand, even if the package cannot be confirmed as installed — " +
+                        "package visibility filtering hides most never-run packages from " +
+                        "Toggles, so this call succeeds regardless. Check " +
+                        "AgentMutationResponse.packageVerified (and its summary) to see whether " +
+                        "the package could actually be confirmed; false is where a typo would " +
+                        "show up."
                 ),
                 AgentMethodArgument(
                     name = AgentCallContract.KEY_KEY,
@@ -168,7 +172,10 @@ object AgentDescription {
                     description = "One of model.configurationTypes."
                 )
             ),
-            returns = "An AgentMutationResponse with the new configuration's id.",
+            returns = "An AgentMutationResponse with the new configuration's id. " +
+                "packageVerified is non-null only when this call just created the application " +
+                "row: true if the package was confirmed installed, false if it could not be " +
+                "confirmed (verify the package name before trusting it).",
             example = callExample(
                 AgentCallContract.METHOD_CREATE_CONFIGURATION,
                 "${AgentCallContract.KEY_PACKAGE}:s" to "com.example.app",
