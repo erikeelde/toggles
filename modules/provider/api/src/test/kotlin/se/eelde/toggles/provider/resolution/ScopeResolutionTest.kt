@@ -39,12 +39,12 @@ class ScopeResolutionTest {
     }
 
     @Test
-    fun `effective value skips a null value in the selected scope`() {
+    fun `effective value returns null when the selected scope holds a null value row`() {
         val chain = ScopeChain(selectedScopeId = 7, defaultScopeId = 1)
 
         val value = ScopeResolution.effectiveValue(mapOf(7L to null, 1L to "prod"), chain)
 
-        assertEquals("prod", value)
+        assertNull(value)
     }
 
     @Test

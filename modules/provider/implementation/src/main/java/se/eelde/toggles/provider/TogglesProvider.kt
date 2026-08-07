@@ -138,6 +138,17 @@ class TogglesProvider : ContentProvider() {
         defaultScopeId = getDefaultScope(scopeDao, applicationId).id
     )
 
+    private fun firstNonEmptyCursor(chain: ScopeChain, query: (Long) -> Cursor): Cursor {
+        var lastEmpty: Cursor? = null
+        chain.orderedScopeIds.forEach { scopeId ->
+            lastEmpty?.close()
+            val candidate = query(scopeId)
+            if (candidate.count > 0) return candidate
+            lastEmpty = candidate
+        }
+        return requireNotNull(lastEmpty) { "scope chain is never empty" }
+    }
+
     override fun onCreate() = true
 
     @Suppress("LongMethod", "NestedBlockDepth", "CyclomaticComplexMethod")
@@ -158,24 +169,16 @@ class TogglesProvider : ContentProvider() {
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATION_ID -> {
                 val configId = requireNotNull(uri.lastPathSegment).toLong()
-                val chain = scopeChainFor(callingApplication.id)
-                cursor = chain.orderedScopeIds
-                    .asSequence()
-                    .map { scopeId -> configurationDao.getToggle(configId, scopeId) }
-                    .onEach { candidate -> if (candidate.count == 0) candidate.close() }
-                    .firstOrNull { candidate -> candidate.count > 0 }
-                    ?: configurationDao.getToggle(configId, chain.defaultScopeId)
+                cursor = firstNonEmptyCursor(scopeChainFor(callingApplication.id)) { scopeId ->
+                    configurationDao.getToggle(configId, scopeId)
+                }
             }
 
             UriMatch.CURRENT_CONFIGURATION_KEY -> {
                 val key = requireNotNull(uri.lastPathSegment)
-                val chain = scopeChainFor(callingApplication.id)
-                cursor = chain.orderedScopeIds
-                    .asSequence()
-                    .map { scopeId -> configurationDao.getToggle(key, scopeId) }
-                    .onEach { candidate -> if (candidate.count == 0) candidate.close() }
-                    .firstOrNull { candidate -> candidate.count > 0 }
-                    ?: configurationDao.getToggle(key, chain.defaultScopeId)
+                cursor = firstNonEmptyCursor(scopeChainFor(callingApplication.id)) { scopeId ->
+                    configurationDao.getToggle(key, scopeId)
+                }
             }
 
             UriMatch.CONFIGURATIONS -> {
