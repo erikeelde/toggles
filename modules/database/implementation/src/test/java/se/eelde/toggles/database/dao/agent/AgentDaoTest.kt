@@ -152,21 +152,34 @@ class AgentDaoTest {
     }
 
     @Test
-    fun `getScopes returns only the requested application's scopes`() {
+    fun `getConfigurations is empty for an applicationId that does not exist`() {
+        insertApplication("com.example.a", "A").also { insertConfiguration(it, "featureA") }
+
+        assertTrue(agentDao.getConfigurations(999L).isEmpty())
+    }
+
+    @Test
+    fun `getScopes returns only the requested application's scopes, ordered by id`() {
         val appA = insertApplication("com.example.a", "A")
         val appB = insertApplication("com.example.b", "B")
-        insertScope(appA, "alpha")
         insertScope(appA, "beta")
+        insertScope(appA, "alpha")
         insertScope(appB, "gamma")
 
         val scopes = agentDao.getScopes(appA)
 
-        assertEquals(setOf("alpha", "beta"), scopes.map { it.name }.toSet())
+        assertEquals(listOf("beta", "alpha"), scopes.map { it.name })
         assertEquals(2, scopes.size)
     }
 
     @Test
     fun `getConfigurationValues returns only the requested application's values`() {
+        // Filler applications and a filler configuration desynchronize the application id
+        // sequence from the configuration id sequence, so a query that accidentally filters on
+        // configuration.id instead of configuration.applicationId cannot coincidentally pass.
+        insertApplication("com.example.filler1", "Filler1")
+        insertApplication("com.example.filler2", "Filler2")
+        insertApplication("com.example.filler3", "Filler3")
         val appA = insertApplication("com.example.a", "A")
         val appB = insertApplication("com.example.b", "B")
         val configA = insertConfiguration(appA, "featureA")
@@ -175,6 +188,8 @@ class AgentDaoTest {
         val scopeB = insertScope(appB, "default")
         insertConfigurationValue(configA, scopeA, "valueA")
         insertConfigurationValue(configB, scopeB, "valueB")
+
+        check(appA != configA) { "test setup must desynchronize the id sequences" }
 
         val values = agentDao.getConfigurationValues(appA)
 
@@ -189,6 +204,16 @@ class AgentDaoTest {
         insertConfiguration(appA, "featureA")
 
         assertTrue(agentDao.getConfigurationValues(appA).isEmpty())
+    }
+
+    @Test
+    fun `getConfigurationValues is empty for an applicationId that does not exist`() {
+        val appA = insertApplication("com.example.a", "A")
+        val configA = insertConfiguration(appA, "featureA")
+        val scopeA = insertScope(appA, "default")
+        insertConfigurationValue(configA, scopeA, "valueA")
+
+        assertTrue(agentDao.getConfigurationValues(999L).isEmpty())
     }
 
     @Test
@@ -208,6 +233,12 @@ class AgentDaoTest {
 
     @Test
     fun `getPredefinedConfigurationValues returns only the requested application's values`() {
+        // Filler applications and a filler configuration desynchronize the application id
+        // sequence from the configuration id sequence, so a query that accidentally filters on
+        // configuration.id instead of configuration.applicationId cannot coincidentally pass.
+        insertApplication("com.example.filler1", "Filler1")
+        insertApplication("com.example.filler2", "Filler2")
+        insertApplication("com.example.filler3", "Filler3")
         val appA = insertApplication("com.example.a", "A")
         val appB = insertApplication("com.example.b", "B")
         val configA = insertConfiguration(appA, "featureA")
@@ -215,10 +246,25 @@ class AgentDaoTest {
         insertPredefinedConfigurationValue(configA, "predefinedA")
         insertPredefinedConfigurationValue(configB, "predefinedB")
 
+        check(appA != configA) { "test setup must desynchronize the id sequences" }
+
         val values = agentDao.getPredefinedConfigurationValues(appA)
 
         assertEquals(1, values.size)
         assertEquals("predefinedA", values[0].value)
         assertTrue(values.none { it.value == "predefinedB" })
+    }
+
+    @Test
+    fun `getPredefinedConfigurationValues returns all predefined values for a configuration`() {
+        val appA = insertApplication("com.example.a", "A")
+        val configA = insertConfiguration(appA, "featureA")
+        insertPredefinedConfigurationValue(configA, "true")
+        insertPredefinedConfigurationValue(configA, "false")
+
+        val values = agentDao.getPredefinedConfigurationValues(appA)
+
+        assertEquals(setOf("true", "false"), values.map { it.value }.toSet())
+        assertEquals(2, values.size)
     }
 }
