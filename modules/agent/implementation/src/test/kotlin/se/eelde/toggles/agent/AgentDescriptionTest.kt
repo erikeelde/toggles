@@ -60,6 +60,26 @@ class AgentDescriptionTest {
     }
 
     @Test
+    fun `valueFormats has an entry for every configuration type`() {
+        val document = describe()
+
+        assertEquals(
+            document.model.configurationTypes.toSet(),
+            document.model.valueFormats.keys
+        )
+    }
+
+    @Test
+    fun `the boolean value format warns about the silent-false behaviour`() {
+        assertTrue(describe().model.valueFormats.getValue("boolean").contains("false"))
+    }
+
+    @Test
+    fun `the enum value format points at predefinedValues`() {
+        assertTrue(describe().model.valueFormats.getValue("enum").contains("predefinedValues"))
+    }
+
+    @Test
     fun `describe lists every error code the api can return`() {
         assertEquals(AgentErrorCode.entries.map { it.wireValue }, describe().errors)
     }

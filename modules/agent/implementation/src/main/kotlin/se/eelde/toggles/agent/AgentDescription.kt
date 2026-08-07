@@ -15,6 +15,7 @@ data class AgentModelDocumentation(
     val scopeResolution: String,
     val agentControl: String,
     val callers: String,
+    val valueFormats: Map<String, String>,
 )
 
 @Serializable
@@ -74,7 +75,19 @@ object AgentDescription {
                 "agentControlEnabled flag to be true. It defaults to true and can be turned off " +
                 "per application inside the Toggles app.",
             callers = "Only uid 2000 (shell) and uid 0 (root) may call this provider. Every other " +
-                "caller receives a not_authorized error."
+                "caller receives a not_authorized error.",
+            valueFormats = mapOf(
+                "boolean" to "Exactly \"true\" or \"false\". The client library parses with " +
+                    "Kotlin's String.toBoolean(), which returns true only for a case-insensitive " +
+                    "\"true\" and silently returns false for anything else — a malformed value " +
+                    "does not error, it reads as false.",
+                "integer" to "A decimal integer string. The client library parses with " +
+                    "String.toInt(), which throws NumberFormatException in the consuming app if " +
+                    "the value is not a valid integer.",
+                "string" to "Any string.",
+                "enum" to "Must be one of the values listed in that configuration's " +
+                    "predefinedValues array."
+            )
         ),
         errors = AgentErrorCode.entries.map { it.wireValue }
     )
