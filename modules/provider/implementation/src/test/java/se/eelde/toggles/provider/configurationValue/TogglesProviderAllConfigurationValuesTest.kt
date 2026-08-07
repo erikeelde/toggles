@@ -64,7 +64,7 @@ class TogglesProviderAllConfigurationValuesTest {
                 this.key = key
             }.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
         togglesProvider.insert(
             TogglesProviderContract.configurationValueUri(configId),
             TogglesConfigurationValue {

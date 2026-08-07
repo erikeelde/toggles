@@ -234,7 +234,7 @@ class TogglesProvider : ContentProvider() {
     }
 
     @Suppress("LongMethod", "CyclomaticComplexMethod")
-    override fun insert(uri: Uri, values: ContentValues?): Uri {
+    override fun insert(uri: Uri, values: ContentValues?): Uri? {
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {
@@ -329,19 +329,24 @@ class TogglesProvider : ContentProvider() {
                     value = togglesConfigurationValue.value,
                     scope = togglesConfigurationValue.scope
                 )
-                // A constraint violation here means the (configurationId, scope) pair already has
-                // a row: an upsert that wrote nothing, so observers should not be woken. The
-                // lookup recovers the existing row's id so callers still get a valid URI back.
+                // A constraint violation here means one of two things, and only a lookup can tell
+                // them apart: (a) the (configurationId, scope) pair already has a row — an upsert,
+                // nothing was written, so no id was freshly created and observers should not be
+                // woken; or (b) the row references a scope that does not exist (its FK to
+                // scope(id) — see MIGRATION_9_10) — a genuine failure, nothing was written and
+                // there is no id to report. Only case (a) has an id to fall back to.
+
                 @Suppress("SwallowedException")
-                insertId = try {
+                val freshId = try {
                     configurationValueDao.insertSync(databaseConfigurationValue)
                 } catch (e: SQLiteConstraintException) {
-                    notify = false
-                    configurationValueDao.getIdByConfigurationIdAndScope(
-                        databaseConfigurationValue.configurationId,
-                        databaseConfigurationValue.scope
-                    ) ?: -1L
+                    null
                 }
+                insertId = freshId ?: configurationValueDao.getIdByConfigurationIdAndScope(
+                    databaseConfigurationValue.configurationId,
+                    databaseConfigurationValue.scope
+                ) ?: return null
+                notify = freshId != null
                 val configId = uri.pathSegments[uri.pathSegments.size - 2].toLong()
                 crossNotifyUri = TogglesProviderContract.toggleUri(configId)
             }

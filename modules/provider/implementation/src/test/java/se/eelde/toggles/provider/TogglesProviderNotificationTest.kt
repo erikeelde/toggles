@@ -183,11 +183,12 @@ class TogglesProviderNotificationTest {
             value = "true"
             scope = getDefaultScopeId()
         }
-        togglesProvider.insert(
+        val uri = togglesProvider.insert(
             TogglesProviderContract.configurationValueUri(configId),
             configValue.toContentValues()
         )
 
+        assertTrue("Expected a fresh insert to return a non-null URI", uri != null)
         val notifiedUris = shadowContentResolver.getNotifiedUris()
         assertTrue(
             "Expected at least one notification after a fresh insert, got none",
@@ -212,11 +213,12 @@ class TogglesProviderNotificationTest {
 
         // Same (configurationId, scope) pair again: nothing is written, so nothing should be
         // notified.
-        togglesProvider.insert(
+        val uri = togglesProvider.insert(
             TogglesProviderContract.configurationValueUri(configId),
             configValue.copy(value = "irrelevant").toContentValues()
         )
 
+        assertTrue("Expected the duplicate insert to still return the existing row's URI", uri != null)
         val notifiedUris = shadowContentResolver.getNotifiedUris()
         assertTrue(
             "Expected no notifications for a duplicate insert that wrote nothing, got: " +
@@ -235,11 +237,12 @@ class TogglesProviderNotificationTest {
             value = "true"
             scope = 999L
         }
-        togglesProvider.insert(
+        val uri = togglesProvider.insert(
             TogglesProviderContract.configurationValueUri(configId),
             configValue.toContentValues()
         )
 
+        assertTrue("Expected a failed insert against a nonexistent scope to return null", uri == null)
         val notifiedUris = shadowContentResolver.getNotifiedUris()
         assertTrue(
             "Expected no notifications for a failed insert that wrote nothing, got: " +
@@ -627,7 +630,7 @@ class TogglesProviderNotificationTest {
             TogglesProviderContract.configurationUri(),
             config.toContentValues()
         )
-        return requireNotNull(uri.lastPathSegment).toLong()
+        return requireNotNull(uri?.lastPathSegment).toLong()
     }
 
     private fun getDefaultScopeId(): Long {

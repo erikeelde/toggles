@@ -77,9 +77,11 @@ class TogglesProviderMatcherConfigurationIdTest {
 
     @Test
     fun testUpdate() {
-        val uri = togglesProvider.insert(
-            TogglesProviderContract.configurationUri(),
-            togglesConfiguration.toContentValues(),
+        val uri = requireNotNull(
+            togglesProvider.insert(
+                TogglesProviderContract.configurationUri(),
+                togglesConfiguration.toContentValues(),
+            )
         )
 
         val updatedConfiguration =
@@ -105,9 +107,11 @@ class TogglesProviderMatcherConfigurationIdTest {
 
     @Test
     fun testQuery() {
-        val uri = togglesProvider.insert(
-            TogglesProviderContract.configurationUri(),
-            togglesConfiguration.toContentValues(),
+        val uri = requireNotNull(
+            togglesProvider.insert(
+                TogglesProviderContract.configurationUri(),
+                togglesConfiguration.toContentValues(),
+            )
         )
 
         val configurationUri = TogglesProviderContract.configurationUri(requireNotNull(uri.lastPathSegment).toLong())
@@ -123,9 +127,11 @@ class TogglesProviderMatcherConfigurationIdTest {
 
     @Test
     fun testDelete() {
-        val uri = togglesProvider.insert(
-            TogglesProviderContract.configurationUri(),
-            togglesConfiguration.toContentValues(),
+        val uri = requireNotNull(
+            togglesProvider.insert(
+                TogglesProviderContract.configurationUri(),
+                togglesConfiguration.toContentValues(),
+            )
         )
 
         val rowsDeleted = togglesProvider.delete(

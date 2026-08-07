@@ -171,7 +171,7 @@ class TogglesProviderMatcherCurrentConfigurationKeyTest {
             TogglesProviderContract.toggleUri(),
             insertToggle.toContentValues()
         )
-        val configId = requireNotNull(insertUri.lastPathSegment).toLong()
+        val configId = requireNotNull(insertUri?.lastPathSegment).toLong()
 
         // Update creates value in selected (development) scope via insert fallback
         val updateToggle = Toggle {

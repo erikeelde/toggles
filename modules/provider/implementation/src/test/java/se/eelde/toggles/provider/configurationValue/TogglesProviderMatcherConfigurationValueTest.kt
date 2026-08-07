@@ -80,7 +80,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
 
         val configValue = TogglesConfigurationValue {
             configurationId = configId
@@ -117,7 +117,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
 
         val configValue = TogglesConfigurationValue {
             configurationId = configId
@@ -154,7 +154,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
 
         val defaultScopeId = getDefaultScopeId()
 
@@ -168,11 +168,12 @@ class TogglesProviderMatcherConfigurationValueTest {
             configValue.toContentValues(),
         )
 
-        assertTrue(uri.toString().contains("/values/"))
+        // A fresh insert must return a non-null URI shaped like ".../values/{id}". insert() only
+        // returns null when nothing was written (see
+        // testInsertWithNonexistentScopeReturnsNullAndWritesNoRow), so requireNotNull here is
+        // itself an assertion that this insert actually succeeded.
+        assertTrue(requireNotNull(uri).toString().contains("/values/"))
 
-        // Asserting the URI shape alone is not enough: insert() swallows a
-        // SQLiteConstraintException and falls back to -1, so a failed insert still produces a URI
-        // containing "/values/". Assert the id is real and that the row is actually readable.
         val insertedId = requireNotNull(uri.lastPathSegment).toLong()
         assertTrue("insert returned id $insertedId — the row was not written", insertedId > 0)
 
@@ -202,7 +203,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
         val defaultScopeId = getDefaultScopeId()
 
         val configValue = TogglesConfigurationValue {
@@ -214,7 +215,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationValueUri(configId),
             configValue.toContentValues(),
         )
-        val firstId = requireNotNull(firstUri.lastPathSegment).toLong()
+        val firstId = requireNotNull(firstUri?.lastPathSegment).toLong()
 
         // Same (configurationId, scope) pair again: insertSync throws on the unique constraint,
         // and the fallback lookup must resolve to the row that already exists.
@@ -222,7 +223,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationValueUri(configId),
             configValue.copy(value = "irrelevant").toContentValues(),
         )
-        val secondId = requireNotNull(secondUri.lastPathSegment).toLong()
+        val secondId = requireNotNull(secondUri?.lastPathSegment).toLong()
 
         assertEquals("duplicate insert must return the existing row's id", firstId, secondId)
 
@@ -238,6 +239,42 @@ class TogglesProviderMatcherConfigurationValueTest {
     }
 
     @Test
+    fun testInsertWithNonexistentScopeReturnsNullAndWritesNoRow() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "nonexistentScopeInsertKey"
+        }
+
+        val configUri = togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            togglesConfiguration.toContentValues(),
+        )
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
+
+        val configValue = TogglesConfigurationValue {
+            configurationId = configId
+            value = "true"
+            scope = 999L
+        }
+        val uri = togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.toContentValues(),
+        )
+
+        assertEquals("insert against a nonexistent scope must return null", null, uri)
+
+        togglesProvider.query(
+            TogglesProviderContract.configurationValueUri(configId),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertEquals("failed insert must not write a row", 0, cursor.count)
+        }
+    }
+
+    @Test
     fun testUpdate() {
         val togglesConfiguration = TogglesConfiguration {
             type = Toggle.TYPE.BOOLEAN
@@ -248,7 +285,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
 
         val configValue = TogglesConfigurationValue {
             configurationId = configId
@@ -358,7 +395,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
 
         val nonExistentValue = TogglesConfigurationValue {
             configurationId = configId
@@ -386,7 +423,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
 
         val defaultScopeId = getDefaultScopeId()
 
@@ -426,7 +463,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
 
         val defaultScopeId = getDefaultScopeId()
         val developmentScopeId = getDevelopmentScopeId()
@@ -480,7 +517,7 @@ class TogglesProviderMatcherConfigurationValueTest {
             TogglesProviderContract.configurationUri(),
             togglesConfiguration.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
 
         val defaultScopeId = getDefaultScopeId()
         val developmentScopeId = getDevelopmentScopeId()
