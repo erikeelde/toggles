@@ -246,4 +246,37 @@ class AgentMutationDaoTest {
         assertNull(agentMutationDao.getConfiguration(999L))
         assertNull(agentMutationDao.getScope(999L))
     }
+
+    @Test
+    fun `deleteConfigurationValue removes the matching row and returns 1, leaving other scopes' rows`() {
+        val appA = insertApplication("com.example.a", "A")
+        val configA = insertConfiguration(appA, "featureA")
+        val scopeA = insertScope(appA, "default")
+        val scopeB = insertScope(appA, "other")
+        agentMutationDao.insertConfigurationValue(
+            TogglesConfigurationValue(id = 0, configurationId = configA, value = "true", scope = scopeA)
+        )
+        agentMutationDao.insertConfigurationValue(
+            TogglesConfigurationValue(id = 0, configurationId = configA, value = "false", scope = scopeB)
+        )
+
+        val deleted = agentMutationDao.deleteConfigurationValue(configA, scopeA)
+
+        assertEquals(1, deleted)
+        val remaining = agentDao.getConfigurationValues(appA)
+        assertEquals(1, remaining.size)
+        assertEquals(scopeB, remaining[0].scope)
+    }
+
+    @Test
+    fun `deleteConfigurationValue returns 0 when there is no matching row`() {
+        val appA = insertApplication("com.example.a", "A")
+        val configA = insertConfiguration(appA, "featureA")
+        val scopeA = insertScope(appA, "default")
+
+        val deleted = agentMutationDao.deleteConfigurationValue(configA, scopeA)
+
+        assertEquals(0, deleted)
+    }
+
 }

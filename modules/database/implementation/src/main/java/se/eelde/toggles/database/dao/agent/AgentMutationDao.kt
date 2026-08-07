@@ -39,6 +39,9 @@ interface AgentMutationDao {
     @Query("SELECT id FROM configurationValue WHERE configurationId = (:configurationId) AND scope = (:scopeId)")
     fun findConfigurationValueId(configurationId: Long, scopeId: Long): Long?
 
+    @Query("DELETE FROM configurationValue WHERE configurationId = (:configurationId) AND scope = (:scopeId)")
+    fun deleteConfigurationValue(configurationId: Long, scopeId: Long): Int
+
     @Insert
     fun insertScope(scope: TogglesScope): Long
 

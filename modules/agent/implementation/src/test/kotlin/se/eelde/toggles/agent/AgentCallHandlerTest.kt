@@ -650,6 +650,113 @@ class AgentCallHandlerTest {
         assertTrue(notifier.configurationsNotified.isEmpty())
     }
 
+    // --- deleteConfigurationValue ---
+
+    @Test
+    fun `removing an override makes effectiveValue fall back to the default scope`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default")
+        val devScopeId = insertScope(appId, "Development scope")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, defaultScopeId, "true")
+        insertValue(configId, devScopeId, "false")
+
+        val response = deleteConfigurationValue(configId, devScopeId)
+
+        assertEquals("deleteConfigurationValue", decode(response).method)
+        assertEquals("true", effectiveValue("com.example.app"))
+        assertEquals(
+            "true",
+            database.agentDao().getConfigurationValues(appId).single { it.scope == defaultScopeId }.value
+        )
+    }
+
+    @Test
+    fun `removing an override notifies the notifier with the configuration's id`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default")
+        val devScopeId = insertScope(appId, "Development scope")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, defaultScopeId, "true")
+        insertValue(configId, devScopeId, "false")
+
+        deleteConfigurationValue(configId, devScopeId)
+
+        assertEquals(listOf(configId), notifier.configurationsNotified)
+    }
+
+    @Test
+    fun `removing a non-existent override succeeds, changes nothing, and says so`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default")
+        val devScopeId = insertScope(appId, "Development scope")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, defaultScopeId, "true")
+
+        val response = deleteConfigurationValue(configId, devScopeId)
+
+        val decoded = decode(response)
+        assertEquals("deleteConfigurationValue", decoded.method)
+        assertTrue(
+            "expected the summary to say nothing was removed, got: ${decoded.summary}",
+            decoded.summary.contains("nothing") || decoded.summary.contains("no")
+        )
+        assertEquals("true", effectiveValue("com.example.app"))
+        assertTrue(notifier.configurationsNotified.isEmpty())
+    }
+
+    @Test
+    fun `removing an override for a scope from a different application returns invalid_argument and deletes nothing`() {
+        val appA = insertApplication("com.example.a", "A")
+        val appB = insertApplication("com.example.b", "B")
+        val scopeA = insertScope(appA, "toggles_default")
+        val scopeB = insertScope(appB, "toggles_default")
+        val configA = insertConfiguration(appA, "feature_x", "boolean")
+        insertValue(configA, scopeA, "true")
+
+        val response = deleteConfigurationValue(configA, scopeB)
+
+        assertEquals("invalid_argument", errorCode(response))
+        assertEquals("true", effectiveValue("com.example.a"))
+    }
+
+    @Test
+    fun `removing an override for a disabled application returns agent_control_disabled and deletes nothing`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, scopeId, "true")
+        database.openHelper.writableDatabase.execSQL(
+            "UPDATE application SET agentControlEnabled = 0 WHERE id = $appId"
+        )
+
+        val response = deleteConfigurationValue(configId, scopeId)
+
+        assertEquals("agent_control_disabled", errorCode(response))
+        assertEquals("true", database.agentDao().getConfigurationValues(appId).single().value)
+        assertTrue(notifier.configurationsNotified.isEmpty())
+    }
+
+    @Test
+    fun `removing an override for an unknown configuration returns unknown_id`() {
+        val response = deleteConfigurationValue(999L, 1L)
+
+        assertEquals("unknown_id", errorCode(response))
+    }
+
+    @Test
+    fun `deleting the default scope's only row leaves effectiveValue null`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val defaultScopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, defaultScopeId, "true")
+
+        val response = deleteConfigurationValue(configId, defaultScopeId)
+
+        assertEquals("deleteConfigurationValue", decode(response).method)
+        assertNull(effectiveValue("com.example.app"))
+    }
+
     // --- agent control notifications (B10) ---
 
     @Test
@@ -827,6 +934,15 @@ class AgentCallHandlerTest {
             "deleteConfiguration",
             Bundle().apply {
                 putLong("configurationId", configurationId)
+            }
+        )
+
+    private fun deleteConfigurationValue(configurationId: Long, scopeId: Long): String =
+        handler.handle(
+            "deleteConfigurationValue",
+            Bundle().apply {
+                putLong("configurationId", configurationId)
+                putLong("scopeId", scopeId)
             }
         )
 

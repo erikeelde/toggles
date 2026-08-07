@@ -79,7 +79,7 @@ class AgentReadHandler(
     private fun detail(application: TogglesApplication): AgentApplicationDetail {
         val scopes = agentDao.getScopes(application.id)
         val selectedScope = scopes.maxByOrNull { it.timeStamp }
-        val chain = chainFor(scopes, selectedScope)
+        val chain = scopeChainFor(scopes, selectedScope)
 
         val valuesByConfigurationId =
             agentDao.getConfigurationValues(application.id).groupBy { it.configurationId }
@@ -100,15 +100,6 @@ class AgentReadHandler(
                 )
             }
         )
-    }
-
-    private fun chainFor(scopes: List<TogglesScope>, selectedScope: TogglesScope?): ScopeChain? {
-        val defaultScope = scopes.firstOrNull { it.name == TogglesScope.SCOPE_DEFAULT }
-        return if (selectedScope != null && defaultScope != null) {
-            ScopeChain(selectedScopeId = selectedScope.id, defaultScopeId = defaultScope.id)
-        } else {
-            null
-        }
     }
 
     private fun TogglesConfiguration.toAgentConfiguration(

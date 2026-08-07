@@ -25,6 +25,7 @@ internal object AgentCallContract {
     const val METHOD_SELECT_SCOPE = "selectScope"
     const val METHOD_CREATE_CONFIGURATION = "createConfiguration"
     const val METHOD_DELETE_CONFIGURATION = "deleteConfiguration"
+    const val METHOD_DELETE_CONFIGURATION_VALUE = "deleteConfigurationValue"
 
     const val KEY_CONFIGURATION_ID = "configurationId"
     const val KEY_SCOPE_ID = "scopeId"
@@ -52,6 +53,8 @@ class AgentCallHandler(
 
     private val applicationProvisioner =
         AgentApplicationProvisioner(agentDao, agentMutationDao, packageManager, clock)
+    private val configurationValueDeleter =
+        AgentConfigurationValueDeleter(agentDao, agentMutationDao, changeNotifier)
 
     @Suppress("TooGenericExceptionCaught") // must never throw across the binder; see class kdoc
     fun handle(method: String, extras: Bundle?): String = try {
@@ -61,6 +64,7 @@ class AgentCallHandler(
             AgentCallContract.METHOD_SELECT_SCOPE -> selectScope(extras)
             AgentCallContract.METHOD_CREATE_CONFIGURATION -> createConfiguration(extras)
             AgentCallContract.METHOD_DELETE_CONFIGURATION -> deleteConfiguration(extras)
+            AgentCallContract.METHOD_DELETE_CONFIGURATION_VALUE -> configurationValueDeleter.handle(extras)
             else -> AgentError.json(
                 AgentErrorCode.UNKNOWN_ENDPOINT,
                 "no such method: $method. Read /describe for the available endpoints."
@@ -79,17 +83,17 @@ class AgentCallHandler(
     @Suppress("ReturnCount")
     private fun setConfigurationValue(extras: Bundle?): String {
         val configurationId = extras.longExtra(AgentCallContract.KEY_CONFIGURATION_ID)
-            ?: return missingArgument(AgentCallContract.KEY_CONFIGURATION_ID)
+            ?: return missingArgumentError(AgentCallContract.KEY_CONFIGURATION_ID)
         val scopeId = extras.longExtra(AgentCallContract.KEY_SCOPE_ID)
-            ?: return missingArgument(AgentCallContract.KEY_SCOPE_ID)
+            ?: return missingArgumentError(AgentCallContract.KEY_SCOPE_ID)
         val value = extras.stringExtra(AgentCallContract.KEY_VALUE)
-            ?: return missingArgument(AgentCallContract.KEY_VALUE)
+            ?: return missingArgumentError(AgentCallContract.KEY_VALUE)
 
         val configuration = agentMutationDao.getConfiguration(configurationId)
-            ?: return unknownId("no configuration with id $configurationId")
+            ?: return unknownIdError("no configuration with id $configurationId")
 
         val application = agentDao.getApplicationById(configuration.applicationId)
-            ?: return unknownId(
+            ?: return unknownIdError(
                 "configuration $configurationId has no owning application " +
                     "(applicationId ${configuration.applicationId})"
             )
@@ -103,7 +107,7 @@ class AgentCallHandler(
         }
 
         val scope = agentMutationDao.getScope(scopeId)
-            ?: return unknownId("no scope with id $scopeId")
+            ?: return unknownIdError("no scope with id $scopeId")
 
         if (scope.applicationId != configuration.applicationId) {
             return AgentError.json(
@@ -153,9 +157,9 @@ class AgentCallHandler(
     @Suppress("ReturnCount")
     private fun createScope(extras: Bundle?): String {
         val packageName = extras.stringExtra(AgentCallContract.KEY_PACKAGE)
-            ?: return missingArgument(AgentCallContract.KEY_PACKAGE)
+            ?: return missingArgumentError(AgentCallContract.KEY_PACKAGE)
         val name = extras.stringExtra(AgentCallContract.KEY_NAME)
-            ?: return missingArgument(AgentCallContract.KEY_NAME)
+            ?: return missingArgumentError(AgentCallContract.KEY_NAME)
 
         val application = agentDao.getApplicationByPackageName(packageName)
             ?: return AgentError.json(
@@ -212,9 +216,9 @@ class AgentCallHandler(
     @Suppress("ReturnCount")
     private fun selectScope(extras: Bundle?): String {
         val packageName = extras.stringExtra(AgentCallContract.KEY_PACKAGE)
-            ?: return missingArgument(AgentCallContract.KEY_PACKAGE)
+            ?: return missingArgumentError(AgentCallContract.KEY_PACKAGE)
         val scopeId = extras.longExtra(AgentCallContract.KEY_SCOPE_ID)
-            ?: return missingArgument(AgentCallContract.KEY_SCOPE_ID)
+            ?: return missingArgumentError(AgentCallContract.KEY_SCOPE_ID)
 
         val application = agentDao.getApplicationByPackageName(packageName)
             ?: return AgentError.json(
@@ -230,7 +234,7 @@ class AgentCallHandler(
         }
 
         val scope = agentMutationDao.getScope(scopeId)
-            ?: return unknownId("no scope with id $scopeId")
+            ?: return unknownIdError("no scope with id $scopeId")
 
         if (scope.applicationId != application.id) {
             return AgentError.json(
@@ -271,11 +275,11 @@ class AgentCallHandler(
     @Suppress("ReturnCount")
     private fun createConfiguration(extras: Bundle?): String {
         val packageName = extras.stringExtra(AgentCallContract.KEY_PACKAGE)
-            ?: return missingArgument(AgentCallContract.KEY_PACKAGE)
+            ?: return missingArgumentError(AgentCallContract.KEY_PACKAGE)
         val key = extras.stringExtra(AgentCallContract.KEY_KEY)
-            ?: return missingArgument(AgentCallContract.KEY_KEY)
+            ?: return missingArgumentError(AgentCallContract.KEY_KEY)
         val type = extras.stringExtra(AgentCallContract.KEY_TYPE)
-            ?: return missingArgument(AgentCallContract.KEY_TYPE)
+            ?: return missingArgumentError(AgentCallContract.KEY_TYPE)
 
         if (type !in AgentValueValidator.VALID_TYPES) {
             return AgentError.json(
@@ -337,13 +341,13 @@ class AgentCallHandler(
     @Suppress("ReturnCount")
     private fun deleteConfiguration(extras: Bundle?): String {
         val configurationId = extras.longExtra(AgentCallContract.KEY_CONFIGURATION_ID)
-            ?: return missingArgument(AgentCallContract.KEY_CONFIGURATION_ID)
+            ?: return missingArgumentError(AgentCallContract.KEY_CONFIGURATION_ID)
 
         val configuration = agentMutationDao.getConfiguration(configurationId)
-            ?: return unknownId("no configuration with id $configurationId")
+            ?: return unknownIdError("no configuration with id $configurationId")
 
         val application = agentDao.getApplicationById(configuration.applicationId)
-            ?: return unknownId(
+            ?: return unknownIdError(
                 "configuration $configurationId has no owning application " +
                     "(applicationId ${configuration.applicationId})"
             )
@@ -394,28 +398,34 @@ class AgentCallHandler(
         value = value,
         packageVerified = null
     )
-
-    private fun missingArgument(key: String): String = AgentError.json(
-        AgentErrorCode.INVALID_ARGUMENT,
-        "missing or wrong-typed required extra \"$key\". `adb shell content call` needs " +
-            "<key>:<type>:<value> bindings, e.g. --extra $key:l:123 for a long or " +
-            "--extra $key:s:foo for a string."
-    )
-
-    private fun unknownId(message: String): String = AgentError.json(AgentErrorCode.UNKNOWN_ID, message)
 }
+
+// Shared by AgentCallHandler's own endpoints and the delegate classes it hands endpoints off to
+// (AgentConfigurationValueDeleter, ...) so every endpoint reports a missing-argument or
+// unknown-id failure identically. Top-level for the same TooManyFunctions reason as
+// longExtra/stringExtra below.
+internal fun missingArgumentError(key: String): String = AgentError.json(
+    AgentErrorCode.INVALID_ARGUMENT,
+    "missing or wrong-typed required extra \"$key\". `adb shell content call` needs " +
+        "<key>:<type>:<value> bindings, e.g. --extra $key:l:123 for a long or " +
+        "--extra $key:s:foo for a string."
+)
+
+internal fun unknownIdError(message: String): String = AgentError.json(AgentErrorCode.UNKNOWN_ID, message)
 
 // Bundle.getLong/getString on a value stored under a different type either throws or silently
 // coerces depending on Android version; Bundle.get() sidesteps both by handing back the raw stored
 // Object (or null when the key is absent) so a type mismatch is just a failed `as?` cast rather
 // than a surprise exception or a wrong value read as if valid. Deliberately top-level rather than
 // members of AgentCallHandler: they don't touch any of its state, and keeping them out of the
-// class body keeps AgentCallHandler under detekt's TooManyFunctions threshold.
+// class body keeps AgentCallHandler under detekt's TooManyFunctions threshold. Internal (not
+// private) so the delegate classes AgentCallHandler hands endpoints off to (e.g.
+// AgentConfigurationValueDeleter) can read the same Bundle extras identically.
 @Suppress("DEPRECATION")
-private fun Bundle?.longExtra(key: String): Long? = this?.get(key) as? Long
+internal fun Bundle?.longExtra(key: String): Long? = this?.get(key) as? Long
 
 @Suppress("DEPRECATION")
-private fun Bundle?.stringExtra(key: String): String? = this?.get(key) as? String
+internal fun Bundle?.stringExtra(key: String): String? = this?.get(key) as? String
 
 // Only createConfiguration can provision a new, possibly-unverifiable application row, so this
 // note is appended to that endpoint's summary alone; every other AgentMutationResponse leaves
