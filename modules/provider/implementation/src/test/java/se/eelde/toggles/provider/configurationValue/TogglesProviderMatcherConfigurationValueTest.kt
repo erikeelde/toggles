@@ -156,9 +156,12 @@ class TogglesProviderMatcherConfigurationValueTest {
         )
         val configId = requireNotNull(configUri.lastPathSegment).toLong()
 
+        val defaultScopeId = getDefaultScopeId()
+
         val configValue = TogglesConfigurationValue {
             configurationId = configId
             value = "true"
+            scope = defaultScopeId
         }
         val uri = togglesProvider.insert(
             TogglesProviderContract.configurationValueUri(configId),
@@ -166,6 +169,26 @@ class TogglesProviderMatcherConfigurationValueTest {
         )
 
         assertTrue(uri.toString().contains("/values/"))
+
+        // Asserting the URI shape alone is not enough: insert() swallows a
+        // SQLiteConstraintException and falls back to -1, so a failed insert still produces a URI
+        // containing "/values/". Assert the id is real and that the row is actually readable.
+        val insertedId = requireNotNull(uri.lastPathSegment).toLong()
+        assertTrue("insert returned id $insertedId — the row was not written", insertedId > 0)
+
+        togglesProvider.query(
+            TogglesProviderContract.configurationValueUri(configId),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertTrue("no configuration value row was written", cursor.moveToFirst())
+            val fromCursor = TogglesConfigurationValue.fromCursor(cursor)
+            assertEquals(configId, fromCursor.configurationId)
+            assertEquals("true", fromCursor.value)
+            assertEquals(defaultScopeId, fromCursor.scope)
+        }
     }
 
     @Test
