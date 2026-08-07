@@ -13,8 +13,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import se.eelde.toggles.database.dao.agent.AgentDao
+import se.eelde.toggles.database.dao.agent.AgentMutationDao
 import java.io.FileOutputStream
 import java.io.IOException
+import kotlin.time.Clock
 
 /**
  * The adb-facing surface. Exported so that shell can reach it; restricted to shell and root by
@@ -46,8 +48,11 @@ class TogglesAgentProvider : ContentProvider() {
     @InstallIn(SingletonComponent::class)
     interface TogglesAgentProviderEntryPoint {
         fun provideAgentDao(): AgentDao
+        fun provideAgentMutationDao(): AgentMutationDao
         fun provideAgentUriMatcher(): AgentUriMatcher
         fun provideCallerAuthorization(): CallerAuthorization
+        fun provideAgentChangeNotifier(): AgentChangeNotifier
+        fun provideClock(): Clock
     }
 
     private val readHandler: AgentReadHandler by lazy {
@@ -55,6 +60,15 @@ class TogglesAgentProvider : ContentProvider() {
             agentDao = entryPoint.provideAgentDao(),
             uriMatcher = entryPoint.provideAgentUriMatcher(),
             appVersionName = appVersionName()
+        )
+    }
+
+    private val callHandler: AgentCallHandler by lazy {
+        AgentCallHandler(
+            agentDao = entryPoint.provideAgentDao(),
+            agentMutationDao = entryPoint.provideAgentMutationDao(),
+            changeNotifier = entryPoint.provideAgentChangeNotifier(),
+            clock = entryPoint.provideClock()
         )
     }
 
@@ -118,21 +132,17 @@ class TogglesAgentProvider : ContentProvider() {
 
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle =
         Bundle().apply {
-            putString(RESULT_KEY, callResult(method))
+            putString(RESULT_KEY, callResult(method, extras))
         }
 
-    private fun callResult(method: String): String {
+    private fun callResult(method: String, extras: Bundle?): String {
         if (!entryPoint.provideCallerAuthorization().isAuthorizedCaller()) {
             return AgentError.json(
                 AgentErrorCode.NOT_AUTHORIZED,
                 "the toggles agent API is only callable from adb (uid 2000) or root (uid 0)"
             )
         }
-        // Mutations arrive here in a later plan. Until then every method is unknown.
-        return AgentError.json(
-            AgentErrorCode.UNKNOWN_ENDPOINT,
-            "no such method: $method. Read /describe for the available endpoints."
-        )
+        return callHandler.handle(method, extras)
     }
 
     companion object {

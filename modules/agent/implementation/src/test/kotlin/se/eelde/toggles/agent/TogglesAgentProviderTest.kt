@@ -6,6 +6,7 @@ package se.eelde.toggles.agent
 
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -24,9 +25,13 @@ import org.robolectric.shadows.ShadowBinder
 import org.robolectric.shadows.ShadowPausedAsyncTask
 import se.eelde.toggles.agent.di.AgentTestApplication_Application
 import se.eelde.toggles.database.TogglesApplication
+import se.eelde.toggles.database.TogglesConfiguration
+import se.eelde.toggles.database.TogglesConfigurationValue
 import se.eelde.toggles.database.TogglesDatabase
+import se.eelde.toggles.database.TogglesScope
 import java.util.concurrent.Executor
 import javax.inject.Inject
+import kotlin.time.Instant
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -109,13 +114,63 @@ class TogglesAgentProviderTest {
     }
 
     @Test
-    fun `call returns an unknown endpoint error for any method`() {
+    fun `call returns an unknown endpoint error for an unknown method`() {
         ShadowBinder.setCallingUid(SHELL_UID)
 
-        val result = provider.call("setConfigurationValue", null, null)
+        val result = provider.call("noSuchMethod", null, null)
         val payload = requireNotNull(result.getString(TogglesAgentProvider.RESULT_KEY))
 
         assertEquals("unknown_endpoint", json.decodeFromString<AgentErrorEnvelope>(payload).error.code)
+    }
+
+    @Test
+    fun `a shell caller's setConfigurationValue call through call actually changes the stored value`() {
+        ShadowBinder.setCallingUid(SHELL_UID)
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, scopeId, "false")
+
+        val result = provider.call(
+            "setConfigurationValue",
+            null,
+            setConfigurationValueExtras(configId, scopeId, "true")
+        )
+        val payload = requireNotNull(result.getString(TogglesAgentProvider.RESULT_KEY))
+
+        assertEquals(
+            "setConfigurationValue",
+            json.decodeFromString<AgentMutationResponse>(payload).method
+        )
+        assertEquals(
+            "true",
+            togglesDatabase.agentDao().getConfigurationValues(appId).single().value
+        )
+    }
+
+    @Test
+    fun `an unauthorized caller's setConfigurationValue call through call changes nothing`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, scopeId, "false")
+
+        ShadowBinder.setCallingUid(APP_UID)
+        val result = provider.call(
+            "setConfigurationValue",
+            null,
+            setConfigurationValueExtras(configId, scopeId, "true")
+        )
+        val payload = requireNotNull(result.getString(TogglesAgentProvider.RESULT_KEY))
+
+        assertEquals(
+            "not_authorized",
+            json.decodeFromString<AgentErrorEnvelope>(payload).error.code
+        )
+        assertEquals(
+            "false",
+            togglesDatabase.agentDao().getConfigurationValues(appId).single().value
+        )
     }
 
     @Test
@@ -166,6 +221,54 @@ class TogglesAgentProviderTest {
         val list = json.decodeFromString<AgentApplicationList>(payload)
         assertEquals(1, list.applications.size)
     }
+
+    private fun setConfigurationValueExtras(configurationId: Long, scopeId: Long, value: String) =
+        Bundle().apply {
+            putLong("configurationId", configurationId)
+            putLong("scopeId", scopeId)
+            putString("value", value)
+        }
+
+    private fun insertApplication(packageName: String, label: String): Long =
+        togglesDatabase.providerApplicationDao().insert(
+            TogglesApplication(
+                id = 0,
+                shortcutId = packageName,
+                packageName = packageName,
+                applicationLabel = label
+            )
+        )
+
+    private fun insertScope(applicationId: Long, name: String): Long =
+        togglesDatabase.providerScopeDao().insert(
+            TogglesScope(
+                id = 0,
+                applicationId = applicationId,
+                name = name,
+                timeStamp = Instant.fromEpochMilliseconds(0)
+            )
+        )
+
+    private fun insertConfiguration(applicationId: Long, key: String, type: String): Long =
+        togglesDatabase.providerConfigurationDao().insert(
+            TogglesConfiguration(
+                id = 0,
+                applicationId = applicationId,
+                key = key,
+                type = type,
+                lastUse = Instant.fromEpochMilliseconds(0)
+            )
+        )
+
+    private fun insertValue(configurationId: Long, scopeId: Long, value: String?): Long =
+        togglesDatabase.providerConfigurationValueDao().insertSync(
+            TogglesConfigurationValue(
+                id = 0,
+                configurationId = configurationId,
+                value = value,
+                scope = scopeId
+            )
+        )
 
     private fun insertApplication() {
         togglesDatabase.providerApplicationDao().insert(
