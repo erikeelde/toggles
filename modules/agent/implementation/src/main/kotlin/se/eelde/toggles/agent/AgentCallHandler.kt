@@ -12,19 +12,28 @@ import se.eelde.toggles.database.dao.agent.AgentMutationDao
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
-private const val KEY_CONFIGURATION_ID = "configurationId"
-private const val KEY_SCOPE_ID = "scopeId"
-private const val KEY_VALUE = "value"
-private const val KEY_PACKAGE = "package"
-private const val KEY_NAME = "name"
-private const val KEY_KEY = "key"
-private const val KEY_TYPE = "type"
+/**
+ * Every method name and extra-key name AgentCallHandler actually reads, in one place.
+ *
+ * [AgentDescription] documents each method's arguments by referencing these same constants rather
+ * than typing the names out again, so an agent reading `/describe` and a developer reading this
+ * class see identical names by construction — there is nowhere for the two to drift apart.
+ */
+internal object AgentCallContract {
+    const val METHOD_SET_CONFIGURATION_VALUE = "setConfigurationValue"
+    const val METHOD_CREATE_SCOPE = "createScope"
+    const val METHOD_SELECT_SCOPE = "selectScope"
+    const val METHOD_CREATE_CONFIGURATION = "createConfiguration"
+    const val METHOD_DELETE_CONFIGURATION = "deleteConfiguration"
 
-private const val METHOD_SET_CONFIGURATION_VALUE = "setConfigurationValue"
-private const val METHOD_CREATE_SCOPE = "createScope"
-private const val METHOD_SELECT_SCOPE = "selectScope"
-private const val METHOD_CREATE_CONFIGURATION = "createConfiguration"
-private const val METHOD_DELETE_CONFIGURATION = "deleteConfiguration"
+    const val KEY_CONFIGURATION_ID = "configurationId"
+    const val KEY_SCOPE_ID = "scopeId"
+    const val KEY_VALUE = "value"
+    const val KEY_PACKAGE = "package"
+    const val KEY_NAME = "name"
+    const val KEY_KEY = "key"
+    const val KEY_TYPE = "type"
+}
 
 /**
  * Serves every agent mutation endpoint (`adb shell content call ...`) as a JSON string.
@@ -46,11 +55,11 @@ class AgentCallHandler(
     @Suppress("TooGenericExceptionCaught") // must never throw across the binder; see class kdoc
     fun handle(method: String, extras: Bundle?): String = try {
         when (method) {
-            METHOD_SET_CONFIGURATION_VALUE -> setConfigurationValue(extras)
-            METHOD_CREATE_SCOPE -> createScope(extras)
-            METHOD_SELECT_SCOPE -> selectScope(extras)
-            METHOD_CREATE_CONFIGURATION -> createConfiguration(extras)
-            METHOD_DELETE_CONFIGURATION -> deleteConfiguration(extras)
+            AgentCallContract.METHOD_SET_CONFIGURATION_VALUE -> setConfigurationValue(extras)
+            AgentCallContract.METHOD_CREATE_SCOPE -> createScope(extras)
+            AgentCallContract.METHOD_SELECT_SCOPE -> selectScope(extras)
+            AgentCallContract.METHOD_CREATE_CONFIGURATION -> createConfiguration(extras)
+            AgentCallContract.METHOD_DELETE_CONFIGURATION -> deleteConfiguration(extras)
             else -> AgentError.json(
                 AgentErrorCode.UNKNOWN_ENDPOINT,
                 "no such method: $method. Read /describe for the available endpoints."
@@ -68,10 +77,12 @@ class AgentCallHandler(
     // would make the failure a caller hits harder to see, not easier.
     @Suppress("ReturnCount")
     private fun setConfigurationValue(extras: Bundle?): String {
-        val configurationId = extras.longExtra(KEY_CONFIGURATION_ID)
-            ?: return missingArgument(KEY_CONFIGURATION_ID)
-        val scopeId = extras.longExtra(KEY_SCOPE_ID) ?: return missingArgument(KEY_SCOPE_ID)
-        val value = extras.stringExtra(KEY_VALUE) ?: return missingArgument(KEY_VALUE)
+        val configurationId = extras.longExtra(AgentCallContract.KEY_CONFIGURATION_ID)
+            ?: return missingArgument(AgentCallContract.KEY_CONFIGURATION_ID)
+        val scopeId = extras.longExtra(AgentCallContract.KEY_SCOPE_ID)
+            ?: return missingArgument(AgentCallContract.KEY_SCOPE_ID)
+        val value = extras.stringExtra(AgentCallContract.KEY_VALUE)
+            ?: return missingArgument(AgentCallContract.KEY_VALUE)
 
         val configuration = agentMutationDao.getConfiguration(configurationId)
             ?: return unknownId("no configuration with id $configurationId")
@@ -139,8 +150,10 @@ class AgentCallHandler(
     // Each early return is a distinct validation gate, same rationale as setConfigurationValue.
     @Suppress("ReturnCount")
     private fun createScope(extras: Bundle?): String {
-        val packageName = extras.stringExtra(KEY_PACKAGE) ?: return missingArgument(KEY_PACKAGE)
-        val name = extras.stringExtra(KEY_NAME) ?: return missingArgument(KEY_NAME)
+        val packageName = extras.stringExtra(AgentCallContract.KEY_PACKAGE)
+            ?: return missingArgument(AgentCallContract.KEY_PACKAGE)
+        val name = extras.stringExtra(AgentCallContract.KEY_NAME)
+            ?: return missingArgument(AgentCallContract.KEY_NAME)
 
         val application = agentDao.getApplicationByPackageName(packageName)
             ?: return AgentError.json(
@@ -178,7 +191,7 @@ class AgentCallHandler(
 
         return agentJson.encodeToString(
             AgentMutationResponse(
-                method = METHOD_CREATE_SCOPE,
+                method = AgentCallContract.METHOD_CREATE_SCOPE,
                 summary = "created scope \"$name\" for $packageName",
                 applicationPackage = packageName,
                 configurationId = null,
@@ -193,8 +206,10 @@ class AgentCallHandler(
     // Each early return is a distinct validation gate, same rationale as setConfigurationValue.
     @Suppress("ReturnCount")
     private fun selectScope(extras: Bundle?): String {
-        val packageName = extras.stringExtra(KEY_PACKAGE) ?: return missingArgument(KEY_PACKAGE)
-        val scopeId = extras.longExtra(KEY_SCOPE_ID) ?: return missingArgument(KEY_SCOPE_ID)
+        val packageName = extras.stringExtra(AgentCallContract.KEY_PACKAGE)
+            ?: return missingArgument(AgentCallContract.KEY_PACKAGE)
+        val scopeId = extras.longExtra(AgentCallContract.KEY_SCOPE_ID)
+            ?: return missingArgument(AgentCallContract.KEY_SCOPE_ID)
 
         val application = agentDao.getApplicationByPackageName(packageName)
             ?: return AgentError.json(
@@ -230,7 +245,7 @@ class AgentCallHandler(
 
         return agentJson.encodeToString(
             AgentMutationResponse(
-                method = METHOD_SELECT_SCOPE,
+                method = AgentCallContract.METHOD_SELECT_SCOPE,
                 summary = "selected scope \"${scope.name}\" for $packageName",
                 applicationPackage = packageName,
                 configurationId = null,
@@ -247,9 +262,12 @@ class AgentCallHandler(
     // has the side effect of creating an application row for an installed-but-unknown package.
     @Suppress("ReturnCount")
     private fun createConfiguration(extras: Bundle?): String {
-        val packageName = extras.stringExtra(KEY_PACKAGE) ?: return missingArgument(KEY_PACKAGE)
-        val key = extras.stringExtra(KEY_KEY) ?: return missingArgument(KEY_KEY)
-        val type = extras.stringExtra(KEY_TYPE) ?: return missingArgument(KEY_TYPE)
+        val packageName = extras.stringExtra(AgentCallContract.KEY_PACKAGE)
+            ?: return missingArgument(AgentCallContract.KEY_PACKAGE)
+        val key = extras.stringExtra(AgentCallContract.KEY_KEY)
+            ?: return missingArgument(AgentCallContract.KEY_KEY)
+        val type = extras.stringExtra(AgentCallContract.KEY_TYPE)
+            ?: return missingArgument(AgentCallContract.KEY_TYPE)
 
         if (type !in AgentValueValidator.VALID_TYPES) {
             return AgentError.json(
@@ -294,7 +312,7 @@ class AgentCallHandler(
 
         return agentJson.encodeToString(
             AgentMutationResponse(
-                method = METHOD_CREATE_CONFIGURATION,
+                method = AgentCallContract.METHOD_CREATE_CONFIGURATION,
                 summary = "created configuration \"$key\" ($type) for $packageName",
                 applicationPackage = packageName,
                 configurationId = configurationId,
@@ -309,8 +327,8 @@ class AgentCallHandler(
     // Each early return is a distinct validation gate, same rationale as setConfigurationValue.
     @Suppress("ReturnCount")
     private fun deleteConfiguration(extras: Bundle?): String {
-        val configurationId = extras.longExtra(KEY_CONFIGURATION_ID)
-            ?: return missingArgument(KEY_CONFIGURATION_ID)
+        val configurationId = extras.longExtra(AgentCallContract.KEY_CONFIGURATION_ID)
+            ?: return missingArgument(AgentCallContract.KEY_CONFIGURATION_ID)
 
         val configuration = agentMutationDao.getConfiguration(configurationId)
             ?: return unknownId("no configuration with id $configurationId")
@@ -336,7 +354,7 @@ class AgentCallHandler(
 
         return agentJson.encodeToString(
             AgentMutationResponse(
-                method = METHOD_DELETE_CONFIGURATION,
+                method = AgentCallContract.METHOD_DELETE_CONFIGURATION,
                 summary = "deleted configuration \"${configuration.key}\" from " +
                     application.packageName,
                 applicationPackage = application.packageName,
@@ -355,7 +373,7 @@ class AgentCallHandler(
         scope: TogglesScope,
         value: String,
     ) = AgentMutationResponse(
-        method = METHOD_SET_CONFIGURATION_VALUE,
+        method = AgentCallContract.METHOD_SET_CONFIGURATION_VALUE,
         summary = "${configuration.key} = $value in \"${scope.name}\"",
         applicationPackage = application.packageName,
         configurationId = configuration.id,
@@ -367,8 +385,9 @@ class AgentCallHandler(
 
     private fun missingArgument(key: String): String = AgentError.json(
         AgentErrorCode.INVALID_ARGUMENT,
-        "missing or wrong-typed required extra \"$key\". `adb shell content call` needs typed " +
-            "prefixes, e.g. --extra l:$key:123 for a long or --extra s:$key:foo for a string."
+        "missing or wrong-typed required extra \"$key\". `adb shell content call` needs " +
+            "<key>:<type>:<value> bindings, e.g. --extra $key:l:123 for a long or " +
+            "--extra $key:s:foo for a string."
     )
 
     private fun unknownId(message: String): String = AgentError.json(AgentErrorCode.UNKNOWN_ID, message)

@@ -10,12 +10,29 @@ data class AgentEndpoint(
 )
 
 @Serializable
+data class AgentMethodArgument(
+    val name: String,
+    val type: String,
+    val required: Boolean,
+    val description: String,
+)
+
+@Serializable
+data class AgentMethod(
+    val method: String,
+    val arguments: List<AgentMethodArgument>,
+    val returns: String,
+    val example: String,
+)
+
+@Serializable
 data class AgentModelDocumentation(
     val configurationTypes: List<String>,
     val scopeResolution: String,
     val agentControl: String,
     val callers: String,
     val valueFormats: Map<String, String>,
+    val callResultWrapping: String,
 )
 
 @Serializable
@@ -24,6 +41,7 @@ data class AgentDescriptionDocument(
     val togglesAppVersion: String,
     val authority: String,
     val endpoints: List<AgentEndpoint>,
+    val methods: List<AgentMethod>,
     val model: AgentModelDocumentation,
     val errors: List<String>,
 )
@@ -41,56 +59,228 @@ object AgentDescription {
         agentApiVersion = AGENT_API_VERSION,
         togglesAppVersion = appVersionName,
         authority = AGENT_AUTHORITY,
-        endpoints = listOf(
-            AgentEndpoint(
-                path = "/describe",
-                returns = "This document.",
-                example = "adb shell content read --uri content://$AGENT_AUTHORITY/describe"
-            ),
-            AgentEndpoint(
-                path = "/apps",
-                returns = "Every application Toggles knows about, with its agentControlEnabled flag.",
-                example = "adb shell content read --uri content://$AGENT_AUTHORITY/apps"
-            ),
-            AgentEndpoint(
-                path = "/apps/{package}",
-                returns = "One application's scopes, configurations, every per-scope value, " +
-                    "predefined values and effective values.",
-                example = "adb shell content read --uri content://$AGENT_AUTHORITY/apps/com.example.app"
-            )
-        ),
-        model = AgentModelDocumentation(
-            configurationTypes = AgentValueValidator.VALID_TYPES,
-            scopeResolution = "Each application has a default scope and zero or more additional " +
-                "scopes. The selected scope is the one with the most recent selectedTimestamp. " +
-                "Resolution consults exactly two scopes: the selected scope, then the default " +
-                "scope. Value rows in any other scope are ignored entirely — they are reported " +
-                "under each configuration's values array but never affect effectiveValue. The " +
-                "fallback to the default scope happens only when the selected scope has no value " +
-                "row at all; a row whose value is null still counts as a hit and stops the " +
-                "fallback. effectiveValue is the result of that resolution, and null means the " +
-                "application observes no value from Toggles — check the values array before " +
-                "concluding a configuration has no value anywhere.",
-            agentControl = "Every /apps/{package} call requires that application's " +
-                "agentControlEnabled flag to be true. It defaults to true and can be turned off " +
-                "per application inside the Toggles app.",
-            callers = "Only uid 2000 (shell) and uid 0 (root) may call this provider. Every other " +
-                "caller receives a not_authorized error.",
-            valueFormats = mapOf(
-                "boolean" to "Exactly \"true\" or \"false\". The client library parses with " +
-                    "Kotlin's String.toBoolean(), which returns true only for a case-insensitive " +
-                    "\"true\" and silently returns false for anything else — a malformed value " +
-                    "does not error, it reads as false.",
-                "integer" to "A decimal integer string. The client library parses with " +
-                    "String.toInt(), which throws NumberFormatException in the consuming app if " +
-                    "the value is not a valid integer.",
-                "string" to "Any string.",
-                "enum" to "Must be one of the values listed in that configuration's " +
-                    "predefinedValues array."
-            )
-        ),
+        endpoints = endpoints(),
+        methods = Methods.all(),
+        model = model(),
         errors = AgentErrorCode.entries.map { it.wireValue }
     )
 
     fun json(appVersionName: String): String = agentJson.encodeToString(document(appVersionName))
+
+    private fun endpoints(): List<AgentEndpoint> = listOf(
+        AgentEndpoint(
+            path = "/describe",
+            returns = "This document.",
+            example = "adb shell content read --uri content://$AGENT_AUTHORITY/describe"
+        ),
+        AgentEndpoint(
+            path = "/apps",
+            returns = "Every application Toggles knows about, with its agentControlEnabled flag.",
+            example = "adb shell content read --uri content://$AGENT_AUTHORITY/apps"
+        ),
+        AgentEndpoint(
+            path = "/apps/{package}",
+            returns = "One application's scopes, configurations, every per-scope value, " +
+                "predefined values and effective values.",
+            example = "adb shell content read --uri content://$AGENT_AUTHORITY/apps/com.example.app"
+        )
+    )
+
+    // Split out of AgentDescription itself (one builder function per mutation method, plus the
+    // shared example-command builder) so that object stays under detekt's TooManyFunctions
+    // threshold instead of reaching for a blanket suppression.
+    private object Methods {
+
+        private const val TYPE_LONG = "long"
+        private const val TYPE_STRING = "string"
+
+        fun all(): List<AgentMethod> = listOf(
+            setConfigurationValue(),
+            createConfiguration(),
+            deleteConfiguration(),
+            createScope(),
+            selectScope()
+        )
+
+        private fun callExample(method: String, vararg extras: Pair<String, String>): String {
+            val extraArgs = extras.joinToString(separator = " ") { (binding, value) ->
+                "--extra $binding:$value"
+            }
+            return "adb shell content call --uri content://${AgentDescription.AGENT_AUTHORITY} " +
+                "--method $method $extraArgs"
+        }
+
+        private fun setConfigurationValue() = AgentMethod(
+            method = AgentCallContract.METHOD_SET_CONFIGURATION_VALUE,
+            arguments = listOf(
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_CONFIGURATION_ID,
+                    type = TYPE_LONG,
+                    required = true,
+                    description = "The configuration's id, from /apps/{package}."
+                ),
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_SCOPE_ID,
+                    type = TYPE_LONG,
+                    required = true,
+                    description = "The scope to write the value into, from /apps/{package}."
+                ),
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_VALUE,
+                    type = TYPE_STRING,
+                    required = true,
+                    description = "The new value, formatted per the configuration's type — see " +
+                        "valueFormats."
+                )
+            ),
+            returns = "An AgentMutationResponse summarizing what changed.",
+            example = callExample(
+                AgentCallContract.METHOD_SET_CONFIGURATION_VALUE,
+                "${AgentCallContract.KEY_CONFIGURATION_ID}:l" to "47",
+                "${AgentCallContract.KEY_SCOPE_ID}:l" to "3",
+                "${AgentCallContract.KEY_VALUE}:s" to "true"
+            )
+        )
+
+        private fun createConfiguration() = AgentMethod(
+            method = AgentCallContract.METHOD_CREATE_CONFIGURATION,
+            arguments = listOf(
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_PACKAGE,
+                    type = TYPE_STRING,
+                    required = true,
+                    description = "The application's package name. If Toggles has never seen it " +
+                        "but the package is installed on the device, the application (with its " +
+                        "default and development scopes) is created on demand; otherwise this " +
+                        "call fails with invalid_argument."
+                ),
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_KEY,
+                    type = TYPE_STRING,
+                    required = true,
+                    description = "The new configuration's key. Must be unique within the " +
+                        "application."
+                ),
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_TYPE,
+                    type = TYPE_STRING,
+                    required = true,
+                    description = "One of model.configurationTypes."
+                )
+            ),
+            returns = "An AgentMutationResponse with the new configuration's id.",
+            example = callExample(
+                AgentCallContract.METHOD_CREATE_CONFIGURATION,
+                "${AgentCallContract.KEY_PACKAGE}:s" to "com.example.app",
+                "${AgentCallContract.KEY_KEY}:s" to "feature_x",
+                "${AgentCallContract.KEY_TYPE}:s" to "boolean"
+            )
+        )
+
+        private fun deleteConfiguration() = AgentMethod(
+            method = AgentCallContract.METHOD_DELETE_CONFIGURATION,
+            arguments = listOf(
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_CONFIGURATION_ID,
+                    type = TYPE_LONG,
+                    required = true,
+                    description = "The configuration's id, from /apps/{package}. Deletes its " +
+                        "value in every scope along with it."
+                )
+            ),
+            returns = "An AgentMutationResponse confirming what was deleted.",
+            example = callExample(
+                AgentCallContract.METHOD_DELETE_CONFIGURATION,
+                "${AgentCallContract.KEY_CONFIGURATION_ID}:l" to "47"
+            )
+        )
+
+        private fun createScope() = AgentMethod(
+            method = AgentCallContract.METHOD_CREATE_SCOPE,
+            arguments = listOf(
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_PACKAGE,
+                    type = TYPE_STRING,
+                    required = true,
+                    description = "The application's package name. Must already be known to " +
+                        "Toggles — see /apps."
+                ),
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_NAME,
+                    type = TYPE_STRING,
+                    required = true,
+                    description = "The new scope's name. Must be unique within the application."
+                )
+            ),
+            returns = "An AgentMutationResponse with the new scope's id. The new scope is not " +
+                "selected automatically.",
+            example = callExample(
+                AgentCallContract.METHOD_CREATE_SCOPE,
+                "${AgentCallContract.KEY_PACKAGE}:s" to "com.example.app",
+                "${AgentCallContract.KEY_NAME}:s" to "staging"
+            )
+        )
+
+        private fun selectScope() = AgentMethod(
+            method = AgentCallContract.METHOD_SELECT_SCOPE,
+            arguments = listOf(
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_PACKAGE,
+                    type = TYPE_STRING,
+                    required = true,
+                    description = "The application's package name."
+                ),
+                AgentMethodArgument(
+                    name = AgentCallContract.KEY_SCOPE_ID,
+                    type = TYPE_LONG,
+                    required = true,
+                    description = "The scope to select, from /apps/{package}."
+                )
+            ),
+            returns = "An AgentMutationResponse confirming which scope is now selected.",
+            example = callExample(
+                AgentCallContract.METHOD_SELECT_SCOPE,
+                "${AgentCallContract.KEY_PACKAGE}:s" to "com.example.app",
+                "${AgentCallContract.KEY_SCOPE_ID}:l" to "3"
+            )
+        )
+    }
+
+    private fun model(): AgentModelDocumentation = AgentModelDocumentation(
+        configurationTypes = AgentValueValidator.VALID_TYPES,
+        scopeResolution = "Each application has a default scope and zero or more additional " +
+            "scopes. The selected scope is the one with the most recent selectedTimestamp. " +
+            "Resolution consults exactly two scopes: the selected scope, then the default " +
+            "scope. Value rows in any other scope are ignored entirely — they are reported " +
+            "under each configuration's values array but never affect effectiveValue. The " +
+            "fallback to the default scope happens only when the selected scope has no value " +
+            "row at all; a row whose value is null still counts as a hit and stops the " +
+            "fallback. effectiveValue is the result of that resolution, and null means the " +
+            "application observes no value from Toggles — check the values array before " +
+            "concluding a configuration has no value anywhere.",
+        agentControl = "Every /apps/{package} call requires that application's " +
+            "agentControlEnabled flag to be true. It defaults to true and can be turned off " +
+            "per application inside the Toggles app.",
+        callers = "Only uid 2000 (shell) and uid 0 (root) may call this provider. Every other " +
+            "caller receives a not_authorized error.",
+        valueFormats = mapOf(
+            "boolean" to "Exactly \"true\" or \"false\". The client library parses with " +
+                "Kotlin's String.toBoolean(), which returns true only for a case-insensitive " +
+                "\"true\" and silently returns false for anything else — a malformed value " +
+                "does not error, it reads as false.",
+            "integer" to "A decimal integer string. The client library parses with " +
+                "String.toInt(), which throws NumberFormatException in the consuming app if " +
+                "the value is not a valid integer.",
+            "string" to "Any string.",
+            "enum" to "Must be one of the values listed in that configuration's " +
+                "predefinedValues array."
+        ),
+        callResultWrapping = "adb shell content call wraps its output in " +
+            "\"Result: Bundle[{result=<json>}]\" rather than printing the JSON alone — " +
+            "confirmed on device. A host parsing this output must strip that " +
+            "\"Result: Bundle[{result=...}]\" wrapper (and its trailing \"}]\") before " +
+            "decoding what remains as JSON. adb shell content read (used by every /describe, " +
+            "/apps and /apps/{package} example above) has no such wrapper; only content call " +
+            "(used by every method example above) does."
+    )
 }
