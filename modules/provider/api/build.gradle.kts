@@ -7,4 +7,5 @@ android {
     namespace = "se.eelde.toggles.provider"
 }
 dependencies {
+    testImplementation(libs.junit)
 }

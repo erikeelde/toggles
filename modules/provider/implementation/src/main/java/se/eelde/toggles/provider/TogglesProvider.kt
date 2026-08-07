@@ -25,8 +25,10 @@ import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderPredefinedConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderScopeDao
+import se.eelde.toggles.provider.resolution.ScopeChain
 import kotlin.time.Clock
 
+@Suppress("TooManyFunctions")
 class TogglesProvider : ContentProvider() {
 
     private val requireContext: Context
@@ -131,6 +133,11 @@ class TogglesProvider : ContentProvider() {
         }
     }
 
+    private fun scopeChainFor(applicationId: Long): ScopeChain = ScopeChain(
+        selectedScopeId = getSelectedScope(scopeDao, applicationId).id,
+        defaultScopeId = getDefaultScope(scopeDao, applicationId).id
+    )
+
     override fun onCreate() = true
 
     @Suppress("LongMethod", "NestedBlockDepth", "CyclomaticComplexMethod")
@@ -151,28 +158,24 @@ class TogglesProvider : ContentProvider() {
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATION_ID -> {
                 val configId = requireNotNull(uri.lastPathSegment).toLong()
-                val scope = getSelectedScope(scopeDao, callingApplication.id)
-                cursor = configurationDao.getToggle(configId, scope.id)
-
-                if (cursor.count == 0) {
-                    cursor.close()
-
-                    val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
-                    cursor = configurationDao.getToggle(configId, defaultScope.id)
-                }
+                val chain = scopeChainFor(callingApplication.id)
+                cursor = chain.orderedScopeIds
+                    .asSequence()
+                    .map { scopeId -> configurationDao.getToggle(configId, scopeId) }
+                    .onEach { candidate -> if (candidate.count == 0) candidate.close() }
+                    .firstOrNull { candidate -> candidate.count > 0 }
+                    ?: configurationDao.getToggle(configId, chain.defaultScopeId)
             }
 
             UriMatch.CURRENT_CONFIGURATION_KEY -> {
                 val key = requireNotNull(uri.lastPathSegment)
-                val scope = getSelectedScope(scopeDao, callingApplication.id)
-                cursor = configurationDao.getToggle(key, scope.id)
-
-                if (cursor.count == 0) {
-                    cursor.close()
-
-                    val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
-                    cursor = configurationDao.getToggle(key, defaultScope.id)
-                }
+                val chain = scopeChainFor(callingApplication.id)
+                cursor = chain.orderedScopeIds
+                    .asSequence()
+                    .map { scopeId -> configurationDao.getToggle(key, scopeId) }
+                    .onEach { candidate -> if (candidate.count == 0) candidate.close() }
+                    .firstOrNull { candidate -> candidate.count > 0 }
+                    ?: configurationDao.getToggle(key, chain.defaultScopeId)
             }
 
             UriMatch.CONFIGURATIONS -> {
