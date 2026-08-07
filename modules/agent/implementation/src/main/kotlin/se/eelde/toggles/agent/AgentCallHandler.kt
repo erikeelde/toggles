@@ -1,5 +1,6 @@
 package se.eelde.toggles.agent
 
+import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import se.eelde.toggles.database.TogglesApplication
@@ -16,10 +17,14 @@ private const val KEY_SCOPE_ID = "scopeId"
 private const val KEY_VALUE = "value"
 private const val KEY_PACKAGE = "package"
 private const val KEY_NAME = "name"
+private const val KEY_KEY = "key"
+private const val KEY_TYPE = "type"
 
 private const val METHOD_SET_CONFIGURATION_VALUE = "setConfigurationValue"
 private const val METHOD_CREATE_SCOPE = "createScope"
 private const val METHOD_SELECT_SCOPE = "selectScope"
+private const val METHOD_CREATE_CONFIGURATION = "createConfiguration"
+private const val METHOD_DELETE_CONFIGURATION = "deleteConfiguration"
 
 /**
  * Serves every agent mutation endpoint (`adb shell content call ...`) as a JSON string.
@@ -32,7 +37,11 @@ class AgentCallHandler(
     private val agentMutationDao: AgentMutationDao,
     private val changeNotifier: AgentChangeNotifier,
     private val clock: Clock,
+    packageManager: PackageManager,
 ) {
+
+    private val applicationProvisioner =
+        AgentApplicationProvisioner(agentDao, agentMutationDao, packageManager, clock)
 
     @Suppress("TooGenericExceptionCaught") // must never throw across the binder; see class kdoc
     fun handle(method: String, extras: Bundle?): String = try {
@@ -40,6 +49,8 @@ class AgentCallHandler(
             METHOD_SET_CONFIGURATION_VALUE -> setConfigurationValue(extras)
             METHOD_CREATE_SCOPE -> createScope(extras)
             METHOD_SELECT_SCOPE -> selectScope(extras)
+            METHOD_CREATE_CONFIGURATION -> createConfiguration(extras)
+            METHOD_DELETE_CONFIGURATION -> deleteConfiguration(extras)
             else -> AgentError.json(
                 AgentErrorCode.UNKNOWN_ENDPOINT,
                 "no such method: $method. Read /describe for the available endpoints."
@@ -231,6 +242,113 @@ class AgentCallHandler(
         )
     }
 
+    // Each early return is a distinct validation gate, same rationale as setConfigurationValue.
+    // Type is validated before touching PackageManager or the database so an invalid type never
+    // has the side effect of creating an application row for an installed-but-unknown package.
+    @Suppress("ReturnCount")
+    private fun createConfiguration(extras: Bundle?): String {
+        val packageName = extras.stringExtra(KEY_PACKAGE) ?: return missingArgument(KEY_PACKAGE)
+        val key = extras.stringExtra(KEY_KEY) ?: return missingArgument(KEY_KEY)
+        val type = extras.stringExtra(KEY_TYPE) ?: return missingArgument(KEY_TYPE)
+
+        if (type !in AgentValueValidator.VALID_TYPES) {
+            return AgentError.json(
+                AgentErrorCode.INVALID_ARGUMENT,
+                "unknown configuration type \"$type\"; must be one of " +
+                    "${AgentValueValidator.VALID_TYPES}."
+            )
+        }
+
+        val application = applicationProvisioner.resolveOrCreate(packageName)
+            ?: return AgentError.json(
+                AgentErrorCode.INVALID_ARGUMENT,
+                "$packageName is not installed on this device and Toggles has no record of it; " +
+                    "a configuration can only be pre-created for a package that is actually " +
+                    "installed."
+            )
+
+        if (!application.agentControlEnabled) {
+            return AgentError.json(
+                AgentErrorCode.AGENT_CONTROL_DISABLED,
+                "agent control is disabled for $packageName. Enable it in the Toggles app."
+            )
+        }
+
+        val configurationId = try {
+            agentMutationDao.insertConfiguration(
+                TogglesConfiguration(
+                    id = 0,
+                    applicationId = application.id,
+                    key = key,
+                    type = type,
+                    lastUse = clock.now()
+                )
+            )
+        } catch (_: SQLiteConstraintException) {
+            return AgentError.json(
+                AgentErrorCode.INVALID_ARGUMENT,
+                "$packageName already has a configuration keyed \"$key\"; configuration keys " +
+                    "must be unique per application."
+            )
+        }
+
+        return agentJson.encodeToString(
+            AgentMutationResponse(
+                method = METHOD_CREATE_CONFIGURATION,
+                summary = "created configuration \"$key\" ($type) for $packageName",
+                applicationPackage = packageName,
+                configurationId = configurationId,
+                configurationKey = key,
+                scopeId = null,
+                scopeName = null,
+                value = null
+            )
+        )
+    }
+
+    // Each early return is a distinct validation gate, same rationale as setConfigurationValue.
+    @Suppress("ReturnCount")
+    private fun deleteConfiguration(extras: Bundle?): String {
+        val configurationId = extras.longExtra(KEY_CONFIGURATION_ID)
+            ?: return missingArgument(KEY_CONFIGURATION_ID)
+
+        val configuration = agentMutationDao.getConfiguration(configurationId)
+            ?: return unknownId("no configuration with id $configurationId")
+
+        val application = agentDao.getApplicationById(configuration.applicationId)
+            ?: return unknownId(
+                "configuration $configurationId has no owning application " +
+                    "(applicationId ${configuration.applicationId})"
+            )
+
+        if (!application.agentControlEnabled) {
+            return AgentError.json(
+                AgentErrorCode.AGENT_CONTROL_DISABLED,
+                "agent control is disabled for ${application.packageName}. Enable it in the " +
+                    "Toggles app."
+            )
+        }
+
+        // ON DELETE CASCADE (see TogglesConfigurationValue's foreign key) removes every value row
+        // for this configuration along with it.
+        agentMutationDao.deleteConfiguration(configurationId)
+        changeNotifier.notifyConfigurationChanged(configurationId)
+
+        return agentJson.encodeToString(
+            AgentMutationResponse(
+                method = METHOD_DELETE_CONFIGURATION,
+                summary = "deleted configuration \"${configuration.key}\" from " +
+                    application.packageName,
+                applicationPackage = application.packageName,
+                configurationId = configurationId,
+                configurationKey = configuration.key,
+                scopeId = null,
+                scopeName = null,
+                value = null
+            )
+        )
+    }
+
     private fun successResponse(
         application: TogglesApplication,
         configuration: TogglesConfiguration,
@@ -254,14 +372,16 @@ class AgentCallHandler(
     )
 
     private fun unknownId(message: String): String = AgentError.json(AgentErrorCode.UNKNOWN_ID, message)
-
-    // Bundle.getLong/getString on a value stored under a different type either throws or
-    // silently coerces depending on Android version; Bundle.get() sidesteps both by handing back
-    // the raw stored Object (or null when the key is absent) so a type mismatch is just a failed
-    // `as?` cast rather than a surprise exception or a wrong value read as if valid.
-    @Suppress("DEPRECATION")
-    private fun Bundle?.longExtra(key: String): Long? = this?.get(key) as? Long
-
-    @Suppress("DEPRECATION")
-    private fun Bundle?.stringExtra(key: String): String? = this?.get(key) as? String
 }
+
+// Bundle.getLong/getString on a value stored under a different type either throws or silently
+// coerces depending on Android version; Bundle.get() sidesteps both by handing back the raw stored
+// Object (or null when the key is absent) so a type mismatch is just a failed `as?` cast rather
+// than a surprise exception or a wrong value read as if valid. Deliberately top-level rather than
+// members of AgentCallHandler: they don't touch any of its state, and keeping them out of the
+// class body keeps AgentCallHandler under detekt's TooManyFunctions threshold.
+@Suppress("DEPRECATION")
+private fun Bundle?.longExtra(key: String): Long? = this?.get(key) as? Long
+
+@Suppress("DEPRECATION")
+private fun Bundle?.stringExtra(key: String): String? = this?.get(key) as? String

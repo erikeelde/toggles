@@ -11,8 +11,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.minus
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
@@ -533,8 +531,6 @@ class TogglesProvider : ContentProvider() {
 
     companion object {
 
-        private const val oneSecond = 1000L
-
         private fun getDefaultScope(
             scopeDao: ProviderScopeDao,
             applicationId: Long
@@ -547,14 +543,16 @@ class TogglesProvider : ContentProvider() {
         ): TogglesScope = scopeDao.getSelectedScope(applicationId)
             ?: error("No selected scope for application $applicationId")
 
+        // Scope construction (names, timestamps) lives on TogglesScope's companion object in
+        // modules/database/implementation so the agent API's on-demand application creation
+        // (AgentCallHandler.resolveOrCreateApplication) produces identical scopes without
+        // duplicating this logic.
         private fun createDefaultScope(
             scopeDao: ProviderScopeDao,
             applicationId: Long,
             clock: Clock,
         ): TogglesScope {
-            val scope = TogglesScope.newScope(clock)
-            scope.applicationId = applicationId
-            scope.timeStamp = clock.now().minus(oneSecond, DateTimeUnit.MILLISECOND)
+            val scope = TogglesScope.defaultScope(applicationId, clock)
             scope.id = scopeDao.insert(scope)
             return scope
         }
@@ -564,10 +562,7 @@ class TogglesProvider : ContentProvider() {
             applicationId: Long,
             clock: Clock,
         ): TogglesScope {
-            val developmentScope = TogglesScope.newScope(clock)
-            developmentScope.applicationId = applicationId
-            developmentScope.timeStamp = clock.now()
-            developmentScope.name = TogglesScope.SCOPE_USER
+            val developmentScope = TogglesScope.developmentScope(applicationId, clock)
             developmentScope.id = scopeDao.insert(developmentScope)
             return developmentScope
         }

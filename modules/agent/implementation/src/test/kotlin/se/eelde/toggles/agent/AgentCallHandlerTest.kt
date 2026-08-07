@@ -1,5 +1,8 @@
 package se.eelde.toggles.agent
 
+import android.app.Application
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.os.Build
 import android.os.Bundle
 import androidx.room.Room
@@ -13,6 +16,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import se.eelde.toggles.database.TogglesApplication
 import se.eelde.toggles.database.TogglesConfiguration
@@ -44,11 +48,13 @@ class AgentCallHandlerTest {
             TogglesDatabase::class.java
         ).allowMainThreadQueries().build()
         notifier = RecordingChangeNotifier()
+        val context = ApplicationProvider.getApplicationContext<Application>()
         handler = AgentCallHandler(
             agentDao = database.agentDao(),
             agentMutationDao = database.agentMutationDao(),
             changeNotifier = notifier,
-            clock = fixedClock
+            clock = fixedClock,
+            packageManager = context.packageManager
         )
     }
 
@@ -422,6 +428,167 @@ class AgentCallHandlerTest {
         assertEquals("agent_control_disabled", errorCode(response))
     }
 
+    // --- createConfiguration ---
+
+    @Test
+    fun `creating a configuration for a known application creates it and it appears via the read handler`() {
+        insertApplication("com.example.app", "Example")
+
+        val response = createConfiguration(
+            packageName = "com.example.app",
+            key = "feature_x",
+            type = "boolean"
+        )
+
+        val decoded = decode(response)
+        assertEquals("createConfiguration", decoded.method)
+        val configurationId = requireNotNull(decoded.configurationId)
+        assertEquals(
+            "feature_x",
+            applicationDetail("com.example.app").configurations.single { it.id == configurationId }.key
+        )
+    }
+
+    @Test
+    fun `creating a configuration for an installed never-seen package creates the application and configuration`() {
+        installPackage("com.example.neverseen", "Never Seen")
+
+        val response = createConfiguration(
+            packageName = "com.example.neverseen",
+            key = "feature_x",
+            type = "boolean"
+        )
+
+        val decoded = decode(response)
+        assertEquals("createConfiguration", decoded.method)
+        val detail = applicationDetail("com.example.neverseen")
+        assertEquals("feature_x", detail.configurations.single().key)
+    }
+
+    @Test
+    fun `creating a configuration for a package that is not installed returns invalid_argument and creates nothing`() {
+        val response = createConfiguration(
+            packageName = "com.example.notinstalled",
+            key = "feature_x",
+            type = "boolean"
+        )
+
+        assertEquals("invalid_argument", errorCode(response))
+        assertTrue(database.agentDao().getApplications().isEmpty())
+    }
+
+    @Test
+    fun `a duplicate configuration key for the same application returns invalid_argument`() {
+        val appId = insertApplication("com.example.app", "Example")
+        insertConfiguration(appId, "feature_x", "boolean")
+
+        val response = createConfiguration(
+            packageName = "com.example.app",
+            key = "feature_x",
+            type = "boolean"
+        )
+
+        assertEquals("invalid_argument", errorCode(response))
+    }
+
+    @Test
+    fun `creating a configuration with an invalid type returns invalid_argument`() {
+        insertApplication("com.example.app", "Example")
+
+        val response = createConfiguration(
+            packageName = "com.example.app",
+            key = "feature_x",
+            type = "not-a-type"
+        )
+
+        assertEquals("invalid_argument", errorCode(response))
+    }
+
+    @Test
+    fun `creating a configuration for a disabled application returns agent_control_disabled`() {
+        val appId = insertApplication("com.example.app", "Example")
+        database.openHelper.writableDatabase.execSQL(
+            "UPDATE application SET agentControlEnabled = 0 WHERE id = $appId"
+        )
+
+        val response = createConfiguration(
+            packageName = "com.example.app",
+            key = "feature_x",
+            type = "boolean"
+        )
+
+        assertEquals("agent_control_disabled", errorCode(response))
+    }
+
+    @Test
+    fun `a newly created application gets default and development scopes so setConfigurationValue works`() {
+        installPackage("com.example.neverseen", "Never Seen")
+
+        val createResponse = createConfiguration(
+            packageName = "com.example.neverseen",
+            key = "feature_x",
+            type = "boolean"
+        )
+        val configurationId = requireNotNull(decode(createResponse).configurationId)
+
+        val defaultScopeId = requireNotNull(
+            applicationDetail("com.example.neverseen").scopes.firstOrNull { it.default }?.id
+        )
+
+        val setResponse = call(configurationId = configurationId, scopeId = defaultScopeId, value = "true")
+
+        assertEquals("setConfigurationValue", decode(setResponse).method)
+        assertEquals("true", effectiveValue("com.example.neverseen"))
+    }
+
+    // --- deleteConfiguration ---
+
+    @Test
+    fun `deleting a configuration removes it and its value rows`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, scopeId, "true")
+
+        val response = deleteConfiguration(configId)
+
+        assertEquals("deleteConfiguration", decode(response).method)
+        assertNull(database.agentMutationDao().getConfiguration(configId))
+        assertTrue(database.agentDao().getConfigurationValues(appId).isEmpty())
+    }
+
+    @Test
+    fun `deleting a configuration notifies the notifier with the configuration's id`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+
+        deleteConfiguration(configId)
+
+        assertEquals(listOf(configId), notifier.configurationsNotified)
+    }
+
+    @Test
+    fun `deleting an unknown configuration id returns unknown_id`() {
+        val response = deleteConfiguration(999L)
+
+        assertEquals("unknown_id", errorCode(response))
+    }
+
+    @Test
+    fun `deleting a configuration for a disabled application returns agent_control_disabled and deletes nothing`() {
+        val appId = insertApplication("com.example.app", "Example")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        database.openHelper.writableDatabase.execSQL(
+            "UPDATE application SET agentControlEnabled = 0 WHERE id = $appId"
+        )
+
+        val response = deleteConfiguration(configId)
+
+        assertEquals("agent_control_disabled", errorCode(response))
+        assertEquals(configId, database.agentMutationDao().getConfiguration(configId)?.id)
+        assertTrue(notifier.configurationsNotified.isEmpty())
+    }
+
     private class RecordingChangeNotifier : AgentChangeNotifier {
         val configurationsNotified = mutableListOf<Long>()
         var scopesNotified = 0
@@ -462,6 +629,37 @@ class AgentCallHandlerTest {
                 putLong("scopeId", scopeId)
             }
         )
+
+    private fun createConfiguration(packageName: String, key: String, type: String): String =
+        handler.handle(
+            "createConfiguration",
+            Bundle().apply {
+                putString("package", packageName)
+                putString("key", key)
+                putString("type", type)
+            }
+        )
+
+    private fun deleteConfiguration(configurationId: Long): String =
+        handler.handle(
+            "deleteConfiguration",
+            Bundle().apply {
+                putLong("configurationId", configurationId)
+            }
+        )
+
+    /** Makes [packageName] "installed" as far as PackageManager.getApplicationInfo is concerned. */
+    private fun installPackage(packageName: String, label: String) {
+        val context = ApplicationProvider.getApplicationContext<Application>()
+        val packageInfo = PackageInfo().apply {
+            this.packageName = packageName
+            applicationInfo = ApplicationInfo().apply {
+                this.packageName = packageName
+                nonLocalizedLabel = label
+            }
+        }
+        shadowOf(context.packageManager).installPackage(packageInfo)
+    }
 
     private fun applicationDetail(packageName: String): AgentApplicationDetail {
         val readHandler = AgentReadHandler(

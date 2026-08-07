@@ -1,6 +1,7 @@
 package se.eelde.toggles.agent.di
 
 import android.content.Context
+import android.content.pm.PackageManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,4 +41,8 @@ object TestAgentModule {
 
     @Provides
     fun provideClock(): Clock = Clock.System
+
+    @Provides
+    fun providePackageManager(@ApplicationContext context: Context): PackageManager =
+        context.packageManager
 }

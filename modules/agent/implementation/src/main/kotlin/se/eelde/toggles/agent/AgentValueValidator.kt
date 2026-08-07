@@ -16,6 +16,13 @@ object AgentValueValidator {
     private const val TYPE_ENUM = "enum"
 
     /**
+     * Every configuration type this API accepts. The single source of truth for that set — nothing
+     * else (createConfiguration's argument validation, /describe's model documentation) may keep
+     * its own copy of this list.
+     */
+    val VALID_TYPES: List<String> = listOf(TYPE_BOOLEAN, TYPE_INTEGER, TYPE_STRING, TYPE_ENUM)
+
+    /**
      * Returns null when the value is acceptable, otherwise a human-readable reason the agent can
      * act on.
      */

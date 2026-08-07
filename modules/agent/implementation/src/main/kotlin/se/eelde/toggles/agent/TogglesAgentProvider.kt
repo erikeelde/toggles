@@ -53,6 +53,7 @@ class TogglesAgentProvider : ContentProvider() {
         fun provideCallerAuthorization(): CallerAuthorization
         fun provideAgentChangeNotifier(): AgentChangeNotifier
         fun provideClock(): Clock
+        fun providePackageManager(): PackageManager
     }
 
     private val readHandler: AgentReadHandler by lazy {
@@ -68,7 +69,8 @@ class TogglesAgentProvider : ContentProvider() {
             agentDao = entryPoint.provideAgentDao(),
             agentMutationDao = entryPoint.provideAgentMutationDao(),
             changeNotifier = entryPoint.provideAgentChangeNotifier(),
-            clock = entryPoint.provideClock()
+            clock = entryPoint.provideClock(),
+            packageManager = entryPoint.providePackageManager()
         )
     }
 

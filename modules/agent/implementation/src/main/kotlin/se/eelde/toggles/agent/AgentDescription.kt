@@ -60,7 +60,7 @@ object AgentDescription {
             )
         ),
         model = AgentModelDocumentation(
-            configurationTypes = listOf("boolean", "integer", "string", "enum"),
+            configurationTypes = AgentValueValidator.VALID_TYPES,
             scopeResolution = "Each application has a default scope and zero or more additional " +
                 "scopes. The selected scope is the one with the most recent selectedTimestamp. " +
                 "Resolution consults exactly two scopes: the selected scope, then the default " +
