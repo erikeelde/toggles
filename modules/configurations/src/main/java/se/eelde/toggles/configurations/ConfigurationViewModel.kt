@@ -15,8 +15,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import se.eelde.toggles.database.TogglesApplication
@@ -74,7 +74,7 @@ class ConfigurationViewModel @AssistedInject internal constructor(
 
         viewModelScope.launch {
             combine(
-                flowOf(requireNotNull(applicationDao.getApplication(applicationId))),
+                applicationDao.getApplicationFlow(applicationId).filterNotNull(),
                 scopeDao.getSelectedScopeFlow(applicationId = applicationId),
                 scopeDao.getDefaultScopeFlow(applicationId = applicationId),
             ) { application, selectedScope, defaultScope ->
@@ -129,6 +129,20 @@ class ConfigurationViewModel @AssistedInject internal constructor(
     internal fun deleteApplication(togglesApplication: TogglesApplication) {
         viewModelScope.launch {
             applicationDao.delete(togglesApplication)
+        }
+    }
+
+    // The only place in the UI this flag can be changed (see ConfigurationsEntry's overflow
+    // menu) — persisted through TogglesApplicationDao rather than AgentMutationDao: the flag is
+    // being flipped by the user tapping a menu item in the Toggles app itself, not by an agent
+    // mutation, so it belongs with the rest of this screen's writes (deleteApplication, above)
+    // rather than reaching into the agent module's DAO from the UI layer.
+    internal fun toggleAgentControl(togglesApplication: TogglesApplication) {
+        viewModelScope.launch {
+            applicationDao.setAgentControlEnabled(
+                togglesApplication.id,
+                !togglesApplication.agentControlEnabled
+            )
         }
     }
 
