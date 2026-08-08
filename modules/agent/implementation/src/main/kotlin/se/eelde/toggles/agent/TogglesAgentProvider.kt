@@ -65,6 +65,12 @@ class TogglesAgentProvider : ContentProvider() {
         )
     }
 
+    // Reads context.packageName rather than a hardcoded "se.eelde.toggles" so this keeps working
+    // under a debug/applicationIdSuffix build variant too.
+    private val agentApiGate: AgentApiGate by lazy {
+        AgentApiGate(agentDao = entryPoint.provideAgentDao(), context = requireContext)
+    }
+
     private val callHandler: AgentCallHandler by lazy {
         AgentCallHandler(
             agentDao = entryPoint.provideAgentDao(),
@@ -88,8 +94,12 @@ class TogglesAgentProvider : ContentProvider() {
     override fun onCreate() = true
 
     override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor {
+        // CallerAuthorization first: an unauthorized caller must get not_authorized regardless of
+        // whether the API is enabled — the enabled state must never leak to a caller who is not
+        // even allowed to ask. Only once authorized does readHandler decide, per endpoint, whether
+        // apiEnabled gates it (every endpoint but /describe does).
         val json = if (entryPoint.provideCallerAuthorization().isAuthorizedCaller()) {
-            readHandler.handle(uri)
+            readHandler.handle(uri, apiEnabled = agentApiGate.isEnabled())
         } else {
             AgentError.json(
                 AgentErrorCode.NOT_AUTHORIZED,
@@ -139,12 +149,20 @@ class TogglesAgentProvider : ContentProvider() {
             putString(RESULT_KEY, callResult(method, extras))
         }
 
+    // Two early returns — caller authorization, then the enabled gate — each a distinct rejection
+    // reason a caller needs to tell apart, same rationale AgentCallHandler's endpoints use.
+    @Suppress("ReturnCount")
     private fun callResult(method: String, extras: Bundle?): String {
+        // Same ordering as openFile: caller authorization first, the enabled gate second. Unlike
+        // reads, call() has no /describe-equivalent exemption — every mutation method is gated.
         if (!entryPoint.provideCallerAuthorization().isAuthorizedCaller()) {
             return AgentError.json(
                 AgentErrorCode.NOT_AUTHORIZED,
                 "the toggles agent API is only callable from adb (uid 2000) or root (uid 0)"
             )
+        }
+        if (!agentApiGate.isEnabled()) {
+            return agentApiDisabledError()
         }
         return callHandler.handle(method, extras)
     }

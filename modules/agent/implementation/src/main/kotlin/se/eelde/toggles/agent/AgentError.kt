@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
  */
 enum class AgentErrorCode(val wireValue: String) {
     NOT_AUTHORIZED("not_authorized"),
+    AGENT_API_DISABLED("agent_api_disabled"),
     AGENT_CONTROL_DISABLED("agent_control_disabled"),
     UNKNOWN_PACKAGE("unknown_package"),
     UNKNOWN_ID("unknown_id"),
@@ -28,3 +29,14 @@ object AgentError {
     fun json(code: AgentErrorCode, message: String): String =
         agentJson.encodeToString(AgentErrorEnvelope(AgentErrorBody(code.wireValue, message)))
 }
+
+/**
+ * Shared by every gated surface — [AgentReadHandler] (every endpoint but `/describe`) and
+ * [TogglesAgentProvider]'s `call()` dispatch (every method, no exception) — so a caller sees the
+ * exact same message regardless of which one rejected the request.
+ */
+internal fun agentApiDisabledError(): String = AgentError.json(
+    AgentErrorCode.AGENT_API_DISABLED,
+    "the agent API is switched off. Turn on the \"beta_agent_api\" toggle in the Toggles app, " +
+        "under the Toggles app's own entry (se.eelde.toggles), to enable it."
+)

@@ -44,6 +44,16 @@ data class AgentDescriptionDocument(
     val methods: List<AgentMethod>,
     val model: AgentModelDocumentation,
     val errors: List<String>,
+    /**
+     * Whether the agent API is currently switched on. `/describe` is reachable regardless of this
+     * flag — that is deliberate, see [AgentErrorCode.AGENT_API_DISABLED] — so this field is how an
+     * agent tells "Toggles is installed but the API is off" apart from "Toggles is not installed at
+     * all". When false, every other endpoint and every `call()` method returns
+     * [AgentErrorCode.AGENT_API_DISABLED] instead of serving data. Enable it with the
+     * `beta_agent_api` toggle on the `se.eelde.toggles` application, which appears in the Toggles
+     * app once it has been opened at least once.
+     */
+    val enabled: Boolean,
 )
 
 /**
@@ -55,17 +65,20 @@ object AgentDescription {
     const val AGENT_API_VERSION = 1
     const val AGENT_AUTHORITY = "se.eelde.toggles.agentprovider"
 
-    fun document(appVersionName: String): AgentDescriptionDocument = AgentDescriptionDocument(
-        agentApiVersion = AGENT_API_VERSION,
-        togglesAppVersion = appVersionName,
-        authority = AGENT_AUTHORITY,
-        endpoints = endpoints(),
-        methods = Methods.all(),
-        model = model(),
-        errors = AgentErrorCode.entries.map { it.wireValue }
-    )
+    fun document(appVersionName: String, apiEnabled: Boolean): AgentDescriptionDocument =
+        AgentDescriptionDocument(
+            agentApiVersion = AGENT_API_VERSION,
+            togglesAppVersion = appVersionName,
+            authority = AGENT_AUTHORITY,
+            endpoints = endpoints(),
+            methods = Methods.all(),
+            model = model(),
+            errors = AgentErrorCode.entries.map { it.wireValue },
+            enabled = apiEnabled
+        )
 
-    fun json(appVersionName: String): String = agentJson.encodeToString(document(appVersionName))
+    fun json(appVersionName: String, apiEnabled: Boolean): String =
+        agentJson.encodeToString(document(appVersionName, apiEnabled))
 
     private fun endpoints(): List<AgentEndpoint> = listOf(
         AgentEndpoint(

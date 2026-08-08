@@ -1157,7 +1157,7 @@ class AgentCallHandlerTest {
             appVersionName = "1.2.3"
         )
         val uri = android.net.Uri.parse("content://${AgentDescription.AGENT_AUTHORITY}/apps/$packageName")
-        return json.decodeFromString(readHandler.handle(uri))
+        return json.decodeFromString(readHandler.handle(uri, apiEnabled = true))
     }
 
     private fun effectiveValue(packageName: String): String? =

@@ -4,16 +4,19 @@
 
 package se.eelde.toggles.agent
 
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.serialization.json.Json
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -100,10 +103,154 @@ class TogglesAgentProviderTest {
     fun `a shell caller can read apps`() {
         ShadowBinder.setCallingUid(SHELL_UID)
         insertApplication()
+        setBetaAgentApi("true")
 
         val list = json.decodeFromString<AgentApplicationList>(readJson(uri("/apps")))
 
-        assertEquals(1, list.applications.size)
+        // setBetaAgentApi() registers the Toggles app's own application row alongside
+        // com.example.app, so the list has two entries now — assert on the one this test is
+        // actually about rather than the raw count.
+        assertEquals(1, list.applications.count { it.packageName == "com.example.app" })
+    }
+
+    @Test
+    fun `apps returns agent_api_disabled when the toggles app has no beta_agent_api configuration`() {
+        ShadowBinder.setCallingUid(SHELL_UID)
+        insertApplication()
+
+        val envelope = json.decodeFromString<AgentErrorEnvelope>(readJson(uri("/apps")))
+
+        assertEquals("agent_api_disabled", envelope.error.code)
+    }
+
+    @Test
+    fun `apps returns agent_api_disabled when beta_agent_api is set to false`() {
+        ShadowBinder.setCallingUid(SHELL_UID)
+        insertApplication()
+        setBetaAgentApi("false")
+
+        val envelope = json.decodeFromString<AgentErrorEnvelope>(readJson(uri("/apps")))
+
+        assertEquals("agent_api_disabled", envelope.error.code)
+    }
+
+    @Test
+    fun `apps returns data when beta_agent_api is set to true`() {
+        ShadowBinder.setCallingUid(SHELL_UID)
+        insertApplication()
+        setBetaAgentApi("true")
+
+        val list = json.decodeFromString<AgentApplicationList>(readJson(uri("/apps")))
+
+        assertTrue(list.applications.any { it.packageName == "com.example.app" })
+    }
+
+    @Test
+    fun `describe is served and reports enabled false when the agent api is disabled`() {
+        ShadowBinder.setCallingUid(SHELL_UID)
+
+        val document = json.decodeFromString<AgentDescriptionDocument>(readJson(uri("/describe")))
+
+        assertFalse(document.enabled)
+    }
+
+    @Test
+    fun `describe is served and reports enabled true when the agent api is enabled`() {
+        ShadowBinder.setCallingUid(SHELL_UID)
+        setBetaAgentApi("true")
+
+        val document = json.decodeFromString<AgentDescriptionDocument>(readJson(uri("/describe")))
+
+        assertTrue(document.enabled)
+    }
+
+    @Test
+    fun `another application's beta_agent_api toggle does not enable the api`() {
+        ShadowBinder.setCallingUid(SHELL_UID)
+        // The Toggles app itself is registered but has never set the toggle.
+        insertApplication(togglesPackageName, "Toggles")
+        // A different, unrelated application has created and enabled a configuration with the
+        // exact same key. It must not be able to flip the global gate for itself.
+        val otherAppId = insertApplication("com.example.other", "Other")
+        val otherScopeId = insertScope(otherAppId, "toggles_default")
+        val otherConfigId = insertConfiguration(otherAppId, "beta_agent_api", "boolean")
+        insertValue(otherConfigId, otherScopeId, "true")
+
+        val envelope = json.decodeFromString<AgentErrorEnvelope>(readJson(uri("/apps")))
+
+        assertEquals("agent_api_disabled", envelope.error.code)
+    }
+
+    @Test
+    fun `an unauthorized caller receives not_authorized rather than agent_api_disabled when the api is enabled`() {
+        setBetaAgentApi("true")
+        ShadowBinder.setCallingUid(APP_UID)
+
+        val envelope = json.decodeFromString<AgentErrorEnvelope>(readJson(uri("/describe")))
+
+        assertEquals("not_authorized", envelope.error.code)
+    }
+
+    @Test
+    fun `an unauthorized caller's call gets not_authorized rather than agent_api_disabled when enabled`() {
+        setBetaAgentApi("true")
+        ShadowBinder.setCallingUid(APP_UID)
+
+        val result = provider.call("anything", null, null)
+        val payload = requireNotNull(result.getString(TogglesAgentProvider.RESULT_KEY))
+
+        assertEquals(
+            "not_authorized",
+            json.decodeFromString<AgentErrorEnvelope>(payload).error.code
+        )
+    }
+
+    @Test
+    fun `setConfigurationValue through call returns agent_api_disabled and writes nothing when the api is disabled`() {
+        ShadowBinder.setCallingUid(SHELL_UID)
+        val appId = insertApplication("com.example.app", "Example")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "feature_x", "boolean")
+        insertValue(configId, scopeId, "false")
+        // beta_agent_api is left unset for the Toggles app, so the gate stays disabled.
+
+        val result = provider.call(
+            "setConfigurationValue",
+            null,
+            setConfigurationValueExtras(configId, scopeId, "true")
+        )
+        val payload = requireNotNull(result.getString(TogglesAgentProvider.RESULT_KEY))
+
+        assertEquals(
+            "agent_api_disabled",
+            json.decodeFromString<AgentErrorEnvelope>(payload).error.code
+        )
+        assertEquals(
+            "false",
+            togglesDatabase.agentDao().getConfigurationValues(appId).single().value
+        )
+    }
+
+    @Test
+    fun `deleteScope through call returns agent_api_disabled and deletes nothing when the api is disabled`() {
+        ShadowBinder.setCallingUid(SHELL_UID)
+        val appId = insertApplication("com.example.app", "Example")
+        insertScope(appId, "toggles_default")
+        val devScopeId = insertScope(appId, "Development scope")
+        // beta_agent_api is left unset for the Toggles app, so the gate stays disabled.
+
+        val result = provider.call(
+            "deleteScope",
+            null,
+            deleteScopeExtras("com.example.app", devScopeId)
+        )
+        val payload = requireNotNull(result.getString(TogglesAgentProvider.RESULT_KEY))
+
+        assertEquals(
+            "agent_api_disabled",
+            json.decodeFromString<AgentErrorEnvelope>(payload).error.code
+        )
+        assertEquals(2, togglesDatabase.agentDao().getScopes(appId).size)
     }
 
     @Test
@@ -116,6 +263,7 @@ class TogglesAgentProviderTest {
     @Test
     fun `call returns an unknown endpoint error for an unknown method`() {
         ShadowBinder.setCallingUid(SHELL_UID)
+        setBetaAgentApi("true")
 
         val result = provider.call("noSuchMethod", null, null)
         val payload = requireNotNull(result.getString(TogglesAgentProvider.RESULT_KEY))
@@ -126,6 +274,7 @@ class TogglesAgentProviderTest {
     @Test
     fun `a shell caller's setConfigurationValue call through call actually changes the stored value`() {
         ShadowBinder.setCallingUid(SHELL_UID)
+        setBetaAgentApi("true")
         val appId = insertApplication("com.example.app", "Example")
         val scopeId = insertScope(appId, "toggles_default")
         val configId = insertConfiguration(appId, "feature_x", "boolean")
@@ -213,13 +362,14 @@ class TogglesAgentProviderTest {
     fun `a large payload survives the pipe intact`() {
         ShadowBinder.setCallingUid(SHELL_UID)
         insertApplication()
+        setBetaAgentApi("true")
 
         val payload = readJson(uri("/apps"))
 
         assertTrue("payload was empty", payload.isNotEmpty())
         // Must be complete, parseable JSON — a truncated pipe would fail to decode.
         val list = json.decodeFromString<AgentApplicationList>(payload)
-        assertEquals(1, list.applications.size)
+        assertEquals(1, list.applications.count { it.packageName == "com.example.app" })
     }
 
     private fun setConfigurationValueExtras(configurationId: Long, scopeId: Long, value: String) =
@@ -228,6 +378,26 @@ class TogglesAgentProviderTest {
             putLong("scopeId", scopeId)
             putString("value", value)
         }
+
+    private fun deleteScopeExtras(packageName: String, scopeId: Long) =
+        Bundle().apply {
+            putString("package", packageName)
+            putLong("scopeId", scopeId)
+        }
+
+    // AgentApiGate resolves the gate for context.packageName specifically (see its kdoc), so
+    // tests must register the toggle under this exact package — the actual package Robolectric
+    // hands TogglesAgentProvider's context — rather than a literal "se.eelde.toggles" that would
+    // silently never match under test.
+    private val togglesPackageName: String
+        get() = ApplicationProvider.getApplicationContext<Context>().packageName
+
+    private fun setBetaAgentApi(value: String) {
+        val appId = insertApplication(togglesPackageName, "Toggles")
+        val scopeId = insertScope(appId, "toggles_default")
+        val configId = insertConfiguration(appId, "beta_agent_api", "boolean")
+        insertValue(configId, scopeId, value)
+    }
 
     private fun insertApplication(packageName: String, label: String): Long =
         togglesDatabase.providerApplicationDao().insert(

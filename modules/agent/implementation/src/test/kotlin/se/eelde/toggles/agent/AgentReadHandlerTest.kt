@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.serialization.json.Json
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -52,21 +53,55 @@ class AgentReadHandlerTest {
     @Test
     fun `describe is served`() {
         val document =
-            json.decodeFromString<AgentDescriptionDocument>(handler.handle(uri("/describe")))
+            json.decodeFromString<AgentDescriptionDocument>(handler.handle(uri("/describe"), apiEnabled = true))
 
         assertEquals(1, document.agentApiVersion)
     }
 
     @Test
     fun `unknown endpoint returns unknown_endpoint`() {
-        assertEquals("unknown_endpoint", errorCode(handler.handle(uri("/nope"))))
+        assertEquals("unknown_endpoint", errorCode(handler.handle(uri("/nope"), apiEnabled = true)))
+    }
+
+    @Test
+    fun `describe is served and reports enabled true when the api is enabled`() {
+        val document =
+            json.decodeFromString<AgentDescriptionDocument>(handler.handle(uri("/describe"), apiEnabled = true))
+
+        assertTrue(document.enabled)
+    }
+
+    @Test
+    fun `describe is still served and reports enabled false when the api is disabled`() {
+        val document =
+            json.decodeFromString<AgentDescriptionDocument>(handler.handle(uri("/describe"), apiEnabled = false))
+
+        assertEquals(1, document.agentApiVersion)
+        assertFalse(document.enabled)
+    }
+
+    @Test
+    fun `apps returns agent_api_disabled when the api is disabled`() {
+        insertApplication("com.example.app", "Example")
+
+        assertEquals("agent_api_disabled", errorCode(handler.handle(uri("/apps"), apiEnabled = false)))
+    }
+
+    @Test
+    fun `an application detail returns agent_api_disabled when the api is disabled`() {
+        insertApplication("com.example.app", "Example")
+
+        assertEquals(
+            "agent_api_disabled",
+            errorCode(handler.handle(uri("/apps/com.example.app"), apiEnabled = false))
+        )
     }
 
     @Test
     fun `apps lists known applications`() {
         insertApplication("com.example.app", "Example")
 
-        val list = json.decodeFromString<AgentApplicationList>(handler.handle(uri("/apps")))
+        val list = json.decodeFromString<AgentApplicationList>(handler.handle(uri("/apps"), apiEnabled = true))
 
         assertEquals(1, list.applications.size)
         assertEquals("com.example.app", list.applications[0].packageName)
@@ -75,14 +110,14 @@ class AgentReadHandlerTest {
 
     @Test
     fun `apps is empty when nothing is registered`() {
-        val list = json.decodeFromString<AgentApplicationList>(handler.handle(uri("/apps")))
+        val list = json.decodeFromString<AgentApplicationList>(handler.handle(uri("/apps"), apiEnabled = true))
 
         assertTrue(list.applications.isEmpty())
     }
 
     @Test
     fun `unknown package returns unknown_package`() {
-        assertEquals("unknown_package", errorCode(handler.handle(uri("/apps/com.example.missing"))))
+        assertEquals("unknown_package", errorCode(handler.handle(uri("/apps/com.example.missing"), apiEnabled = true)))
     }
 
     @Test
@@ -94,7 +129,7 @@ class AgentReadHandlerTest {
 
         assertEquals(
             "agent_control_disabled",
-            errorCode(handler.handle(uri("/apps/com.example.app")))
+            errorCode(handler.handle(uri("/apps/com.example.app"), apiEnabled = true))
         )
     }
 
@@ -224,7 +259,7 @@ class AgentReadHandlerTest {
     }
 
     private fun detail(packageName: String): AgentApplicationDetail =
-        json.decodeFromString(handler.handle(uri("/apps/$packageName")))
+        json.decodeFromString(handler.handle(uri("/apps/$packageName"), apiEnabled = true))
 
     private fun errorCode(payload: String): String =
         json.decodeFromString<AgentErrorEnvelope>(payload).error.code
