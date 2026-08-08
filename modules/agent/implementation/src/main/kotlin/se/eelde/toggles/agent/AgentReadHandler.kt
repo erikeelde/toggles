@@ -22,16 +22,26 @@ class AgentReadHandler(
     private val appVersionName: String,
 ) {
 
+    // /describe must stay reachable even when apiEnabled is false: it is how an agent tells
+    // "Toggles is installed but the API is off" apart from "Toggles is not installed", and it is
+    // what carries the enabled flag itself. Every other match — including UNKNOWN, so a disabled
+    // API does not leak which paths are real endpoints — is gated on apiEnabled before the normal
+    // per-endpoint dispatch runs.
     @Suppress("TooGenericExceptionCaught") // must never throw across the binder; see class kdoc
-    fun handle(uri: Uri): String = try {
-        when (uriMatcher.match(uri)) {
-            AgentUriMatch.DESCRIBE -> AgentDescription.json(appVersionName)
-            AgentUriMatch.APPLICATIONS -> agentJson.encodeToString(applications())
-            AgentUriMatch.APPLICATION -> application(uri)
-            AgentUriMatch.UNKNOWN -> AgentError.json(
-                AgentErrorCode.UNKNOWN_ENDPOINT,
-                "no such endpoint: ${uri.path}. Read /describe for the available endpoints."
-            )
+    fun handle(uri: Uri, apiEnabled: Boolean): String = try {
+        val match = uriMatcher.match(uri)
+        if (match != AgentUriMatch.DESCRIBE && !apiEnabled) {
+            agentApiDisabledError()
+        } else {
+            when (match) {
+                AgentUriMatch.DESCRIBE -> AgentDescription.json(appVersionName, apiEnabled)
+                AgentUriMatch.APPLICATIONS -> agentJson.encodeToString(applications())
+                AgentUriMatch.APPLICATION -> application(uri)
+                AgentUriMatch.UNKNOWN -> AgentError.json(
+                    AgentErrorCode.UNKNOWN_ENDPOINT,
+                    "no such endpoint: ${uri.path}. Read /describe for the available endpoints."
+                )
+            }
         }
     } catch (throwable: Throwable) {
         AgentError.json(

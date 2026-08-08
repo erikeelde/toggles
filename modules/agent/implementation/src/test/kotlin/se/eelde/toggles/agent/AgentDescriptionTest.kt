@@ -2,6 +2,7 @@ package se.eelde.toggles.agent
 
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -9,8 +10,8 @@ class AgentDescriptionTest {
 
     private val json = Json { ignoreUnknownKeys = false }
 
-    private fun describe(): AgentDescriptionDocument =
-        json.decodeFromString(AgentDescription.json(appVersionName = "1.2.3"))
+    private fun describe(apiEnabled: Boolean = true): AgentDescriptionDocument =
+        json.decodeFromString(AgentDescription.json(appVersionName = "1.2.3", apiEnabled = apiEnabled))
 
     @Test
     fun `describe reports the agent api version and the app version`() {
@@ -145,9 +146,31 @@ class AgentDescriptionTest {
 
     @Test
     fun `describe is valid json that round trips`() {
-        val encoded = AgentDescription.json(appVersionName = "9.9.9")
+        val encoded = AgentDescription.json(appVersionName = "9.9.9", apiEnabled = true)
         val decoded = json.decodeFromString<AgentDescriptionDocument>(encoded)
 
         assertEquals("9.9.9", decoded.togglesAppVersion)
+    }
+
+    @Test
+    fun `describe reports enabled true when the api is enabled`() {
+        assertTrue(describe(apiEnabled = true).enabled)
+    }
+
+    @Test
+    fun `describe reports enabled false when the api is disabled`() {
+        assertFalse(describe(apiEnabled = false).enabled)
+    }
+
+    @Test
+    fun `the model explains how to enable the agent api`() {
+        val notes = describe().model.agentApiEnablement
+
+        assertTrue(notes.contains("beta_agent_api"))
+        assertTrue(notes.contains("se.eelde.toggles"))
+        assertTrue(
+            "the enablement note must name the error code a disabled call returns, got: $notes",
+            notes.contains("agent_api_disabled")
+        )
     }
 }

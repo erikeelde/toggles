@@ -118,6 +118,11 @@ fun Navigation(
     mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val editorAsDialog by mainViewModel.editorAsDialog.collectAsStateWithLifecycle(initialValue = true)
+    // Collecting this is what auto-creates and registers the beta_agent_api toggle (see
+    // MainViewModel.agentApiEnabled's kdoc), making it visible and switchable in the Toggles UI
+    // under this app's own entry. The emitted value is unused here on purpose — the agent
+    // ContentProvider reads the same toggle synchronously, straight from the database.
+    mainViewModel.agentApiEnabled.collectAsStateWithLifecycle(initialValue = false)
     val leafMetadata: Map<String, Any> =
         if (editorAsDialog) DialogSceneStrategy.dialog() else ListDetailSceneStrategy.extraPane()
 

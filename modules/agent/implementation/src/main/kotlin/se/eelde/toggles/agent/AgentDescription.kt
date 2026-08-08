@@ -30,6 +30,7 @@ data class AgentModelDocumentation(
     val configurationTypes: List<String>,
     val scopeResolution: String,
     val agentControl: String,
+    val agentApiEnablement: String,
     val callers: String,
     val valueFormats: Map<String, String>,
     val callResultWrapping: String,
@@ -44,6 +45,16 @@ data class AgentDescriptionDocument(
     val methods: List<AgentMethod>,
     val model: AgentModelDocumentation,
     val errors: List<String>,
+    /**
+     * Whether the agent API is currently switched on. `/describe` is reachable regardless of this
+     * flag — that is deliberate, see [AgentErrorCode.AGENT_API_DISABLED] — so this field is how an
+     * agent tells "Toggles is installed but the API is off" apart from "Toggles is not installed at
+     * all". When false, every other endpoint and every `call()` method returns
+     * [AgentErrorCode.AGENT_API_DISABLED] instead of serving data. Enable it with the
+     * `beta_agent_api` toggle on the `se.eelde.toggles` application, which appears in the Toggles
+     * app once it has been opened at least once.
+     */
+    val enabled: Boolean,
 )
 
 /**
@@ -55,17 +66,20 @@ object AgentDescription {
     const val AGENT_API_VERSION = 1
     const val AGENT_AUTHORITY = "se.eelde.toggles.agentprovider"
 
-    fun document(appVersionName: String): AgentDescriptionDocument = AgentDescriptionDocument(
-        agentApiVersion = AGENT_API_VERSION,
-        togglesAppVersion = appVersionName,
-        authority = AGENT_AUTHORITY,
-        endpoints = endpoints(),
-        methods = Methods.all(),
-        model = model(),
-        errors = AgentErrorCode.entries.map { it.wireValue }
-    )
+    fun document(appVersionName: String, apiEnabled: Boolean): AgentDescriptionDocument =
+        AgentDescriptionDocument(
+            agentApiVersion = AGENT_API_VERSION,
+            togglesAppVersion = appVersionName,
+            authority = AGENT_AUTHORITY,
+            endpoints = endpoints(),
+            methods = Methods.all(),
+            model = model(),
+            errors = AgentErrorCode.entries.map { it.wireValue },
+            enabled = apiEnabled
+        )
 
-    fun json(appVersionName: String): String = agentJson.encodeToString(document(appVersionName))
+    fun json(appVersionName: String, apiEnabled: Boolean): String =
+        agentJson.encodeToString(document(appVersionName, apiEnabled))
 
     private fun endpoints(): List<AgentEndpoint> = listOf(
         AgentEndpoint(
@@ -332,6 +346,16 @@ object AgentDescription {
         agentControl = "Every /apps/{package} call requires that application's " +
             "agentControlEnabled flag to be true. It defaults to true and can be turned off " +
             "per application inside the Toggles app.",
+        agentApiEnablement = "The entire agent API is switched off by default — this `enabled` " +
+            "field on this document reports the current state. Turn it on with the " +
+            "\"beta_agent_api\" toggle on the se.eelde.toggles application itself (Toggles " +
+            "dogfoods its own client library for this), which appears in the Toggles app once " +
+            "the app has been opened at least once. While disabled, /describe keeps working — " +
+            "that is how you tell \"Toggles is installed but the API is off\" apart from " +
+            "\"Toggles is not installed\" — but every other endpoint and every call() method " +
+            "returns agent_api_disabled instead of serving data or applying a change. If a " +
+            "call returns that code, relay it to the user rather than trying to work around " +
+            "it: only they can flip the toggle inside the Toggles app.",
         callers = "Only uid 2000 (shell) and uid 0 (root) may call this provider. Every other " +
             "caller receives a not_authorized error.",
         valueFormats = mapOf(

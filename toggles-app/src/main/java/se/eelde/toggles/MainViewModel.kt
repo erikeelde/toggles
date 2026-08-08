@@ -17,7 +17,22 @@ class MainViewModel @Inject constructor(
     val editorAsDialog: Flow<Boolean> =
         toggles.toggle(EDITOR_PRESENTATION_DIALOG, true)
 
+    /**
+     * Global kill switch for the adb-facing agent API (`modules/agent`). Defaults to off: the
+     * feature is a beta/evaluated toggle (hence the `beta_` prefix, which also groups it with
+     * other evaluated features in the alphabetically-listed UI), and a fresh install should not
+     * expose the agent provider until the user has opened this app and opted in.
+     *
+     * The agent ContentProvider (`TogglesAgentProvider`, via `AgentApiGate`) reads this exact same
+     * key straight from the database — synchronously, bypassing this flow and toggles-flow
+     * entirely, since a binder call inside the provider's own call path cannot go back through the
+     * provider it is serving. Both surfaces resolve the value through the same scope-chain logic,
+     * so they can never disagree.
+     */
+    val agentApiEnabled: Flow<Boolean> = toggles.toggle(BETA_AGENT_API, false)
+
     companion object {
         const val EDITOR_PRESENTATION_DIALOG = "editor_presentation_dialog"
+        const val BETA_AGENT_API = "beta_agent_api"
     }
 }

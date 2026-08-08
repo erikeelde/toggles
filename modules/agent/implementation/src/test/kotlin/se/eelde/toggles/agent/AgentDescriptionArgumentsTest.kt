@@ -70,7 +70,7 @@ class AgentDescriptionArgumentsTest {
 
     @Test
     fun `every documented argument is both necessary and sufficient for its method`() {
-        AgentDescription.document(appVersionName = "1.0").methods.forEach { method ->
+        AgentDescription.document(appVersionName = "1.0", apiEnabled = true).methods.forEach { method ->
             val fullResponse = handler.handle(method.method, bundleFor(method.arguments))
             assertFalse(
                 "supplying every documented argument for ${method.method} still reports a " +
