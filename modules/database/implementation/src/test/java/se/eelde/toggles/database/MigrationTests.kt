@@ -13,6 +13,7 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.database.migrations.Migrations.LEGACY_SCOPE_NAME
+import se.eelde.toggles.database.migrations.Migrations.MIGRATION_10_11
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_1_2
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_2_3
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_3_4
@@ -22,7 +23,6 @@ import se.eelde.toggles.database.migrations.Migrations.MIGRATION_6_7
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_7_8
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_8_9
 import se.eelde.toggles.database.migrations.Migrations.MIGRATION_9_10
-import se.eelde.toggles.database.migrations.Migrations.MIGRATION_10_11
 import se.eelde.toggles.database.tables.ConfigurationTable
 import java.io.IOException
 

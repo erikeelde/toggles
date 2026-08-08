@@ -77,7 +77,7 @@ class TogglesProviderBlankKeyTest {
             TogglesProviderContract.configurationUri(),
             configurationValues("myConfigurationkey")
         )
-        val configurationId = requireNotNull(uri.lastPathSegment).toLong()
+        val configurationId = requireNotNull(uri?.lastPathSegment).toLong()
 
         BLANK_KEYS.forEach { key ->
             assertThrows(IllegalArgumentException::class.java) {
