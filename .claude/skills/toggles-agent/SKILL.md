@@ -27,6 +27,23 @@ works. Follow it rather than guessing.
 - Callable only from adb (uid 2000) or root. Not reachable from an app.
 - An application appears under `/apps` once it has contacted Toggles — or once you pre-create a
   configuration for it.
+- The agent API itself is opt-in — see below.
+
+## The API is opt-in
+
+The whole agent API is switched off by default, even on a device where Toggles is installed and
+`/describe` responds. `/describe` always works and always reports the current state in its
+`enabled` field — that is how you tell "Toggles is installed but the API is off" apart from
+"Toggles is not installed." Every other endpoint and every `content call` method returns
+`agent_api_disabled` instead of serving data or applying a change while it is off.
+
+It is enabled with the `beta_agent_api` toggle on the `se.eelde.toggles` application's own entry
+inside the Toggles app — Toggles dogfoods its own client library for this. That entry appears only
+once the Toggles app has been opened at least once.
+
+**If a call returns `agent_api_disabled`, relay that to the user rather than trying to work around
+it.** Only the user can flip the toggle inside the Toggles app; there is no way to enable it over
+adb (that would defeat the point of an opt-in gate).
 
 ## Multiple devices
 
@@ -74,8 +91,9 @@ believing a call worked.**
 {"error": {"code": "invalid_argument", "message": "..."}}
 ```
 
-Common codes: `not_authorized`, `agent_control_disabled`, `unknown_package`, `unknown_id`,
-`unknown_endpoint`, `invalid_argument`, `internal_error`.
+Common codes: `not_authorized`, `agent_api_disabled`, `agent_control_disabled`, `unknown_package`,
+`unknown_id`, `unknown_endpoint`, `invalid_argument`, `internal_error`. See "The API is opt-in"
+above for `agent_api_disabled` specifically.
 
 If a command prints `No result found.` instead of JSON, the provider was not reached at all — check
 the Toggles app is installed and current.

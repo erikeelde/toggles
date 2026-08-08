@@ -161,4 +161,16 @@ class AgentDescriptionTest {
     fun `describe reports enabled false when the api is disabled`() {
         assertFalse(describe(apiEnabled = false).enabled)
     }
+
+    @Test
+    fun `the model explains how to enable the agent api`() {
+        val notes = describe().model.agentApiEnablement
+
+        assertTrue(notes.contains("beta_agent_api"))
+        assertTrue(notes.contains("se.eelde.toggles"))
+        assertTrue(
+            "the enablement note must name the error code a disabled call returns, got: $notes",
+            notes.contains("agent_api_disabled")
+        )
+    }
 }
