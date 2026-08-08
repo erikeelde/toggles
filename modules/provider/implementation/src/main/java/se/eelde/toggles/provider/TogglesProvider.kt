@@ -11,8 +11,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.minus
 import se.eelde.toggles.core.Toggle
 import se.eelde.toggles.core.TogglesConfiguration
 import se.eelde.toggles.core.TogglesProviderContract
@@ -25,8 +23,10 @@ import se.eelde.toggles.database.dao.provider.ProviderConfigurationDao
 import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderPredefinedConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderScopeDao
+import se.eelde.toggles.provider.resolution.ScopeChain
 import kotlin.time.Clock
 
+@Suppress("TooManyFunctions")
 class TogglesProvider : ContentProvider() {
 
     private val requireContext: Context
@@ -131,6 +131,22 @@ class TogglesProvider : ContentProvider() {
         }
     }
 
+    private fun scopeChainFor(applicationId: Long): ScopeChain = ScopeChain(
+        selectedScopeId = getSelectedScope(scopeDao, applicationId).id,
+        defaultScopeId = getDefaultScope(scopeDao, applicationId).id
+    )
+
+    private fun firstNonEmptyCursor(chain: ScopeChain, query: (Long) -> Cursor): Cursor {
+        var lastEmpty: Cursor? = null
+        chain.orderedScopeIds.forEach { scopeId ->
+            lastEmpty?.close()
+            val candidate = query(scopeId)
+            if (candidate.count > 0) return candidate
+            lastEmpty = candidate
+        }
+        return requireNotNull(lastEmpty) { "scope chain is never empty" }
+    }
+
     override fun onCreate() = true
 
     @Suppress("LongMethod", "NestedBlockDepth", "CyclomaticComplexMethod")
@@ -151,27 +167,15 @@ class TogglesProvider : ContentProvider() {
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATION_ID -> {
                 val configId = requireNotNull(uri.lastPathSegment).toLong()
-                val scope = getSelectedScope(scopeDao, callingApplication.id)
-                cursor = configurationDao.getToggle(configId, scope.id)
-
-                if (cursor.count == 0) {
-                    cursor.close()
-
-                    val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
-                    cursor = configurationDao.getToggle(configId, defaultScope.id)
+                cursor = firstNonEmptyCursor(scopeChainFor(callingApplication.id)) { scopeId ->
+                    configurationDao.getToggle(configId, scopeId)
                 }
             }
 
             UriMatch.CURRENT_CONFIGURATION_KEY -> {
                 val key = requireNotNull(uri.lastPathSegment)
-                val scope = getSelectedScope(scopeDao, callingApplication.id)
-                cursor = configurationDao.getToggle(key, scope.id)
-
-                if (cursor.count == 0) {
-                    cursor.close()
-
-                    val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
-                    cursor = configurationDao.getToggle(key, defaultScope.id)
+                cursor = firstNonEmptyCursor(scopeChainFor(callingApplication.id)) { scopeId ->
+                    configurationDao.getToggle(key, scopeId)
                 }
             }
 
@@ -230,7 +234,7 @@ class TogglesProvider : ContentProvider() {
     }
 
     @Suppress("LongMethod", "CyclomaticComplexMethod")
-    override fun insert(uri: Uri, values: ContentValues?): Uri {
+    override fun insert(uri: Uri, values: ContentValues?): Uri? {
         val callingApplication = getCallingApplication(applicationDao)
 
         if (!isTogglesApplication(callingApplication)) {
@@ -240,6 +244,7 @@ class TogglesProvider : ContentProvider() {
         val contentValues = requireNotNull(values) { "ContentValues required for insert" }
         val insertId: Long
         var crossNotifyUri: Uri? = null
+        var notify = true
         when (togglesUriMatcher.match(uri)) {
             UriMatch.CURRENT_CONFIGURATIONS -> {
                 val toggle = Toggle.fromContentValues(contentValues)
@@ -324,15 +329,24 @@ class TogglesProvider : ContentProvider() {
                     value = togglesConfigurationValue.value,
                     scope = togglesConfigurationValue.scope
                 )
+                // A constraint violation here means one of two things, and only a lookup can tell
+                // them apart: (a) the (configurationId, scope) pair already has a row — an upsert,
+                // nothing was written, so no id was freshly created and observers should not be
+                // woken; or (b) the row references a scope that does not exist (its FK to
+                // scope(id) — see MIGRATION_9_10) — a genuine failure, nothing was written and
+                // there is no id to report. Only case (a) has an id to fall back to.
+
                 @Suppress("SwallowedException")
-                insertId = try {
+                val freshId = try {
                     configurationValueDao.insertSync(databaseConfigurationValue)
                 } catch (e: SQLiteConstraintException) {
-                    configurationValueDao.getIdByConfigurationIdAndScope(
-                        databaseConfigurationValue.configurationId,
-                        databaseConfigurationValue.scope
-                    ) ?: -1L
+                    null
                 }
+                insertId = freshId ?: configurationValueDao.getIdByConfigurationIdAndScope(
+                    databaseConfigurationValue.configurationId,
+                    databaseConfigurationValue.scope
+                ) ?: return null
+                notify = freshId != null
                 val configId = uri.pathSegments[uri.pathSegments.size - 2].toLong()
                 crossNotifyUri = TogglesProviderContract.toggleUri(configId)
             }
@@ -342,8 +356,10 @@ class TogglesProvider : ContentProvider() {
             }
         }
 
-        requireContext.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
-        crossNotifyUri?.let { requireContext.contentResolver.notifyInsert(it) }
+        if (notify) {
+            requireContext.contentResolver.notifyInsert(Uri.withAppendedPath(uri, insertId.toString()))
+            crossNotifyUri?.let { requireContext.contentResolver.notifyInsert(it) }
+        }
 
         return ContentUris.withAppendedId(uri, insertId)
     }
@@ -527,8 +543,6 @@ class TogglesProvider : ContentProvider() {
 
     companion object {
 
-        private const val oneSecond = 1000L
-
         private fun getDefaultScope(
             scopeDao: ProviderScopeDao,
             applicationId: Long
@@ -541,14 +555,16 @@ class TogglesProvider : ContentProvider() {
         ): TogglesScope = scopeDao.getSelectedScope(applicationId)
             ?: error("No selected scope for application $applicationId")
 
+        // Scope construction (names, timestamps) lives on TogglesScope's companion object in
+        // modules/database/implementation so the agent API's on-demand application creation
+        // (AgentCallHandler.resolveOrCreateApplication) produces identical scopes without
+        // duplicating this logic.
         private fun createDefaultScope(
             scopeDao: ProviderScopeDao,
             applicationId: Long,
             clock: Clock,
         ): TogglesScope {
-            val scope = TogglesScope.newScope(clock)
-            scope.applicationId = applicationId
-            scope.timeStamp = clock.now().minus(oneSecond, DateTimeUnit.MILLISECOND)
+            val scope = TogglesScope.defaultScope(applicationId, clock)
             scope.id = scopeDao.insert(scope)
             return scope
         }
@@ -558,10 +574,7 @@ class TogglesProvider : ContentProvider() {
             applicationId: Long,
             clock: Clock,
         ): TogglesScope {
-            val developmentScope = TogglesScope.newScope(clock)
-            developmentScope.applicationId = applicationId
-            developmentScope.timeStamp = clock.now()
-            developmentScope.name = TogglesScope.SCOPE_USER
+            val developmentScope = TogglesScope.developmentScope(applicationId, clock)
             developmentScope.id = scopeDao.insert(developmentScope)
             return developmentScope
         }

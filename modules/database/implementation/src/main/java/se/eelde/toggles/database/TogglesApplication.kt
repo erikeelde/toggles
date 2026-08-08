@@ -22,5 +22,11 @@ data class TogglesApplication constructor(
     var packageName: String,
 
     @ColumnInfo(name = ApplicationTable.COL_APP_LABEL)
-    var applicationLabel: String
+    var applicationLabel: String,
+
+    @ColumnInfo(
+        name = ApplicationTable.COL_AGENT_CONTROL_ENABLED,
+        defaultValue = "1"
+    )
+    var agentControlEnabled: Boolean = true
 )

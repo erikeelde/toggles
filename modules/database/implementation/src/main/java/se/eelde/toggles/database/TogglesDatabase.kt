@@ -3,6 +3,8 @@ package se.eelde.toggles.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import se.eelde.toggles.database.dao.agent.AgentDao
+import se.eelde.toggles.database.dao.agent.AgentMutationDao
 import se.eelde.toggles.database.dao.application.TogglesApplicationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationDao
 import se.eelde.toggles.database.dao.application.TogglesConfigurationValueDao
@@ -14,6 +16,7 @@ import se.eelde.toggles.database.dao.provider.ProviderConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderPredefinedConfigurationValueDao
 import se.eelde.toggles.database.dao.provider.ProviderScopeDao
 
+@Suppress("TooManyFunctions")
 @Database(
     entities = [
         TogglesApplication::class,
@@ -22,7 +25,7 @@ import se.eelde.toggles.database.dao.provider.ProviderScopeDao
         TogglesPredefinedConfigurationValue::class,
         TogglesScope::class,
     ],
-    version = 8
+    version = 10
 )
 @TypeConverters(RoomInstantConverter::class)
 abstract class TogglesDatabase : RoomDatabase() {
@@ -41,4 +44,7 @@ abstract class TogglesDatabase : RoomDatabase() {
 
     abstract fun togglesScopeDao(): TogglesScopeDao
     abstract fun providerScopeDao(): ProviderScopeDao
+
+    abstract fun agentDao(): AgentDao
+    abstract fun agentMutationDao(): AgentMutationDao
 }

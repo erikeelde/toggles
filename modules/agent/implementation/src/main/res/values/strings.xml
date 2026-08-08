@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="agent_control_notification_channel_name">Agent control</string>
+    <string name="agent_control_notification_title">%1$s changed by an agent</string>
+    <string name="agent_control_notification_text">A connected agent changed a toggle for %1$s. Tap Disable to turn agent control off for it.</string>
+    <string name="agent_control_disable_action">Disable agent control</string>
+</resources>

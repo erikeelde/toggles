@@ -40,6 +40,17 @@
             android:enabled="true"
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
+
+        <provider
+            android:name=".agent.TogglesAgentProvider"
+            android:authorities="${togglesAgentAuthority}"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
+
+        <receiver
+            android:name=".agent.AgentControlDisableReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>

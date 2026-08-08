@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Cyclone
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.SmartToy
 import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -186,6 +187,24 @@ fun EntryProviderScope<NavKey>.configurationsNavigations(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Outlined.List,
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        if (uiState.value.application?.agentControlEnabled == true) {
+                                            "Disable agent control"
+                                        } else {
+                                            "Enable agent control"
+                                        }
+                                    )
+                                },
+                                onClick = { viewModel.toggleAgentControl(requireNotNull(uiState.value.application)) },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.SmartToy,
                                         contentDescription = null
                                     )
                                 }

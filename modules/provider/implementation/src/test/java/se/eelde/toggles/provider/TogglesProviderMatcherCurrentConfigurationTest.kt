@@ -85,7 +85,7 @@ class TogglesProviderMatcherCurrentConfigurationTest {
         assertEquals(insertToggle.type, queryToggle.type)
 
         val toggleUri = TogglesProviderContract.toggleUri(
-            Integer.parseInt(requireNotNull(insertToggleUri.lastPathSegment)).toLong()
+            Integer.parseInt(requireNotNull(insertToggleUri?.lastPathSegment)).toLong()
         )
         cursor = togglesProvider.query(toggleUri, null, null, null, null)
         assertNotNull(cursor)

@@ -61,6 +61,8 @@ include(
     ":modules:provider:api",
     ":modules:provider:implementation",
     ":modules:provider:wiring",
+    ":modules:agent:implementation",
+    ":modules:agent:wiring",
     ":modules:applications",
     ":modules:configurations",
     ":modules:oss",

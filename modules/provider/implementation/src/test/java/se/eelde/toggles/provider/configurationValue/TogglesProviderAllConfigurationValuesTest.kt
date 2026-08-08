@@ -64,12 +64,13 @@ class TogglesProviderAllConfigurationValuesTest {
                 this.key = key
             }.toContentValues(),
         )
-        val configId = requireNotNull(configUri.lastPathSegment).toLong()
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
         togglesProvider.insert(
             TogglesProviderContract.configurationValueUri(configId),
             TogglesConfigurationValue {
                 configurationId = configId
                 this.value = value
+                scope = getDefaultScopeId()
             }.toContentValues(),
         )
         return configId
@@ -145,6 +146,24 @@ class TogglesProviderAllConfigurationValuesTest {
             assertFalse(cursor.moveToFirst())
             assertEquals(0, cursor.count)
         }
+    }
+
+    private fun getDefaultScopeId(): Long {
+        togglesProvider.query(
+            TogglesProviderContract.scopeUri(),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            while (cursor.moveToNext()) {
+                val scope = ToggleScope.fromCursor(cursor)
+                if (scope.name == "toggles_default") {
+                    return scope.id
+                }
+            }
+        }
+        error("Default scope not found")
     }
 
     private fun getDevelopmentScopeId(): Long {

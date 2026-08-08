@@ -9,6 +9,7 @@ import se.eelde.toggles.core.ColumnNames
 import se.eelde.toggles.database.tables.ApplicationTable
 import se.eelde.toggles.database.tables.ScopeTable
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 @Entity(
@@ -50,5 +51,27 @@ data class TogglesScope constructor(
         fun isDefaultScope(scope: TogglesScope): Boolean {
             return SCOPE_DEFAULT == scope.name
         }
+
+        /**
+         * The two scopes every application gets the moment Toggles creates its row — whether that
+         * happens because the app itself first contacted the ContentProvider (TogglesProvider) or
+         * because the agent API pre-created the application for a package that has not run yet.
+         * Both call sites must build identical rows, so this is the one place either builds them:
+         * the default scope's timestamp is anchored one second behind [clock] so it can never tie
+         * with, or race ahead of, a scope created afterwards via createScope.
+         */
+        fun defaultScope(applicationId: Long, clock: Clock): TogglesScope = TogglesScope(
+            id = 0,
+            applicationId = applicationId,
+            name = SCOPE_DEFAULT,
+            timeStamp = clock.now().minus(1.seconds)
+        )
+
+        fun developmentScope(applicationId: Long, clock: Clock): TogglesScope = TogglesScope(
+            id = 0,
+            applicationId = applicationId,
+            name = SCOPE_USER,
+            timeStamp = clock.now()
+        )
     }
 }
