@@ -33,7 +33,7 @@ data class AgentScopeValue(
 @Serializable
 data class AgentConfiguration(
     val id: Long,
-    val key: String?,
+    val key: String,
     val type: String,
     /**
      * The value the application resolves right now.

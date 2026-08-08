@@ -10,7 +10,7 @@ data class TogglesConfigurationWithValues constructor(
     var applicationId: Long,
 
     @ColumnInfo(name = ConfigurationTable.COL_KEY)
-    var key: String?,
+    var key: String,
 
     @ColumnInfo(name = ConfigurationTable.COL_TYPE)
     var type: String?,

@@ -32,7 +32,7 @@ data class TogglesConfiguration(
     var applicationId: Long,
 
     @field:ColumnInfo(name = ConfigurationTable.COL_KEY)
-    var key: String?,
+    var key: String,
 
     @field:ColumnInfo(name = ConfigurationTable.COL_TYPE)
     var type: String,

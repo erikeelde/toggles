@@ -25,10 +25,19 @@ public class TogglesConfiguration private constructor(
         public fun setType(@Toggle.ToggleType type: String): Builder =
             apply { this.type = type }
 
+        /**
+         * Sets the key identifying this configuration. Required: [build] throws
+         * [IllegalArgumentException] for a blank key, because configurations are stored under a
+         * unique (application, key) identity and unnamed ones would collide with one another.
+         */
         public fun setKey(key: String): Builder = apply { this.key = key }
 
         public fun build(): TogglesConfiguration =
-            TogglesConfiguration(id = id, type = type, key = key)
+            TogglesConfiguration(
+                id = id,
+                type = type,
+                key = requireValidKey(key, ColumnNames.Configuration.COL_KEY)
+            )
     }
 
     public fun copy(
@@ -36,7 +45,11 @@ public class TogglesConfiguration private constructor(
         type: String = this.type,
         key: String = this.key,
     ): TogglesConfiguration =
-        TogglesConfiguration(id = id, type = type, key = key)
+        TogglesConfiguration(
+            id = id,
+            type = type,
+            key = requireValidKey(key, ColumnNames.Configuration.COL_KEY)
+        )
 
     public fun toContentValues(): ContentValues = ContentValues().apply {
         put(ColumnNames.Configuration.COL_ID, id)
@@ -76,9 +89,10 @@ public class TogglesConfiguration private constructor(
                 type = requireNotNull(values.getAsString(ColumnNames.Configuration.COL_TYPE)) {
                     "Missing required field: ${ColumnNames.Configuration.COL_TYPE}"
                 },
-                key = requireNotNull(values.getAsString(ColumnNames.Configuration.COL_KEY)) {
-                    "Missing required field: ${ColumnNames.Configuration.COL_KEY}"
-                },
+                key = requireValidKey(
+                    values.getAsString(ColumnNames.Configuration.COL_KEY),
+                    ColumnNames.Configuration.COL_KEY
+                ),
             )
         }
 

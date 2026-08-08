@@ -25,7 +25,7 @@ import se.eelde.toggles.database.dao.provider.ProviderScopeDao
         TogglesPredefinedConfigurationValue::class,
         TogglesScope::class,
     ],
-    version = 10
+    version = 11
 )
 @TypeConverters(RoomInstantConverter::class)
 abstract class TogglesDatabase : RoomDatabase() {

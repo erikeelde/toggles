@@ -14,6 +14,10 @@ android {
 
 dependencies {
     implementation(libs.androidx.annotation)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.org.robolectric)
 }
 
 val versionFile = File("versions.properties")
