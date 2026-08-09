@@ -9,7 +9,6 @@ import kotlinx.serialization.json.Json
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -164,19 +163,12 @@ class AgentReadHandlerTest {
         assertEquals("false", detail("com.example.app").configurations.single().effectiveValue)
     }
 
-    @Test
-    fun `a null value row in the selected scope wins over the default scope`() {
-        val applicationId = insertApplication("com.example.app", "Example")
-        val defaultScopeId =
-            insertScope(applicationId, "toggles_default", Instant.fromEpochMilliseconds(1))
-        val devScopeId =
-            insertScope(applicationId, "Development scope", Instant.fromEpochMilliseconds(2))
-        val configurationId = insertConfiguration(applicationId, "feature_x", "boolean")
-        insertValue(configurationId, defaultScopeId, "false")
-        insertValue(configurationId, devScopeId, null)
-
-        assertNull(detail("com.example.app").configurations.single().effectiveValue)
-    }
+    // A prior version of this test proved that a null-valued row in the selected scope still won
+    // over the default scope (key presence, not value nullability, decides resolution). That
+    // state is no longer representable: `configurationValue.value` is NOT NULL at the database
+    // level (see MIGRATION_11_12), so `insertValue` can no longer construct such a row - inserting
+    // one would throw a SQLiteConstraintException instead of exercising the code path this test
+    // meant to cover.
 
     @Test
     fun `a value in an unresolved scope is reported but does not affect the effective value`() {
@@ -292,7 +284,7 @@ class AgentReadHandlerTest {
             )
         )
 
-    private fun insertValue(configurationId: Long, scopeId: Long, value: String?): Long =
+    private fun insertValue(configurationId: Long, scopeId: Long, value: String): Long =
         database.providerConfigurationValueDao().insertSync(
             TogglesConfigurationValue(
                 id = 0,

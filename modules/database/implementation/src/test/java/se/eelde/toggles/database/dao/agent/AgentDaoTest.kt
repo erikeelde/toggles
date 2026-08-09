@@ -72,7 +72,7 @@ class AgentDaoTest {
             )
         )
 
-    private fun insertConfigurationValue(configurationId: Long, scopeId: Long, value: String?): Long =
+    private fun insertConfigurationValue(configurationId: Long, scopeId: Long, value: String): Long =
         database.providerConfigurationValueDao().insertSync(
             TogglesConfigurationValue(
                 id = 0,

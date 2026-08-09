@@ -131,7 +131,7 @@ class AgentApiGateTest {
             )
         )
 
-    private fun insertValue(configurationId: Long, scopeId: Long, value: String?): Long =
+    private fun insertValue(configurationId: Long, scopeId: Long, value: String): Long =
         database.providerConfigurationValueDao().insertSync(
             TogglesConfigurationValue(id = 0, configurationId = configurationId, value = value, scope = scopeId)
         )
