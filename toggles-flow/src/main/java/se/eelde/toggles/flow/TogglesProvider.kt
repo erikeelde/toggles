@@ -22,6 +22,7 @@ import se.eelde.toggles.core.TogglesProviderContract.configurationUri
 import se.eelde.toggles.core.TogglesProviderContract.configurationValueUri
 import se.eelde.toggles.core.TogglesProviderContract.scopeUri
 import se.eelde.toggles.core.TogglesProviderContract.toggleUri
+import java.util.concurrent.atomic.AtomicReference
 
 @Suppress("TooManyFunctions")
 internal class TogglesProvider(
@@ -115,13 +116,26 @@ internal class TogglesProvider(
     // region Observation
 
     fun observeToggleState(key: String): Flow<ToggleState> = callbackFlow {
+        // Tracks the configuration id this flow's key resolved to, once known. Read on the main
+        // looper (inside onChange) and written from the flow's dispatcher (inside
+        // fetchAndTrackToggleState), so it is held in an AtomicReference rather than a plain var.
+        val resolvedConfigurationId = AtomicReference<Long?>(null)
+
+        suspend fun fetchAndTrackToggleState(): ToggleState {
+            val toggleState = getToggleState(key)
+            resolvedConfigurationId.set(toggleState.configuration?.id)
+            return toggleState
+        }
+
         val observer = object : ContentObserver(Handler(android.os.Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean) {
                 onChange(selfChange, null)
             }
 
             override fun onChange(selfChange: Boolean, uri: Uri?) {
-                launch { trySend(getToggleState(key)) }
+                if (shouldRefetchOnChange(uri, resolvedConfigurationId.get())) {
+                    launch { trySend(fetchAndTrackToggleState()) }
+                }
             }
         }
 
@@ -145,7 +159,7 @@ internal class TogglesProvider(
             )
         }
 
-        trySend(getToggleState(key))
+        trySend(fetchAndTrackToggleState())
 
         awaitClose {
             contentResolver.unregisterContentObserver(observer)
@@ -210,4 +224,45 @@ internal class TogglesProvider(
     }
 
     // endregion
+}
+
+/**
+ * Path segment layout of the URIs [TogglesProvider.observeToggleState] observes:
+ * - `configurationUri(id)`     -> `/configuration/{configId}`
+ * - `toggleUri(id)`            -> `/currentConfiguration/{configId}`
+ * - configuration value notify -> `/configuration/{configId}/values/{valueId}`
+ * - `scopeUri()`               -> `/scope`
+ *
+ * The configuration id is segment 1 — never the last segment — whenever the root segment is
+ * "configuration" or "currentConfiguration". Using `lastPathSegment` would read the *value* id
+ * off a configuration-value notification and compare it against the wrong number. Any other
+ * shape (including `/scope`, which carries no configuration id at all) yields null.
+ */
+internal fun configurationIdFromNotificationUri(uri: Uri): Long? {
+    val segments = uri.pathSegments
+    val root = segments.getOrNull(0)
+    if (root != "configuration" && root != "currentConfiguration") {
+        return null
+    }
+    return segments.getOrNull(1)?.toLongOrNull()
+}
+
+/**
+ * Conservative change filter for the shared [ContentObserver] registered by
+ * [TogglesProvider.observeToggleState]. Skips a re-fetch only when it is positively known to be
+ * irrelevant to [resolvedConfigurationId] — a configuration id was parsed out of [uri] and it
+ * differs from the one already resolved for this flow's key.
+ *
+ * Every other case re-fetches, because a missed notification leaves a running app silently
+ * serving a stale value: a null [uri] (the deprecated `onChange(selfChange)` overload), a uri
+ * that carries no configuration id (a tree-root notification, or `/scope` — a scope switch
+ * changes what every toggle resolves to), or [resolvedConfigurationId] not yet being known (the
+ * configuration may not exist yet, and its auto-creation on first read must not be missed).
+ */
+@Suppress("ReturnCount")
+internal fun shouldRefetchOnChange(uri: Uri?, resolvedConfigurationId: Long?): Boolean {
+    if (uri == null) return true
+    val notifiedConfigurationId = configurationIdFromNotificationUri(uri) ?: return true
+    if (resolvedConfigurationId == null) return true
+    return notifiedConfigurationId == resolvedConfigurationId
 }
