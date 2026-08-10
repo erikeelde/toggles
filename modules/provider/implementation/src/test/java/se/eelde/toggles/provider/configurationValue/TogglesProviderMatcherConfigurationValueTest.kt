@@ -275,6 +275,45 @@ class TogglesProviderMatcherConfigurationValueTest {
     }
 
     @Test
+    fun testInsertWithNullValueReturnsNullAndWritesNoRow() {
+        val togglesConfiguration = TogglesConfiguration {
+            type = Toggle.TYPE.BOOLEAN
+            key = "nullValueInsertKey"
+        }
+
+        val configUri = togglesProvider.insert(
+            TogglesProviderContract.configurationUri(),
+            togglesConfiguration.toContentValues(),
+        )
+        val configId = requireNotNull(configUri?.lastPathSegment).toLong()
+        val defaultScopeId = getDefaultScopeId()
+
+        // Deliberately omit setValue(): configurationValue.value is NOT NULL at the database
+        // level (see MIGRATION_11_12), so TogglesProvider.insert must reject this up front
+        // instead of attempting — and failing — the write.
+        val configValue = TogglesConfigurationValue {
+            configurationId = configId
+            scope = defaultScopeId
+        }
+        val uri = togglesProvider.insert(
+            TogglesProviderContract.configurationValueUri(configId),
+            configValue.toContentValues(),
+        )
+
+        assertEquals("insert with a null value must return null", null, uri)
+
+        togglesProvider.query(
+            TogglesProviderContract.configurationValueUri(configId),
+            null,
+            null,
+            null,
+            null
+        ).use { cursor ->
+            assertEquals("rejected insert must not write a row", 0, cursor.count)
+        }
+    }
+
+    @Test
     fun testUpdate() {
         val togglesConfiguration = TogglesConfiguration {
             type = Toggle.TYPE.BOOLEAN

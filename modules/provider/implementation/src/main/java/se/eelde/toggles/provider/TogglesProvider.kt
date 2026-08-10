@@ -265,25 +265,29 @@ class TogglesProvider : ContentProvider() {
                     togglesConfiguration.id = configurationDao.insert(togglesConfiguration)
                 }
 
-                val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
+                // configurationValue.value is NOT NULL at the database level (see
+                // MIGRATION_11_12). A null toggle.value has nothing to persist: an absent row
+                // resolves to the caller's compiled-in default exactly like a null-valued one
+                // used to, so skipping the insert changes nothing a consumer observes.
+                val toggleValue = toggle.value
+                if (toggleValue != null) {
+                    val defaultScope = getDefaultScope(scopeDao, callingApplication.id)
 
-                val togglesConfigurationValue = TogglesConfigurationValue(
-                    0,
-                    togglesConfiguration.id,
-                    toggle.value,
-                    defaultScope.id
-                )
-                togglesConfigurationValue.configurationId = togglesConfiguration.id
-                togglesConfigurationValue.value = toggle.value
-                togglesConfigurationValue.scope = defaultScope.id
+                    val togglesConfigurationValue = TogglesConfigurationValue(
+                        0,
+                        togglesConfiguration.id,
+                        toggleValue,
+                        defaultScope.id
+                    )
 
-                @Suppress("SwallowedException")
-                try {
-                    togglesConfigurationValue.id =
-                        configurationValueDao.insertSync(togglesConfigurationValue)
-                } catch (e: SQLiteConstraintException) {
-                    // this happens when the app is initially launched because many of many calls
-                    // into assertValidApiVersion()
+                    @Suppress("SwallowedException")
+                    try {
+                        togglesConfigurationValue.id =
+                            configurationValueDao.insertSync(togglesConfigurationValue)
+                    } catch (e: SQLiteConstraintException) {
+                        // this happens when the app is initially launched because many of many
+                        // calls into assertValidApiVersion()
+                    }
                 }
 
                 insertId = togglesConfiguration.id
@@ -323,28 +327,39 @@ class TogglesProvider : ContentProvider() {
             UriMatch.CONFIGURATION_VALUE_ID -> {
                 val togglesConfigurationValue =
                     se.eelde.toggles.core.TogglesConfigurationValue.fromContentValues(contentValues)
-                val databaseConfigurationValue = TogglesConfigurationValue(
-                    id = togglesConfigurationValue.id,
-                    configurationId = togglesConfigurationValue.configurationId,
-                    value = togglesConfigurationValue.value,
-                    scope = togglesConfigurationValue.scope
-                )
                 // A constraint violation here means one of two things, and only a lookup can tell
                 // them apart: (a) the (configurationId, scope) pair already has a row — an upsert,
                 // nothing was written, so no id was freshly created and observers should not be
                 // woken; or (b) the row references a scope that does not exist (its FK to
                 // scope(id) — see MIGRATION_9_10) — a genuine failure, nothing was written and
                 // there is no id to report. Only case (a) has an id to fall back to.
+                //
+                // A null value falls into the same "attempt nothing, fall back to lookup" shape:
+                // configurationValue.value is NOT NULL at the database level (see
+                // MIGRATION_11_12), so rather than let insertSync fail on that constraint - which
+                // a caught SQLiteConstraintException could not tell apart from cases (a) or (b) -
+                // the insert is skipped outright and freshId stays null.
+                val value = togglesConfigurationValue.value
 
                 @Suppress("SwallowedException")
-                val freshId = try {
-                    configurationValueDao.insertSync(databaseConfigurationValue)
-                } catch (e: SQLiteConstraintException) {
+                val freshId = if (value == null) {
                     null
+                } else {
+                    val databaseConfigurationValue = TogglesConfigurationValue(
+                        id = togglesConfigurationValue.id,
+                        configurationId = togglesConfigurationValue.configurationId,
+                        value = value,
+                        scope = togglesConfigurationValue.scope
+                    )
+                    try {
+                        configurationValueDao.insertSync(databaseConfigurationValue)
+                    } catch (e: SQLiteConstraintException) {
+                        null
+                    }
                 }
                 insertId = freshId ?: configurationValueDao.getIdByConfigurationIdAndScope(
-                    databaseConfigurationValue.configurationId,
-                    databaseConfigurationValue.scope
+                    togglesConfigurationValue.configurationId,
+                    togglesConfigurationValue.scope
                 ) ?: return null
                 notify = freshId != null
                 val configId = uri.pathSegments[uri.pathSegments.size - 2].toLong()

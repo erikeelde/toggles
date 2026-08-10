@@ -23,16 +23,14 @@ object ScopeResolution {
      * The value an application will actually observe, given every value it has per scope.
      *
      * Contract for [valuesByScopeId]: it must contain an entry for every scope that has a value
-     * row, including rows whose value is null. Key presence, not value nullability, is what marks
-     * a scope as resolved — this mirrors the SQL join TogglesProvider queries against, where an
-     * inner join on a null-valued row still counts as a matching row (no fallback to the next
-     * scope). A scope with no row at all must be absent from the map entirely so the chain can
-     * fall through to the next scope.
+     * row. `configurationValue.value` is NOT NULL at the database level (see MIGRATION_11_12), so
+     * a value row always carries a real value — key presence alone marks a scope as resolved. A
+     * scope with no row at all must be absent from the map entirely so the chain can fall through
+     * to the next scope.
      *
-     * A `null` return is therefore ambiguous by design: either the winning scope's row holds a
-     * null value, or no scope in the chain has a row at all.
+     * A `null` return means no scope in the chain has a row at all.
      */
-    fun effectiveValue(valuesByScopeId: Map<Long, String?>, chain: ScopeChain): String? =
+    fun effectiveValue(valuesByScopeId: Map<Long, String>, chain: ScopeChain): String? =
         chain.orderedScopeIds
             .firstOrNull { scopeId -> valuesByScopeId.containsKey(scopeId) }
             ?.let { scopeId -> valuesByScopeId[scopeId] }

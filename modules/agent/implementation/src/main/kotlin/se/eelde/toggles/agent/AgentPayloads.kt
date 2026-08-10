@@ -27,7 +27,7 @@ data class AgentScopeValue(
     val id: Long,
     val scopeId: Long,
     val scopeName: String?,
-    val value: String?,
+    val value: String,
 )
 
 @Serializable
@@ -38,11 +38,10 @@ data class AgentConfiguration(
     /**
      * The value the application resolves right now.
      *
-     * Null means the application will observe no value from Toggles. That happens when there is no
-     * value row in the selected scope or the default scope — including when rows exist only in
-     * some other scope, which resolution never consults — or when the winning scope's row holds a
-     * null value. It does NOT mean "no value exists anywhere for this configuration"; check
-     * [values] before concluding that.
+     * Null means the application will observe no value from Toggles: there is no value row in
+     * either the selected scope or the default scope — including when rows exist only in some
+     * other scope, which resolution never consults. It does NOT mean "no value exists anywhere
+     * for this configuration"; check [values] before concluding that.
      */
     val effectiveValue: String?,
     val values: List<AgentScopeValue>,

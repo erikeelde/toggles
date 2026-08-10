@@ -430,7 +430,7 @@ class TogglesAgentProviderTest {
             )
         )
 
-    private fun insertValue(configurationId: Long, scopeId: Long, value: String?): Long =
+    private fun insertValue(configurationId: Long, scopeId: Long, value: String): Long =
         togglesDatabase.providerConfigurationValueDao().insertSync(
             TogglesConfigurationValue(
                 id = 0,

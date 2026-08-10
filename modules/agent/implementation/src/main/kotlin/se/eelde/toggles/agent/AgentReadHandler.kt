@@ -130,8 +130,8 @@ class AgentReadHandler(
         values: List<TogglesConfigurationValue>,
         chain: ScopeChain?,
     ): String? = chain?.let {
-        // Key presence means "this scope has a value row", including null-valued rows, which
-        // matches the INNER JOIN the provider resolves values with. Do not filter nulls out.
+        // Key presence means "this scope has a value row", matching the INNER JOIN the provider
+        // resolves values with.
         ScopeResolution.effectiveValue(values.associate { value -> value.scope to value.value }, it)
     }
 

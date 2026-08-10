@@ -38,14 +38,13 @@ class ScopeResolutionTest {
         assertEquals("prod", value)
     }
 
-    @Test
-    fun `effective value returns null when the selected scope holds a null value row`() {
-        val chain = ScopeChain(selectedScopeId = 7, defaultScopeId = 1)
-
-        val value = ScopeResolution.effectiveValue(mapOf(7L to null, 1L to "prod"), chain)
-
-        assertNull(value)
-    }
+    // A prior version of this test proved that a null-valued row in the selected scope still won
+    // over the default scope, because effectiveValue resolves by key presence rather than value
+    // nullability. That state is no longer representable: `valuesByScopeId` is now
+    // `Map<Long, String>` (see MIGRATION_11_12, which makes `configurationValue.value` NOT NULL
+    // at the database level), so a present entry can no longer hold null. The presence-over-null
+    // resolution rule this test exercised is unreachable code now, not a behaviour to keep
+    // covering.
 
     @Test
     fun `effective value is null when no scope holds a value`() {

@@ -339,8 +339,7 @@ object AgentDescription {
             "scope. Value rows in any other scope are ignored entirely — they are reported " +
             "under each configuration's values array but never affect effectiveValue. The " +
             "fallback to the default scope happens only when the selected scope has no value " +
-            "row at all; a row whose value is null still counts as a hit and stops the " +
-            "fallback. effectiveValue is the result of that resolution, and null means the " +
+            "row at all. effectiveValue is the result of that resolution, and null means the " +
             "application observes no value from Toggles — check the values array before " +
             "concluding a configuration has no value anywhere.",
         agentControl = "Every /apps/{package} call requires that application's " +

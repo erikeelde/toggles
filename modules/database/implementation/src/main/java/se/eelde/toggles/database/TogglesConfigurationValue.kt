@@ -51,7 +51,7 @@ data class TogglesConfigurationValue(
     var configurationId: Long,
 
     @field:ColumnInfo(name = ConfigurationValueTable.COL_VALUE)
-    var value: String?,
+    var value: String,
 
     @field:ColumnInfo(name = ConfigurationValueTable.COL_SCOPE)
     var scope: Long

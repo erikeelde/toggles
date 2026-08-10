@@ -19,6 +19,7 @@ object Migrations {
     private const val databaseVersion9 = 9
     private const val databaseVersion10 = 10
     private const val databaseVersion11 = 11
+    private const val databaseVersion12 = 12
 
     /**
      * A configuration key is the sole identifier of a toggle, so a row whose key is null - or
@@ -433,6 +434,63 @@ object Migrations {
                 db.execSQL("DROP INDEX `index_configuration_temp_applicationId_configurationKey`")
                 db.execSQL(
                     "CREATE UNIQUE INDEX `index_configuration_applicationId_configurationKey` ON `$tableNameTemp` (`applicationId`, `configurationKey`)"
+                )
+
+                db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
+            }
+        }
+    }
+
+    val MIGRATION_11_12: Migration = object : Migration(databaseVersion11, databaseVersion12) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            run {
+                val tableName = "configurationValue"
+                val tableNameTemp = tableName + "_temp"
+
+                // Rebuild the table with `value` tightened to NOT NULL. Nullable was never a
+                // deliberate choice - it dates back to schema v1, and the write paths already
+                // contradicted each other: updates rejected a null value (TogglesProvider used
+                // requireNotNull(toggle.value) and threw), while inserts let one through
+                // unchecked.
+                //
+                // A null-valued row is observationally identical to an absent row -
+                // TogglesResolver.kt falls back to the caller's compiled-in default either way
+                // (`selectedConfigValue.value ?: defaultValue`, and one line later
+                // `defaultConfigValue?.value ?: defaultValue`) - so dropping null rows instead of
+                // backfilling them changes nothing a consumer can observe. It is also strictly
+                // better: a null row sitting in the DEFAULT scope was tripping a spurious
+                // default-mismatch (`defaultConfigValue.value != defaultValue`), either silently
+                // overwriting the row or calling onDefaultMismatch with an empty string. Deleting
+                // it lets addDefaultAutomatically recreate the row properly instead. Backfilling
+                // was considered and rejected: any invented value would differ from the app's
+                // real default and trip that very same mismatch path.
+                //
+                // configurationValue is a child table only - its foreign keys point out to
+                // `configuration` and `scope`, nothing references configurationValue as a parent
+                // - so dropping it here cannot cascade-delete any other table's rows.
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `$tableNameTemp` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configurationId` INTEGER NOT NULL, `value` TEXT NOT NULL, `scope` INTEGER NOT NULL, FOREIGN KEY(`configurationId`) REFERENCES `configuration`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`scope`) REFERENCES `scope`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+                )
+                db.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS `index_configurationValue_temp_configurationId_scope` ON `$tableNameTemp` (`configurationId`, `scope`)"
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_configurationValue_temp_scope` ON `$tableNameTemp` (`scope`)"
+                )
+
+                db.execSQL(
+                    "INSERT INTO $tableNameTemp SELECT id, configurationId, value, scope FROM $tableName WHERE value IS NOT NULL"
+                )
+                db.execSQL("DROP TABLE $tableName")
+
+                db.execSQL("DROP INDEX `index_configurationValue_temp_configurationId_scope`")
+                db.execSQL(
+                    "CREATE UNIQUE INDEX `index_configurationValue_configurationId_scope` ON `$tableNameTemp` (`configurationId`, `scope`)"
+                )
+
+                db.execSQL("DROP INDEX `index_configurationValue_temp_scope`")
+                db.execSQL(
+                    "CREATE INDEX `index_configurationValue_scope` ON `$tableNameTemp` (`scope`)"
                 )
 
                 db.execSQL("ALTER TABLE $tableNameTemp RENAME TO $tableName")
