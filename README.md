@@ -59,6 +59,33 @@ Install the companion app to manage your feature toggles:
 
 [Google Play Store](https://play.google.com/store/apps/details?id=se.eelde.toggles)
 
+## Agent Integration (Beta)
+
+An AI coding agent connected over adb can read and change your toggles while it works — useful when the feature it is building sits behind one.
+
+It is off by default. Turn it on in the Toggles app: **Applications → Toggles → `beta_agent_api` → On**.
+
+Then, with the device connected:
+
+```bash
+adb shell content read --uri content://se.eelde.toggles.agentprovider/describe
+```
+
+That returns the whole API as JSON — every endpoint and every method, each with a runnable example command. It is self-describing and version-tied to the installed app, so it is the only command you need to know: everything else is discovered from the device rather than from documentation that can go stale.
+
+The API can:
+
+- list the applications Toggles knows about, and dump one app's toggles, scopes, per-scope values and effective values
+- set a value, or remove a scope override so resolution falls back
+- create and delete toggles, including for an app that has not run yet
+- create, select and delete scopes
+
+Changes reach a running app immediately — no restart.
+
+**Access is restricted to adb (uid 2000) and root.** Apps on the device cannot reach it. Beyond the global `beta_agent_api` switch, any single application can be opted out from its overflow menu in the Toggles app, and the first change an agent makes to an application raises a notification.
+
+If you use Claude Code, [`.claude/skills/toggles-agent/SKILL.md`](.claude/skills/toggles-agent/SKILL.md) documents the API for the agent itself.
+
 ## Advanced Examples
 
 ### Working with Enums
