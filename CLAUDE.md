@@ -140,7 +140,9 @@ The app and the libraries are therefore versioned and released **independently**
 1. Make sure `main` is green.
 2. Release-drafter maintains a draft release as PRs merge; `app-release.yml` can be dispatched to refresh it.
 3. Edit the draft — set the tag to the next `vX.Y.Z`, check the notes — and publish.
-4. `release_workflow.yml` runs the checks and uploads to Play. Note `triplet-play` is configured with `releaseStatus DRAFT`, so it lands as a **draft in the Play Console** and still needs promoting there.
+4. `release_workflow.yml` runs the checks and uploads to Play. It lands as a **draft in the Play Console** and is promoted from there by hand.
+
+**`releaseStatus DRAFT` in `toggles-app/build.gradle.kts` is deliberate — do not change it to `COMPLETED`.** A draft can be replaced and Play retains the uploaded binary, so a bad build is recoverable. A completed release cannot be taken back: the version code is burned and the only remedy is shipping another version on top. Automated publishing straight to a live track has no undo, which is why the last human step stays manual. (`resolutionStrategy AUTO` is commented out in the same file for the same reason.)
 
 ### Releasing the libraries
 
