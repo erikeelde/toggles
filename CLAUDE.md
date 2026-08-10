@@ -107,10 +107,49 @@ New code should use the new API. The new API enables multi-scope support (e.g. d
 ## CI/CD
 
 GitHub Actions in `.github/workflows/`:
-- `pull-request.yml`: Runs detekt, unit tests, instrumentation tests on PRs
-- `libraries-release.yml` / `app-release.yml`: Manual-trigger releases to Maven Central / Play Store
+- `pull-request.yml` — detekt, unit tests and instrumentation tests on PRs
+- `post-merge.yml` — on every push to `main`: `./gradlew check`, packages debug APKs, and publishes library **snapshots** to Maven Central
+- `app-release.yml` — `workflow_dispatch` only. Runs release-drafter; it *creates or refreshes the draft GitHub release*, it does not publish anything
+- `libraries-snapshot.yml` — `workflow_dispatch` only, for an ad-hoc snapshot publish
+- `release_workflow.yml` / `libraries-release.yml` — both fire on `release: published`; see below
 
 CI uses `warningsAsErrors=true` (`.github/ci-gradle.properties`).
+
+## Releasing
+
+**Releases are made by publishing a GitHub release. The tag prefix decides what ships.** Both release workflows listen to the same `release: published` event and gate on the tag, so they are mutually exclusive:
+
+| Tag | Workflow that runs | What it does |
+|---|---|---|
+| `vX.Y.Z` | `release_workflow.yml` (`if: !startsWith(tag, 'lib/')`) | `./gradlew check`, then `:toggles-app:publishReleaseBundle` to Google Play and `assembleRelease`; attaches APKs to the release. `libraries-release` is **skipped**. |
+| `lib/X.Y.Z` | `libraries-release.yml` (`if: startsWith(tag, 'lib/')`) | `publishAndReleaseToMavenCentral`. `release_workflow` is **skipped**. |
+
+The app and the libraries are therefore versioned and released **independently**, and their tags normally sit on different commits.
+
+### Versions come from git tags
+
+`scripts/generate_versions.sh` derives `versions.properties` (generated, **gitignored — never edit it by hand**) from the tags reachable at `HEAD`:
+
+- newest `v*` tag → `V_VERSION` / `V_VERSION_CODE` (the app)
+- newest `lib/*` tag → `V_LIBRARY_VERSION` (the published libraries); with no tag at `HEAD` this becomes a `-SNAPSHOT`
+
+`libraries-release.yml` calls the version action with `release: true`, which **requires `HEAD` to be exactly on a `lib/*` tag** — it exits with `--release but HEAD is N commit(s) ahead of lib/x.y.z — tag HEAD first` otherwise. `release_workflow.yml` does not use release mode.
+
+### Releasing the app
+
+1. Make sure `main` is green.
+2. Release-drafter maintains a draft release as PRs merge; `app-release.yml` can be dispatched to refresh it.
+3. Edit the draft — set the tag to the next `vX.Y.Z`, check the notes — and publish.
+4. `release_workflow.yml` runs the checks and uploads to Play. Note `triplet-play` is configured with `releaseStatus DRAFT`, so it lands as a **draft in the Play Console** and still needs promoting there.
+
+### Releasing the libraries
+
+1. Publish a GitHub release whose tag is `lib/X.Y.Z`, targeting the commit to release.
+2. `libraries-release.yml` runs `publishAndReleaseToMavenCentral`.
+
+**Maven Central releases are permanent** — artifacts cannot be deleted or overwritten. Check the version is what you intend before publishing.
+
+If a change only touches `toggles-app` or `modules/`, no library release is needed; the published libraries are `toggles-core`, `toggles-flow`, `toggles-prefs` and their `-noop` variants.
 
 ## Kotlin Compatibility
 
