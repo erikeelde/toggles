@@ -12,6 +12,9 @@ import android.os.Build.VERSION_CODES.O
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,7 +22,9 @@ import org.robolectric.Robolectric
 import org.robolectric.android.controller.ContentProviderController
 import org.robolectric.annotation.Config
 import se.eelde.toggles.core.ColumnNames
+import se.eelde.toggles.core.ToggleState
 import se.eelde.toggles.core.TogglesProviderContract
+import se.eelde.toggles.prefs.ScopeComparator
 import se.eelde.toggles.prefs.TogglesPreferences
 import se.eelde.toggles.prefs.TogglesPreferencesImpl
 
@@ -75,6 +80,48 @@ internal class TogglesPreferencesReturnsProviderValues {
     fun `return provider int when available`() {
         assertEquals(1, togglesPreferences.getInt(key, 1))
         assertEquals(1, togglesPreferences.getInt(key, 2))
+    }
+
+    @Test
+    fun `hasOverride returns true when non-default scope has a value`() {
+        // The mock provider returns two scopes: DEFAULT_SCOPE (id=1, older) and "user" (id=2, newer).
+        // Pre-insert a configuration and a value for scope 2 (user = selected scope).
+        val context = ApplicationProvider.getApplicationContext<Application>()
+        val configValues = ContentValues().apply {
+            put(ColumnNames.Configuration.COL_KEY, "override-key")
+            put(ColumnNames.Configuration.COL_TYPE, "BOOLEAN")
+        }
+        val configUri = requireNotNull(
+            context.contentResolver.insert(TogglesProviderContract.configurationUri(), configValues)
+        )
+        val configId = requireNotNull(configUri.lastPathSegment?.toLong())
+
+        val valueValues = ContentValues().apply {
+            put(ColumnNames.ConfigurationValue.COL_CONFIG_ID, configId)
+            put(ColumnNames.ConfigurationValue.COL_VALUE, "true")
+            put(ColumnNames.ConfigurationValue.COL_SCOPE, 2L)
+        }
+        context.contentResolver.insert(TogglesProviderContract.configurationValueUri(configId), valueValues)
+
+        assertTrue(togglesPreferences.hasOverride("override-key"))
+    }
+
+    @Test
+    fun `hasOverride returns false when no value stored for non-default scope`() {
+        // Unknown key → no configuration registered → configurationValues empty → false
+        assertFalse(togglesPreferences.hasOverride("unknown-key"))
+    }
+
+    @Test
+    fun `hasOverride passes ToggleState to custom comparator`() {
+        var capturedState: ToggleState? = null
+        val capturingComparator = ScopeComparator { state ->
+            capturedState = state
+            false
+        }
+        togglesPreferences.hasOverride("myKey", capturingComparator)
+        val state = requireNotNull(capturedState)
+        assertNull(state.configuration) // unknown key → no configuration registered
     }
 }
 
