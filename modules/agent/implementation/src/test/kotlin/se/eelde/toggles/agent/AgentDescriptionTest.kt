@@ -81,6 +81,20 @@ class AgentDescriptionTest {
     }
 
     @Test
+    fun `the string value format documents colon escaping in content call bindings`() {
+        val notes = describe().model.valueFormats.getValue("string")
+
+        assertTrue(
+            "the note must name the error an unescaped colon produces, got: $notes",
+            notes.contains("Binding not well formed")
+        )
+        assertTrue(
+            "the note must show the escape sequence, got: $notes",
+            notes.contains("\\:")
+        )
+    }
+
+    @Test
     fun `describe lists every error code the api can return`() {
         assertEquals(AgentErrorCode.entries.map { it.wireValue }, describe().errors)
     }
