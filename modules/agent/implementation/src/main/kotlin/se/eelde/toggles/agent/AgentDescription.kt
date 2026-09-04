@@ -373,7 +373,10 @@ object AgentDescription {
                 "whole command for the device shell and single-quote the binding inside it, " +
                 "e.g. adb shell \"content call ... --extra " +
                 "'value:s:http\\://192.168.10.123\\:8080'\". The escapes are stripped on " +
-                "parse; the stored value is a clean http://192.168.10.123:8080.",
+                "parse; the stored value is a clean http://192.168.10.123:8080. The same " +
+                "applies to every string extra, not just value: a configuration key or scope " +
+                "name containing colons needs the same escaping, and one containing spaces " +
+                "needs the same quoting.",
             "enum" to "Must be one of the values listed in that configuration's " +
                 "predefinedValues array."
         ),

@@ -95,6 +95,11 @@ The obvious form — `adb shell content call … --extra "value:s:http\://…"` 
 sees it. Verified on device: the escapes are stripped on parse, so the stored value is a clean
 `http://192.168.10.123:8080`.
 
+This applies to **every** string extra, not just `value`: a configuration key or scope name
+containing colons needs the same `\:` escaping, and one containing spaces needs the same quoting
+(spaces fail differently — `Unsupported argument: <word>` — but the fix is the same). Keys like
+the sample app's `String configuration:` contain both.
+
 Read `/describe`'s `methods` array for the full list and exact arguments. Available: set a value,
 remove an override, create and select scopes, delete a scope, and create and delete configurations.
 
