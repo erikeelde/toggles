@@ -77,6 +77,24 @@ The `--extra` binding format is `<key>:<type>:<value>`, where `l` is long and `s
 Getting the type letter wrong is the most common mistake; the API reports it as `invalid_argument`
 rather than failing silently.
 
+**A string value containing `:` (every URL) must escape each colon as `\:`.** The `content` tool
+splits the binding on unescaped colons and rejects extras with `Binding not well formed` — an
+error that gives no hint that escaping exists. The backslash must reach the `content` tool itself,
+which means it must survive the device shell too: quote the whole command for the device shell and
+single-quote the binding inside it.
+
+```bash
+adb shell "content call --uri content://se.eelde.toggles.agentprovider \
+  --method setConfigurationValue \
+  --extra configurationId:l:47 --extra scopeId:l:3 \
+  --extra 'value:s:http\://192.168.10.123\:8080'"
+```
+
+The obvious form — `adb shell content call … --extra "value:s:http\://…"` — fails with the same
+`Binding not well formed` error, because the device shell consumes the backslash before `content`
+sees it. Verified on device: the escapes are stripped on parse, so the stored value is a clean
+`http://192.168.10.123:8080`.
+
 Read `/describe`'s `methods` array for the full list and exact arguments. Available: set a value,
 remove an override, create and select scopes, delete a scope, and create and delete configurations.
 

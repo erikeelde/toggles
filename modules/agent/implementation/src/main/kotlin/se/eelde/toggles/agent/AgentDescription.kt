@@ -365,7 +365,15 @@ object AgentDescription {
             "integer" to "A decimal integer string. The client library parses with " +
                 "String.toInt(), which throws NumberFormatException in the consuming app if " +
                 "the value is not a valid integer.",
-            "string" to "Any string.",
+            "string" to "Any string. In an adb shell content call --extra binding, every " +
+                "colon inside the value (every URL has them) must be escaped as \"\\:\" or " +
+                "the content tool rejects the binding with \"Binding not well formed\" — an " +
+                "error that gives no hint that escaping exists. The backslash must reach the " +
+                "content tool itself, so it must also survive the device shell: quote the " +
+                "whole command for the device shell and single-quote the binding inside it, " +
+                "e.g. adb shell \"content call ... --extra " +
+                "'value:s:http\\://192.168.10.123\\:8080'\". The escapes are stripped on " +
+                "parse; the stored value is a clean http://192.168.10.123:8080.",
             "enum" to "Must be one of the values listed in that configuration's " +
                 "predefinedValues array."
         ),
