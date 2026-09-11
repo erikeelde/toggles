@@ -1,8 +1,22 @@
+public final class se/eelde/toggles/prefs/DefaultScopeComparator : se/eelde/toggles/prefs/ScopeComparator {
+	public static final field INSTANCE Lse/eelde/toggles/prefs/DefaultScopeComparator;
+	public fun hasOverride (Lse/eelde/toggles/core/ToggleState;)Z
+}
+
+public abstract interface class se/eelde/toggles/prefs/ScopeComparator {
+	public abstract fun hasOverride (Lse/eelde/toggles/core/ToggleState;)Z
+}
+
 public abstract interface class se/eelde/toggles/prefs/TogglesPreferences {
 	public abstract fun getBoolean (Ljava/lang/String;Z)Z
 	public abstract fun getEnum (Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Enum;)Ljava/lang/Enum;
 	public abstract fun getInt (Ljava/lang/String;I)I
 	public abstract fun getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun hasOverride (Ljava/lang/String;Lse/eelde/toggles/prefs/ScopeComparator;)Z
+}
+
+public final class se/eelde/toggles/prefs/TogglesPreferences$DefaultImpls {
+	public static fun hasOverride$default (Lse/eelde/toggles/prefs/TogglesPreferences;Ljava/lang/String;Lse/eelde/toggles/prefs/ScopeComparator;ILjava/lang/Object;)Z
 }
 
 public final class se/eelde/toggles/prefs/TogglesPreferencesImpl : se/eelde/toggles/prefs/TogglesPreferences {
@@ -16,4 +30,5 @@ public final class se/eelde/toggles/prefs/TogglesPreferencesImpl : se/eelde/togg
 	public fun getEnum (Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Enum;)Ljava/lang/Enum;
 	public fun getInt (Ljava/lang/String;I)I
 	public fun getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun hasOverride (Ljava/lang/String;Lse/eelde/toggles/prefs/ScopeComparator;)Z
 }
