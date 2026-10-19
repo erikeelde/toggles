@@ -15,4 +15,9 @@ public interface Toggles {
         type: Class<T>,
         defaultValue: T
     ): Flow<T>
+
+    public fun hasOverride(
+        key: String,
+        comparator: ScopeComparator = DefaultScopeComparator
+    ): Flow<Boolean>
 }

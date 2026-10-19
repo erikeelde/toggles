@@ -54,4 +54,7 @@ public class TogglesPreferencesImpl @JvmOverloads constructor(
         }
         return java.lang.Enum.valueOf(type, result)
     }
+
+    override fun hasOverride(key: String, comparator: ScopeComparator): Boolean =
+        comparator.hasOverride(provider.getToggleState(key))
 }

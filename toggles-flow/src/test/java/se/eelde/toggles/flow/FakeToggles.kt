@@ -15,4 +15,7 @@ internal class FakeToggles : Toggles {
 
     override fun <T : Enum<T>> toggle(key: String, type: Class<T>, defaultValue: T): Flow<T> =
         flowOf(defaultValue)
+
+    override fun hasOverride(key: String, comparator: ScopeComparator): Flow<Boolean> =
+        flowOf(false)
 }
